@@ -11,18 +11,34 @@ L'API et le front tournent en même temps : ouvre **un terminal pour chacun**.
 
 ```bash
 # 1. Base de données (une fois)
-cd infra && docker compose up -d db
+cd infra
+docker compose up -d db
 
 # 2. API, dans un premier terminal — http://localhost:8010/api/docs
-cd api && uv sync && uv run alembic upgrade head && uv run uvicorn app.main:app --reload --port 8010
+cd api
+python -m venv .venv
+source .venv/bin/activate
+pip install uv
+uv sync --frozen
+python -m alembic upgrade head
+python -m uvicorn app.main:app --reload --port 8010
 
 # 3. Front, dans un second terminal — http://localhost:5173/app/
-cd front && npm install && npm run dev
+cd front
+npm install && npm run dev
 ```
 
 « Le serveur ne répond pas » dans l'application : l'API n'est pas lancée, ou un autre programme occupe le port 8010.
 
 La vitrine publique s'ouvre sur http://localhost:5173/, l'application sur http://localhost:5173/app/.
+
+## Promouvoir un admin
+
+```bash
+# Dans un terminal
+cd api/
+python -m app.comptes.commandes promouvoir-admin <email>
+```
 
 ## Documentation
 
