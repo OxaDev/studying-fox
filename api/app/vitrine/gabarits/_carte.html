@@ -1,0 +1,11 @@
+{#- Carte d'un parcours. Attend `p` (ParcoursDetail), `index` et `niveau_titre`. -#}
+<article class="carte">
+  <div class="carte-entete {{ PASTELS[index % PASTELS|length] }}">
+    <span class="carte-theme">{{ p.theme.nom }}</span>
+  </div>
+  <div class="carte-corps">
+    <h{{ niveau_titre }} class="carte-titre"><a href="/parcours/{{ p.slug }}">{{ p.titre }}</a></h{{ niveau_titre }}>
+    <p class="carte-meta">{{ NIVEAUX[p.niveau] }} · {{ p.nb_lecons }} leçon{{ "s" if p.nb_lecons > 1 }} · {{ p.duree_minutes|duree }}</p>
+    <p class="carte-description">{{ p.description }}</p>
+  </div>
+</article>

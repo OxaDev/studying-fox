@@ -1,0 +1,65 @@
+.barre {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+}
+
+.piste {
+  flex: 1;
+  height: 10px;
+  border-radius: var(--rayon-bouton);
+  /* Le fond de la piste reste visible sur les cartes blanches comme sur les pastels. */
+  background: color-mix(in srgb, var(--progression) 18%, transparent);
+  overflow: hidden;
+}
+
+.remplissage {
+  height: 100%;
+  border-radius: var(--rayon-bouton);
+  background: var(--progression);
+  transition: width var(--duree-animation);
+}
+
+.texte {
+  flex-shrink: 0;
+  color: var(--texte-doux);
+  font-size: 0.9375rem;
+}
+
+.cercle {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  flex-shrink: 0;
+}
+
+.cercle svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.fondCercle,
+.arc {
+  fill: none;
+  stroke-width: 10;
+}
+
+.fondCercle {
+  stroke: color-mix(in srgb, var(--progression) 18%, transparent);
+}
+
+.arc {
+  stroke: var(--progression);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--duree-animation);
+}
+
+.pourcentage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+}

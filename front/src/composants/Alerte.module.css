@@ -1,0 +1,23 @@
+.alerte {
+  margin-block: var(--esp-4);
+  padding: var(--esp-3) var(--esp-4);
+  border-radius: 12px;
+  border-left: 4px solid;
+  background: var(--surface);
+}
+
+.alerte p {
+  margin: 0;
+}
+
+.alerte p + p {
+  margin-top: var(--esp-2);
+}
+
+.erreur {
+  border-color: var(--erreur);
+}
+
+.succes {
+  border-color: var(--succes-icone);
+}

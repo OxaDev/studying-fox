@@ -1,0 +1,116 @@
+.etat {
+  color: var(--texte-doux);
+}
+
+.carte {
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.carte h2 {
+  margin-top: 0;
+}
+
+.ligne {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-6);
+}
+
+.aide {
+  margin-bottom: var(--esp-4);
+}
+
+.aide summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.outils {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-4);
+}
+
+.outil {
+  min-height: 36px;
+  padding: var(--esp-1) var(--esp-3);
+  border: 2px solid var(--bordure);
+  border-radius: var(--rayon-bouton);
+  background: var(--surface);
+  color: var(--texte);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.outil[data-hovered] {
+  border-color: var(--primaire);
+}
+
+.outil[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.edition {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--esp-6);
+  align-items: start;
+}
+
+@media (max-width: 64rem) {
+  .edition {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.saisie :global(.cm-editor) {
+  min-height: 24rem;
+  border: 2px solid var(--bordure);
+  border-radius: 12px;
+}
+
+.apercu {
+  padding: var(--esp-4);
+  border: 2px dashed var(--bordure);
+  border-radius: 12px;
+}
+
+.apercu h3 {
+  margin-top: 0;
+}
+
+.case {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
+  cursor: pointer;
+}
+
+.boite {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border: 2px solid var(--bordure);
+  border-radius: 6px;
+  color: var(--sur-primaire);
+  font-weight: 800;
+}
+
+.case[data-selected] .boite {
+  border-color: var(--primaire);
+  background: var(--primaire);
+}
+
+.case[data-focus-visible] .boite {
+  box-shadow: var(--focus);
+}

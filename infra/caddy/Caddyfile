@@ -1,0 +1,46 @@
+# Découpage des adresses : voir ADR 0020.
+# Les CSP doivent rester identiques à front/csp.ts (vérifié par front/e2e/securite.spec.ts).
+{$DOMAINE:localhost} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# Workers d'exécution du code des leçons (ADR 0009) : CSP plus stricte que la page.
+	@worker_javascript path /app/assets/worker-javascript-*
+	@worker_python path /app/assets/worker-python-*
+	@medias path /medias/*
+	@page not path /app/assets/worker-javascript-* /app/assets/worker-python-* /medias/*
+	header @worker_javascript Content-Security-Policy "default-src 'none'; script-src 'unsafe-eval'"
+	header @worker_python Content-Security-Policy "default-src 'none'; script-src {scheme}://{hostport}/app/pyodide/ 'wasm-unsafe-eval'; connect-src {scheme}://{hostport}/app/pyodide/"
+	header @medias Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+	header @page Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+
+	# API
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	# Images des leçons
+	handle_path /medias/* {
+		root * /srv/medias
+		file_server
+	}
+
+	# Application React (connexion requise)
+	handle /app* {
+		root * /srv
+		try_files {path} /app/index.html
+		file_server
+	}
+
+	# Tout le reste : vitrine publique générée par FastAPI (ADR 0016)
+	handle {
+		reverse_proxy api:8000
+	}
+}

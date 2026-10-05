@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block titre %}Page introuvable{% endblock %}
+{% block description %}Cette page n'existe pas ou n'existe plus.{% endblock %}
+{% block contenu %}
+<h1>Page introuvable</h1>
+<p>Cette page n'existe pas ou n'existe plus. Le renard a cherché partout !</p>
+<p class="actions">
+  <a href="/" class="bouton primaire">Retour à l'accueil</a>
+  <a href="/parcours" class="bouton secondaire">Voir les parcours</a>
+</p>
+{% endblock %}

@@ -1,0 +1,498 @@
+/*
+ * Styles de la vitrine publique (ADR 0016).
+ * tokens.css est une copie exacte de front/src/styles/tokens.css (vérifié par les tests de l'API).
+ */
+@import "tokens.css";
+
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("polices/nunito-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("polices/nunito-latin-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 800;
+  src: url("polices/nunito-latin-800-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("polices/caveat-latin-600-normal.woff2") format("woff2");
+}
+
+/* --- Base (comme front/src/styles/global.css) --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: var(--police-texte);
+  font-size: var(--taille-texte);
+  line-height: var(--interligne);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 var(--esp-4);
+}
+
+a {
+  color: var(--primaire);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: 4px;
+}
+
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.evitement {
+  position: absolute;
+  left: var(--esp-4);
+  top: -100px;
+  z-index: 10;
+  padding: var(--esp-2) var(--esp-4);
+  border-radius: var(--rayon-bouton);
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+.evitement:focus {
+  top: var(--esp-2);
+}
+
+/* --- En-tête et pied de page --- */
+
+.entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-4);
+  padding: var(--esp-4) var(--esp-6);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.logo {
+  font-weight: 800;
+  color: var(--texte);
+  text-decoration: none;
+}
+
+.menu {
+  display: flex;
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu a {
+  color: var(--texte);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.menu a:hover,
+.menu a[aria-current="page"] {
+  color: var(--primaire);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.compte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+
+.contenu {
+  flex: 1;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--esp-8) var(--esp-4);
+}
+
+.pied {
+  padding: var(--esp-6) var(--esp-4);
+  background: var(--surface);
+  color: var(--texte-doux);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.pied p {
+  margin: var(--esp-1) 0;
+}
+
+/* --- Boutons (comme front/src/composants/Bouton.module.css) --- */
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--esp-2) var(--esp-6);
+  border: 2px solid var(--primaire);
+  border-radius: var(--rayon-bouton);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--duree-animation);
+}
+
+.bouton:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 5px var(--primaire);
+  border-radius: var(--rayon-bouton);
+}
+
+.primaire {
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+.primaire:hover {
+  background: var(--primaire-fonce);
+  border-color: var(--primaire-fonce);
+}
+
+.secondaire {
+  background: var(--surface);
+  color: var(--primaire);
+}
+
+.secondaire:hover {
+  background: var(--survol-secondaire);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+  margin: var(--esp-6) 0 0;
+}
+
+.introduction {
+  max-width: 40rem;
+  color: var(--texte-doux);
+}
+
+/* --- Accueil --- */
+
+.accroche {
+  padding: var(--esp-8) 0 var(--esp-12);
+}
+
+.manuscrit {
+  margin: 0;
+  color: var(--primaire);
+  font-family: var(--police-manuscrite);
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.atouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atouts li {
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+  text-align: center;
+}
+
+.atouts h3 {
+  margin: 0 0 var(--esp-2);
+  font-size: 1.125rem;
+}
+
+.atouts p {
+  margin: 0;
+  color: var(--texte-doux);
+  font-size: 1rem;
+}
+
+.une {
+  margin-top: var(--esp-12);
+}
+
+/* --- Cartes de parcours (comme front/src/features/parcours/CarteParcours.module.css) --- */
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--esp-6);
+  margin: 0 0 var(--esp-6);
+  padding: 0;
+  list-style: none;
+}
+
+.carte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+  overflow: hidden;
+  transition: transform var(--duree-animation);
+}
+
+.carte:hover {
+  transform: translateY(-2px);
+}
+
+.carte:has(a:focus-visible) {
+  box-shadow:
+    var(--ombre),
+    0 0 0 3px var(--primaire);
+}
+
+/* Les pastels sont clairs dans les deux thèmes : le texte de l'en-tête reste foncé. */
+.carte-entete {
+  padding: var(--esp-6) var(--esp-4) var(--esp-3);
+  color: var(--sur-pastel);
+}
+
+.peche { background: var(--peche); }
+.menthe { background: var(--menthe); }
+.soleil { background: var(--soleil); }
+.sakura { background: var(--sakura); }
+.ciel { background: var(--ciel); }
+
+.carte-theme {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.carte-corps {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--esp-2);
+  padding: var(--esp-4);
+}
+
+.carte-titre {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+/* Toute la carte est cliquable, mais le lien reste le titre (une seule cible au clavier). */
+.carte-titre a {
+  color: var(--texte);
+  text-decoration: none;
+}
+
+.carte-titre a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.carte-titre a:hover,
+.carte-titre a:focus-visible {
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.carte-meta,
+.carte-description {
+  margin: 0;
+  color: var(--texte-doux);
+  font-size: 0.9375rem;
+}
+
+/* --- Catalogue --- */
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: var(--esp-6) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filtre {
+  display: inline-block;
+  padding: var(--esp-1) var(--esp-4);
+  border: 2px solid var(--bordure);
+  border-radius: var(--rayon-bouton);
+  color: var(--texte);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.filtre:hover {
+  border-color: var(--primaire);
+}
+
+.filtre[aria-current="true"] {
+  border-color: var(--primaire);
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+/* --- Présentation d'un parcours --- */
+
+.ariane ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: 0 0 var(--esp-6);
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+}
+
+.ariane li + li::before {
+  content: "›" / "";
+  margin-right: var(--esp-2);
+  color: var(--texte-doux);
+}
+
+.bandeau {
+  padding: var(--esp-8) var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--ciel);
+  color: var(--sur-pastel);
+}
+
+.bandeau .introduction {
+  color: var(--sur-pastel);
+}
+
+.faits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: var(--esp-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.faits li {
+  padding: var(--esp-1) var(--esp-3);
+  border-radius: var(--rayon-bouton);
+  background: var(--surface);
+  color: var(--texte);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.colonnes {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  gap: var(--esp-8);
+  align-items: start;
+  margin-top: var(--esp-8);
+}
+
+@media (max-width: 48rem) {
+  .colonnes {
+    grid-template-columns: 1fr;
+  }
+}
+
+.programme h2,
+.commencer h2 {
+  margin-top: 0;
+}
+
+.lecons {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: lecon;
+}
+
+.lecons li {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: baseline;
+  padding: var(--esp-3) var(--esp-4);
+  border-radius: 12px;
+  background: var(--surface);
+  counter-increment: lecon;
+}
+
+.lecons li + li {
+  margin-top: var(--esp-2);
+}
+
+.lecons li::before {
+  content: counter(lecon) ".";
+  color: var(--primaire);
+  font-weight: 800;
+}
+
+.lecon-titre {
+  flex: 1;
+  font-weight: 700;
+}
+
+.lecon-duree {
+  color: var(--texte-doux);
+  font-size: 1rem;
+}
+
+.commencer {
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}

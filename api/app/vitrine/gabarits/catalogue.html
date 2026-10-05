@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titre %}{{ "Parcours " ~ nom_theme if nom_theme else "Nos parcours" }}{% endblock %}
+{% block description %}Tous les parcours du Renard Étudiant pour apprendre la programmation : Python, JavaScript, du niveau débutant à intermédiaire.{% endblock %}
+{% block contenu %}
+<h1>Nos parcours</h1>
+<p class="introduction">Choisis un parcours et avance pas à pas vers ton objectif.</p>
+
+{% if themes|length > 1 %}
+<nav aria-label="Filtrer par thème">
+  <ul class="filtres">
+    <li><a href="/parcours" class="filtre"{% if not theme_choisi %} aria-current="true"{% endif %}>Tous</a></li>
+    {% for slug, nom in themes %}
+    <li><a href="/parcours?theme={{ slug|urlencode }}" class="filtre"{% if theme_choisi == slug %} aria-current="true"{% endif %}>{{ nom }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
+
+{% if parcours %}
+<ul class="grille">
+  {% for p in parcours %}
+  <li>{% with index = loop.index0, niveau_titre = 2 %}{% include "_carte.html" %}{% endwith %}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Aucun parcours pour l'instant. Reviens bientôt !</p>
+{% endif %}
+{% endblock %}

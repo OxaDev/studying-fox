@@ -1,0 +1,431 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:renard-etudiant:lecons:v1",
+  "title": "Paquet de leçons — Le Renard Étudiant",
+  "description": "Fichier importé dans la plateforme. Chaque leçon devient un brouillon à relire.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "lecons"
+  ],
+  "properties": {
+    "format": {
+      "const": "renard-etudiant/lecons"
+    },
+    "version": {
+      "enum": [
+        1,
+        2
+      ],
+      "description": "2 ajoute le bloc « exercice ». Un fichier en version 1 reste accepté."
+    },
+    "generation": {
+      "$ref": "#/$defs/generation"
+    },
+    "parcours": {
+      "$ref": "#/$defs/parcours"
+    },
+    "lecons": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/lecon"
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "version": {
+        "const": 1
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "lecons": {
+        "items": {
+          "properties": {
+            "blocs": {
+              "items": {
+                "not": {
+                  "properties": {
+                    "type": {
+                      "const": "exercice"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 80,
+      "description": "Identifiant lisible : minuscules, chiffres et tirets. Ex : variables-en-python"
+    },
+    "niveau": {
+      "enum": [
+        "debutant",
+        "intermediaire"
+      ]
+    },
+    "langage": {
+      "enum": [
+        "python",
+        "javascript"
+      ]
+    },
+    "generation": {
+      "type": "object",
+      "description": "Comment le contenu a été produit. Affiché aux relecteurs.",
+      "additionalProperties": false,
+      "required": [
+        "assiste_par_ia"
+      ],
+      "properties": {
+        "assiste_par_ia": {
+          "type": "boolean"
+        },
+        "outil": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Ex : Claude Opus 5.5"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "parcours": {
+      "type": "object",
+      "description": "Facultatif. Crée ou met à jour un parcours qui regroupe les leçons dans l'ordre indiqué.",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "titre",
+        "description",
+        "niveau",
+        "theme",
+        "lecons"
+      ],
+      "properties": {
+        "slug": {
+          "$ref": "#/$defs/slug"
+        },
+        "titre": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 500
+        },
+        "niveau": {
+          "$ref": "#/$defs/niveau"
+        },
+        "theme": {
+          "$ref": "#/$defs/slug"
+        },
+        "lecons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "description": "Slugs des leçons, dans l'ordre. Ils peuvent viser des leçons déjà publiées."
+        }
+      }
+    },
+    "lecon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "titre",
+        "resume",
+        "theme",
+        "niveau",
+        "duree_minutes",
+        "objectifs",
+        "blocs"
+      ],
+      "properties": {
+        "slug": {
+          "$ref": "#/$defs/slug"
+        },
+        "titre": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "resume": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 300,
+          "description": "Une ou deux phrases. Affiché dans le catalogue et la recherche."
+        },
+        "theme": {
+          "$ref": "#/$defs/slug"
+        },
+        "niveau": {
+          "$ref": "#/$defs/niveau"
+        },
+        "duree_minutes": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30
+        },
+        "prerequis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          }
+        },
+        "objectifs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "maxLength": 150
+          },
+          "description": "Ce que l'apprenant saura faire à la fin. Commence par un verbe : « Déclarer une variable »."
+        },
+        "blocs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/bloc"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "titre",
+              "url"
+            ],
+            "properties": {
+              "titre": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      }
+    },
+    "bloc": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/bloc_texte"
+        },
+        {
+          "$ref": "#/$defs/bloc_code"
+        },
+        {
+          "$ref": "#/$defs/bloc_exercice"
+        },
+        {
+          "$ref": "#/$defs/bloc_encadre"
+        },
+        {
+          "$ref": "#/$defs/bloc_image"
+        }
+      ]
+    },
+    "bloc_texte": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "markdown"
+      ],
+      "properties": {
+        "type": {
+          "const": "texte"
+        },
+        "markdown": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Markdown simple. Pas de HTML. Titres de niveau 2 (##) au maximum."
+        }
+      }
+    },
+    "bloc_code": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "langage",
+        "code",
+        "executable"
+      ],
+      "properties": {
+        "type": {
+          "const": "code"
+        },
+        "langage": {
+          "$ref": "#/$defs/langage"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        },
+        "executable": {
+          "type": "boolean",
+          "description": "true : l'apprenant peut lancer et modifier ce code."
+        },
+        "sortie_attendue": {
+          "type": "string",
+          "description": "Ce que le code affiche. Vérifié à l'import, dans le navigateur."
+        }
+      }
+    },
+    "bloc_exercice": {
+      "type": "object",
+      "description": "Version 2. Une consigne, un code de départ que l'apprenant modifie et lance, et une solution masquée.",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "langage",
+        "consigne",
+        "code",
+        "solution"
+      ],
+      "properties": {
+        "type": {
+          "const": "exercice"
+        },
+        "langage": {
+          "$ref": "#/$defs/langage"
+        },
+        "consigne": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "L'énoncé, en Markdown simple."
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000,
+          "description": "Code de départ, modifiable. Il n'est pas vérifié à l'import."
+        },
+        "solution": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000,
+          "description": "Solution, masquée par défaut et non modifiable. Exécutée à l'import."
+        },
+        "sortie_attendue": {
+          "type": "string",
+          "description": "Ce qu'affiche la solution. Vérifié à l'import, dans le navigateur."
+        }
+      }
+    },
+    "bloc_encadre": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "variante",
+        "markdown"
+      ],
+      "properties": {
+        "type": {
+          "const": "encadre"
+        },
+        "variante": {
+          "enum": [
+            "astuce",
+            "attention",
+            "a_retenir"
+          ]
+        },
+        "markdown": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "bloc_image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "fichier",
+        "alt",
+        "licence"
+      ],
+      "properties": {
+        "type": {
+          "const": "image"
+        },
+        "fichier": {
+          "type": "string",
+          "pattern": "^images/[a-z0-9-]+\\.(png|jpg|webp|svg)$",
+          "description": "Chemin dans l'archive ZIP."
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 250,
+          "description": "Décrit ce que montre l'image, pour les lecteurs d'écran."
+        },
+        "legende": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "licence": {
+          "enum": [
+            "creation-originale",
+            "cc-by",
+            "cc-by-sa",
+            "domaine-public"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "format": "uri",
+          "description": "Obligatoire si l'image n'est pas une création originale."
+        }
+      },
+      "if": {
+        "properties": {
+          "licence": {
+            "not": {
+              "const": "creation-originale"
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "source"
+        ]
+      }
+    }
+  }
+}

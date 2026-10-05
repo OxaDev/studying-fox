@@ -1,0 +1,80 @@
+.bandeau {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-8);
+  padding: var(--esp-8) var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.bandeau h1 {
+  margin: 0;
+}
+
+.bandeau p {
+  margin: 0;
+}
+
+.meta {
+  color: var(--texte-doux);
+}
+
+.progression {
+  width: 100%;
+  max-width: 28rem;
+  margin-block: var(--esp-2);
+}
+
+.bravo {
+  font-family: var(--police-manuscrite);
+  font-size: 1.5rem;
+}
+
+.lecons {
+  max-width: 46rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: lecon;
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.lecon {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto 2rem;
+  align-items: center;
+  gap: var(--esp-3);
+  padding: var(--esp-3) var(--esp-4);
+  counter-increment: lecon;
+}
+
+.lecon + .lecon {
+  border-top: 1px solid color-mix(in srgb, var(--bordure) 40%, transparent);
+}
+
+.lecon::before {
+  content: counter(lecon);
+  color: var(--texte-doux);
+  font-weight: 800;
+}
+
+.lecon a {
+  color: var(--texte);
+  font-weight: 700;
+}
+
+.duree {
+  color: var(--texte-doux);
+  font-size: 0.9375rem;
+}
+
+.etat {
+  color: var(--succes-icone);
+  font-weight: 800;
+  text-align: center;
+}

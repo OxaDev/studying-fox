@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titre %}{% endblock %}
+{% block description %}Des leçons courtes et des parcours guidés pour apprendre Python et JavaScript, avec du code à essayer directement dans le navigateur. Gratuit et sans publicité.{% endblock %}
+{% block contenu %}
+<section class="accroche" aria-labelledby="titre-accroche">
+  <h1 id="titre-accroche">Apprends à programmer, à ton rythme</h1>
+  <p class="manuscrit">Petit pas = grands progrès</p>
+  <p class="introduction">
+    Des leçons courtes, des parcours guidés et du code que tu modifies et lances
+    directement dans ton navigateur. Pour Python et JavaScript, gratuitement.
+  </p>
+  <p class="actions">
+    <a href="/parcours" class="bouton primaire">Découvrir les parcours</a>
+    <a href="/app/inscription" class="bouton secondaire">Créer un compte gratuit</a>
+  </p>
+</section>
+
+<section aria-labelledby="titre-atouts">
+  <h2 id="titre-atouts" class="visuellement-cache">Ce que tu trouveras ici</h2>
+  <ul class="atouts">
+    <li>
+      <h3>Des leçons claires</h3>
+      <p>Une notion à la fois, expliquée simplement, avec des exemples concrets.</p>
+    </li>
+    <li>
+      <h3>Des parcours guidés</h3>
+      <p>Les leçons s'enchaînent dans le bon ordre et ton avancement est enregistré.</p>
+    </li>
+    <li>
+      <h3>Du code à essayer</h3>
+      <p>Modifie les exemples et lance-les tout de suite, sans rien installer.</p>
+    </li>
+    <li>
+      <h3>Gratuit et respectueux</h3>
+      <p>Ni publicité ni traceur. Les leçons sont libres, sous licence CC BY-SA.</p>
+    </li>
+  </ul>
+</section>
+
+<section aria-labelledby="titre-une" class="une">
+  <h2 id="titre-une">Parcours à la une</h2>
+  {% if parcours %}
+  <ul class="grille">
+    {% for p in parcours %}
+    <li>{% with index = loop.index0, niveau_titre = 3 %}{% include "_carte.html" %}{% endwith %}</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/parcours">Voir tous les parcours</a></p>
+  {% else %}
+  <p>Les premiers parcours arrivent bientôt. Reviens vite !</p>
+  {% endif %}
+</section>
+{% endblock %}

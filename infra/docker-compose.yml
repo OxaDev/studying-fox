@@ -1,0 +1,58 @@
+# Production et test local de l'ensemble (ADR 0012).
+# En développement, on ne lance que la base : `docker compose up -d db`.
+name: renard-etudiant
+
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: renard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-renard}
+      POSTGRES_DB: renard
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      # Exposé seulement en local, sur 5433 pour ne pas gêner un PostgreSQL déjà installé.
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U renard"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ../api
+    restart: unless-stopped
+    environment:
+      RENARD_ENVIRONNEMENT: ${RENARD_ENVIRONNEMENT:-prod}
+      RENARD_DATABASE_URL: postgresql+asyncpg://renard:${POSTGRES_PASSWORD:-renard}@db:5432/renard
+      RENARD_DOSSIER_MEDIAS: /srv/medias
+      # Confirmation de l'email : à activer avec un service d'envoi (ADR 0023).
+      RENARD_VERIFICATION_EMAIL: ${RENARD_VERIFICATION_EMAIL:-false}
+    volumes:
+      # L'API écrit les images importées ; Caddy les sert en lecture seule.
+      - medias:/srv/medias
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    build:
+      context: ..
+      dockerfile: infra/caddy/Dockerfile
+    restart: unless-stopped
+    environment:
+      DOMAINE: ${DOMAINE:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - medias:/srv/medias:ro
+    depends_on:
+      - api
+
+volumes:
+  db-data:
+  caddy-data:
+  medias:

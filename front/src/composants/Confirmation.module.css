@@ -1,0 +1,35 @@
+.fond {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--esp-4);
+  background: var(--voile);
+}
+
+.fenetre {
+  width: 100%;
+  max-width: 28rem;
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.dialogue {
+  padding: var(--esp-6);
+  outline: none;
+}
+
+.titre {
+  margin: 0 0 var(--esp-2);
+  font-size: 1.25rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--esp-3);
+  margin-top: var(--esp-6);
+}

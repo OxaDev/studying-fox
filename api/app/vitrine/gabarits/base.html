@@ -1,0 +1,47 @@
+{#- Gabarit commun de la vitrine. HTML simple, aucun JavaScript (ADR 0016). -#}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- set titre_complet = (self.titre() ~ " — Le Renard Étudiant") if self.titre() else "Le Renard Étudiant — Apprendre la programmation à son rythme" %}
+  <title>{{ titre_complet }}</title>
+  <meta name="description" content="{% block description %}{% endblock %}">
+  <link rel="canonical" href="{{ url_publique }}{{ chemin }}">
+  <meta property="og:site_name" content="Le Renard Étudiant">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ titre_complet }}">
+  <meta property="og:description" content="{{ self.description() }}">
+  <meta property="og:url" content="{{ url_publique }}{{ chemin }}">
+  <link rel="stylesheet" href="/statique/vitrine.css">
+</head>
+<body>
+  <a href="#contenu" class="evitement">Aller au contenu</a>
+  <header class="entete">
+    <a href="/" class="logo">Le Renard Étudiant</a>
+    <nav aria-label="Navigation principale">
+      <ul class="menu">
+        <li><a href="/"{% if chemin == "/" %} aria-current="page"{% endif %}>Accueil</a></li>
+        <li><a href="/parcours"{% if chemin.startswith("/parcours") %} aria-current="page"{% endif %}>Parcours</a></li>
+      </ul>
+    </nav>
+    <div class="compte">
+      <a href="/app/connexion" class="bouton secondaire">Se connecter</a>
+      <a href="/app/inscription" class="bouton primaire">Créer un compte</a>
+    </div>
+  </header>
+  <main id="contenu" tabindex="-1" class="contenu">
+    {% block contenu %}{% endblock %}
+  </main>
+  <footer class="pied">
+    <p>Le Renard Étudiant est gratuit, sans publicité et sans traceur.</p>
+    <p>
+      Leçons sous licence
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" hreflang="fr">CC BY-SA 4.0</a>,
+      code sous licence
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" hreflang="en" lang="en">AGPL-3.0</a>.
+    </p>
+  </footer>
+</body>
+</html>

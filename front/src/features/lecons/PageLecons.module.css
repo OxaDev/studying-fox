@@ -1,0 +1,37 @@
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.carte {
+  display: flex;
+  flex-direction: column;
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.carte p {
+  margin: var(--esp-2) 0 0;
+}
+
+.titre {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.titre a {
+  color: var(--texte);
+}
+
+.meta {
+  margin-top: auto;
+  padding-top: var(--esp-3);
+  color: var(--texte-doux);
+  font-size: 1rem;
+}

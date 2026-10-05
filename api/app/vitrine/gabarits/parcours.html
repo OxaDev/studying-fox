@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block titre %}{{ parcours.titre }}{% endblock %}
+{% block description %}{{ parcours.description }}{% endblock %}
+{% block contenu %}
+<nav aria-label="Fil d'Ariane" class="ariane">
+  <ol>
+    <li><a href="/">Accueil</a></li>
+    <li><a href="/parcours">Parcours</a></li>
+    <li aria-current="page">{{ parcours.titre }}</li>
+  </ol>
+</nav>
+
+<div class="bandeau">
+  <p class="carte-theme">{{ parcours.theme.nom }}</p>
+  <h1>{{ parcours.titre }}</h1>
+  <p class="introduction">{{ parcours.description }}</p>
+  <ul class="faits">
+    <li><span class="visuellement-cache">Niveau : </span>{{ NIVEAUX[parcours.niveau] }}</li>
+    <li>{{ parcours.nb_lecons }} leçon{{ "s" if parcours.nb_lecons > 1 }}</li>
+    <li><span class="visuellement-cache">Durée totale : </span>{{ parcours.duree_minutes|duree }}</li>
+  </ul>
+</div>
+
+<div class="colonnes">
+  <section aria-labelledby="titre-programme" class="programme">
+    <h2 id="titre-programme">Au programme</h2>
+    <ol class="lecons">
+      {% for lecon in parcours.lecons %}
+      <li>
+        <span class="lecon-titre">{{ lecon.titre }}</span>
+        <span class="lecon-duree">{{ lecon.duree_minutes|duree }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <aside aria-labelledby="titre-commencer" class="commencer">
+    <h2 id="titre-commencer">Prêt à commencer ?</h2>
+    <p>Crée ton compte gratuit pour suivre les leçons et garder ton avancement.</p>
+    <p><a href="/app/inscription" class="bouton primaire">Commencer ce parcours</a></p>
+    <p>Déjà inscrit ? <a href="/app/connexion?retour={{ retour }}">Se connecter</a></p>
+  </aside>
+</div>
+{% endblock %}

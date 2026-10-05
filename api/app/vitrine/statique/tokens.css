@@ -1,0 +1,128 @@
+/*
+ * Jetons de design — source : docs/identite-visuelle.md
+ * Toute couleur utilisée dans l'application vient d'ici.
+ */
+:root {
+  /* Couleurs — thème clair */
+  --fond: #eef6ff;
+  --surface: #ffffff;
+  --texte: #14254f;
+  --texte-doux: #51617f;
+  --primaire: #1f5fd6;
+  --primaire-fonce: #1748a8;
+  --sur-primaire: #ffffff;
+  --progression: #3a7fe6;
+  --turquoise: #3ccfc4;
+  --succes: #1a7a43;
+  --succes-icone: #24965a;
+  --erreur: #c2334d;
+  --bordure: #6f86ae;
+
+  /* Pastels (en-têtes de cartes) */
+  --peche: #fdebdd;
+  --menthe: #e2f5ec;
+  --soleil: #fff4d2;
+  --sakura: #fde4ea;
+  --ciel: #e3effd;
+  /* Texte sur un pastel : les pastels restent clairs, même en thème sombre. */
+  --sur-pastel: #14254f;
+  --survol-secondaire: var(--ciel);
+  /* Mots trouvés par la recherche (texte en couleur `texte` dessus) */
+  --surlignage: #ffe7a0;
+
+  /* Coloration du code (contrastes vérifiés sur surface et ligne active) */
+  --code-mot-cle: #7a3db8;
+  --code-chaine: #1a7a43;
+  --code-nombre: #a3480f;
+  --code-commentaire: #51617f;
+  --code-fonction: #1f5fd6;
+  --code-ligne-active: #f4f8fe;
+  --code-selection: #cfe0fb;
+
+  /* Typographie */
+  --police-texte: "Nunito", system-ui, sans-serif;
+  --police-manuscrite: "Caveat", cursive;
+  --police-code: "JetBrains Mono", ui-monospace, monospace;
+  --taille-texte: 1.125rem; /* 18 px */
+  --interligne: 1.6;
+
+  /* Formes */
+  --rayon-bouton: 999px;
+  --rayon-carte: 20px;
+  --ombre: 0 4px 16px rgb(20 37 79 / 0.08);
+  /* Fond assombri derrière une fenêtre de dialogue */
+  --voile: rgb(14 26 51 / 0.5);
+  --focus: 0 0 0 3px var(--primaire);
+
+  /* Espacements (multiples de 4 px) */
+  --esp-1: 0.25rem;
+  --esp-2: 0.5rem;
+  --esp-3: 0.75rem;
+  --esp-4: 1rem;
+  --esp-6: 1.5rem;
+  --esp-8: 2rem;
+  --esp-12: 3rem;
+
+  --duree-animation: 200ms;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fond: #0e1a33;
+    --surface: #16264a;
+    --texte: #eaf2ff;
+    --texte-doux: #a8b8d6;
+    --primaire: #7cb0ff;
+    --primaire-fonce: #a3c7ff;
+    --sur-primaire: #0e1a33;
+    --progression: #7cb0ff;
+    --turquoise: #4fd8cd;
+    --succes: #6bd69a;
+    --succes-icone: #6bd69a;
+    --erreur: #ff8fa3;
+    --bordure: #8a9cc0;
+    --code-mot-cle: #d4a8ff;
+    --code-chaine: #8fe3a8;
+    --code-nombre: #ffc27a;
+    --code-commentaire: #a8b8d6;
+    --code-fonction: #7cb0ff;
+    --code-ligne-active: #1c2f57;
+    --code-selection: #2c4a85;
+    --survol-secondaire: #23386a;
+    --surlignage: #5c4a12;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --fond: #0e1a33;
+  --surface: #16264a;
+  --texte: #eaf2ff;
+  --texte-doux: #a8b8d6;
+  --primaire: #7cb0ff;
+  --primaire-fonce: #a3c7ff;
+  --sur-primaire: #0e1a33;
+  --progression: #7cb0ff;
+  --turquoise: #4fd8cd;
+  --succes: #6bd69a;
+  --succes-icone: #6bd69a;
+  --erreur: #ff8fa3;
+  --bordure: #8a9cc0;
+  --code-mot-cle: #d4a8ff;
+  --code-chaine: #8fe3a8;
+  --code-nombre: #ffc27a;
+  --code-commentaire: #a8b8d6;
+  --code-fonction: #7cb0ff;
+  --code-ligne-active: #1c2f57;
+  --code-selection: #2c4a85;
+  --survol-secondaire: #23386a;
+  --surlignage: #5c4a12;
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duree-animation: 0ms;
+  }
+}

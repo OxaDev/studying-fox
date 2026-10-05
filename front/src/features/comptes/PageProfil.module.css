@@ -1,0 +1,16 @@
+.sections {
+  display: grid;
+  gap: var(--esp-6);
+  max-width: 40rem;
+}
+
+.section {
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.section h2 {
+  margin-top: 0;
+}

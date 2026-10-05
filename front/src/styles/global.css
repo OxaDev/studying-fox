@@ -1,0 +1,86 @@
+@import "@fontsource/nunito/latin-400.css";
+@import "@fontsource/nunito/latin-700.css";
+@import "@fontsource/nunito/latin-800.css";
+@import "@fontsource/caveat/latin-600.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: var(--police-texte);
+  font-size: var(--taille-texte);
+  line-height: var(--interligne);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--primaire);
+}
+
+code,
+pre {
+  font-family: var(--police-code);
+}
+
+/* Le focus clavier est toujours visible (ADR 0013). */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: 4px;
+}
+
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Lien « Aller au contenu », visible seulement au clavier (RGAA 12.7). */
+.evitement {
+  position: absolute;
+  left: var(--esp-4);
+  top: -100px;
+  z-index: 10;
+  padding: var(--esp-2) var(--esp-4);
+  border-radius: var(--rayon-bouton);
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+.evitement:focus {
+  top: var(--esp-2);
+}
+
+/* Fil d'Ariane (RGAA 12.9) */
+.ariane ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: 0 0 var(--esp-6);
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+}
+
+.ariane li + li::before {
+  content: "›" / "";
+  margin-right: var(--esp-2);
+  color: var(--texte-doux);
+}

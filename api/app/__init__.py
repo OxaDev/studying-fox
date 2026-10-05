@@ -1,0 +1,1 @@
+"""API du Renard Étudiant."""

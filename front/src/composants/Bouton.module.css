@@ -1,0 +1,67 @@
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+  min-height: 44px;
+  padding: var(--esp-2) var(--esp-6);
+  border: 2px solid var(--primaire);
+  border-radius: var(--rayon-bouton);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--duree-animation);
+}
+
+.bouton[data-focus-visible] {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 5px var(--primaire);
+}
+
+.bouton[data-pending],
+.bouton[data-disabled] {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.primaire {
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+.primaire[data-hovered] {
+  background: var(--primaire-fonce);
+  border-color: var(--primaire-fonce);
+}
+
+.secondaire {
+  background: var(--surface);
+  color: var(--primaire);
+}
+
+.secondaire[data-hovered] {
+  background: var(--survol-secondaire);
+}
+
+/* LienBouton : mêmes styles, déclenchés par :hover et :focus-visible. */
+.lien {
+  text-decoration: none;
+}
+
+.lien:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 5px var(--primaire);
+}
+
+.lien.primaire:hover {
+  background: var(--primaire-fonce);
+  border-color: var(--primaire-fonce);
+}
+
+.lien.secondaire:hover {
+  background: var(--survol-secondaire);
+}

@@ -1,0 +1,77 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 1,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-05"
+  },
+  "parcours": {
+    "slug": "premiers-pas-en-python",
+    "titre": "Premiers pas en Python",
+    "description": "Découvrir les bases de Python : afficher du texte, stocker des valeurs et faire des calculs simples.",
+    "niveau": "debutant",
+    "theme": "python",
+    "lecons": ["afficher-du-texte-en-python", "les-variables-en-python"]
+  },
+  "lecons": [
+    {
+      "slug": "afficher-du-texte-en-python",
+      "titre": "Afficher du texte",
+      "resume": "Utiliser la fonction print pour afficher un message à l'écran.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 5,
+      "objectifs": ["Afficher un message avec print"],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour qu'un programme **affiche** quelque chose, on utilise la fonction `print`.\n\nOn place le texte entre guillemets, à l'intérieur des parenthèses."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "print(\"Bonjour !\")",
+          "executable": true,
+          "sortie_attendue": "Bonjour !\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Modifie le texte entre guillemets, puis relance le code."
+        }
+      ]
+    },
+    {
+      "slug": "les-variables-en-python",
+      "titre": "Les variables",
+      "resume": "Stocker une valeur dans une variable pour la réutiliser plus tard.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": ["afficher-du-texte-en-python"],
+      "objectifs": ["Créer une variable", "Afficher le contenu d'une variable"],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **variable** est une boîte qui porte un nom et contient une valeur.\n\nOn la crée avec le signe `=`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "prenom = \"Aiko\"\nprint(prenom)",
+          "executable": true,
+          "sortie_attendue": "Aiko\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Le `=` ne veut pas dire « égal » : il veut dire « range cette valeur dans cette boîte »."
+        }
+      ],
+      "sources": [
+        { "titre": "Documentation officielle de Python", "url": "https://docs.python.org/fr/3/tutorial/introduction.html" }
+      ]
+    }
+  ]
+}

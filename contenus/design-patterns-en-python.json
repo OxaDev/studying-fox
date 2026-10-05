@@ -1,0 +1,1061 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 2,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-05"
+  },
+  "parcours": {
+    "slug": "design-patterns-en-python",
+    "titre": "Design patterns en Python pour les API critiques",
+    "description": "Les patrons de conception qu'utilisent les équipes des banques et des plateformes de données : Stratégie, Fabrique, Adaptateur, Décorateur, Observateur, Dépôt, Unité de travail, réessai, disjoncteur, limiteur de débit, idempotence, cache, saga et event sourcing. Prérequis : savoir écrire des fonctions et des classes en Python.",
+    "niveau": "intermediaire",
+    "theme": "python",
+    "lecons": [
+      "design-patterns-introduction",
+      "patron-strategie",
+      "patron-fabrique",
+      "patron-adaptateur",
+      "patron-decorateur",
+      "patron-observateur",
+      "patron-depot",
+      "patron-unite-de-travail",
+      "patron-reessai-backoff",
+      "patron-disjoncteur",
+      "patron-limiteur-de-debit",
+      "patron-cle-idempotence",
+      "patron-cache-aside",
+      "patron-saga",
+      "patron-event-sourcing",
+      "design-patterns-api-de-paiement"
+    ]
+  },
+  "lecons": [
+    {
+      "slug": "design-patterns-introduction",
+      "titre": "Les design patterns, à quoi ça sert ?",
+      "resume": "Comprendre ce qu'est un design pattern et pourquoi les API critiques (banque, paiement, big data) en dépendent.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [],
+      "objectifs": [
+        "Expliquer ce qu'est un design pattern",
+        "Décrire un contrat avec typing.Protocol",
+        "Manipuler des montants avec Decimal plutôt qu'avec float"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un **design pattern** (en français, *patron de conception*) est une solution éprouvée à un problème qui revient souvent. Ce n'est pas une bibliothèque à installer : c'est un **plan**, que tu adaptes à ton code.\n\nDans une API soumise à une forte charge, comme celle d'une banque ou d'une plateforme de données, trois questions reviennent sans cesse :\n\n- **Évoluer** : ajouter un moyen de paiement sans tout réécrire.\n- **Résister** : continuer à répondre quand un service voisin tombe en panne.\n- **Rester juste** : ne jamais débiter deux fois, ne jamais perdre un centime.\n\nCe parcours te donne, pour chaque question, les patrons que les équipes utilisent vraiment."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Programmer pour un contrat\n\nPresque tous les patrons reposent sur la même idée : ton code dépend d'un **contrat** (ce qu'un objet sait faire), pas d'une classe précise.\n\nEn Python, on écrit ce contrat avec `Protocol`, du module `typing`. Une classe le respecte dès qu'elle a les bonnes méthodes : pas besoin d'hériter de quoi que ce soit."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Protocol\n\n\nclass Notifieur(Protocol):\n    def envoyer(self, message: str) -> None: ...\n\n\nclass NotifieurEmail:\n    def envoyer(self, message: str) -> None:\n        print(f\"[email] {message}\")\n\n\nclass NotifieurSms:\n    def envoyer(self, message: str) -> None:\n        print(f\"[sms] {message}\")\n\n\ndef alerter_client(notifieur: Notifieur, montant: str) -> None:\n    notifieur.envoyer(f\"Paiement de {montant} € accepté\")\n\n\nalerter_client(NotifieurEmail(), \"42,00\")\nalerter_client(NotifieurSms(), \"42,00\")\n",
+          "executable": true,
+          "sortie_attendue": "[email] Paiement de 42,00 € accepté\n[sms] Paiement de 42,00 € accepté\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`alerter_client` ne sait pas comment le message part. Demain, tu peux ajouter un `NotifieurPush` sans toucher à cette fonction."
+        },
+        {
+          "type": "texte",
+          "markdown": "## L'argent ne se compte pas en float\n\nUn `float` est un nombre à virgule stocké en binaire. Il est rapide, mais approximatif. Pour de l'argent, on utilise `Decimal`, qui calcule en base 10, exactement comme sur un relevé bancaire."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\n\nprint(0.1 + 0.2)\nprint(Decimal(\"0.10\") + Decimal(\"0.20\"))\n",
+          "executable": true,
+          "sortie_attendue": "0.30000000000000004\n0.30\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Crée toujours un `Decimal` à partir d'une **chaîne** : `Decimal(\"0.10\")`. Écrire `Decimal(0.1)` recopie l'erreur du `float`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une classe `NotifieurSlack` qui respecte le contrat `Notifieur` : sa méthode `envoyer` affiche `[slack] ` suivi du message.\n\nDécommente ensuite la dernière ligne. `alerter_client` ne doit pas changer.",
+          "code": "from typing import Protocol\n\n\nclass Notifieur(Protocol):\n    def envoyer(self, message: str) -> None: ...\n\n\ndef alerter_client(notifieur: Notifieur, montant: str) -> None:\n    notifieur.envoyer(f\"Paiement de {montant} € accepté\")\n\n\nclass NotifieurSlack:\n    pass  # À compléter\n\n\n# alerter_client(NotifieurSlack(), \"42,00\")\n",
+          "solution": "from typing import Protocol\n\n\nclass Notifieur(Protocol):\n    def envoyer(self, message: str) -> None: ...\n\n\ndef alerter_client(notifieur: Notifieur, montant: str) -> None:\n    notifieur.envoyer(f\"Paiement de {montant} € accepté\")\n\n\nclass NotifieurSlack:\n    def envoyer(self, message: str) -> None:\n        print(f\"[slack] {message}\")\n\n\nalerter_client(NotifieurSlack(), \"42,00\")\n",
+          "sortie_attendue": "[slack] Paiement de 42,00 € accepté\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un design pattern est une solution type, pas un morceau de code à copier.\n- Dépends d'un contrat (`Protocol`), pas d'une classe.\n- Un patron ajoute de la complexité : utilise-le seulement quand le problème qu'il résout existe vraiment."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Documentation Python : typing.Protocol",
+          "url": "https://docs.python.org/fr/3/library/typing.html#typing.Protocol"
+        },
+        {
+          "titre": "Documentation Python : decimal",
+          "url": "https://docs.python.org/fr/3/library/decimal.html"
+        }
+      ]
+    },
+    {
+      "slug": "patron-strategie",
+      "titre": "Stratégie : changer de règle sans changer le code",
+      "resume": "Remplacer une cascade de if par des stratégies interchangeables, par exemple pour calculer des frais bancaires.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Reconnaître une cascade de conditions à remplacer",
+        "Écrire plusieurs stratégies qui respectent le même contrat",
+        "Choisir une stratégie à partir d'un dictionnaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une banque calcule des frais de virement différents selon le type de compte. Le premier réflexe est une cascade de `if` :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def frais_virement(type_compte, montant):\n    if type_compte == \"standard\":\n        return montant * Decimal(\"0.02\")\n    elif type_compte == \"premium\":\n        return Decimal(\"0.00\")\n    elif type_compte == \"pro\":\n        ...\n    # Chaque nouvelle offre commerciale ajoute un elif ici.\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "Cette fonction grossit à chaque nouvelle offre, et chaque modification risque de casser les autres règles.\n\nLe patron **Stratégie** range chaque règle dans son propre objet. Toutes respectent le même contrat : une méthode `calculer`. Le code appelant choisit la bonne stratégie, puis l'utilise sans savoir laquelle c'est."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal, ROUND_HALF_UP\nfrom typing import Protocol\n\nCENTIME = Decimal(\"0.01\")\n\n\nclass StrategieFrais(Protocol):\n    def calculer(self, montant: Decimal) -> Decimal: ...\n\n\nclass FraisStandard:\n    def calculer(self, montant: Decimal) -> Decimal:\n        return (montant * Decimal(\"0.02\")).quantize(CENTIME, ROUND_HALF_UP)\n\n\nclass FraisPremium:\n    def calculer(self, montant: Decimal) -> Decimal:\n        return Decimal(\"0.00\")\n\n\nclass FraisProfessionnel:\n    \"\"\"1 %, avec un minimum de 0,50 €.\"\"\"\n\n    def calculer(self, montant: Decimal) -> Decimal:\n        frais = (montant * Decimal(\"0.01\")).quantize(CENTIME, ROUND_HALF_UP)\n        return max(frais, Decimal(\"0.50\"))\n\n\nSTRATEGIES: dict[str, StrategieFrais] = {\n    \"standard\": FraisStandard(),\n    \"premium\": FraisPremium(),\n    \"pro\": FraisProfessionnel(),\n}\n\n\ndef frais_virement(type_compte: str, montant: Decimal) -> Decimal:\n    return STRATEGIES[type_compte].calculer(montant)\n\n\nfor type_compte in [\"standard\", \"premium\", \"pro\"]:\n    print(type_compte, frais_virement(type_compte, Decimal(\"30.00\")))\n",
+          "executable": true,
+          "sortie_attendue": "standard 0.60\npremium 0.00\npro 0.50\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`quantize(CENTIME, ROUND_HALF_UP)` arrondit au centime, à la façon d'une banque : 0,005 devient 0,01.\n\nAjouter une offre revient maintenant à écrire une classe et une ligne dans le dictionnaire. Les règles existantes ne bougent pas, et chacune se teste seule."
+        },
+        {
+          "type": "texte",
+          "markdown": "## La version courte : des fonctions\n\nEn Python, une fonction est un objet comme un autre. Quand une stratégie n'a pas besoin d'état, une simple fonction suffit."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\nfrom typing import Callable\n\nStrategie = Callable[[Decimal], Decimal]\n\n\ndef sans_frais(montant: Decimal) -> Decimal:\n    return Decimal(\"0.00\")\n\n\ndef forfait(montant: Decimal) -> Decimal:\n    return Decimal(\"1.00\")\n\n\ndef total_a_debiter(montant: Decimal, strategie: Strategie) -> Decimal:\n    return montant + strategie(montant)\n\n\nprint(total_a_debiter(Decimal(\"100.00\"), sans_frais))\nprint(total_a_debiter(Decimal(\"100.00\"), forfait))\n",
+          "executable": true,
+          "sortie_attendue": "100.00\n101.00\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Ajoute une stratégie `FraisEtudiant` (0,10 € par virement) au premier exemple, puis relance le code."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute deux stratégies au registre :\n\n- `etudiant` : 0,10 € par virement, quel que soit le montant ;\n- `international` : 3 % du montant, avec un minimum de 2,00 €.\n\nLa boucle doit afficher les frais pour 30 € puis pour 200 €.",
+          "code": "from decimal import Decimal, ROUND_HALF_UP\nfrom typing import Protocol\n\nCENTIME = Decimal(\"0.01\")\n\n\nclass StrategieFrais(Protocol):\n    def calculer(self, montant: Decimal) -> Decimal: ...\n\n\nclass FraisStandard:\n    def calculer(self, montant: Decimal) -> Decimal:\n        return (montant * Decimal(\"0.02\")).quantize(CENTIME, ROUND_HALF_UP)\n\n\nSTRATEGIES: dict[str, StrategieFrais] = {\n    \"standard\": FraisStandard(),\n}\n\nfor nom, strategie in STRATEGIES.items():\n    print(nom, strategie.calculer(Decimal(\"30.00\")), strategie.calculer(Decimal(\"200.00\")))\n",
+          "solution": "from decimal import Decimal, ROUND_HALF_UP\nfrom typing import Protocol\n\nCENTIME = Decimal(\"0.01\")\n\n\nclass StrategieFrais(Protocol):\n    def calculer(self, montant: Decimal) -> Decimal: ...\n\n\nclass FraisStandard:\n    def calculer(self, montant: Decimal) -> Decimal:\n        return (montant * Decimal(\"0.02\")).quantize(CENTIME, ROUND_HALF_UP)\n\n\nclass FraisEtudiant:\n    def calculer(self, montant: Decimal) -> Decimal:\n        return Decimal(\"0.10\")\n\n\nclass FraisInternational:\n    def calculer(self, montant: Decimal) -> Decimal:\n        frais = (montant * Decimal(\"0.03\")).quantize(CENTIME, ROUND_HALF_UP)\n        return max(frais, Decimal(\"2.00\"))\n\n\nSTRATEGIES: dict[str, StrategieFrais] = {\n    \"standard\": FraisStandard(),\n    \"etudiant\": FraisEtudiant(),\n    \"international\": FraisInternational(),\n}\n\nfor nom, strategie in STRATEGIES.items():\n    print(nom, strategie.calculer(Decimal(\"30.00\")), strategie.calculer(Decimal(\"200.00\")))\n",
+          "sortie_attendue": "standard 0.60 4.00\netudiant 0.10 0.10\ninternational 2.00 6.00\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Stratégie = une famille de règles interchangeables derrière un même contrat. On l'utilise pour les frais, les taux, les règles de scoring, les algorithmes de tri ou de compression."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Refactoring.Guru : Stratégie",
+          "url": "https://refactoring.guru/fr/design-patterns/strategy"
+        }
+      ]
+    },
+    {
+      "slug": "patron-fabrique",
+      "titre": "Fabrique : créer le bon objet à partir de la configuration",
+      "resume": "Centraliser la création des objets, par exemple choisir la passerelle de paiement à partir d'un fichier de configuration.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Expliquer le rôle d'une fabrique",
+        "Créer un objet à partir d'une configuration",
+        "Refuser proprement une configuration inconnue"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Ton API de paiement parle à plusieurs **passerelles** : le réseau carte, le réseau SEPA des virements européens… Laquelle utiliser, et avec quels réglages, dépend de la **configuration** (un fichier, des variables d'environnement).\n\nSi chaque partie du code crée elle-même ses passerelles, les `if moyen == \"carte\"` se répandent partout. La **Fabrique** (*Factory*) rassemble la création à un seul endroit : on lui donne une configuration, elle rend un objet prêt à l'emploi."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\nfrom typing import Callable, Protocol\n\n\nclass Passerelle(Protocol):\n    def payer(self, montant: Decimal) -> str: ...\n\n\nclass PasserelleCarte:\n    def __init__(self, delai_max: float) -> None:\n        self.delai_max = delai_max\n\n    def payer(self, montant: Decimal) -> str:\n        return f\"Carte : {montant} € autorisés (délai max {self.delai_max} s)\"\n\n\nclass PasserelleSepa:\n    def __init__(self, delai_max: float) -> None:\n        self.delai_max = delai_max\n\n    def payer(self, montant: Decimal) -> str:\n        return f\"SEPA : virement de {montant} € programmé\"\n\n\n# Le registre : un nom de configuration -> de quoi construire l'objet\nPASSERELLES: dict[str, Callable[[float], Passerelle]] = {\n    \"carte\": PasserelleCarte,\n    \"sepa\": PasserelleSepa,\n}\n\n\ndef creer_passerelle(config: dict[str, str]) -> Passerelle:\n    moyen = config[\"moyen\"]\n    if moyen not in PASSERELLES:\n        raise ValueError(f\"Moyen de paiement inconnu : {moyen}\")\n    delai_max = float(config.get(\"delai_max\", \"2\"))\n    return PASSERELLES[moyen](delai_max)\n\n\nfor config in [{\"moyen\": \"carte\"}, {\"moyen\": \"sepa\", \"delai_max\": \"5\"}]:\n    passerelle = creer_passerelle(config)\n    print(passerelle.payer(Decimal(\"19.90\")))\n\ntry:\n    creer_passerelle({\"moyen\": \"cheque\"})\nexcept ValueError as erreur:\n    print(erreur)\n",
+          "executable": true,
+          "sortie_attendue": "Carte : 19.90 € autorisés (délai max 2.0 s)\nSEPA : virement de 19.90 € programmé\nMoyen de paiement inconnu : cheque\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le reste de l'application reçoit une `Passerelle` et ne sait pas comment elle a été construite.\n\nDeux bénéfices très concrets :\n\n- **Les tests** : on ajoute au registre une passerelle simulée, qui ne contacte aucune banque.\n- **La sécurité** : une configuration fausse échoue **au démarrage**, avec un message clair, et pas au milieu de la nuit sur le premier paiement."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Ajoute une `PasserelleSimulee` au registre sous le nom `\"simulation\"`, puis crée-la avec `{\"moyen\": \"simulation\"}`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Deux améliorations pour la fabrique :\n\n1. Enregistre une `PasserelleSimulee` sous le nom `simulation`. Sa méthode `payer` renvoie `Simulation : 19.90 € (aucun appel réel)`.\n2. `creer_passerelle` refuse un `delai_max` négatif ou nul avec une `ValueError` : `Délai invalide : -1.0`.",
+          "code": "from decimal import Decimal\nfrom typing import Callable, Protocol\n\n\nclass Passerelle(Protocol):\n    def payer(self, montant: Decimal) -> str: ...\n\n\nclass PasserelleCarte:\n    def __init__(self, delai_max: float) -> None:\n        self.delai_max = delai_max\n\n    def payer(self, montant: Decimal) -> str:\n        return f\"Carte : {montant} € autorisés\"\n\n\nPASSERELLES: dict[str, Callable[[float], Passerelle]] = {\"carte\": PasserelleCarte}\n\n\ndef creer_passerelle(config: dict[str, str]) -> Passerelle:\n    moyen = config[\"moyen\"]\n    if moyen not in PASSERELLES:\n        raise ValueError(f\"Moyen de paiement inconnu : {moyen}\")\n    return PASSERELLES[moyen](float(config.get(\"delai_max\", \"2\")))\n\n\nfor config in [{\"moyen\": \"simulation\"}, {\"moyen\": \"carte\", \"delai_max\": \"-1\"}]:\n    try:\n        print(creer_passerelle(config).payer(Decimal(\"19.90\")))\n    except ValueError as erreur:\n        print(erreur)\n",
+          "solution": "from decimal import Decimal\nfrom typing import Callable, Protocol\n\n\nclass Passerelle(Protocol):\n    def payer(self, montant: Decimal) -> str: ...\n\n\nclass PasserelleCarte:\n    def __init__(self, delai_max: float) -> None:\n        self.delai_max = delai_max\n\n    def payer(self, montant: Decimal) -> str:\n        return f\"Carte : {montant} € autorisés\"\n\n\nclass PasserelleSimulee:\n    def __init__(self, delai_max: float) -> None:\n        self.delai_max = delai_max\n\n    def payer(self, montant: Decimal) -> str:\n        return f\"Simulation : {montant} € (aucun appel réel)\"\n\n\nPASSERELLES: dict[str, Callable[[float], Passerelle]] = {\n    \"carte\": PasserelleCarte,\n    \"simulation\": PasserelleSimulee,\n}\n\n\ndef creer_passerelle(config: dict[str, str]) -> Passerelle:\n    moyen = config[\"moyen\"]\n    if moyen not in PASSERELLES:\n        raise ValueError(f\"Moyen de paiement inconnu : {moyen}\")\n    delai_max = float(config.get(\"delai_max\", \"2\"))\n    if delai_max <= 0:\n        raise ValueError(f\"Délai invalide : {delai_max}\")\n    return PASSERELLES[moyen](delai_max)\n\n\nfor config in [{\"moyen\": \"simulation\"}, {\"moyen\": \"carte\", \"delai_max\": \"-1\"}]:\n    try:\n        print(creer_passerelle(config).payer(Decimal(\"19.90\")))\n    except ValueError as erreur:\n        print(erreur)\n",
+          "sortie_attendue": "Simulation : 19.90 € (aucun appel réel)\nDélai invalide : -1.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Fabrique = un seul endroit qui sait **comment** créer les objets. Le reste du code se contente de les **utiliser**."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Refactoring.Guru : Fabrique",
+          "url": "https://refactoring.guru/fr/design-patterns/factory-method"
+        }
+      ]
+    },
+    {
+      "slug": "patron-adaptateur",
+      "titre": "Adaptateur : brancher un vieux système sans le subir",
+      "resume": "Faire parler une API moderne avec un système historique, comme le système central d'une banque, sans le modifier.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Reconnaître une interface incompatible",
+        "Écrire un adaptateur qui traduit les données",
+        "Isoler un système historique du reste du code"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Les banques font souvent tourner un **système central** vieux de plusieurs décennies. Il fonctionne, mais il parle sa propre langue : des noms de fonctions en majuscules, des montants en centimes dans des chaînes à positions fixes.\n\nTu ne peux pas le modifier. Et tu ne veux pas que ces bizarreries se répandent dans ton API.\n\nL'**Adaptateur** est une petite classe qui se place entre les deux : elle respecte **ton** contrat d'un côté, et appelle l'ancien système de l'autre."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\nfrom typing import Protocol\n\n\n@dataclass(frozen=True)\nclass Solde:\n    iban: str\n    montant: Decimal\n    devise: str\n\n\nclass SourceDeSoldes(Protocol):\n    def solde(self, iban: str) -> Solde: ...\n\n\nclass AncienSystemeCentral:\n    \"\"\"Système historique : on ne peut pas le modifier.\"\"\"\n\n    def LIRE_CPT(self, numero: str) -> str:\n        # Réponse à positions fixes : 10 chiffres en centimes, puis la devise\n        return \"0000012345EUR\"\n\n\nclass AdaptateurSystemeCentral:\n    def __init__(self, ancien: AncienSystemeCentral) -> None:\n        self._ancien = ancien\n\n    def solde(self, iban: str) -> Solde:\n        numero = iban[-11:]  # l'ancien système ne connaît que la fin de l'IBAN\n        brut = self._ancien.LIRE_CPT(numero)\n        centimes = int(brut[:10])\n        return Solde(iban, Decimal(centimes) / 100, brut[10:])\n\n\ndef afficher_solde(source: SourceDeSoldes, iban: str) -> None:\n    s = source.solde(iban)\n    print(f\"{s.iban} : {s.montant} {s.devise}\")\n\n\nsource = AdaptateurSystemeCentral(AncienSystemeCentral())\nafficher_solde(source, \"FR7630006000011234567890189\")\n",
+          "executable": true,
+          "sortie_attendue": "FR7630006000011234567890189 : 123.45 EUR\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`@dataclass(frozen=True)` crée une petite classe de données : Python écrit pour toi le constructeur et l'affichage. `frozen=True` la rend **non modifiable**, ce qui évite qu'un solde soit changé par erreur.\n\nToute la traduction (positions fixes, centimes, devise) vit dans **une seule classe**. Le jour où la banque remplace son système central, tu écris un nouvel adaptateur, et rien d'autre ne change."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un adaptateur **traduit**, il ne décide pas. Si tu commences à y mettre des règles métier (plafonds, frais…), elles seront perdues au prochain changement de système."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un partenaire européen renvoie les soldes dans son propre format : `{\"balance\": \"1 234,56\", \"ccy\": \"eur\"}`.\n\nÉcris `AdaptateurPartenaire` : sa méthode `solde(iban)` renvoie un `Solde` avec un `Decimal` correct et la devise en majuscules. Résultat attendu : `FR76-001 : 1234.56 EUR`.",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass(frozen=True)\nclass Solde:\n    iban: str\n    montant: Decimal\n    devise: str\n\n\nclass ApiPartenaire:\n    \"\"\"API externe : on ne peut pas la modifier.\"\"\"\n\n    def get_balance(self, account: str) -> dict[str, str]:\n        return {\"balance\": \"1 234,56\", \"ccy\": \"eur\"}\n\n\nclass AdaptateurPartenaire:\n    def __init__(self, api: ApiPartenaire) -> None:\n        self._api = api\n\n    def solde(self, iban: str) -> Solde:\n        return Solde(iban, Decimal(\"0\"), \"\")  # À compléter\n\n\ns = AdaptateurPartenaire(ApiPartenaire()).solde(\"FR76-001\")\nprint(f\"{s.iban} : {s.montant} {s.devise}\")\n",
+          "solution": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass(frozen=True)\nclass Solde:\n    iban: str\n    montant: Decimal\n    devise: str\n\n\nclass ApiPartenaire:\n    \"\"\"API externe : on ne peut pas la modifier.\"\"\"\n\n    def get_balance(self, account: str) -> dict[str, str]:\n        return {\"balance\": \"1 234,56\", \"ccy\": \"eur\"}\n\n\nclass AdaptateurPartenaire:\n    def __init__(self, api: ApiPartenaire) -> None:\n        self._api = api\n\n    def solde(self, iban: str) -> Solde:\n        brut = self._api.get_balance(iban)\n        montant = Decimal(brut[\"balance\"].replace(\" \", \"\").replace(\",\", \".\"))\n        return Solde(iban, montant, brut[\"ccy\"].upper())\n\n\ns = AdaptateurPartenaire(ApiPartenaire()).solde(\"FR76-001\")\nprint(f\"{s.iban} : {s.montant} {s.devise}\")\n",
+          "sortie_attendue": "FR76-001 : 1234.56 EUR\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Adaptateur = un traducteur entre ton contrat et une interface que tu ne contrôles pas : système historique, API d'un partenaire, bibliothèque externe."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Refactoring.Guru : Adaptateur",
+          "url": "https://refactoring.guru/fr/design-patterns/adapter"
+        }
+      ]
+    },
+    {
+      "slug": "patron-decorateur",
+      "titre": "Décorateur : ajouter un comportement autour d'une fonction",
+      "resume": "Ajouter journalisation, contrôle d'accès ou mesures autour d'une fonction, sans modifier son code.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Écrire un décorateur Python avec functools.wraps",
+        "Écrire un décorateur qui prend un paramètre",
+        "Séparer le code métier des préoccupations transverses"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Dans une API critique, chaque opération doit être **journalisée**, **contrôlée** (qui a le droit ?) et **mesurée**. Si tu écris ces lignes dans chaque fonction, le code métier disparaît sous la plomberie.\n\nLe patron **Décorateur** enveloppe un objet pour lui ajouter un comportement, sans le modifier. Python l'intègre directement dans le langage, avec la syntaxe `@`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import functools\n\n\ndef journaliser(fonction):\n    @functools.wraps(fonction)\n    def enveloppe(*args, **kwargs):\n        print(f\"-> appel de {fonction.__name__}{args}\")\n        resultat = fonction(*args, **kwargs)\n        print(f\"<- {fonction.__name__} a renvoyé {resultat!r}\")\n        return resultat\n\n    return enveloppe\n\n\n@journaliser\ndef convertir(montant: float, taux: float) -> float:\n    return round(montant * taux, 2)\n\n\nconvertir(100, 1.08)\n",
+          "executable": true,
+          "sortie_attendue": "-> appel de convertir(100, 1.08)\n<- convertir a renvoyé 108.0\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Écrire `@journaliser` au-dessus de `convertir` revient à écrire `convertir = journaliser(convertir)`. La fonction d'origine est remplacée par `enveloppe`, qui l'appelle au milieu.\n\n`functools.wraps` recopie le nom et la documentation de la fonction d'origine sur l'enveloppe. Sans lui, tous tes journaux afficheraient `enveloppe`."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Un décorateur avec un paramètre\n\nPour passer un réglage, on ajoute un niveau : une fonction qui **fabrique** le décorateur. C'est ainsi qu'on restreint une opération à un rôle."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import functools\n\n\nclass AccesRefuse(Exception):\n    pass\n\n\ndef exiger_role(role):\n    def decorateur(fonction):\n        @functools.wraps(fonction)\n        def enveloppe(utilisateur, *args, **kwargs):\n            if role not in utilisateur[\"roles\"]:\n                raise AccesRefuse(f\"{utilisateur['nom']} n'a pas le rôle {role}\")\n            return fonction(utilisateur, *args, **kwargs)\n\n        return enveloppe\n\n    return decorateur\n\n\n@exiger_role(\"conseiller\")\ndef debloquer_carte(utilisateur, numero_carte):\n    return f\"Carte {numero_carte} débloquée par {utilisateur['nom']}\"\n\n\nconseillere = {\"nom\": \"Inès\", \"roles\": [\"conseiller\"]}\nclient = {\"nom\": \"Marc\", \"roles\": [\"client\"]}\n\nprint(debloquer_carte(conseillere, \"**** 4242\"))\ntry:\n    debloquer_carte(client, \"**** 4242\")\nexcept AccesRefuse as erreur:\n    print(f\"Refusé : {erreur}\")\n",
+          "executable": true,
+          "sortie_attendue": "Carte **** 4242 débloquée par Inès\nRefusé : Marc n'a pas le rôle conseiller\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les frameworks web reposent sur cette idée. Dans FastAPI, `@app.get(\"/comptes\")` est un décorateur, et les dépendances jouent le même rôle que `exiger_role`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Pour les tableaux de bord, écris un décorateur `compter_appels`. Il compte les appels de la fonction décorée dans un attribut `appels` de l'enveloppe.\n\nAprès trois conversions, le programme doit afficher `convertir appelée 3 fois`.",
+          "code": "import functools\n\n\ndef compter_appels(fonction):\n    @functools.wraps(fonction)\n    def enveloppe(*args, **kwargs):\n        return fonction(*args, **kwargs)  # À compléter\n\n    enveloppe.appels = 0\n    return enveloppe\n\n\n@compter_appels\ndef convertir(montant, taux):\n    return round(montant * taux, 2)\n\n\nfor montant in [10, 20, 30]:\n    convertir(montant, 1.08)\nprint(f\"{convertir.__name__} appelée {convertir.appels} fois\")\n",
+          "solution": "import functools\n\n\ndef compter_appels(fonction):\n    @functools.wraps(fonction)\n    def enveloppe(*args, **kwargs):\n        enveloppe.appels += 1\n        return fonction(*args, **kwargs)\n\n    enveloppe.appels = 0\n    return enveloppe\n\n\n@compter_appels\ndef convertir(montant, taux):\n    return round(montant * taux, 2)\n\n\nfor montant in [10, 20, 30]:\n    convertir(montant, 1.08)\nprint(f\"{convertir.__name__} appelée {convertir.appels} fois\")\n",
+          "sortie_attendue": "convertir appelée 3 fois\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Décorateur = un comportement **autour** d'une fonction : journaux, droits, cache, mesures, réessais. Le code métier reste lisible, et la règle transverse s'écrit une seule fois."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Documentation Python : functools.wraps",
+          "url": "https://docs.python.org/fr/3/library/functools.html#functools.wraps"
+        },
+        {
+          "titre": "Refactoring.Guru : Décorateur",
+          "url": "https://refactoring.guru/fr/design-patterns/decorator"
+        }
+      ]
+    },
+    {
+      "slug": "patron-observateur",
+      "titre": "Observateur : réagir aux événements sans tout coupler",
+      "resume": "Prévenir plusieurs services quand un virement a lieu (notification, audit, anti-fraude), sans que le virement les connaisse.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Publier un événement vers plusieurs abonnés",
+        "Ajouter un abonné sans modifier le code qui publie",
+        "Empêcher un abonné en panne de bloquer les autres"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Quand un virement est effectué, il faut prévenir le client, écrire dans le journal d'audit et alerter l'équipe anti-fraude au-delà d'un certain montant. Demain, il faudra aussi alimenter un tableau de bord.\n\nSi la fonction de virement appelle chacun de ces services, elle doit tous les connaître. Le patron **Observateur** inverse la relation : le virement **publie un événement**, et les services intéressés s'y **abonnent**.\n\nUn **événement** est un fait qui s'est produit, écrit au passé : `VirementEffectue`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\nfrom typing import Callable\n\n\n@dataclass(frozen=True)\nclass VirementEffectue:\n    reference: str\n    montant: Decimal\n    beneficiaire: str\n\n\nAbonne = Callable[[VirementEffectue], None]\n\n\nclass BusEvenements:\n    def __init__(self) -> None:\n        self._abonnes: list[Abonne] = []\n\n    def abonner(self, abonne: Abonne) -> None:\n        self._abonnes.append(abonne)\n\n    def publier(self, evenement: VirementEffectue) -> None:\n        for abonne in self._abonnes:\n            abonne(evenement)\n\n\ndef notifier_client(e: VirementEffectue) -> None:\n    print(f\"Notification : {e.montant} € envoyés à {e.beneficiaire}\")\n\n\ndef journal_audit(e: VirementEffectue) -> None:\n    print(f\"Audit : {e.reference} enregistré\")\n\n\ndef controle_fraude(e: VirementEffectue) -> None:\n    if e.montant >= Decimal(\"10000\"):\n        print(f\"Fraude : {e.reference} à vérifier\")\n\n\nbus = BusEvenements()\nbus.abonner(notifier_client)\nbus.abonner(journal_audit)\nbus.abonner(controle_fraude)\n\nbus.publier(VirementEffectue(\"V-001\", Decimal(\"250.00\"), \"Léa\"))\nbus.publier(VirementEffectue(\"V-002\", Decimal(\"15000.00\"), \"Société X\"))\n",
+          "executable": true,
+          "sortie_attendue": "Notification : 250.00 € envoyés à Léa\nAudit : V-001 enregistré\nNotification : 15000.00 € envoyés à Société X\nAudit : V-002 enregistré\nFraude : V-002 à vérifier\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le code qui publie ne connaît aucun abonné. Brancher le tableau de bord, c'est une ligne : `bus.abonner(mettre_a_jour_tableau)`."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Dans la version ci-dessus, si un abonné lève une exception, les suivants ne sont **jamais appelés**. Une panne du service de notification empêcherait l'audit : inacceptable dans une banque."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Callable\n\nAbonne = Callable[[str], None]\n\n\nclass BusEvenements:\n    def __init__(self) -> None:\n        self._abonnes: list[Abonne] = []\n\n    def abonner(self, abonne: Abonne) -> None:\n        self._abonnes.append(abonne)\n\n    def publier(self, evenement: str) -> None:\n        for abonne in self._abonnes:\n            try:\n                abonne(evenement)\n            except Exception as erreur:\n                # On isole la panne, on la signale, et on continue\n                print(f\"Erreur chez {abonne.__name__} : {erreur}\")\n\n\ndef notifier_client(evenement: str) -> None:\n    raise ConnectionError(\"service SMS injoignable\")\n\n\ndef journal_audit(evenement: str) -> None:\n    print(f\"Audit : {evenement}\")\n\n\nbus = BusEvenements()\nbus.abonner(notifier_client)\nbus.abonner(journal_audit)\nbus.publier(\"V-003 effectué\")\n",
+          "executable": true,
+          "sortie_attendue": "Erreur chez notifier_client : service SMS injoignable\nAudit : V-003 effectué\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## À grande échelle\n\nIci, tout se passe dans le même programme. Dans un système bancaire ou de traitement de données, le bus est un **courtier de messages** comme Kafka ou RabbitMQ : les abonnés sont d'autres services, qui lisent les événements à leur rythme. Le principe reste exactement le même."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute au bus une méthode `desabonner(abonne)`. Après le désabonnement du tableau de bord, le deuxième événement ne doit plus apparaître que dans l'audit.",
+          "code": "from typing import Callable\n\nAbonne = Callable[[str], None]\n\n\nclass BusEvenements:\n    def __init__(self) -> None:\n        self._abonnes: list[Abonne] = []\n\n    def abonner(self, abonne: Abonne) -> None:\n        self._abonnes.append(abonne)\n\n    def desabonner(self, abonne: Abonne) -> None:\n        pass  # À compléter\n\n    def publier(self, evenement: str) -> None:\n        for abonne in self._abonnes:\n            abonne(evenement)\n\n\ndef audit(evenement: str) -> None:\n    print(\"Audit :\", evenement)\n\n\ndef tableau_de_bord(evenement: str) -> None:\n    print(\"Tableau de bord :\", evenement)\n\n\nbus = BusEvenements()\nbus.abonner(audit)\nbus.abonner(tableau_de_bord)\nbus.publier(\"V-001 effectué\")\nbus.desabonner(tableau_de_bord)\nbus.publier(\"V-002 effectué\")\n",
+          "solution": "from typing import Callable\n\nAbonne = Callable[[str], None]\n\n\nclass BusEvenements:\n    def __init__(self) -> None:\n        self._abonnes: list[Abonne] = []\n\n    def abonner(self, abonne: Abonne) -> None:\n        self._abonnes.append(abonne)\n\n    def desabonner(self, abonne: Abonne) -> None:\n        if abonne in self._abonnes:\n            self._abonnes.remove(abonne)\n\n    def publier(self, evenement: str) -> None:\n        for abonne in self._abonnes:\n            abonne(evenement)\n\n\ndef audit(evenement: str) -> None:\n    print(\"Audit :\", evenement)\n\n\ndef tableau_de_bord(evenement: str) -> None:\n    print(\"Tableau de bord :\", evenement)\n\n\nbus = BusEvenements()\nbus.abonner(audit)\nbus.abonner(tableau_de_bord)\nbus.publier(\"V-001 effectué\")\nbus.desabonner(tableau_de_bord)\nbus.publier(\"V-002 effectué\")\n",
+          "sortie_attendue": "Audit : V-001 effectué\nTableau de bord : V-001 effectué\nAudit : V-002 effectué\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Observateur = on publie un fait, ceux que ça intéresse réagissent. Le producteur ne connaît pas ses consommateurs, et une panne chez l'un ne doit pas bloquer les autres."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Refactoring.Guru : Observateur",
+          "url": "https://refactoring.guru/fr/design-patterns/observer"
+        }
+      ]
+    },
+    {
+      "slug": "patron-depot",
+      "titre": "Dépôt (Repository) : isoler l'accès aux données",
+      "resume": "Séparer les règles métier de la base de données, pour pouvoir tester sans base et changer de stockage sans tout réécrire.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Décrire un dépôt avec un Protocol",
+        "Écrire un dépôt en mémoire pour les tests",
+        "Écrire un service métier qui ignore la base de données"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Quand le SQL est éparpillé dans le code métier, deux problèmes apparaissent : chaque test a besoin d'une vraie base, et changer de base (ou ajouter un cache) oblige à toucher à toutes les règles.\n\nLe **Dépôt** (*Repository*) range les objets métier comme dans une collection : `obtenir`, `enregistrer`. **Comment** ils sont stockés reste caché derrière ce contrat."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\nfrom typing import Protocol\n\n\n@dataclass\nclass Compte:\n    iban: str\n    titulaire: str\n    solde: Decimal\n\n\nclass DepotComptes(Protocol):\n    def obtenir(self, iban: str) -> Compte | None: ...\n    def enregistrer(self, compte: Compte) -> None: ...\n\n\nclass DepotComptesEnMemoire:\n    \"\"\"Parfait pour les tests : rapide et sans base de données.\"\"\"\n\n    def __init__(self) -> None:\n        self._comptes: dict[str, Compte] = {}\n\n    def obtenir(self, iban: str) -> Compte | None:\n        return self._comptes.get(iban)\n\n    def enregistrer(self, compte: Compte) -> None:\n        self._comptes[compte.iban] = compte\n\n\n# Le service métier ne connaît que le contrat DepotComptes\ndef crediter(depot: DepotComptes, iban: str, montant: Decimal) -> Compte:\n    if montant <= 0:\n        raise ValueError(\"Le montant doit être positif\")\n    compte = depot.obtenir(iban)\n    if compte is None:\n        raise LookupError(f\"Compte introuvable : {iban}\")\n    compte.solde += montant\n    depot.enregistrer(compte)\n    return compte\n\n\ndepot = DepotComptesEnMemoire()\ndepot.enregistrer(Compte(\"FR76-001\", \"Nadia\", Decimal(\"100.00\")))\n\nprint(crediter(depot, \"FR76-001\", Decimal(\"25.50\")))\ntry:\n    crediter(depot, \"FR76-999\", Decimal(\"10.00\"))\nexcept LookupError as erreur:\n    print(erreur)\n",
+          "executable": true,
+          "sortie_attendue": "Compte(iban='FR76-001', titulaire='Nadia', solde=Decimal('125.50'))\nCompte introuvable : FR76-999\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "En production, une autre classe respecte le même contrat, avec une vraie base. Par exemple avec SQLAlchemy, une bibliothèque Python d'accès aux bases de données :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class DepotComptesSql:\n    def __init__(self, session: Session) -> None:\n        self._session = session\n\n    def obtenir(self, iban: str) -> Compte | None:\n        return self._session.get(Compte, iban)\n\n    def enregistrer(self, compte: Compte) -> None:\n        self._session.add(compte)\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "La fonction `crediter` ne change pas d'une ligne. Tu testes ta règle métier en quelques millisecondes avec le dépôt en mémoire, et tu gardes quelques tests avec la vraie base pour vérifier le dépôt SQL lui-même."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute au dépôt en mémoire une méthode `lister_par_titulaire(titulaire)`, qui renvoie la liste des comptes de cette personne.\n\nÉcris ensuite la fonction métier `solde_total(depot, titulaire)`. Pour Nadia, elle doit afficher `150.50`.",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass\nclass Compte:\n    iban: str\n    titulaire: str\n    solde: Decimal\n\n\nclass DepotComptesEnMemoire:\n    def __init__(self) -> None:\n        self._comptes: dict[str, Compte] = {}\n\n    def enregistrer(self, compte: Compte) -> None:\n        self._comptes[compte.iban] = compte\n\n    def lister_par_titulaire(self, titulaire: str) -> list[Compte]:\n        return []  # À compléter\n\n\ndef solde_total(depot: DepotComptesEnMemoire, titulaire: str) -> Decimal:\n    return Decimal(\"0.00\")  # À compléter\n\n\ndepot = DepotComptesEnMemoire()\ndepot.enregistrer(Compte(\"FR76-001\", \"Nadia\", Decimal(\"100.00\")))\ndepot.enregistrer(Compte(\"FR76-002\", \"Nadia\", Decimal(\"50.50\")))\ndepot.enregistrer(Compte(\"FR76-003\", \"Omar\", Decimal(\"999.00\")))\nprint(solde_total(depot, \"Nadia\"))\n",
+          "solution": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass\nclass Compte:\n    iban: str\n    titulaire: str\n    solde: Decimal\n\n\nclass DepotComptesEnMemoire:\n    def __init__(self) -> None:\n        self._comptes: dict[str, Compte] = {}\n\n    def enregistrer(self, compte: Compte) -> None:\n        self._comptes[compte.iban] = compte\n\n    def lister_par_titulaire(self, titulaire: str) -> list[Compte]:\n        return [c for c in self._comptes.values() if c.titulaire == titulaire]\n\n\ndef solde_total(depot: DepotComptesEnMemoire, titulaire: str) -> Decimal:\n    total = Decimal(\"0.00\")\n    for compte in depot.lister_par_titulaire(titulaire):\n        total += compte.solde\n    return total\n\n\ndepot = DepotComptesEnMemoire()\ndepot.enregistrer(Compte(\"FR76-001\", \"Nadia\", Decimal(\"100.00\")))\ndepot.enregistrer(Compte(\"FR76-002\", \"Nadia\", Decimal(\"50.50\")))\ndepot.enregistrer(Compte(\"FR76-003\", \"Omar\", Decimal(\"999.00\")))\nprint(solde_total(depot, \"Nadia\"))\n",
+          "sortie_attendue": "150.50\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Dépôt = une collection d'objets métier derrière un contrat. Le métier dit **quoi** stocker, le dépôt sait **comment**."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Martin Fowler : Repository",
+          "url": "https://martinfowler.com/eaaCatalog/repository.html"
+        }
+      ]
+    },
+    {
+      "slug": "patron-unite-de-travail",
+      "titre": "Unité de travail : tout ou rien",
+      "resume": "Regrouper plusieurs modifications pour qu'elles soient toutes validées, ou toutes annulées, comme un débit et son crédit.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "patron-depot"
+      ],
+      "objectifs": [
+        "Expliquer pourquoi un virement doit être atomique",
+        "Écrire une unité de travail avec un gestionnaire de contexte",
+        "Annuler automatiquement les modifications en cas d'erreur"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un virement, c'est deux opérations : **débiter** un compte, puis **créditer** l'autre. Si le programme plante entre les deux, l'argent disparaît."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\n\nsoldes = {\"A\": Decimal(\"100.00\"), \"B\": Decimal(\"20.00\")}\n\n\ndef virer(source: str, cible: str, montant: Decimal) -> None:\n    soldes[source] -= montant\n    soldes[cible] += montant  # plante si la cible n'existe pas\n\n\ntry:\n    virer(\"A\", \"Z\", Decimal(\"50.00\"))\nexcept KeyError:\n    print(\"Le virement a échoué...\")\n\nprint(soldes)\nprint(\"Total :\", sum(soldes.values()))\n",
+          "executable": true,
+          "sortie_attendue": "Le virement a échoué...\n{'A': Decimal('50.00'), 'B': Decimal('20.00')}\nTotal : 70.00\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le compte A a perdu 50 €, et personne ne les a reçus. Il faut que le virement soit **atomique** : soit tout est fait, soit rien.\n\nL'**Unité de travail** (*Unit of Work*) rassemble les modifications d'une opération. À la fin, elle les **valide** toutes d'un coup. En cas d'erreur, elle les **annule** toutes.\n\nOn l'écrit avec un **gestionnaire de contexte** : un objet utilisable avec `with`. Python appelle sa méthode `__enter__` en entrant dans le bloc, et `__exit__` en sortant, même si une exception a été levée."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import copy\nfrom decimal import Decimal\n\n\nclass UniteDeTravail:\n    def __init__(self, base: dict[str, Decimal]) -> None:\n        self._base = base\n\n    def __enter__(self) -> \"UniteDeTravail\":\n        # On travaille sur une copie : la base n'est pas touchée\n        self.soldes = copy.deepcopy(self._base)\n        return self\n\n    def __exit__(self, type_erreur, erreur, trace) -> bool:\n        if type_erreur is None:\n            self._base.update(self.soldes)  # validation\n            print(\"Validé\")\n        else:\n            print(f\"Annulé ({type_erreur.__name__})\")  # la copie est jetée\n        return False  # l'exception continue sa route\n\n\nbase = {\"A\": Decimal(\"100.00\"), \"B\": Decimal(\"20.00\")}\n\n\ndef virer(source: str, cible: str, montant: Decimal) -> None:\n    with UniteDeTravail(base) as uow:\n        uow.soldes[source] -= montant\n        uow.soldes[cible] += montant\n\n\nvirer(\"A\", \"B\", Decimal(\"30.00\"))\nprint(base)\n\ntry:\n    virer(\"A\", \"Z\", Decimal(\"50.00\"))\nexcept KeyError:\n    print(\"Compte cible inconnu\")\nprint(base)\n",
+          "executable": true,
+          "sortie_attendue": "Validé\n{'A': Decimal('70.00'), 'B': Decimal('50.00')}\nAnnulé (KeyError)\nCompte cible inconnu\n{'A': Decimal('70.00'), 'B': Decimal('50.00')}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Cette fois, l'échec ne laisse aucune trace : la base est restée dans son état précédent.\n\nAvec une vraie base de données, l'unité de travail s'appuie sur une **transaction** (`BEGIN`, `COMMIT`, `ROLLBACK`). SQLAlchemy la fournit directement : `async with session.begin():` valide à la sortie du bloc, ou annule en cas d'exception."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "L'unité de travail protège **une seule base**. Dès que l'opération touche plusieurs services (ta banque et une banque étrangère, par exemple), une transaction ne suffit plus : c'est le rôle de la **saga**, vue plus loin dans ce parcours."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un virement ne doit jamais rendre un compte négatif. Dans `virer`, lève `SoldeInsuffisant` si le solde source devient négatif.\n\nGrâce à l'unité de travail, la base doit rester intacte après le refus : `{'A': Decimal('100.00'), 'B': Decimal('20.00')}`.",
+          "code": "import copy\nfrom decimal import Decimal\n\n\nclass SoldeInsuffisant(Exception):\n    pass\n\n\nclass UniteDeTravail:\n    def __init__(self, base: dict[str, Decimal]) -> None:\n        self._base = base\n\n    def __enter__(self) -> \"UniteDeTravail\":\n        self.soldes = copy.deepcopy(self._base)\n        return self\n\n    def __exit__(self, type_erreur, erreur, trace) -> bool:\n        if type_erreur is None:\n            self._base.update(self.soldes)\n        return False\n\n\nbase = {\"A\": Decimal(\"100.00\"), \"B\": Decimal(\"20.00\")}\n\n\ndef virer(source: str, cible: str, montant: Decimal) -> None:\n    with UniteDeTravail(base) as uow:\n        uow.soldes[source] -= montant\n        # Vérifie le solde ici\n        uow.soldes[cible] += montant\n\n\ntry:\n    virer(\"A\", \"B\", Decimal(\"150.00\"))\n    print(\"Virement accepté\")\nexcept SoldeInsuffisant:\n    print(\"Virement refusé\")\nprint(base)\n",
+          "solution": "import copy\nfrom decimal import Decimal\n\n\nclass SoldeInsuffisant(Exception):\n    pass\n\n\nclass UniteDeTravail:\n    def __init__(self, base: dict[str, Decimal]) -> None:\n        self._base = base\n\n    def __enter__(self) -> \"UniteDeTravail\":\n        self.soldes = copy.deepcopy(self._base)\n        return self\n\n    def __exit__(self, type_erreur, erreur, trace) -> bool:\n        if type_erreur is None:\n            self._base.update(self.soldes)\n        return False\n\n\nbase = {\"A\": Decimal(\"100.00\"), \"B\": Decimal(\"20.00\")}\n\n\ndef virer(source: str, cible: str, montant: Decimal) -> None:\n    with UniteDeTravail(base) as uow:\n        uow.soldes[source] -= montant\n        if uow.soldes[source] < 0:\n            raise SoldeInsuffisant(source)\n        uow.soldes[cible] += montant\n\n\ntry:\n    virer(\"A\", \"B\", Decimal(\"150.00\"))\n    print(\"Virement accepté\")\nexcept SoldeInsuffisant:\n    print(\"Virement refusé\")\nprint(base)\n",
+          "sortie_attendue": "Virement refusé\n{'A': Decimal('100.00'), 'B': Decimal('20.00')}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Unité de travail = un `with` qui valide tout à la fin, ou annule tout en cas d'erreur. Elle s'utilise souvent avec les dépôts : le dépôt lit et écrit, l'unité de travail décide quand c'est définitif."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Martin Fowler : Unit of Work",
+          "url": "https://martinfowler.com/eaaCatalog/unitOfWork.html"
+        },
+        {
+          "titre": "Documentation Python : gestionnaires de contexte",
+          "url": "https://docs.python.org/fr/3/reference/datamodel.html#context-managers"
+        }
+      ]
+    },
+    {
+      "slug": "patron-reessai-backoff",
+      "titre": "Réessai avec attente exponentielle",
+      "resume": "Réessayer intelligemment un appel qui échoue de façon passagère, sans écraser le service qui peine déjà.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "design-patterns-introduction"
+      ],
+      "objectifs": [
+        "Distinguer une erreur temporaire d'une erreur définitive",
+        "Calculer une attente exponentielle avec un plafond",
+        "Ajouter de l'aléatoire pour étaler les réessais"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Sur un réseau, beaucoup d'erreurs sont **passagères** : un délai dépassé, un serveur qui redémarre. Réessayer est souvent la bonne réponse.\n\nMais réessayer **tout de suite**, et tous en même temps, aggrave la situation : des milliers de clients bombardent un service déjà fragile. Le patron de **réessai avec attente exponentielle** (*exponential backoff*) répond à ce problème :\n\n- on attend de plus en plus longtemps entre deux essais : 0,1 s, 0,2 s, 0,4 s… ;\n- on plafonne l'attente et le nombre d'essais ;\n- on ajoute de l'**aléatoire** (*jitter*) pour que tous les clients ne réessaient pas à la même seconde."
+        },
+        {
+          "type": "texte",
+          "markdown": "Dans l'exemple, la fonction `attendre` est **passée en paramètre** au lieu d'appeler directement `time.sleep`. En production, on lui donne `time.sleep`. Dans un test, on lui donne une fonction qui note simplement les attentes : le test reste instantané. C'est l'**injection de dépendances**, et tu la retrouveras dans les leçons suivantes."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import random\nfrom typing import Callable, TypeVar\n\nT = TypeVar(\"T\")\n\n\nclass ErreurTemporaire(Exception):\n    \"\"\"Délai dépassé, service en redémarrage... Réessayer a un sens.\"\"\"\n\n\nclass ErreurDefinitive(Exception):\n    \"\"\"Solde insuffisant, demande invalide... Réessayer ne changera rien.\"\"\"\n\n\ndef avec_reessais(\n    operation: Callable[[], T],\n    attendre: Callable[[float], None],\n    alea: random.Random,\n    tentatives_max: int = 5,\n    base: float = 0.1,\n    plafond: float = 2.0,\n) -> T:\n    for tentative in range(1, tentatives_max + 1):\n        try:\n            return operation()\n        except ErreurTemporaire as erreur:\n            if tentative == tentatives_max:\n                raise\n            delai_max = min(plafond, base * 2 ** (tentative - 1))\n            delai = alea.uniform(0, delai_max)  # aléatoire complet\n            print(f\"Essai {tentative} raté ({erreur}), pause de {delai:.3f} s\")\n            attendre(delai)\n    raise AssertionError(\"inaccessible\")\n\n\nclass ServiceDeChange:\n    \"\"\"Échoue deux fois, puis répond.\"\"\"\n\n    def __init__(self) -> None:\n        self.appels = 0\n\n    def taux_usd(self) -> float:\n        self.appels += 1\n        if self.appels < 3:\n            raise ErreurTemporaire(\"délai dépassé\")\n        return 1.0842\n\n\ndef sans_attente(secondes: float) -> None:\n    pass  # en production : time.sleep\n\n\nalea = random.Random(42)  # graine fixe : résultat reproductible\nservice = ServiceDeChange()\nprint(\"Taux :\", avec_reessais(service.taux_usd, sans_attente, alea))\n\n\ndef payer() -> str:\n    raise ErreurDefinitive(\"solde insuffisant\")\n\n\ntry:\n    avec_reessais(payer, sans_attente, alea)\nexcept ErreurDefinitive as erreur:\n    print(\"Pas de réessai :\", erreur)\n",
+          "executable": true,
+          "sortie_attendue": "Essai 1 raté (délai dépassé), pause de 0.064 s\nEssai 2 raté (délai dépassé), pause de 0.005 s\nTaux : 1.0842\nPas de réessai : solde insuffisant\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Seule `ErreurTemporaire` déclenche un réessai. Une `ErreurDefinitive` remonte immédiatement : réessayer un paiement refusé pour solde insuffisant ne sert à rien."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ne réessaie **jamais** une opération qui modifie quelque chose (un débit, un virement) sans la rendre **idempotente** : si la première tentative a réussi mais que la réponse s'est perdue, tu débiterais deux fois. C'est l'objet de la leçon sur la clé d'idempotence."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris `delais_max(tentatives, base, plafond)`. Elle renvoie la liste des attentes **maximales** entre deux essais, avant l'aléatoire : `base`, puis le double à chaque fois, sans dépasser `plafond`.\n\nPour 6 tentatives, base 0.1 et plafond 2.0 : `[0.1, 0.2, 0.4, 0.8, 1.6, 2.0]`.",
+          "code": "def delais_max(tentatives: int, base: float, plafond: float) -> list[float]:\n    return []  # À compléter\n\n\nprint(delais_max(6, 0.1, 2.0))\n",
+          "solution": "def delais_max(tentatives: int, base: float, plafond: float) -> list[float]:\n    return [round(min(plafond, base * 2**n), 3) for n in range(tentatives)]\n\n\nprint(delais_max(6, 0.1, 2.0))\n",
+          "sortie_attendue": "[0.1, 0.2, 0.4, 0.8, 1.6, 2.0]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Réessayer : oui, mais seulement les erreurs temporaires, avec une attente qui double, un plafond, un nombre d'essais limité et une part d'aléatoire."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "AWS Builders' Library : Timeouts, retries and backoff with jitter",
+          "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+        },
+        {
+          "titre": "Microsoft : modèle Nouvelle tentative",
+          "url": "https://learn.microsoft.com/fr-fr/azure/architecture/patterns/retry"
+        }
+      ]
+    },
+    {
+      "slug": "patron-disjoncteur",
+      "titre": "Disjoncteur : arrêter d'appeler un service en panne",
+      "resume": "Couper les appels vers un service défaillant pour protéger ton API, puis tester prudemment son retour.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 18,
+      "prerequis": [
+        "patron-reessai-backoff"
+      ],
+      "objectifs": [
+        "Décrire les trois états d'un disjoncteur",
+        "Écrire un disjoncteur avec une horloge injectée",
+        "Expliquer pourquoi échouer vite protège tout le système"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Ton API de crédit interroge un service de **scoring** (la note de risque d'un client). Ce service tombe en panne. Chaque requête attend 10 secondes avant d'échouer, les requêtes s'accumulent, ton API sature… et tombe à son tour. C'est la **panne en cascade**.\n\nLe **Disjoncteur** (*Circuit Breaker*) fonctionne comme celui de ton tableau électrique. Il a trois états :\n\n- **fermé** : tout va bien, les appels passent ;\n- **ouvert** : après trop d'échecs, il coupe. Les appels échouent **immédiatement**, sans contacter le service ;\n- **semi-ouvert** : après un délai, il laisse passer **un** appel de test. S'il réussit, on referme. Sinon, on rouvre."
+        },
+        {
+          "type": "texte",
+          "markdown": "Pour tester des délais sans attendre vraiment, on injecte une **horloge fictive** : un objet qui donne l'heure et qu'on peut avancer à la main."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Callable, TypeVar\n\nT = TypeVar(\"T\")\n\n\nclass Horloge:\n    def __init__(self) -> None:\n        self.secondes = 0.0\n\n    def maintenant(self) -> float:\n        return self.secondes\n\n    def avancer(self, secondes: float) -> None:\n        self.secondes += secondes\n\n\nclass CircuitOuvert(Exception):\n    pass\n\n\nclass Disjoncteur:\n    def __init__(self, horloge: Horloge, seuil: int = 3, delai: float = 30.0) -> None:\n        self.horloge = horloge\n        self.seuil = seuil\n        self.delai = delai\n        self.etat = \"fermé\"\n        self.echecs = 0\n        self.ouvert_depuis = 0.0\n\n    def appeler(self, operation: Callable[[], T]) -> T:\n        if self.etat == \"ouvert\":\n            if self.horloge.maintenant() - self.ouvert_depuis < self.delai:\n                raise CircuitOuvert(\"appel bloqué sans contacter le service\")\n            self.etat = \"semi-ouvert\"\n        try:\n            resultat = operation()\n        except Exception:\n            self._echec()\n            raise\n        self.etat = \"fermé\"\n        self.echecs = 0\n        return resultat\n\n    def _echec(self) -> None:\n        self.echecs += 1\n        if self.etat == \"semi-ouvert\" or self.echecs >= self.seuil:\n            self.etat = \"ouvert\"\n            self.ouvert_depuis = self.horloge.maintenant()\n\n\nclass ServiceScoring:\n    en_panne = True\n\n    def score(self) -> int:\n        if self.en_panne:\n            raise ConnectionError(\"pas de réponse\")\n        return 720\n\n\nhorloge = Horloge()\ndisjoncteur = Disjoncteur(horloge)\nservice = ServiceScoring()\n\n\ndef tenter(numero: int) -> None:\n    try:\n        resultat = f\"score {disjoncteur.appeler(service.score)}\"\n    except CircuitOuvert as erreur:\n        resultat = f\"rejet immédiat ({erreur})\"\n    except ConnectionError as erreur:\n        resultat = f\"échec ({erreur})\"\n    print(f\"Appel {numero} : {resultat} -> {disjoncteur.etat}\")\n\n\nfor numero in range(1, 6):\n    tenter(numero)\n\nhorloge.avancer(30)\nservice.en_panne = False\ntenter(6)\n",
+          "executable": true,
+          "sortie_attendue": "Appel 1 : échec (pas de réponse) -> fermé\nAppel 2 : échec (pas de réponse) -> fermé\nAppel 3 : échec (pas de réponse) -> ouvert\nAppel 4 : rejet immédiat (appel bloqué sans contacter le service) -> ouvert\nAppel 5 : rejet immédiat (appel bloqué sans contacter le service) -> ouvert\nAppel 6 : score 720 -> fermé\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Les appels 4 et 5 échouent en une fraction de seconde : ton API répond vite (par exemple avec un code HTTP `503`, « service indisponible ») au lieu de s'effondrer. Trente secondes plus tard, un appel de test passe, et le circuit se referme."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Remplace `service.en_panne = False` par `True`, puis relance : l'appel de test échoue et le disjoncteur se rouvre aussitôt."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Pour la supervision, le disjoncteur doit compter les appels **rejetés sans contacter le service**. Ajoute un attribut `rejets`, mis à jour au bon endroit.\n\nLe programme doit afficher `Échecs : 3, rejets : 2`.",
+          "code": "class CircuitOuvert(Exception):\n    pass\n\n\nclass Disjoncteur:\n    def __init__(self, seuil: int = 3) -> None:\n        self.seuil = seuil\n        self.etat = \"fermé\"\n        self.echecs = 0\n\n    def appeler(self, operation):\n        if self.etat == \"ouvert\":\n            raise CircuitOuvert()\n        try:\n            return operation()\n        except ConnectionError:\n            self.echecs += 1\n            if self.echecs >= self.seuil:\n                self.etat = \"ouvert\"\n            raise\n\n\ndef service_en_panne():\n    raise ConnectionError(\"pas de réponse\")\n\n\ndisjoncteur = Disjoncteur()\nfor _ in range(5):\n    try:\n        disjoncteur.appeler(service_en_panne)\n    except (ConnectionError, CircuitOuvert):\n        pass\nprint(f\"Échecs : {disjoncteur.echecs}, rejets : {getattr(disjoncteur, 'rejets', 0)}\")\n",
+          "solution": "class CircuitOuvert(Exception):\n    pass\n\n\nclass Disjoncteur:\n    def __init__(self, seuil: int = 3) -> None:\n        self.seuil = seuil\n        self.etat = \"fermé\"\n        self.echecs = 0\n        self.rejets = 0\n\n    def appeler(self, operation):\n        if self.etat == \"ouvert\":\n            self.rejets += 1\n            raise CircuitOuvert()\n        try:\n            return operation()\n        except ConnectionError:\n            self.echecs += 1\n            if self.echecs >= self.seuil:\n                self.etat = \"ouvert\"\n            raise\n\n\ndef service_en_panne():\n    raise ConnectionError(\"pas de réponse\")\n\n\ndisjoncteur = Disjoncteur()\nfor _ in range(5):\n    try:\n        disjoncteur.appeler(service_en_panne)\n    except (ConnectionError, CircuitOuvert):\n        pass\nprint(f\"Échecs : {disjoncteur.echecs}, rejets : {getattr(disjoncteur, 'rejets', 0)}\")\n",
+          "sortie_attendue": "Échecs : 3, rejets : 2\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Disjoncteur = échouer vite quand un service voisin est en panne, pour ne pas tomber avec lui. On le combine souvent avec le réessai : les réessais se font **à l'intérieur** d'un appel protégé par le disjoncteur."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Martin Fowler : CircuitBreaker",
+          "url": "https://martinfowler.com/bliki/CircuitBreaker.html"
+        },
+        {
+          "titre": "Microsoft : modèle Disjoncteur",
+          "url": "https://learn.microsoft.com/fr-fr/azure/architecture/patterns/circuit-breaker"
+        }
+      ]
+    },
+    {
+      "slug": "patron-limiteur-de-debit",
+      "titre": "Limiteur de débit : le seau à jetons",
+      "resume": "Limiter le nombre de requêtes par client pour protéger ton API des abus et des pics de charge.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "patron-disjoncteur"
+      ],
+      "objectifs": [
+        "Expliquer le fonctionnement du seau à jetons",
+        "Écrire un limiteur de débit par client",
+        "Répondre correctement à un client trop pressé"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un client mal programmé envoie 5 000 requêtes par seconde. Sans protection, il ralentit l'API pour tout le monde. Le **limiteur de débit** (*rate limiter*) fixe un maximum par client.\n\nL'algorithme le plus utilisé est le **seau à jetons** (*token bucket*) :\n\n- chaque client a un seau qui contient au plus N jetons (la **capacité**) ;\n- le seau se remplit à vitesse constante, par exemple 1 jeton par seconde ;\n- chaque requête consomme un jeton. Seau vide : requête refusée.\n\nLa capacité autorise de **courtes rafales**, le remplissage fixe le **débit moyen**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Horloge:\n    def __init__(self) -> None:\n        self.secondes = 0.0\n\n    def maintenant(self) -> float:\n        return self.secondes\n\n    def avancer(self, secondes: float) -> None:\n        self.secondes += secondes\n\n\nclass SeauAJetons:\n    def __init__(self, horloge: Horloge, capacite: int, jetons_par_seconde: float) -> None:\n        self.horloge = horloge\n        self.capacite = capacite\n        self.debit = jetons_par_seconde\n        self.jetons = float(capacite)\n        self.mise_a_jour = horloge.maintenant()\n\n    def autoriser(self) -> bool:\n        maintenant = self.horloge.maintenant()\n        ecoule = maintenant - self.mise_a_jour\n        self.jetons = min(self.capacite, self.jetons + ecoule * self.debit)\n        self.mise_a_jour = maintenant\n        if self.jetons >= 1:\n            self.jetons -= 1\n            return True\n        return False\n\n\nhorloge = Horloge()\nseaux: dict[str, SeauAJetons] = {}\n\n\ndef requete(client: str) -> int:\n    \"\"\"Renvoie le code HTTP de la réponse.\"\"\"\n    if client not in seaux:\n        seaux[client] = SeauAJetons(horloge, capacite=3, jetons_par_seconde=1)\n    return 200 if seaux[client].autoriser() else 429\n\n\nprint(\"Rafale de A :\", [requete(\"A\") for _ in range(5)])\nprint(\"B, lui, passe :\", requete(\"B\"))\n\nhorloge.avancer(2)\nprint(\"A, 2 s plus tard :\", [requete(\"A\") for _ in range(3)])\n",
+          "executable": true,
+          "sortie_attendue": "Rafale de A : [200, 200, 200, 429, 429]\nB, lui, passe : 200\nA, 2 s plus tard : [200, 200, 429]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le code HTTP `429` signifie « trop de requêtes ». On l'accompagne de l'en-tête `Retry-After`, qui dit au client combien de secondes attendre. Un client bien écrit le respecte, avec son propre réessai exponentiel.\n\nLe client B n'est pas pénalisé par les abus de A : chaque client a **son** seau."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ici, les seaux vivent en mémoire. Si ton API tourne sur dix serveurs, chacun a ses propres seaux, et un client obtient dix fois sa limite. En production, les compteurs sont partagés dans un stockage rapide comme Redis."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Quand une requête est refusée, l'API renvoie l'en-tête `Retry-After`. Ajoute au seau une méthode `attente()` : le nombre de secondes avant le prochain jeton (0 s'il en reste un).\n\nAvec 1 jeton toutes les 2 secondes, le programme doit afficher `2.0` puis `1.0`.",
+          "code": "class Horloge:\n    def __init__(self) -> None:\n        self.secondes = 0.0\n\n\nclass SeauAJetons:\n    def __init__(self, horloge: Horloge, capacite: int, jetons_par_seconde: float) -> None:\n        self.horloge = horloge\n        self.capacite = capacite\n        self.debit = jetons_par_seconde\n        self.jetons = float(capacite)\n        self.mise_a_jour = horloge.secondes\n\n    def _remplir(self) -> None:\n        ecoule = self.horloge.secondes - self.mise_a_jour\n        self.jetons = min(self.capacite, self.jetons + ecoule * self.debit)\n        self.mise_a_jour = self.horloge.secondes\n\n    def autoriser(self) -> bool:\n        self._remplir()\n        if self.jetons >= 1:\n            self.jetons -= 1\n            return True\n        return False\n\n    def attente(self) -> float:\n        return 0.0  # À compléter\n\n\nhorloge = Horloge()\nseau = SeauAJetons(horloge, capacite=2, jetons_par_seconde=0.5)\nseau.autoriser()\nseau.autoriser()\nprint(seau.attente())\nhorloge.secondes += 1\nprint(seau.attente())\n",
+          "solution": "class Horloge:\n    def __init__(self) -> None:\n        self.secondes = 0.0\n\n\nclass SeauAJetons:\n    def __init__(self, horloge: Horloge, capacite: int, jetons_par_seconde: float) -> None:\n        self.horloge = horloge\n        self.capacite = capacite\n        self.debit = jetons_par_seconde\n        self.jetons = float(capacite)\n        self.mise_a_jour = horloge.secondes\n\n    def _remplir(self) -> None:\n        ecoule = self.horloge.secondes - self.mise_a_jour\n        self.jetons = min(self.capacite, self.jetons + ecoule * self.debit)\n        self.mise_a_jour = self.horloge.secondes\n\n    def autoriser(self) -> bool:\n        self._remplir()\n        if self.jetons >= 1:\n            self.jetons -= 1\n            return True\n        return False\n\n    def attente(self) -> float:\n        self._remplir()\n        if self.jetons >= 1:\n            return 0.0\n        return (1 - self.jetons) / self.debit\n\n\nhorloge = Horloge()\nseau = SeauAJetons(horloge, capacite=2, jetons_par_seconde=0.5)\nseau.autoriser()\nseau.autoriser()\nprint(seau.attente())\nhorloge.secondes += 1\nprint(seau.attente())\n",
+          "sortie_attendue": "2.0\n1.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Limiteur de débit = un seau de jetons par client. Il absorbe les rafales, limite le débit moyen et répond `429` au-delà."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Microsoft : modèle Limitation du débit",
+          "url": "https://learn.microsoft.com/fr-fr/azure/architecture/patterns/rate-limiting-pattern"
+        }
+      ]
+    },
+    {
+      "slug": "patron-cle-idempotence",
+      "titre": "Clé d'idempotence : ne jamais débiter deux fois",
+      "resume": "Permettre au client de renvoyer une requête de paiement sans risque de double débit, grâce à une clé d'idempotence.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "patron-reessai-backoff",
+        "patron-unite-de-travail"
+      ],
+      "objectifs": [
+        "Définir ce qu'est une opération idempotente",
+        "Mémoriser la réponse associée à une clé d'idempotence",
+        "Refuser une même clé utilisée pour une autre demande"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un client envoie un paiement de 80 €. Le serveur débite le compte… puis la connexion coupe avant la réponse. Le client ne sait pas si le paiement est passé. S'il réessaie, il risque de payer **deux fois**.\n\nUne opération est **idempotente** quand la répéter donne le même résultat que la faire une seule fois. Lire un solde l'est. Débiter un compte ne l'est pas.\n\nLa **clé d'idempotence** rend un paiement idempotent :\n\n1. le client génère un identifiant unique pour **cette** demande, par exemple avec `uuid.uuid4()`, et l'envoie avec la requête ;\n2. le serveur garde la réponse associée à chaque clé ;\n3. si la même clé revient, il renvoie la réponse gardée, **sans refaire le paiement**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import json\nfrom decimal import Decimal\n\n\nclass ServicePaiement:\n    def __init__(self) -> None:\n        self.solde = Decimal(\"500.00\")\n        self.paiements = 0\n        # clé -> (empreinte de la demande, réponse renvoyée)\n        self._reponses: dict[str, tuple[str, dict[str, str]]] = {}\n\n    def payer(self, cle: str, demande: dict[str, str]) -> dict[str, str]:\n        empreinte = json.dumps(demande, sort_keys=True)\n        if cle in self._reponses:\n            empreinte_connue, reponse = self._reponses[cle]\n            if empreinte != empreinte_connue:\n                raise ValueError(\"Clé déjà utilisée pour une autre demande\")\n            return reponse\n\n        self.solde -= Decimal(demande[\"montant\"])\n        self.paiements += 1\n        reponse = {\"paiement\": f\"P-{self.paiements}\", \"statut\": \"accepté\"}\n        self._reponses[cle] = (empreinte, reponse)\n        return reponse\n\n\nservice = ServicePaiement()\ndemande = {\"montant\": \"80.00\", \"beneficiaire\": \"Librairie\"}\n\nprint(service.payer(\"cle-7f3a\", demande))\n# La réponse s'est perdue : le client renvoie la même requête\nprint(service.payer(\"cle-7f3a\", demande))\nprint(\"Solde :\", service.solde)\n\ntry:\n    service.payer(\"cle-7f3a\", {\"montant\": \"999.00\", \"beneficiaire\": \"Librairie\"})\nexcept ValueError as erreur:\n    print(\"Erreur :\", erreur)\n",
+          "executable": true,
+          "sortie_attendue": "{'paiement': 'P-1', 'statut': 'accepté'}\n{'paiement': 'P-1', 'statut': 'accepté'}\nSolde : 420.00\nErreur : Clé déjà utilisée pour une autre demande\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le client a envoyé deux fois la requête, mais le compte n'a été débité qu'une fois. Il reçoit les deux fois la même réponse, avec la même référence `P-1`.\n\nL'**empreinte** de la demande protège contre un bug du client qui réutiliserait une clé pour un autre paiement : le serveur refuse au lieu de renvoyer une réponse qui ne correspond pas."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "En production, les clés sont stockées en base avec une **contrainte d'unicité**, et le débit et l'enregistrement de la clé se font dans la **même transaction**. Sinon, deux requêtes identiques arrivées à la même milliseconde passeraient toutes les deux. On supprime les clés après un délai (24 h, par exemple)."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Garder les clés pour toujours remplirait la base. Ajoute une durée de vie : une clé enregistrée il y a **plus de 24 heures** est oubliée.\n\nLe troisième appel, 25 heures plus tard, doit donc créer un nouveau paiement : `P-1`, `P-1`, puis `P-2`.",
+          "code": "class Horloge:\n    def __init__(self) -> None:\n        self.heures = 0\n\n\nclass ServicePaiement:\n    def __init__(self, horloge: Horloge) -> None:\n        self.horloge = horloge\n        self.paiements = 0\n        self._reponses: dict[str, tuple[str, int]] = {}  # clé -> (réponse, heure)\n\n    def payer(self, cle: str) -> str:\n        if cle in self._reponses:\n            reponse, _ = self._reponses[cle]\n            return reponse\n        self.paiements += 1\n        reponse = f\"P-{self.paiements}\"\n        self._reponses[cle] = (reponse, self.horloge.heures)\n        return reponse\n\n\nhorloge = Horloge()\nservice = ServicePaiement(horloge)\nprint(service.payer(\"cle-1\"))\nhorloge.heures += 1\nprint(service.payer(\"cle-1\"))\nhorloge.heures += 25\nprint(service.payer(\"cle-1\"))\n",
+          "solution": "class Horloge:\n    def __init__(self) -> None:\n        self.heures = 0\n\n\nclass ServicePaiement:\n    DUREE_DE_VIE = 24\n\n    def __init__(self, horloge: Horloge) -> None:\n        self.horloge = horloge\n        self.paiements = 0\n        self._reponses: dict[str, tuple[str, int]] = {}  # clé -> (réponse, heure)\n\n    def payer(self, cle: str) -> str:\n        if cle in self._reponses:\n            reponse, heure = self._reponses[cle]\n            if self.horloge.heures - heure <= self.DUREE_DE_VIE:\n                return reponse\n            del self._reponses[cle]\n        self.paiements += 1\n        reponse = f\"P-{self.paiements}\"\n        self._reponses[cle] = (reponse, self.horloge.heures)\n        return reponse\n\n\nhorloge = Horloge()\nservice = ServicePaiement(horloge)\nprint(service.payer(\"cle-1\"))\nhorloge.heures += 1\nprint(service.payer(\"cle-1\"))\nhorloge.heures += 25\nprint(service.payer(\"cle-1\"))\n",
+          "sortie_attendue": "P-1\nP-1\nP-2\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Clé d'idempotence = le client nomme sa demande, le serveur s'en souvient. C'est ce qui rend les réessais sans danger sur toute opération qui modifie de l'argent ou des données."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Stripe : requêtes idempotentes",
+          "url": "https://docs.stripe.com/api/idempotent_requests"
+        }
+      ]
+    },
+    {
+      "slug": "patron-cache-aside",
+      "titre": "Cache à la demande (cache-aside)",
+      "resume": "Soulager la base de données en gardant les lectures fréquentes en cache, avec une durée de vie et une invalidation.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "patron-depot"
+      ],
+      "objectifs": [
+        "Lire d'abord dans le cache, puis dans la base en cas d'absence",
+        "Donner une durée de vie aux entrées du cache",
+        "Invalider le cache quand la donnée change"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Les taux de change sont lus des milliers de fois par seconde, mais ne changent que de temps en temps. Les relire en base à chaque requête gaspille ses ressources.\n\nUn **cache** est une mémoire rapide qui garde une copie des données récemment lues. Dans le patron **cache à la demande** (*cache-aside*), c'est le code de l'application qui le gère :\n\n1. chercher dans le cache ;\n2. absent ou expiré ? lire en base, puis ranger la valeur dans le cache ;\n3. quand la donnée change en base, **supprimer** l'entrée du cache."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\n\n\nclass Horloge:\n    def __init__(self) -> None:\n        self.secondes = 0.0\n\n    def maintenant(self) -> float:\n        return self.secondes\n\n    def avancer(self, secondes: float) -> None:\n        self.secondes += secondes\n\n\nclass Cache:\n    def __init__(self, horloge: Horloge, duree_de_vie: float) -> None:\n        self.horloge = horloge\n        self.duree_de_vie = duree_de_vie\n        self._entrees: dict[str, tuple[Decimal, float]] = {}\n\n    def lire(self, cle: str) -> Decimal | None:\n        entree = self._entrees.get(cle)\n        if entree is None or entree[1] <= self.horloge.maintenant():\n            return None\n        return entree[0]\n\n    def ecrire(self, cle: str, valeur: Decimal) -> None:\n        self._entrees[cle] = (valeur, self.horloge.maintenant() + self.duree_de_vie)\n\n    def supprimer(self, cle: str) -> None:\n        self._entrees.pop(cle, None)\n\n\nclass Base:\n    def __init__(self) -> None:\n        self.taux = {\"USD\": Decimal(\"1.0842\")}\n        self.lectures = 0\n\n    def lire_taux(self, devise: str) -> Decimal:\n        self.lectures += 1\n        return self.taux[devise]\n\n\nhorloge = Horloge()\ncache = Cache(horloge, duree_de_vie=60)\nbase = Base()\n\n\ndef taux(devise: str) -> Decimal:\n    valeur = cache.lire(devise)\n    if valeur is None:\n        valeur = base.lire_taux(devise)\n        cache.ecrire(devise, valeur)\n    return valeur\n\n\ndef changer_taux(devise: str, valeur: Decimal) -> None:\n    base.taux[devise] = valeur\n    cache.supprimer(devise)  # la prochaine lecture ira en base\n\n\nfor _ in range(1000):\n    taux(\"USD\")\nprint(\"1000 lectures, accès à la base :\", base.lectures)\n\nhorloge.avancer(61)\ntaux(\"USD\")\nprint(\"Après expiration :\", base.lectures)\n\nchanger_taux(\"USD\", Decimal(\"1.0901\"))\nprint(\"Nouveau taux :\", taux(\"USD\"), \"| accès à la base :\", base.lectures)\n",
+          "executable": true,
+          "sortie_attendue": "1000 lectures, accès à la base : 1\nAprès expiration : 2\nNouveau taux : 1.0901 | accès à la base : 3\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Mille lectures, un seul accès à la base. La **durée de vie** (*TTL*, pour *time to live*) garantit qu'une valeur périmée finit par disparaître, même si on oublie de l'invalider."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un cache peut renvoyer une valeur **périmée**. C'est acceptable pour un taux affiché, pas pour un solde avant un débit : les données qui décident d'un mouvement d'argent se lisent toujours à la source."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute au cache deux compteurs : `succes` (valeur trouvée) et `echecs` (valeur absente ou expirée). Le programme affiche ensuite le taux de succès.\n\nRésultat attendu : `Succès : 3, échecs : 2, taux : 60 %`.",
+          "code": "class Cache:\n    def __init__(self, duree_de_vie: float) -> None:\n        self.maintenant = 0.0\n        self.duree_de_vie = duree_de_vie\n        self._entrees: dict[str, tuple[float, float]] = {}\n\n    def lire(self, cle: str) -> float | None:\n        entree = self._entrees.get(cle)\n        if entree is None or entree[1] <= self.maintenant:\n            return None\n        return entree[0]\n\n    def ecrire(self, cle: str, valeur: float) -> None:\n        self._entrees[cle] = (valeur, self.maintenant + self.duree_de_vie)\n\n\ncache = Cache(duree_de_vie=60)\n\n\ndef taux(devise: str) -> float:\n    valeur = cache.lire(devise)\n    if valeur is None:\n        valeur = 1.08  # lecture en base\n        cache.ecrire(devise, valeur)\n    return valeur\n\n\nfor instant in [0, 10, 20, 70, 80]:\n    cache.maintenant = instant\n    taux(\"USD\")\n\nsucces = getattr(cache, \"succes\", 0)\nechecs = getattr(cache, \"echecs\", 0)\ntotal = succes + echecs\nprint(f\"Succès : {succes}, échecs : {echecs}, taux : {succes * 100 // max(total, 1)} %\")\n",
+          "solution": "class Cache:\n    def __init__(self, duree_de_vie: float) -> None:\n        self.maintenant = 0.0\n        self.duree_de_vie = duree_de_vie\n        self._entrees: dict[str, tuple[float, float]] = {}\n        self.succes = 0\n        self.echecs = 0\n\n    def lire(self, cle: str) -> float | None:\n        entree = self._entrees.get(cle)\n        if entree is None or entree[1] <= self.maintenant:\n            self.echecs += 1\n            return None\n        self.succes += 1\n        return entree[0]\n\n    def ecrire(self, cle: str, valeur: float) -> None:\n        self._entrees[cle] = (valeur, self.maintenant + self.duree_de_vie)\n\n\ncache = Cache(duree_de_vie=60)\n\n\ndef taux(devise: str) -> float:\n    valeur = cache.lire(devise)\n    if valeur is None:\n        valeur = 1.08  # lecture en base\n        cache.ecrire(devise, valeur)\n    return valeur\n\n\nfor instant in [0, 10, 20, 70, 80]:\n    cache.maintenant = instant\n    taux(\"USD\")\n\nsucces = getattr(cache, \"succes\", 0)\nechecs = getattr(cache, \"echecs\", 0)\ntotal = succes + echecs\nprint(f\"Succès : {succes}, échecs : {echecs}, taux : {succes * 100 // max(total, 1)} %\")\n",
+          "sortie_attendue": "Succès : 3, échecs : 2, taux : 60 %\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Cache-aside = cache d'abord, base si besoin, puis on range. On supprime l'entrée quand la donnée change, et on fixe toujours une durée de vie. En production, le cache est partagé entre serveurs, souvent avec Redis."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Microsoft : modèle Cache-aside",
+          "url": "https://learn.microsoft.com/fr-fr/azure/architecture/patterns/cache-aside"
+        }
+      ]
+    },
+    {
+      "slug": "patron-saga",
+      "titre": "Saga : des transactions entre plusieurs services",
+      "resume": "Enchaîner des étapes réparties sur plusieurs services, et les défaire proprement avec des compensations en cas d'échec.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 18,
+      "prerequis": [
+        "patron-unite-de-travail"
+      ],
+      "objectifs": [
+        "Expliquer pourquoi une transaction ne suffit plus entre plusieurs services",
+        "Associer chaque étape à une compensation",
+        "Compenser les étapes faites, dans l'ordre inverse"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un virement international touche plusieurs systèmes : ton système de comptes, le service de change, la banque correspondante à l'étranger. Chacun a sa base de données. Impossible de tout mettre dans **une** transaction.\n\nUne **saga** découpe l'opération en étapes locales. Chaque étape a une **compensation** : l'action qui annule son effet. Si une étape échoue, on exécute les compensations des étapes déjà faites, **dans l'ordre inverse**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\nfrom typing import Callable\n\n\n@dataclass\nclass Etape:\n    nom: str\n    action: Callable[[], None]\n    compensation: Callable[[], None]\n\n\ndef executer_saga(etapes: list[Etape]) -> bool:\n    faites: list[Etape] = []\n    for etape in etapes:\n        try:\n            etape.action()\n        except Exception as erreur:\n            print(f\"Échec à l'étape « {etape.nom} » : {erreur}\")\n            for faite in reversed(faites):\n                faite.compensation()\n            return False\n        faites.append(etape)\n    return True\n\n\ndef virement_international(correspondant_disponible: bool) -> None:\n    def envoyer() -> None:\n        if not correspondant_disponible:\n            raise ConnectionError(\"banque correspondante injoignable\")\n        print(\"  Fonds envoyés à l'étranger\")\n\n    etapes = [\n        Etape(\n            \"bloquer les fonds\",\n            lambda: print(\"  1 000 € bloqués sur le compte\"),\n            lambda: print(\"  Compensation : 1 000 € débloqués\"),\n        ),\n        Etape(\n            \"réserver le taux\",\n            lambda: print(\"  Taux EUR/USD réservé\"),\n            lambda: print(\"  Compensation : réservation du taux libérée\"),\n        ),\n        Etape(\n            \"envoyer les fonds\",\n            envoyer,\n            lambda: print(\"  Compensation : demande de retour des fonds\"),\n        ),\n    ]\n    reussi = executer_saga(etapes)\n    print(\"Résultat :\", \"virement effectué\" if reussi else \"virement annulé\")\n\n\nvirement_international(correspondant_disponible=True)\nprint()\nvirement_international(correspondant_disponible=False)\n",
+          "executable": true,
+          "sortie_attendue": "  1 000 € bloqués sur le compte\n  Taux EUR/USD réservé\n  Fonds envoyés à l'étranger\nRésultat : virement effectué\n\n  1 000 € bloqués sur le compte\n  Taux EUR/USD réservé\nÉchec à l'étape « envoyer les fonds » : banque correspondante injoignable\n  Compensation : réservation du taux libérée\n  Compensation : 1 000 € débloqués\nRésultat : virement annulé\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`lambda` crée une petite fonction sans nom, sur une ligne. Ici, elle sert à décrire chaque action et sa compensation.\n\nLors du deuxième virement, l'envoi échoue : la réservation du taux est libérée, **puis** les fonds sont débloqués. Le client retrouve son argent, et aucun système ne garde une opération à moitié faite."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Une compensation n'efface pas le passé : elle ajoute une opération **inverse**. Pendant un court instant, les fonds ont bien été bloqués, et quelqu'un a pu le voir. Les compensations doivent aussi être idempotentes, car elles seront peut-être réessayées."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Une compensation peut échouer, elle aussi. Modifie `compenser` : si une compensation lève une exception, on continue avec les suivantes, et on renvoie la liste des étapes qui restent à traiter à la main.\n\nLe programme doit afficher le déblocage des fonds, puis `À traiter à la main : ['réserver le taux']`.",
+          "code": "from dataclasses import dataclass\nfrom typing import Callable\n\n\n@dataclass\nclass Etape:\n    nom: str\n    compensation: Callable[[], None]\n\n\ndef compenser(faites: list[Etape]) -> list[str]:\n    for etape in reversed(faites):\n        etape.compensation()\n    return []\n\n\ndef liberer_taux() -> None:\n    raise ConnectionError(\"service de change injoignable\")\n\n\nfaites = [\n    Etape(\"bloquer les fonds\", lambda: print(\"Fonds débloqués\")),\n    Etape(\"réserver le taux\", liberer_taux),\n]\ntry:\n    print(\"À traiter à la main :\", compenser(faites))\nexcept ConnectionError as erreur:\n    print(\"La compensation s'est arrêtée :\", erreur)\n",
+          "solution": "from dataclasses import dataclass\nfrom typing import Callable\n\n\n@dataclass\nclass Etape:\n    nom: str\n    compensation: Callable[[], None]\n\n\ndef compenser(faites: list[Etape]) -> list[str]:\n    en_echec: list[str] = []\n    for etape in reversed(faites):\n        try:\n            etape.compensation()\n        except Exception:\n            en_echec.append(etape.nom)\n    return en_echec\n\n\ndef liberer_taux() -> None:\n    raise ConnectionError(\"service de change injoignable\")\n\n\nfaites = [\n    Etape(\"bloquer les fonds\", lambda: print(\"Fonds débloqués\")),\n    Etape(\"réserver le taux\", liberer_taux),\n]\ntry:\n    print(\"À traiter à la main :\", compenser(faites))\nexcept ConnectionError as erreur:\n    print(\"La compensation s'est arrêtée :\", erreur)\n",
+          "sortie_attendue": "Fonds débloqués\nÀ traiter à la main : ['réserver le taux']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Saga = une suite d'étapes locales, chacune avec sa compensation. En cas d'échec, on défait ce qui a été fait, en sens inverse. En production, l'état de la saga est enregistré en base pour reprendre après un redémarrage."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Microsoft : modèle Saga",
+          "url": "https://learn.microsoft.com/fr-fr/azure/architecture/patterns/saga"
+        }
+      ]
+    },
+    {
+      "slug": "patron-event-sourcing",
+      "titre": "Event sourcing : garder chaque événement",
+      "resume": "Enregistrer l'historique complet des événements d'un compte, au lieu de son seul état, et en déduire le solde à tout moment.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 18,
+      "prerequis": [
+        "patron-observateur"
+      ],
+      "objectifs": [
+        "Reconstituer un état à partir d'une suite d'événements",
+        "Retrouver l'état passé d'un compte",
+        "Construire une vue de lecture à partir des événements"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une table classique garde l'**état actuel** : « solde = 120 € ». Mais comment est-on arrivé là ? Pour une banque, cette question est essentielle : audit, litiges, régulateur.\n\nL'**event sourcing** (en français, *sourçage par événements*) inverse la logique : on enregistre **chaque événement**, sans jamais le modifier ni le supprimer. L'état actuel se **déduit** en rejouant les événements depuis le début.\n\nC'est exactement le principe d'un relevé de compte : la liste des opérations fait foi, le solde en découle."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass(frozen=True)\nclass Evenement:\n    nature: str  # \"depot\" ou \"retrait\"\n    montant: Decimal\n\n\nclass SoldeInsuffisant(Exception):\n    pass\n\n\nclass Compte:\n    def __init__(self) -> None:\n        self.evenements: list[Evenement] = []\n\n    def deposer(self, montant: Decimal) -> None:\n        self.evenements.append(Evenement(\"depot\", montant))\n\n    def retirer(self, montant: Decimal) -> None:\n        if montant > self.solde():\n            raise SoldeInsuffisant(f\"retrait de {montant} refusé\")\n        self.evenements.append(Evenement(\"retrait\", montant))\n\n    def solde(self, jusqua: int | None = None) -> Decimal:\n        \"\"\"Rejoue les événements, éventuellement jusqu'à un point donné.\"\"\"\n        total = Decimal(\"0.00\")\n        for e in self.evenements[:jusqua]:\n            total += e.montant if e.nature == \"depot\" else -e.montant\n        return total\n\n\ncompte = Compte()\ncompte.deposer(Decimal(\"200.00\"))\ncompte.retirer(Decimal(\"50.00\"))\ncompte.deposer(Decimal(\"30.00\"))\ntry:\n    compte.retirer(Decimal(\"500.00\"))\nexcept SoldeInsuffisant as erreur:\n    print(\"Refusé :\", erreur)\n\nprint(\"Solde actuel :\", compte.solde())\nprint(\"Solde après 2 opérations :\", compte.solde(jusqua=2))\nfor numero, e in enumerate(compte.evenements, start=1):\n    print(numero, e.nature, e.montant)\n",
+          "executable": true,
+          "sortie_attendue": "Refusé : retrait de 500.00 refusé\nSolde actuel : 180.00\nSolde après 2 opérations : 150.00\n1 depot 200.00\n2 retrait 50.00\n3 depot 30.00\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le retrait refusé n'a créé aucun événement : on vérifie la règle **avant** d'enregistrer. Et l'on peut répondre à « quel était le solde après la deuxième opération ? » sans aucune table d'historique supplémentaire."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des vues pour la lecture\n\nRejouer des millions d'événements à chaque lecture serait trop lent. On construit donc des **projections** : des vues tenues à jour à chaque nouvel événement, taillées pour une question précise.\n\nSéparer ainsi le modèle qui **écrit** (les événements) des modèles qui **lisent** (les projections) s'appelle **CQRS** (*Command Query Responsibility Segregation*)."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\n\n# Flux d'événements de toute la banque : (compte, type, montant)\nflux = [\n    (\"FR76-001\", \"depot\", Decimal(\"200.00\")),\n    (\"FR76-002\", \"depot\", Decimal(\"1000.00\")),\n    (\"FR76-001\", \"retrait\", Decimal(\"50.00\")),\n    (\"FR76-002\", \"retrait\", Decimal(\"300.00\")),\n    (\"FR76-001\", \"depot\", Decimal(\"30.00\")),\n]\n\n# Projection : le solde de chaque compte, prêt à être lu\nsoldes: dict[str, Decimal] = {}\n\nfor compte, type_evenement, montant in flux:\n    signe = 1 if type_evenement == \"depot\" else -1\n    soldes[compte] = soldes.get(compte, Decimal(\"0.00\")) + signe * montant\n\nfor compte, solde in soldes.items():\n    print(compte, solde)\n",
+          "executable": true,
+          "sortie_attendue": "FR76-001 180.00\nFR76-002 700.00\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "L'event sourcing est puissant mais exigeant : il faut gérer l'évolution du format des événements, des projections parfois en retard de quelques millisecondes, et des volumes qui grossissent sans fin. Réserve-le aux domaines où l'historique a une vraie valeur."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Le service client veut voir l'évolution du solde. Ajoute la méthode `soldes_successifs()` : la liste des soldes après chaque événement, calculée en rejouant les événements.\n\nRésultat attendu : `['200.00', '150.00', '180.00']`.",
+          "code": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass(frozen=True)\nclass Evenement:\n    nature: str  # \"depot\" ou \"retrait\"\n    montant: Decimal\n\n\nclass Compte:\n    def __init__(self) -> None:\n        self.evenements: list[Evenement] = []\n\n    def deposer(self, montant: Decimal) -> None:\n        self.evenements.append(Evenement(\"depot\", montant))\n\n    def retirer(self, montant: Decimal) -> None:\n        self.evenements.append(Evenement(\"retrait\", montant))\n\n    def soldes_successifs(self) -> list[Decimal]:\n        return []  # À compléter\n\n\ncompte = Compte()\ncompte.deposer(Decimal(\"200.00\"))\ncompte.retirer(Decimal(\"50.00\"))\ncompte.deposer(Decimal(\"30.00\"))\nprint([str(solde) for solde in compte.soldes_successifs()])\n",
+          "solution": "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass(frozen=True)\nclass Evenement:\n    nature: str  # \"depot\" ou \"retrait\"\n    montant: Decimal\n\n\nclass Compte:\n    def __init__(self) -> None:\n        self.evenements: list[Evenement] = []\n\n    def deposer(self, montant: Decimal) -> None:\n        self.evenements.append(Evenement(\"depot\", montant))\n\n    def retirer(self, montant: Decimal) -> None:\n        self.evenements.append(Evenement(\"retrait\", montant))\n\n    def soldes_successifs(self) -> list[Decimal]:\n        soldes: list[Decimal] = []\n        total = Decimal(\"0.00\")\n        for e in self.evenements:\n            total += e.montant if e.nature == \"depot\" else -e.montant\n            soldes.append(total)\n        return soldes\n\n\ncompte = Compte()\ncompte.deposer(Decimal(\"200.00\"))\ncompte.retirer(Decimal(\"50.00\"))\ncompte.deposer(Decimal(\"30.00\"))\nprint([str(solde) for solde in compte.soldes_successifs()])\n",
+          "sortie_attendue": "['200.00', '150.00', '180.00']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Event sourcing = les événements font foi, l'état s'en déduit. CQRS = des modèles séparés pour écrire et pour lire. Ensemble, ils offrent un audit complet et des lectures rapides."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Martin Fowler : Event Sourcing",
+          "url": "https://martinfowler.com/eaaDev/EventSourcing.html"
+        },
+        {
+          "titre": "Martin Fowler : CQRS",
+          "url": "https://martinfowler.com/bliki/CQRS.html"
+        }
+      ]
+    },
+    {
+      "slug": "design-patterns-api-de-paiement",
+      "titre": "Synthèse : une API de paiement robuste",
+      "resume": "Assembler limiteur de débit, clé d'idempotence, réessai et disjoncteur dans une même route de paiement.",
+      "theme": "python",
+      "niveau": "intermediaire",
+      "duree_minutes": 18,
+      "prerequis": [
+        "patron-limiteur-de-debit",
+        "patron-cle-idempotence",
+        "patron-disjoncteur"
+      ],
+      "objectifs": [
+        "Combiner plusieurs patrons dans une même route",
+        "Justifier l'ordre des protections",
+        "Associer chaque protection au bon code HTTP"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Tu connais maintenant les briques. Voici comment elles s'assemblent dans une route `POST /paiements`, de la protection la moins chère à la plus coûteuse :\n\n1. **Limiteur de débit** : refuser tôt un client trop pressé (`429`). Ça ne coûte presque rien.\n2. **Clé d'idempotence** : si la demande a déjà été traitée, renvoyer la réponse gardée. Aucun appel externe.\n3. **Disjoncteur** : si la banque est en panne, répondre tout de suite (`503`).\n4. **Réessai**, à l'intérieur du disjoncteur : absorber une erreur passagère."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Horloge:\n    def __init__(self) -> None:\n        self.secondes = 0.0\n\n\nclass ErreurTemporaire(Exception):\n    pass\n\n\nclass CircuitOuvert(Exception):\n    pass\n\n\nclass Limiteur:\n    def __init__(self, horloge, capacite, debit):\n        self.horloge, self.capacite, self.debit = horloge, capacite, debit\n        self.jetons, self.vu = float(capacite), 0.0\n\n    def autoriser(self):\n        ecoule = self.horloge.secondes - self.vu\n        self.jetons = min(self.capacite, self.jetons + ecoule * self.debit)\n        self.vu = self.horloge.secondes\n        if self.jetons >= 1:\n            self.jetons -= 1\n            return True\n        return False\n\n\nclass Disjoncteur:\n    def __init__(self, seuil):\n        self.seuil, self.echecs = seuil, 0\n\n    def appeler(self, operation):\n        if self.echecs >= self.seuil:\n            raise CircuitOuvert()\n        try:\n            resultat = operation()\n        except ErreurTemporaire:\n            self.echecs += 1\n            raise\n        self.echecs = 0\n        return resultat\n\n\ndef avec_reessais(operation, tentatives):\n    for tentative in range(1, tentatives + 1):\n        try:\n            return operation()\n        except ErreurTemporaire:\n            if tentative == tentatives:\n                raise\n\n\nclass BanqueExterne:\n    def __init__(self):\n        self.appels = 0\n\n    def debiter(self, montant):\n        self.appels += 1\n        if self.appels == 1:\n            raise ErreurTemporaire(\"délai dépassé\")\n        return f\"TX-{self.appels}\"\n\n\nclass ApiPaiement:\n    def __init__(self, horloge, banque):\n        self.horloge, self.banque = horloge, banque\n        self.limiteurs = {}\n        self.reponses = {}\n        self.disjoncteur = Disjoncteur(seuil=3)\n\n    def post_paiement(self, client, cle, montant):\n        limiteur = self.limiteurs.setdefault(client, Limiteur(self.horloge, 3, 1))\n        if not limiteur.autoriser():\n            return 429, \"Trop de requêtes\"\n        if cle in self.reponses:\n            return self.reponses[cle]\n        try:\n            transaction = self.disjoncteur.appeler(\n                lambda: avec_reessais(lambda: self.banque.debiter(montant), 3)\n            )\n        except CircuitOuvert:\n            return 503, \"Banque indisponible, réessayez plus tard\"\n        except ErreurTemporaire:\n            return 502, \"La banque n'a pas répondu\"\n        reponse = (201, f\"Paiement {transaction} accepté\")\n        self.reponses[cle] = reponse\n        return reponse\n\n\nhorloge = Horloge()\nbanque = BanqueExterne()\napi = ApiPaiement(horloge, banque)\n\nprint(api.post_paiement(\"boutique\", \"cle-1\", \"49.90\"))\nprint(api.post_paiement(\"boutique\", \"cle-1\", \"49.90\"))\nprint(\"Appels à la banque :\", banque.appels)\nprint(api.post_paiement(\"boutique\", \"cle-2\", \"15.00\"))\nprint(api.post_paiement(\"boutique\", \"cle-3\", \"8.00\"))\n",
+          "executable": true,
+          "sortie_attendue": "(201, 'Paiement TX-2 accepté')\n(201, 'Paiement TX-2 accepté')\nAppels à la banque : 2\n(201, 'Paiement TX-3 accepté')\n(429, 'Trop de requêtes')\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ce que tu observes :\n\n- le premier paiement a connu une erreur passagère, **absorbée** par le réessai : le client n'a rien vu ;\n- le renvoi de `cle-1` n'a **pas** rappelé la banque : deux appels au total, un seul débit ;\n- le quatrième appel dépasse la rafale autorisée : `429`, avant même de regarder la clé.\n\nPour rester lisible, ce code est simplifié : pas de typage complet, pas d'attente entre les réessais, un disjoncteur sans réouverture. Les leçons précédentes en donnent les versions complètes."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Fais échouer **tous** les appels de `BanqueExterne`, puis envoie quatre paiements avec des clés différentes en ajoutant 10 à `horloge.secondes` entre chaque. Observe le passage de `502` à `503`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un montant nul ou négatif ne doit **jamais** atteindre la banque. Ajoute une validation dans `post_paiement` : elle répond `(422, \"Montant invalide\")`.\n\nPlace-la au bon endroit : la banque ne doit pas être appelée, et la clé ne doit pas être enregistrée. Le dernier appel, avec la même clé et un montant correct, doit donc réussir.",
+          "code": "from decimal import Decimal\n\n\nclass Banque:\n    def __init__(self) -> None:\n        self.appels = 0\n\n    def debiter(self, montant: Decimal) -> str:\n        self.appels += 1\n        return f\"TX-{self.appels}\"\n\n\nclass ApiPaiement:\n    def __init__(self, banque: Banque) -> None:\n        self.banque = banque\n        self.reponses: dict[str, tuple[int, str]] = {}\n\n    def post_paiement(self, cle: str, montant: str) -> tuple[int, str]:\n        if cle in self.reponses:\n            return self.reponses[cle]\n        transaction = self.banque.debiter(Decimal(montant))\n        reponse = (201, f\"Paiement {transaction} accepté\")\n        self.reponses[cle] = reponse\n        return reponse\n\n\nbanque = Banque()\napi = ApiPaiement(banque)\nprint(api.post_paiement(\"cle-1\", \"-5.00\"))\nprint(\"Appels à la banque :\", banque.appels)\nprint(api.post_paiement(\"cle-1\", \"5.00\"))\n",
+          "solution": "from decimal import Decimal\n\n\nclass Banque:\n    def __init__(self) -> None:\n        self.appels = 0\n\n    def debiter(self, montant: Decimal) -> str:\n        self.appels += 1\n        return f\"TX-{self.appels}\"\n\n\nclass ApiPaiement:\n    def __init__(self, banque: Banque) -> None:\n        self.banque = banque\n        self.reponses: dict[str, tuple[int, str]] = {}\n\n    def post_paiement(self, cle: str, montant: str) -> tuple[int, str]:\n        if Decimal(montant) <= 0:\n            return (422, \"Montant invalide\")\n        if cle in self.reponses:\n            return self.reponses[cle]\n        transaction = self.banque.debiter(Decimal(montant))\n        reponse = (201, f\"Paiement {transaction} accepté\")\n        self.reponses[cle] = reponse\n        return reponse\n\n\nbanque = Banque()\napi = ApiPaiement(banque)\nprint(api.post_paiement(\"cle-1\", \"-5.00\"))\nprint(\"Appels à la banque :\", banque.appels)\nprint(api.post_paiement(\"cle-1\", \"5.00\"))\n",
+          "sortie_attendue": "(422, 'Montant invalide')\nAppels à la banque : 0\n(201, 'Paiement TX-1 accepté')\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Les patrons se combinent. Les plus courants dans une API critique :\n\n- **structurer** : Stratégie, Fabrique, Adaptateur, Décorateur, Observateur ;\n- **données** : Dépôt, Unité de travail, Cache-aside, Event sourcing ;\n- **résister** : Réessai, Disjoncteur, Limiteur de débit ;\n- **rester juste** : Clé d'idempotence, Saga."
+        }
+      ],
+      "sources": []
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+.entete {
+  padding: var(--esp-4) var(--esp-6);
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--texte);
+  text-decoration: none;
+}
+
+.contenu {
+  display: flex;
+  justify-content: center;
+  padding: var(--esp-4) var(--esp-4) var(--esp-12);
+}
+
+.carte {
+  width: 100%;
+  max-width: 30rem;
+  padding: var(--esp-8) var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.carte h1 {
+  margin-top: 0;
+}

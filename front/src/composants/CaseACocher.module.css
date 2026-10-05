@@ -1,0 +1,34 @@
+.case {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-3);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.case[data-disabled] {
+  cursor: not-allowed;
+  color: var(--texte-doux);
+}
+
+.boite {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border: 2px solid var(--bordure);
+  border-radius: 6px;
+  color: var(--sur-primaire);
+  font-weight: 800;
+}
+
+.case[data-selected] .boite,
+.case[data-indeterminate] .boite {
+  border-color: var(--primaire);
+  background: var(--primaire);
+}
+
+.case[data-focus-visible] .boite {
+  box-shadow: var(--focus);
+}

@@ -1,0 +1,81 @@
+.nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: 0 0 var(--esp-6);
+  padding: 0;
+  list-style: none;
+}
+
+.nav a {
+  display: inline-block;
+  padding: var(--esp-1) var(--esp-4);
+  border: 2px solid var(--bordure);
+  border-radius: var(--rayon-bouton);
+  color: var(--texte);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  border-color: var(--primaire);
+}
+
+.nav a[aria-current="page"] {
+  border-color: var(--primaire);
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+.recherche {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-6);
+}
+
+.recherche > :first-child {
+  flex: 1 1 16rem;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-4);
+  margin-top: var(--esp-4);
+}
+
+.etat {
+  display: inline-block;
+  font-weight: 700;
+}
+
+.alerte {
+  color: var(--erreur);
+}
+
+.details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.actionsLigne {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+}
+
+.carte {
+  margin-top: var(--esp-8);
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.carte h2 {
+  margin-top: 0;
+}

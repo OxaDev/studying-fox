@@ -1,0 +1,82 @@
+.intro {
+  color: var(--texte-doux);
+}
+
+.haut {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-6);
+  margin-block: var(--esp-6);
+}
+
+.avancement {
+  display: flex;
+  flex: 1 1 20rem;
+  align-items: center;
+  gap: var(--esp-6);
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.avancement p {
+  margin: var(--esp-1) 0 0;
+  color: var(--texte-doux);
+}
+
+.titreAvancement {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+/* Bulle d'encouragement, en écriture manuscrite (identité visuelle). */
+.encouragement {
+  display: flex;
+  flex: 1 1 16rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--ciel);
+  color: var(--sur-pastel);
+  font-family: var(--police-manuscrite);
+  font-size: 1.625rem;
+  text-align: center;
+}
+
+.section {
+  margin-top: var(--esp-8);
+}
+
+.entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--esp-3);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--esp-3);
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+}
+
+.vide p {
+  margin: 0;
+}

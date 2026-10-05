@@ -1,0 +1,45 @@
+.zone {
+  margin-block: var(--esp-8);
+}
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-3);
+  min-height: 44px;
+  padding: var(--esp-2) var(--esp-6) var(--esp-2) var(--esp-3);
+  border: 2px solid var(--succes-icone);
+  border-radius: var(--rayon-bouton);
+  background: var(--surface);
+  color: var(--texte);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bouton[data-focus-visible] {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 5px var(--primaire);
+}
+
+.bouton[data-disabled] {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.case {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--succes-icone);
+  border-radius: 6px;
+  color: var(--surface);
+  font-weight: 800;
+}
+
+.bouton[data-selected] .case {
+  background: var(--succes-icone);
+}

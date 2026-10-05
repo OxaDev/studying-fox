@@ -1,0 +1,3999 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Le Renard Étudiant — API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/sante": {
+      "get": {
+        "tags": [
+          "santé"
+        ],
+        "summary": "Sante",
+        "description": "L'API tourne.",
+        "operationId": "sante_api_sante_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Statut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sante/base": {
+      "get": {
+        "tags": [
+          "santé"
+        ],
+        "summary": "Sante Base",
+        "description": "L'API tourne et la base de données répond.",
+        "operationId": "sante_base_api_sante_base_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Statut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/reglages": {
+      "get": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Reglages",
+        "operationId": "reglages_api_comptes_reglages_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reglages"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/inscription": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Inscription",
+        "description": "Crée un compte et envoie l'email de confirmation.\n\nSi l'email a déjà un compte, la réponse est la même : on ne révèle pas qui est inscrit.\nLe titulaire de l'adresse reçoit un email qui le lui signale.\n\nSans vérification de l'email (ADR 0023), le compte est utilisable tout de suite,\net une adresse déjà inscrite est signalée : personne d'autre ne pourrait prévenir son titulaire.",
+        "operationId": "inscription_api_comptes_inscription_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Inscription"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/confirmation": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Confirmation",
+        "description": "Confirme l'adresse d'un nouveau compte, ou la nouvelle adresse d'un compte existant.",
+        "operationId": "confirmation_api_comptes_confirmation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JetonRecu"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/renvoyer-confirmation": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Renvoyer Confirmation",
+        "operationId": "renvoyer_confirmation_api_comptes_renvoyer_confirmation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandeParEmail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/connexion": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Connexion",
+        "operationId": "connexion_api_comptes_connexion_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Connexion"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Moi"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/deconnexion": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Deconnexion",
+        "operationId": "deconnexion_api_comptes_deconnexion_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/api/comptes/moi": {
+      "get": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Moi",
+        "operationId": "moi_api_comptes_moi_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Moi"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Modifier Profil",
+        "operationId": "modifier_profil_api_comptes_moi_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModificationProfil"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Moi"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/moi/mot-de-passe": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Changer Mot De Passe",
+        "description": "Change le mot de passe et déconnecte les autres appareils.",
+        "operationId": "changer_mot_de_passe_api_comptes_moi_mot_de_passe_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangementMotDePasse"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/moi/email": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Changer Email",
+        "description": "Envoie un lien à la nouvelle adresse. Elle ne remplace l'ancienne qu'après confirmation.\n\nSans vérification de l'email (ADR 0023), la nouvelle adresse remplace l'ancienne tout de suite.",
+        "operationId": "changer_email_api_comptes_moi_email_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangementEmail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/mot-de-passe-oublie": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Mot De Passe Oublie",
+        "description": "Envoie un lien de réinitialisation. Même réponse si l'email est inconnu.",
+        "operationId": "mot_de_passe_oublie_api_comptes_mot_de_passe_oublie_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandeParEmail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/reinitialisation": {
+      "post": {
+        "tags": [
+          "comptes"
+        ],
+        "summary": "Reinitialisation",
+        "description": "Change le mot de passe et ferme toutes les sessions.",
+        "operationId": "reinitialisation_api_comptes_reinitialisation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reinitialisation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/utilisateurs": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Lister Utilisateurs",
+        "operationId": "lister_utilisateurs_api_admin_utilisateurs_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 254,
+              "description": "Début du pseudo ou de l'email",
+              "default": "",
+              "title": "Q"
+            },
+            "description": "Début du pseudo ou de l'email"
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limite"
+            }
+          },
+          {
+            "name": "decalage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Decalage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageUtilisateurs"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/utilisateurs/{utilisateur_id}": {
+      "patch": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Modifier Utilisateur",
+        "operationId": "modifier_utilisateur_api_admin_utilisateurs__utilisateur_id__patch",
+        "parameters": [
+          {
+            "name": "utilisateur_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Utilisateur Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModificationUtilisateur"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UtilisateurAdmin"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/themes": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Lister Themes",
+        "operationId": "lister_themes_api_admin_themes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ThemeAdmin"
+                  },
+                  "type": "array",
+                  "title": "Response Lister Themes Api Admin Themes Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Creer Theme",
+        "operationId": "creer_theme_api_admin_themes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NouveauTheme"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThemeAdmin"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/themes/{slug}": {
+      "patch": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Renommer Theme",
+        "operationId": "renommer_theme_api_admin_themes__slug__patch",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModificationTheme"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThemeAdmin"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Supprimer Theme",
+        "operationId": "supprimer_theme_api_admin_themes__slug__delete",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/journal": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Consulter Journal",
+        "description": "Les actions les plus récentes d'abord. Conservées un an (ADR 0014).",
+        "operationId": "consulter_journal_api_admin_journal_get",
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 50
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limite"
+            }
+          },
+          {
+            "name": "decalage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Decalage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageJournal"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/moi/export": {
+      "get": {
+        "tags": [
+          "mes données"
+        ],
+        "summary": "Telecharger Mes Donnees",
+        "operationId": "telecharger_mes_donnees_api_comptes_moi_export_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Export"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comptes/moi/suppression": {
+      "post": {
+        "tags": [
+          "mes données"
+        ],
+        "summary": "Supprimer Mon Compte",
+        "description": "Supprime le compte pour de bon. Le mot de passe est redemandé.",
+        "operationId": "supprimer_mon_compte_api_comptes_moi_suppression_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandeSuppression"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lecons": {
+      "get": {
+        "tags": [
+          "leçons"
+        ],
+        "summary": "Lister Lecons",
+        "operationId": "lister_lecons_api_lecons_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ResumeLecon"
+                  },
+                  "type": "array",
+                  "title": "Response Lister Lecons Api Lecons Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lecons/themes": {
+      "get": {
+        "tags": [
+          "leçons"
+        ],
+        "summary": "Lister Themes",
+        "operationId": "lister_themes_api_lecons_themes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ThemeLecture"
+                  },
+                  "type": "array",
+                  "title": "Response Lister Themes Api Lecons Themes Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lecons/{slug}": {
+      "get": {
+        "tags": [
+          "leçons"
+        ],
+        "summary": "Lire Lecon",
+        "operationId": "lire_lecon_api_lecons__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeconPubliee"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parcours": {
+      "get": {
+        "tags": [
+          "parcours"
+        ],
+        "summary": "Lister Parcours",
+        "operationId": "lister_parcours_api_parcours_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ResumeParcours"
+                  },
+                  "type": "array",
+                  "title": "Response Lister Parcours Api Parcours Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parcours/{slug}": {
+      "get": {
+        "tags": [
+          "parcours"
+        ],
+        "summary": "Lire Parcours",
+        "operationId": "lire_parcours_api_parcours__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParcoursDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/progression/lecons/{slug}": {
+      "put": {
+        "tags": [
+          "progression"
+        ],
+        "summary": "Terminer Lecon",
+        "description": "Marque la leçon comme terminée. Sans effet si elle l'est déjà.",
+        "operationId": "terminer_lecon_api_progression_lecons__slug__put",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "progression"
+        ],
+        "summary": "Reprendre Lecon",
+        "description": "Retire la leçon des leçons terminées.",
+        "operationId": "reprendre_lecon_api_progression_lecons__slug__delete",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/progression": {
+      "get": {
+        "tags": [
+          "progression"
+        ],
+        "summary": "Espace",
+        "operationId": "espace_api_progression_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Espace"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/imports/analyse": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Analyser Fichier",
+        "description": "Vérifie le fichier sans rien enregistrer. Le navigateur exécute ensuite les codes listés.",
+        "operationId": "analyser_fichier_api_imports_analyse_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_analyser_fichier_api_imports_analyse_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultatAnalyse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/imports": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Importer Fichier",
+        "description": "Crée une révision « brouillon » par leçon. Le fichier est réanalysé : tout ou rien.",
+        "operationId": "importer_fichier_api_imports_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_importer_fichier_api_imports_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultatImport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/relecture": {
+      "get": {
+        "tags": [
+          "relecture"
+        ],
+        "summary": "File De Relecture",
+        "operationId": "file_de_relecture_api_relecture_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ElementFile"
+                  },
+                  "type": "array",
+                  "title": "Response File De Relecture Api Relecture Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/relecture/{revision_id}": {
+      "get": {
+        "tags": [
+          "relecture"
+        ],
+        "summary": "Lire Revision",
+        "operationId": "lire_revision_api_relecture__revision_id__get",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionARelire"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/relecture/decisions": {
+      "post": {
+        "tags": [
+          "relecture"
+        ],
+        "summary": "Decider En Groupe",
+        "description": "Applique la même décision à plusieurs versions. C'est tout ou rien.",
+        "operationId": "decider_en_groupe_api_relecture_decisions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandeDecisionGroupee"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultatDecisionGroupee"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/relecture/{revision_id}/decision": {
+      "post": {
+        "tags": [
+          "relecture"
+        ],
+        "summary": "Decider",
+        "operationId": "decider_api_relecture__revision_id__decision_post",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandeDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionARelire"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions": {
+      "get": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Mes Contributions",
+        "operationId": "mes_contributions_api_contributions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ElementContribution"
+                  },
+                  "type": "array",
+                  "title": "Response Mes Contributions Api Contributions Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Nouvelle Lecon",
+        "operationId": "nouvelle_lecon_api_contributions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NouvelleLecon"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/{revision_id}": {
+      "get": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Lire Contribution",
+        "operationId": "lire_contribution_api_contributions__revision_id__get",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Enregistrer",
+        "operationId": "enregistrer_api_contributions__revision_id__put",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContenuBrouillon"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Supprimer",
+        "description": "Supprime un brouillon jamais soumis. Une leçon qui n'a plus aucune version disparaît.",
+        "operationId": "supprimer_api_contributions__revision_id__delete",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/depuis/{slug}": {
+      "post": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Proposer Modification",
+        "description": "Brouillon copié de la version en ligne, ou la proposition déjà ouverte s'il y en a une.",
+        "operationId": "proposer_modification_api_contributions_depuis__slug__post",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/{revision_id}/reprendre": {
+      "post": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Reprendre",
+        "description": "Après « demander des corrections » : nouveau brouillon copié de la version relue.",
+        "operationId": "reprendre_api_contributions__revision_id__reprendre_post",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/{revision_id}/soumettre": {
+      "post": {
+        "tags": [
+          "contributions"
+        ],
+        "summary": "Soumettre",
+        "operationId": "soumettre_api_contributions__revision_id__soumettre_post",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Soumission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recherche": {
+      "get": {
+        "tags": [
+          "recherche"
+        ],
+        "summary": "Rechercher",
+        "description": "Sans mots, renvoie tout ce qui correspond aux filtres, par ordre alphabétique.",
+        "operationId": "rechercher_api_recherche_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Mots recherchés",
+              "default": "",
+              "title": "Q"
+            },
+            "description": "Mots recherchés"
+          },
+          {
+            "name": "theme",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Theme"
+            }
+          },
+          {
+            "name": "niveau",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Niveau"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Niveau"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TypeResultat"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resultats"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Action": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "acteur": {
+            "type": "string",
+            "title": "Acteur"
+          },
+          "cible": {
+            "type": "string",
+            "title": "Cible"
+          },
+          "details": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Details"
+          },
+          "cree_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cree Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "action",
+          "acteur",
+          "cible",
+          "details",
+          "cree_le"
+        ],
+        "title": "Action"
+      },
+      "ActionExportee": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "cible": {
+            "type": "string",
+            "title": "Cible"
+          },
+          "details": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Details"
+          },
+          "le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "cible",
+          "details",
+          "le"
+        ],
+        "title": "ActionExportee"
+      },
+      "ApercuLecon": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "theme": {
+            "type": "string",
+            "title": "Theme"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "creation",
+              "nouvelle_version"
+            ],
+            "title": "Action"
+          },
+          "nb_images": {
+            "type": "integer",
+            "title": "Nb Images"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "theme",
+          "action",
+          "nb_images"
+        ],
+        "title": "ApercuLecon"
+      },
+      "ApercuParcours": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "creation",
+              "mise_a_jour"
+            ],
+            "title": "Action"
+          },
+          "lecons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Lecons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "action",
+          "lecons"
+        ],
+        "title": "ApercuParcours"
+      },
+      "Body_analyser_fichier_api_imports_analyse_post": {
+        "properties": {
+          "fichier": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Fichier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fichier"
+        ],
+        "title": "Body_analyser_fichier_api_imports_analyse_post"
+      },
+      "Body_importer_fichier_api_imports_post": {
+        "properties": {
+          "fichier": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Fichier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fichier"
+        ],
+        "title": "Body_importer_fichier_api_imports_post"
+      },
+      "ChangementEmail": {
+        "properties": {
+          "nouvel_email": {
+            "type": "string",
+            "format": "email",
+            "title": "Nouvel Email"
+          },
+          "mot_de_passe": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Mot De Passe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nouvel_email",
+          "mot_de_passe"
+        ],
+        "title": "ChangementEmail"
+      },
+      "ChangementMotDePasse": {
+        "properties": {
+          "actuel": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Actuel"
+          },
+          "nouveau": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 12,
+            "title": "Nouveau"
+          }
+        },
+        "type": "object",
+        "required": [
+          "actuel",
+          "nouveau"
+        ],
+        "title": "ChangementMotDePasse"
+      },
+      "CodeAVerifier": {
+        "properties": {
+          "lecon": {
+            "type": "string",
+            "title": "Lecon"
+          },
+          "bloc": {
+            "type": "integer",
+            "title": "Bloc"
+          },
+          "langage": {
+            "type": "string",
+            "enum": [
+              "python",
+              "javascript"
+            ],
+            "title": "Langage"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "sortie_attendue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sortie Attendue"
+          },
+          "solution": {
+            "type": "boolean",
+            "title": "Solution",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "lecon",
+          "bloc",
+          "langage",
+          "code",
+          "sortie_attendue"
+        ],
+        "title": "CodeAVerifier",
+        "description": "Exemple de code à exécuter dans le navigateur de la personne qui importe (ADR 0009)."
+      },
+      "CompteExporte": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "pseudo": {
+            "type": "string",
+            "title": "Pseudo"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "inscrit_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Inscrit Le"
+          },
+          "email_confirme_le": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email Confirme Le"
+          },
+          "licence_acceptee_le": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Licence Acceptee Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "pseudo",
+          "role",
+          "inscrit_le",
+          "email_confirme_le",
+          "licence_acceptee_le"
+        ],
+        "title": "CompteExporte"
+      },
+      "Connexion": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "mot_de_passe": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Mot De Passe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "mot_de_passe"
+        ],
+        "title": "Connexion"
+      },
+      "ContenuBrouillon": {
+        "properties": {
+          "titre": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Titre"
+          },
+          "resume": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Resume"
+          },
+          "objectifs": {
+            "items": {
+              "type": "string",
+              "maxLength": 150
+            },
+            "type": "array",
+            "maxItems": 5,
+            "title": "Objectifs"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "maximum": 30.0,
+            "minimum": 2.0,
+            "title": "Duree Minutes"
+          },
+          "contenu": {
+            "type": "string",
+            "maxLength": 50000,
+            "title": "Contenu"
+          },
+          "theme": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theme"
+          },
+          "niveau": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Niveau"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "titre",
+          "resume",
+          "objectifs",
+          "duree_minutes",
+          "contenu"
+        ],
+        "title": "ContenuBrouillon",
+        "description": "Un brouillon peut être incomplet : seules les longueurs maximales sont vérifiées ici."
+      },
+      "Contribution": {
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "lecon_slug": {
+            "type": "string",
+            "title": "Lecon Slug"
+          },
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutRevision"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "resume": {
+            "type": "string",
+            "title": "Resume"
+          },
+          "objectifs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Objectifs"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "contenu": {
+            "type": "string",
+            "title": "Contenu"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "nouvelle_lecon": {
+            "type": "boolean",
+            "title": "Nouvelle Lecon"
+          },
+          "modifiee_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Modifiee Le"
+          },
+          "retours": {
+            "items": {
+              "$ref": "#/components/schemas/Retour"
+            },
+            "type": "array",
+            "title": "Retours"
+          }
+        },
+        "type": "object",
+        "required": [
+          "revision_id",
+          "lecon_slug",
+          "numero",
+          "statut",
+          "titre",
+          "resume",
+          "objectifs",
+          "duree_minutes",
+          "contenu",
+          "theme",
+          "niveau",
+          "nouvelle_lecon",
+          "modifiee_le",
+          "retours"
+        ],
+        "title": "Contribution"
+      },
+      "Decision": {
+        "type": "string",
+        "enum": [
+          "publier",
+          "corriger",
+          "refuser"
+        ],
+        "title": "Decision",
+        "description": "Les trois décisions d'un relecteur (ADR 0010)."
+      },
+      "DecisionLue": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "relecteur": {
+            "type": "string",
+            "title": "Relecteur"
+          },
+          "commentaire": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commentaire"
+          },
+          "cree_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cree Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "relecteur",
+          "commentaire",
+          "cree_le"
+        ],
+        "title": "DecisionLue"
+      },
+      "DemandeDecision": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "commentaire": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commentaire"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "title": "DemandeDecision"
+      },
+      "DemandeDecisionGroupee": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "commentaire": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commentaire"
+          },
+          "revision_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Revision Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "revision_ids"
+        ],
+        "title": "DemandeDecisionGroupee",
+        "description": "La même décision pour plusieurs versions, par exemple toutes celles d'un import."
+      },
+      "DemandeParEmail": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "DemandeParEmail"
+      },
+      "DemandeSuppression": {
+        "properties": {
+          "mot_de_passe": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Mot De Passe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mot_de_passe"
+        ],
+        "title": "DemandeSuppression"
+      },
+      "ElementContribution": {
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "lecon_slug": {
+            "type": "string",
+            "title": "Lecon Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutRevision"
+          },
+          "nouvelle_lecon": {
+            "type": "boolean",
+            "title": "Nouvelle Lecon"
+          },
+          "modifiee_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Modifiee Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "revision_id",
+          "lecon_slug",
+          "titre",
+          "numero",
+          "statut",
+          "nouvelle_lecon",
+          "modifiee_le"
+        ],
+        "title": "ElementContribution"
+      },
+      "ElementFile": {
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "lecon_slug": {
+            "type": "string",
+            "title": "Lecon Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutRevision"
+          },
+          "auteur": {
+            "type": "string",
+            "title": "Auteur"
+          },
+          "assiste_par_ia": {
+            "type": "boolean",
+            "title": "Assiste Par Ia"
+          },
+          "fichier_importe": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fichier Importe"
+          },
+          "cree_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cree Le"
+          },
+          "peut_publier": {
+            "type": "boolean",
+            "title": "Peut Publier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "revision_id",
+          "lecon_slug",
+          "titre",
+          "numero",
+          "statut",
+          "auteur",
+          "assiste_par_ia",
+          "fichier_importe",
+          "cree_le",
+          "peut_publier"
+        ],
+        "title": "ElementFile"
+      },
+      "Erreur": {
+        "properties": {
+          "emplacement": {
+            "type": "string",
+            "title": "Emplacement"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "emplacement",
+          "message"
+        ],
+        "title": "Erreur"
+      },
+      "Espace": {
+        "properties": {
+          "lecons_terminees": {
+            "type": "integer",
+            "title": "Lecons Terminees"
+          },
+          "pourcentage": {
+            "type": "integer",
+            "title": "Pourcentage"
+          },
+          "parcours_en_cours": {
+            "items": {
+              "$ref": "#/components/schemas/ResumeParcours"
+            },
+            "type": "array",
+            "title": "Parcours En Cours"
+          },
+          "parcours_termines": {
+            "items": {
+              "$ref": "#/components/schemas/ResumeParcours"
+            },
+            "type": "array",
+            "title": "Parcours Termines"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lecons_terminees",
+          "pourcentage",
+          "parcours_en_cours",
+          "parcours_termines"
+        ],
+        "title": "Espace",
+        "description": "Tableau de bord de l'apprenant (cadrage § 5.3)."
+      },
+      "EtapeLecture": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "terminee": {
+            "type": "boolean",
+            "title": "Terminee"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "duree_minutes",
+          "terminee"
+        ],
+        "title": "EtapeLecture"
+      },
+      "Export": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "title": "Format",
+            "default": "renard-etudiant/donnees-personnelles"
+          },
+          "exporte_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Exporte Le"
+          },
+          "compte": {
+            "$ref": "#/components/schemas/CompteExporte"
+          },
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/SessionExportee"
+            },
+            "type": "array",
+            "title": "Sessions"
+          },
+          "lecons_terminees": {
+            "items": {
+              "$ref": "#/components/schemas/LeconTermineeExportee"
+            },
+            "type": "array",
+            "title": "Lecons Terminees"
+          },
+          "contributions": {
+            "items": {
+              "$ref": "#/components/schemas/VersionExportee"
+            },
+            "type": "array",
+            "title": "Contributions"
+          },
+          "relectures": {
+            "items": {
+              "$ref": "#/components/schemas/RelectureExportee"
+            },
+            "type": "array",
+            "title": "Relectures"
+          },
+          "imports": {
+            "items": {
+              "$ref": "#/components/schemas/ImportExporte"
+            },
+            "type": "array",
+            "title": "Imports"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionExportee"
+            },
+            "type": "array",
+            "title": "Actions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "exporte_le",
+          "compte",
+          "sessions",
+          "lecons_terminees",
+          "contributions",
+          "relectures",
+          "imports",
+          "actions"
+        ],
+        "title": "Export",
+        "description": "Tout ce que la plateforme garde sur toi. Le mot de passe n'est stocké que haché."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ImportExporte": {
+        "properties": {
+          "fichier": {
+            "type": "string",
+            "title": "Fichier"
+          },
+          "nb_lecons": {
+            "type": "integer",
+            "title": "Nb Lecons"
+          },
+          "le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fichier",
+          "nb_lecons",
+          "le"
+        ],
+        "title": "ImportExporte"
+      },
+      "Inscription": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "pseudo": {
+            "type": "string",
+            "maxLength": 30,
+            "minLength": 3,
+            "pattern": "^[\\w.-]+$",
+            "title": "Pseudo"
+          },
+          "mot_de_passe": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 12,
+            "title": "Mot De Passe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "pseudo",
+          "mot_de_passe"
+        ],
+        "title": "Inscription"
+      },
+      "JetonRecu": {
+        "properties": {
+          "jeton": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Jeton"
+          }
+        },
+        "type": "object",
+        "required": [
+          "jeton"
+        ],
+        "title": "JetonRecu"
+      },
+      "LeconPubliee": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "resume": {
+            "type": "string",
+            "title": "Resume"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "objectifs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Objectifs"
+          },
+          "contenu": {
+            "type": "string",
+            "title": "Contenu"
+          },
+          "assiste_par_ia": {
+            "type": "boolean",
+            "title": "Assiste Par Ia"
+          },
+          "auteurs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Auteurs"
+          },
+          "publiee_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Publiee Le"
+          },
+          "terminee": {
+            "type": "boolean",
+            "title": "Terminee"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "resume",
+          "theme",
+          "niveau",
+          "duree_minutes",
+          "objectifs",
+          "contenu",
+          "assiste_par_ia",
+          "auteurs",
+          "publiee_le",
+          "terminee"
+        ],
+        "title": "LeconPubliee"
+      },
+      "LeconTermineeExportee": {
+        "properties": {
+          "lecon": {
+            "type": "string",
+            "title": "Lecon"
+          },
+          "terminee_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Terminee Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lecon",
+          "terminee_le"
+        ],
+        "title": "LeconTermineeExportee"
+      },
+      "ModificationProfil": {
+        "properties": {
+          "pseudo": {
+            "type": "string",
+            "maxLength": 30,
+            "minLength": 3,
+            "pattern": "^[\\w.-]+$",
+            "title": "Pseudo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pseudo"
+        ],
+        "title": "ModificationProfil"
+      },
+      "ModificationTheme": {
+        "properties": {
+          "nom": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Nom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nom"
+        ],
+        "title": "ModificationTheme"
+      },
+      "ModificationUtilisateur": {
+        "properties": {
+          "role": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "suspendu": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suspendu"
+          }
+        },
+        "type": "object",
+        "title": "ModificationUtilisateur"
+      },
+      "Moi": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "pseudo": {
+            "type": "string",
+            "title": "Pseudo"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "licence_acceptee": {
+            "type": "boolean",
+            "title": "Licence Acceptee"
+          },
+          "jeton_csrf": {
+            "type": "string",
+            "title": "Jeton Csrf"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "pseudo",
+          "role",
+          "licence_acceptee",
+          "jeton_csrf"
+        ],
+        "title": "Moi",
+        "description": "L'utilisateur connecté. Le jeton CSRF est à renvoyer dans l'en-tête X-CSRF-Token."
+      },
+      "Niveau": {
+        "type": "string",
+        "enum": [
+          "debutant",
+          "intermediaire"
+        ],
+        "title": "Niveau"
+      },
+      "NouveauTheme": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "maxLength": 80,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Slug"
+          },
+          "nom": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Nom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "nom"
+        ],
+        "title": "NouveauTheme"
+      },
+      "NouvelleLecon": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "maxLength": 80,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "title": "Titre"
+          },
+          "theme": {
+            "type": "string",
+            "maxLength": 80,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Theme"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "theme",
+          "niveau"
+        ],
+        "title": "NouvelleLecon"
+      },
+      "PageJournal": {
+        "properties": {
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/Action"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "actions",
+          "total"
+        ],
+        "title": "PageJournal"
+      },
+      "PageUtilisateurs": {
+        "properties": {
+          "utilisateurs": {
+            "items": {
+              "$ref": "#/components/schemas/UtilisateurAdmin"
+            },
+            "type": "array",
+            "title": "Utilisateurs"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "utilisateurs",
+          "total"
+        ],
+        "title": "PageUtilisateurs"
+      },
+      "ParcoursDetail": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "nb_lecons": {
+            "type": "integer",
+            "title": "Nb Lecons"
+          },
+          "nb_terminees": {
+            "type": "integer",
+            "title": "Nb Terminees"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "lecons": {
+            "items": {
+              "$ref": "#/components/schemas/EtapeLecture"
+            },
+            "type": "array",
+            "title": "Lecons"
+          },
+          "prochaine_lecon": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prochaine Lecon"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "description",
+          "niveau",
+          "theme",
+          "nb_lecons",
+          "nb_terminees",
+          "duree_minutes",
+          "lecons",
+          "prochaine_lecon"
+        ],
+        "title": "ParcoursDetail"
+      },
+      "Reglages": {
+        "properties": {
+          "verification_email": {
+            "type": "boolean",
+            "title": "Verification Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "verification_email"
+        ],
+        "title": "Reglages",
+        "description": "Réglages publics des comptes, pour adapter les écrans du front."
+      },
+      "Reinitialisation": {
+        "properties": {
+          "jeton": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Jeton"
+          },
+          "nouveau": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 12,
+            "title": "Nouveau"
+          }
+        },
+        "type": "object",
+        "required": [
+          "jeton",
+          "nouveau"
+        ],
+        "title": "Reinitialisation"
+      },
+      "RelectureExportee": {
+        "properties": {
+          "lecon": {
+            "type": "string",
+            "title": "Lecon"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "commentaire": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commentaire"
+          },
+          "le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lecon",
+          "version",
+          "decision",
+          "commentaire",
+          "le"
+        ],
+        "title": "RelectureExportee"
+      },
+      "ResultatAnalyse": {
+        "properties": {
+          "valide": {
+            "type": "boolean",
+            "title": "Valide"
+          },
+          "erreurs": {
+            "items": {
+              "$ref": "#/components/schemas/Erreur"
+            },
+            "type": "array",
+            "title": "Erreurs"
+          },
+          "lecons": {
+            "items": {
+              "$ref": "#/components/schemas/ApercuLecon"
+            },
+            "type": "array",
+            "title": "Lecons"
+          },
+          "parcours": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApercuParcours"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "codes": {
+            "items": {
+              "$ref": "#/components/schemas/CodeAVerifier"
+            },
+            "type": "array",
+            "title": "Codes"
+          },
+          "assiste_par_ia": {
+            "type": "boolean",
+            "title": "Assiste Par Ia"
+          },
+          "outil": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outil"
+          }
+        },
+        "type": "object",
+        "required": [
+          "valide",
+          "erreurs",
+          "lecons",
+          "parcours",
+          "codes",
+          "assiste_par_ia",
+          "outil"
+        ],
+        "title": "ResultatAnalyse"
+      },
+      "ResultatDecisionGroupee": {
+        "properties": {
+          "revision_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Revision Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "revision_ids"
+        ],
+        "title": "ResultatDecisionGroupee"
+      },
+      "ResultatImport": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "revisions": {
+            "items": {
+              "$ref": "#/components/schemas/RevisionCreee"
+            },
+            "type": "array",
+            "title": "Revisions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "revisions"
+        ],
+        "title": "ResultatImport"
+      },
+      "ResultatLecon": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "terminee": {
+            "type": "boolean",
+            "title": "Terminee"
+          },
+          "resume": {
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "type": "array",
+            "title": "Resume"
+          },
+          "extrait": {
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "type": "array",
+            "title": "Extrait"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "theme",
+          "niveau",
+          "duree_minutes",
+          "terminee",
+          "resume",
+          "extrait"
+        ],
+        "title": "ResultatLecon"
+      },
+      "ResultatParcours": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "nb_lecons": {
+            "type": "integer",
+            "title": "Nb Lecons"
+          },
+          "nb_terminees": {
+            "type": "integer",
+            "title": "Nb Terminees"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "description": {
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "type": "array",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "theme",
+          "niveau",
+          "nb_lecons",
+          "nb_terminees",
+          "duree_minutes",
+          "description"
+        ],
+        "title": "ResultatParcours"
+      },
+      "Resultats": {
+        "properties": {
+          "parcours": {
+            "items": {
+              "$ref": "#/components/schemas/ResultatParcours"
+            },
+            "type": "array",
+            "title": "Parcours"
+          },
+          "lecons": {
+            "items": {
+              "$ref": "#/components/schemas/ResultatLecon"
+            },
+            "type": "array",
+            "title": "Lecons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "parcours",
+          "lecons"
+        ],
+        "title": "Resultats"
+      },
+      "ResumeLecon": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "resume": {
+            "type": "string",
+            "title": "Resume"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "resume",
+          "theme",
+          "niveau",
+          "duree_minutes"
+        ],
+        "title": "ResumeLecon"
+      },
+      "ResumeParcours": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "nb_lecons": {
+            "type": "integer",
+            "title": "Nb Lecons"
+          },
+          "nb_terminees": {
+            "type": "integer",
+            "title": "Nb Terminees"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "titre",
+          "description",
+          "niveau",
+          "theme",
+          "nb_lecons",
+          "nb_terminees",
+          "duree_minutes"
+        ],
+        "title": "ResumeParcours"
+      },
+      "Retour": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "relecteur": {
+            "type": "string",
+            "title": "Relecteur"
+          },
+          "commentaire": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commentaire"
+          },
+          "cree_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cree Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "relecteur",
+          "commentaire",
+          "cree_le"
+        ],
+        "title": "Retour"
+      },
+      "RevisionARelire": {
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "lecon_slug": {
+            "type": "string",
+            "title": "Lecon Slug"
+          },
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutRevision"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "resume": {
+            "type": "string",
+            "title": "Resume"
+          },
+          "objectifs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Objectifs"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "contenu": {
+            "type": "string",
+            "title": "Contenu"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/ThemeLecture"
+          },
+          "niveau": {
+            "$ref": "#/components/schemas/Niveau"
+          },
+          "auteur": {
+            "type": "string",
+            "title": "Auteur"
+          },
+          "assiste_par_ia": {
+            "type": "boolean",
+            "title": "Assiste Par Ia"
+          },
+          "fichier_importe": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fichier Importe"
+          },
+          "a_relire": {
+            "type": "boolean",
+            "title": "A Relire"
+          },
+          "peut_publier": {
+            "type": "boolean",
+            "title": "Peut Publier"
+          },
+          "historique": {
+            "items": {
+              "$ref": "#/components/schemas/VersionHistorique"
+            },
+            "type": "array",
+            "title": "Historique"
+          }
+        },
+        "type": "object",
+        "required": [
+          "revision_id",
+          "lecon_slug",
+          "numero",
+          "statut",
+          "titre",
+          "resume",
+          "objectifs",
+          "duree_minutes",
+          "contenu",
+          "theme",
+          "niveau",
+          "auteur",
+          "assiste_par_ia",
+          "fichier_importe",
+          "a_relire",
+          "peut_publier",
+          "historique"
+        ],
+        "title": "RevisionARelire"
+      },
+      "RevisionCreee": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Revision Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "revision_id"
+        ],
+        "title": "RevisionCreee"
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "apprenant",
+          "contributeur",
+          "relecteur",
+          "admin"
+        ],
+        "title": "Role",
+        "description": "Rôles du cadrage, du moins au plus élevé. Chaque rôle a les droits des précédents."
+      },
+      "Segment": {
+        "properties": {
+          "texte": {
+            "type": "string",
+            "title": "Texte"
+          },
+          "surligne": {
+            "type": "boolean",
+            "title": "Surligne"
+          }
+        },
+        "type": "object",
+        "required": [
+          "texte",
+          "surligne"
+        ],
+        "title": "Segment",
+        "description": "Morceau de texte. Les mots trouvés sont dans des segments surlignés."
+      },
+      "SessionExportee": {
+        "properties": {
+          "ouverte_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ouverte Le"
+          },
+          "expire_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Expire Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ouverte_le",
+          "expire_le"
+        ],
+        "title": "SessionExportee"
+      },
+      "Soumission": {
+        "properties": {
+          "accepte_licence": {
+            "type": "boolean",
+            "title": "Accepte Licence",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "Soumission"
+      },
+      "Statut": {
+        "properties": {
+          "statut": {
+            "type": "string",
+            "const": "ok",
+            "title": "Statut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "statut"
+        ],
+        "title": "Statut"
+      },
+      "StatutRevision": {
+        "type": "string",
+        "enum": [
+          "brouillon",
+          "en_relecture",
+          "a_corriger",
+          "publiee",
+          "refusee"
+        ],
+        "title": "StatutRevision",
+        "description": "Statuts du circuit de relecture (ADR 0010)."
+      },
+      "ThemeAdmin": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "nom": {
+            "type": "string",
+            "title": "Nom"
+          },
+          "nb_lecons": {
+            "type": "integer",
+            "title": "Nb Lecons"
+          },
+          "nb_parcours": {
+            "type": "integer",
+            "title": "Nb Parcours"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "nom",
+          "nb_lecons",
+          "nb_parcours"
+        ],
+        "title": "ThemeAdmin"
+      },
+      "ThemeLecture": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "nom": {
+            "type": "string",
+            "title": "Nom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "nom"
+        ],
+        "title": "ThemeLecture"
+      },
+      "TypeResultat": {
+        "type": "string",
+        "enum": [
+          "lecon",
+          "parcours"
+        ],
+        "title": "TypeResultat"
+      },
+      "UtilisateurAdmin": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "pseudo": {
+            "type": "string",
+            "title": "Pseudo"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "email_verifie": {
+            "type": "boolean",
+            "title": "Email Verifie"
+          },
+          "suspendu": {
+            "type": "boolean",
+            "title": "Suspendu"
+          },
+          "cree_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cree Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "pseudo",
+          "role",
+          "email_verifie",
+          "suspendu",
+          "cree_le"
+        ],
+        "title": "UtilisateurAdmin"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VersionExportee": {
+        "properties": {
+          "lecon": {
+            "type": "string",
+            "title": "Lecon"
+          },
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutRevision"
+          },
+          "titre": {
+            "type": "string",
+            "title": "Titre"
+          },
+          "resume": {
+            "type": "string",
+            "title": "Resume"
+          },
+          "objectifs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Objectifs"
+          },
+          "duree_minutes": {
+            "type": "integer",
+            "title": "Duree Minutes"
+          },
+          "contenu": {
+            "type": "string",
+            "title": "Contenu"
+          },
+          "creee_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Creee Le"
+          },
+          "modifiee_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Modifiee Le"
+          },
+          "publiee_le": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publiee Le"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lecon",
+          "numero",
+          "statut",
+          "titre",
+          "resume",
+          "objectifs",
+          "duree_minutes",
+          "contenu",
+          "creee_le",
+          "modifiee_le",
+          "publiee_le"
+        ],
+        "title": "VersionExportee"
+      },
+      "VersionHistorique": {
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutRevision"
+          },
+          "auteur": {
+            "type": "string",
+            "title": "Auteur"
+          },
+          "cree_le": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Cree Le"
+          },
+          "publiee_le": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publiee Le"
+          },
+          "en_ligne": {
+            "type": "boolean",
+            "title": "En Ligne"
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/DecisionLue"
+            },
+            "type": "array",
+            "title": "Decisions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "revision_id",
+          "numero",
+          "statut",
+          "auteur",
+          "cree_le",
+          "publiee_le",
+          "en_ligne",
+          "decisions"
+        ],
+        "title": "VersionHistorique"
+      }
+    }
+  }
+}

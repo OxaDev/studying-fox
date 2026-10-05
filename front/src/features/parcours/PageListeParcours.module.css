@@ -1,0 +1,41 @@
+.intro {
+  color: var(--texte-doux);
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: var(--esp-6) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filtre {
+  display: inline-block;
+  padding: var(--esp-1) var(--esp-4);
+  border: 2px solid var(--bordure);
+  border-radius: var(--rayon-bouton);
+  color: var(--texte);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.filtre:hover {
+  border-color: var(--primaire);
+}
+
+.actif {
+  border-color: var(--primaire);
+  background: var(--primaire);
+  color: var(--sur-primaire);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

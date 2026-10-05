@@ -1,0 +1,1343 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 2,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-05"
+  },
+  "parcours": {
+    "slug": "fondamentaux-de-python",
+    "titre": "Les fondamentaux de Python",
+    "description": "Apprendre Python pas à pas, sans prérequis : variables, calculs, texte, conditions, listes, boucles, dictionnaires, fonctions, erreurs, modules et classes. Des exemples tirés de la vie professionnelle, et un mini-projet pour finir.",
+    "niveau": "debutant",
+    "theme": "python",
+    "lecons": [
+      "python-premier-programme",
+      "python-variables-et-types",
+      "python-calculs",
+      "python-chaines-de-caracteres",
+      "python-conditions",
+      "python-listes",
+      "python-boucle-for",
+      "python-boucle-while",
+      "python-dictionnaires",
+      "python-tuples-et-ensembles",
+      "python-comprehensions",
+      "python-fonctions",
+      "python-fonctions-parametres",
+      "python-erreurs-et-exceptions",
+      "python-modules",
+      "python-classes-et-objets",
+      "python-projet-suivi-des-depenses"
+    ]
+  },
+  "lecons": [
+    {
+      "slug": "python-premier-programme",
+      "titre": "Ton premier programme",
+      "resume": "Écrire et lancer tes premières lignes de Python : afficher du texte et commenter ton code.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [],
+      "objectifs": [
+        "Afficher du texte avec print",
+        "Afficher plusieurs valeurs sur une ligne",
+        "Écrire un commentaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un **programme** est une suite d'instructions que l'ordinateur exécute dans l'ordre, de haut en bas.\n\nPython est un **langage de programmation** : une façon d'écrire ces instructions que l'ordinateur comprend. On l'apprécie pour sa lisibilité. Il sert à automatiser des tâches, analyser des données, créer des sites web…\n\nIci, le code s'exécute directement dans ton navigateur. Clique sur **Exécuter** pour lancer l'exemple."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "print(\"Bonjour !\")\nprint(\"Je découvre Python.\")\n",
+          "executable": true,
+          "sortie_attendue": "Bonjour !\nJe découvre Python.\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`print` est une **fonction** : une instruction qui porte un nom et réalise une tâche. Celle-ci affiche ce qu'on lui donne entre parenthèses.\n\nLe texte placé entre guillemets s'appelle une **chaîne de caractères**. Les guillemets indiquent à Python où le texte commence et où il s'arrête.\n\nTu peux donner plusieurs valeurs à `print`, séparées par des virgules. Python les affiche sur la même ligne, séparées par un espace."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "print(\"Total :\", 42, \"euros\")\nprint(\"Réunion à\", 14, \"h\")\n",
+          "executable": true,
+          "sortie_attendue": "Total : 42 euros\nRéunion à 14 h\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les commentaires\n\nTout ce qui suit le signe `#` est un **commentaire** : Python l'ignore. Il sert à expliquer ton code aux humains, y compris à toi dans six mois."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# Rappel envoyé à l'équipe le lundi\nprint(\"Point d'équipe à 9 h 30\")  # salle B\n",
+          "executable": true,
+          "sortie_attendue": "Point d'équipe à 9 h 30\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Python est sensible aux majuscules : `Print` n'est pas `print`. Vérifie aussi que chaque guillemet et chaque parenthèse ouverts sont bien fermés."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Modifie les messages, ajoute une ligne, puis relance. Tu ne peux rien casser : expérimenter est la meilleure façon d'apprendre."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Affiche une carte de visite sur trois lignes : le prénom **Camille**, le métier **Comptable**, puis la ville **Nantes**.\n\nAjoute au-dessus un commentaire qui explique ce que fait le programme.",
+          "code": "# Écris tes trois print ici\n",
+          "solution": "# Carte de visite de Camille\nprint(\"Camille\")\nprint(\"Comptable\")\nprint(\"Nantes\")\n",
+          "sortie_attendue": "Camille\nComptable\nNantes\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `print(...)` affiche une ou plusieurs valeurs.\n- Le texte s'écrit entre guillemets.\n- `#` commence un commentaire."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : introduction",
+          "url": "https://docs.python.org/fr/3/tutorial/introduction.html"
+        }
+      ]
+    },
+    {
+      "slug": "python-variables-et-types",
+      "titre": "Variables et types de données",
+      "resume": "Ranger des valeurs dans des variables et connaître les types de base : nombres entiers, décimaux, texte et booléens.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 16,
+      "prerequis": [
+        "python-premier-programme"
+      ],
+      "objectifs": [
+        "Créer et modifier une variable",
+        "Reconnaître les types int, float, str et bool",
+        "Convertir une valeur d'un type à un autre"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **variable** est une étiquette posée sur une valeur. Elle permet de la réutiliser plus loin dans le programme.\n\nOn la crée avec le signe `=` : le nom à gauche, la valeur à droite."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "prenom = \"Samira\"\nage = 34\nprint(prenom, \"a\", age, \"ans\")\n",
+          "executable": true,
+          "sortie_attendue": "Samira a 34 ans\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les types de base\n\nChaque valeur a un **type**, qui dit ce qu'elle est et ce qu'on peut en faire. La fonction `type` l'indique.\n\n- `int` : un nombre entier, comme `42` ;\n- `float` : un nombre à virgule, écrit avec un **point** : `3.5` ;\n- `str` : du texte, entre guillemets ;\n- `bool` : un **booléen**, qui vaut `True` (vrai) ou `False` (faux)."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "print(type(42))\nprint(type(3.5))\nprint(type(\"bonjour\"))\nprint(type(True))\n",
+          "executable": true,
+          "sortie_attendue": "<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Changer la valeur\n\nUne variable peut changer de valeur. Python calcule d'abord la partie droite du `=`, puis range le résultat dans la variable."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "stock = 10\nprint(\"Stock initial :\", stock)\nstock = stock - 3\nprint(\"Après la vente :\", stock)\n",
+          "executable": true,
+          "sortie_attendue": "Stock initial : 10\nAprès la vente : 7\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Convertir\n\n`\"12\"` (du texte) et `12` (un nombre) ne sont pas la même chose. Pour passer de l'un à l'autre, on utilise `int`, `float` ou `str`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "quantite_texte = \"12\"\nquantite = int(quantite_texte)\nprint(quantite + 3)\nprint(\"Quantité : \" + str(quantite))\nprint(float(\"2.5\") * 2)\n",
+          "executable": true,
+          "sortie_attendue": "15\nQuantité : 12\n5.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Choisis des noms clairs, en minuscules, avec des `_` entre les mots : `prix_unitaire` se comprend tout de suite, `pu` beaucoup moins."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Une facture comporte **3** articles à **12.5 €**.\n\nDonne la bonne valeur aux variables `quantite` et `prix_unitaire`, puis affiche `Total : 37.5`.",
+          "code": "quantite = 0\nprix_unitaire = 0.0\n# Affiche le total\n",
+          "solution": "quantite = 3\nprix_unitaire = 12.5\nprint(\"Total :\", quantite * prix_unitaire)\n",
+          "sortie_attendue": "Total : 37.5\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un formulaire renvoie toujours du texte. Convertis `saisie` en nombre entier, ajoute 50, puis affiche le résultat : `300`.",
+          "code": "saisie = \"250\"\n# Convertis, puis ajoute 50\nprint(saisie)\n",
+          "solution": "saisie = \"250\"\nnombre = int(saisie)\nprint(nombre + 50)\n",
+          "sortie_attendue": "300\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `nom = valeur` crée ou modifie une variable.\n- Les quatre types de base : `int`, `float`, `str`, `bool`.\n- `int()`, `float()` et `str()` convertissent une valeur."
+        }
+      ],
+      "sources": []
+    },
+    {
+      "slug": "python-calculs",
+      "titre": "Faire des calculs",
+      "resume": "Utiliser Python comme une calculatrice : opérations, priorités, division entière, reste et arrondis.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "python-variables-et-types"
+      ],
+      "objectifs": [
+        "Utiliser les opérateurs + - * / // % **",
+        "Contrôler l'ordre des calculs avec des parenthèses",
+        "Arrondir un résultat avec round"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Python connaît toutes les opérations d'une calculatrice, et quelques autres. Un **opérateur** est le symbole qui indique l'opération."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "print(7 + 3)\nprint(7 - 3)\nprint(7 * 3)\nprint(7 / 2)   # division : le résultat est un float\nprint(7 // 2)  # division entière : on garde la partie entière\nprint(7 % 2)   # reste de la division (modulo)\nprint(2 ** 10) # puissance\n",
+          "executable": true,
+          "sortie_attendue": "10\n4\n21\n3.5\n3\n1\n1024\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Comme en mathématiques, `*` et `/` passent avant `+` et `-`. Les parenthèses imposent l'ordre que tu veux.\n\n`round(valeur, 2)` arrondit à deux chiffres après la virgule."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "prix_ht = 120\ntaux_tva = 0.2\nprix_ttc = prix_ht * (1 + taux_tva)\nprint(prix_ttc)\n\nremise = 0.15\nprint(round(prix_ttc * (1 - remise), 2))\n",
+          "executable": true,
+          "sortie_attendue": "144.0\n122.4\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Division entière et reste\n\n`//` et `%` sont très pratiques pour découper une quantité. Par exemple, convertir des minutes en heures et minutes :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "duree = 135\nprint(duree // 60, \"h\", duree % 60, \"min\")\n",
+          "executable": true,
+          "sortie_attendue": "2 h 15 min\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les raccourcis\n\n`total += 5` est un raccourci pour `total = total + 5`. Il existe aussi `-=`, `*=` et `/=`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "total = 0\ntotal += 25\ntotal += 40\ntotal -= 10\nprint(total)\n",
+          "executable": true,
+          "sortie_attendue": "55\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Les `float` sont stockés en binaire et peuvent être légèrement inexacts : `0.1 + 0.2` donne `0.30000000000000004`. Pour un affichage, arrondis. Pour de la comptabilité, Python propose le module `decimal`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Une formation dure **200 minutes**. Avec `//` et `%`, affiche sa durée sous la forme `3 h 20 min`.",
+          "code": "duree = 200\n# Affiche les heures et les minutes\n",
+          "solution": "duree = 200\nprint(duree // 60, \"h\", duree % 60, \"min\")\n",
+          "sortie_attendue": "3 h 20 min\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `/` donne toujours un `float`, `//` une division entière, `%` le reste.\n- Les parenthèses fixent l'ordre des calculs.\n- `+=` ajoute à la valeur d'une variable."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les nombres",
+          "url": "https://docs.python.org/fr/3/tutorial/introduction.html#numbers"
+        }
+      ]
+    },
+    {
+      "slug": "python-chaines-de-caracteres",
+      "titre": "Manipuler du texte",
+      "resume": "Assembler, formater et nettoyer du texte : f-strings, longueur, majuscules, remplacement et recherche.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-calculs"
+      ],
+      "objectifs": [
+        "Assembler du texte avec + et avec une f-string",
+        "Formater un nombre dans un texte",
+        "Nettoyer une chaîne avec strip, lower et replace"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "On manipule du texte en permanence : noms, adresses email, libellés de factures. Python offre de nombreux outils pour ça.\n\nLe `+` colle deux chaînes bout à bout. Mais la façon la plus lisible d'insérer des valeurs dans un texte est la **f-string** : un `f` devant les guillemets, et les valeurs entre accolades `{}`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "prenom = \"Léo\"\nnom = \"Martin\"\nprint(prenom + \" \" + nom)\nprint(f\"Bonjour {prenom} {nom} !\")\n",
+          "executable": true,
+          "sortie_attendue": "Léo Martin\nBonjour Léo Martin !\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Entre les accolades, tu peux mettre un calcul. Après `:`, tu peux préciser le format : `.2f` affiche deux chiffres après la virgule."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "prix = 19.9\nquantite = 3\nprint(f\"Prix unitaire : {prix:.2f} €\")\nprint(f\"Total : {prix * quantite:.2f} €\")\n",
+          "executable": true,
+          "sortie_attendue": "Prix unitaire : 19.90 €\nTotal : 59.70 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les méthodes de texte\n\nUne **méthode** est une fonction attachée à une valeur. On l'appelle avec un point : `texte.lower()`.\n\n- `strip()` retire les espaces au début et à la fin ;\n- `lower()` et `upper()` passent en minuscules ou en majuscules ;\n- `replace(a, b)` remplace `a` par `b`.\n\nLa fonction `len` donne le nombre de caractères, et `in` vérifie si un texte en contient un autre."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "saisie = \"  Samira.Diallo@Exemple.FR  \"\nemail = saisie.strip().lower()\nprint(email)\nprint(len(email))\nprint(email.replace(\"exemple.fr\", \"societe.fr\"))\nprint(\"@\" in email)\n",
+          "executable": true,
+          "sortie_attendue": "samira.diallo@exemple.fr\n24\nsamira.diallo@societe.fr\nTrue\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Accéder à un caractère\n\nChaque caractère a une **position**, appelée **index**, qui commence à **0**. Un index négatif part de la fin."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "code_postal = \"69003\"\nprint(code_postal[0])\nprint(code_postal[-1])\nprint(code_postal[:2])  # les deux premiers caractères : le département\n",
+          "executable": true,
+          "sortie_attendue": "6\n3\n69\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Une chaîne ne se modifie jamais : `email.lower()` renvoie un **nouveau** texte. Pour garder le résultat, range-le dans une variable."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un client a saisi son nom n'importe comment. Nettoie `saisie` pour obtenir `Dupont`, puis affiche `Bonjour M. Dupont !` avec une f-string.\n\nIndice : la méthode `capitalize()` met la première lettre en majuscule, et toutes les autres en minuscules.",
+          "code": "saisie = \"   dUPONT  \"\nnom = saisie\nprint(f\"Bonjour M. {nom} !\")\n",
+          "solution": "saisie = \"   dUPONT  \"\nnom = saisie.strip().capitalize()\nprint(f\"Bonjour M. {nom} !\")\n",
+          "sortie_attendue": "Bonjour M. Dupont !\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `f\"... {valeur} ...\"` insère des valeurs dans un texte.\n- `strip`, `lower`, `upper` et `replace` transforment un texte.\n- `len` compte les caractères, `in` cherche un morceau de texte."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les chaînes de caractères",
+          "url": "https://docs.python.org/fr/3/tutorial/introduction.html#text"
+        }
+      ]
+    },
+    {
+      "slug": "python-conditions",
+      "titre": "Prendre des décisions avec if",
+      "resume": "Exécuter du code seulement quand une condition est vraie, grâce à if, elif et else.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-chaines-de-caracteres"
+      ],
+      "objectifs": [
+        "Comparer deux valeurs",
+        "Écrire une condition avec if, elif et else",
+        "Combiner des conditions avec and, or et not"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un programme doit souvent choisir : valider ou refuser, appliquer une remise ou non. On utilise pour ça une **condition**.\n\nUne comparaison donne un booléen, `True` ou `False` :\n\n- `==` égal, `!=` différent ;\n- `<`, `>`, `<=`, `>=` pour comparer des nombres."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "montant = 1500\nprint(montant > 1000)\nprint(montant == 1000)\n",
+          "executable": true,
+          "sortie_attendue": "True\nFalse\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`if` exécute un bloc seulement si la condition est vraie. Le bloc est repéré par son **indentation** : les lignes décalées de quatre espaces après le `:`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "montant = 1500\nif montant > 1000:\n    print(\"Validation du manager requise\")\nprint(\"Demande enregistrée\")\n",
+          "executable": true,
+          "sortie_attendue": "Validation du manager requise\nDemande enregistrée\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "La dernière ligne n'est pas décalée : elle s'exécute dans tous les cas.\n\nPour plusieurs cas, on enchaîne avec `elif` (« sinon, si ») et `else` (« sinon »). Python s'arrête au **premier** cas vrai."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "commande = 65\n\nif commande >= 100:\n    livraison = 0\nelif commande >= 50:\n    livraison = 4.9\nelse:\n    livraison = 9.9\n\nprint(f\"Frais de livraison : {livraison} €\")\n",
+          "executable": true,
+          "sortie_attendue": "Frais de livraison : 4.9 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Combiner des conditions\n\n- `and` : les deux conditions doivent être vraies ;\n- `or` : au moins une doit être vraie ;\n- `not` : inverse la condition."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "age = 25\na_le_permis = True\njour = \"samedi\"\n\nif age >= 18 and a_le_permis:\n    print(\"Peut louer un véhicule\")\n\nif jour == \"samedi\" or jour == \"dimanche\":\n    print(\"Agence fermée\")\n\nif not a_le_permis:\n    print(\"Permis requis\")\n",
+          "executable": true,
+          "sortie_attendue": "Peut louer un véhicule\nAgence fermée\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ne confonds pas `=` (ranger une valeur) et `==` (comparer). Et n'oublie pas le `:` en fin de ligne `if`, `elif` ou `else`."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Change la valeur de `commande` dans le deuxième exemple (30, 50, 120) et observe les frais de livraison."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris la règle de remise d'une boutique :\n\n- 20 % dès 500 € d'achat ;\n- 10 % dès 100 € ;\n- rien en dessous.\n\nPour `montant = 650`, le programme doit afficher `Remise : 130.0 €`. Essaie ensuite avec 150 et 60.",
+          "code": "montant = 650\nremise = 0\n# Calcule la remise ici\nprint(f\"Remise : {remise} €\")\n",
+          "solution": "montant = 650\nif montant >= 500:\n    remise = montant * 0.2\nelif montant >= 100:\n    remise = montant * 0.1\nelse:\n    remise = 0\nprint(f\"Remise : {remise} €\")\n",
+          "sortie_attendue": "Remise : 130.0 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `if condition:` puis un bloc décalé de quatre espaces.\n- `elif` et `else` traitent les autres cas.\n- `and`, `or` et `not` combinent les conditions."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : l'instruction if",
+          "url": "https://docs.python.org/fr/3/tutorial/controlflow.html#if-statements"
+        }
+      ]
+    },
+    {
+      "slug": "python-listes",
+      "titre": "Les listes",
+      "resume": "Ranger plusieurs valeurs dans une liste, y accéder, la modifier et en tirer des statistiques simples.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-conditions"
+      ],
+      "objectifs": [
+        "Créer une liste et accéder à ses éléments",
+        "Ajouter, retirer et modifier des éléments",
+        "Calculer une somme, un minimum et un maximum"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **liste** range plusieurs valeurs dans un ordre précis. On l'écrit entre crochets `[]`, avec des virgules entre les éléments.\n\nComme pour le texte, chaque élément a un index qui commence à 0."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "equipe = [\"Ana\", \"Bruno\", \"Chloé\"]\nprint(equipe[0])\nprint(equipe[-1])\nprint(len(equipe))\n",
+          "executable": true,
+          "sortie_attendue": "Ana\nChloé\n3\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Une liste se modifie :\n\n- `append(valeur)` ajoute à la fin ;\n- `remove(valeur)` retire la première occurrence ;\n- `liste[index] = valeur` remplace un élément."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "equipe = [\"Ana\", \"Bruno\", \"Chloé\"]\nequipe.append(\"David\")\nequipe.remove(\"Bruno\")\nequipe[0] = \"Anaïs\"\nprint(equipe)\nprint(\"Chloé\" in equipe)\n",
+          "executable": true,
+          "sortie_attendue": "['Anaïs', 'Chloé', 'David']\nTrue\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des statistiques en une ligne\n\n`sum`, `min` et `max` travaillent directement sur une liste de nombres. `sorted` renvoie une copie triée.\n\nAvec `[début:fin]`, on extrait une **tranche** : de l'index `début` inclus à `fin` exclu."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "ventes = [120, 85, 230, 40]\nprint(sum(ventes), min(ventes), max(ventes))\nprint(sorted(ventes))\nprint(ventes[1:3])\n",
+          "executable": true,
+          "sortie_attendue": "475 40 230\n[40, 85, 120, 230]\n[85, 230]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Du texte à la liste, et retour\n\n`split` découpe un texte en liste, `join` rassemble une liste en texte. Très utile pour lire une ligne de fichier CSV."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "ligne = \"Dupont;Marie;Comptabilité\"\nchamps = ligne.split(\";\")\nprint(champs)\nprint(champs[1])\nprint(\" - \".join(champs))\n",
+          "executable": true,
+          "sortie_attendue": "['Dupont', 'Marie', 'Comptabilité']\nMarie\nDupont - Marie - Comptabilité\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Demander un index qui n'existe pas (`equipe[10]`) provoque une erreur `IndexError`. Une liste de 3 éléments a les index 0, 1 et 2."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Voici des notes de satisfaction, de 1 à 5. Un nouveau client vient de donner la note **4**.\n\nAjoute-la à la liste, puis affiche sur une ligne : le nombre de notes, la meilleure note et la moyenne arrondie à 2 décimales. Résultat attendu : `6 5 3.83`.",
+          "code": "notes = [4, 5, 3, 5, 2]\n# Ajoute la note, puis affiche les trois valeurs\n",
+          "solution": "notes = [4, 5, 3, 5, 2]\nnotes.append(4)\nmoyenne = sum(notes) / len(notes)\nprint(len(notes), max(notes), round(moyenne, 2))\n",
+          "sortie_attendue": "6 5 3.83\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une liste s'écrit `[a, b, c]` et commence à l'index 0.\n- `append`, `remove` et `liste[i] = ...` la modifient.\n- `len`, `sum`, `min`, `max` et `sorted` la résument."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les listes",
+          "url": "https://docs.python.org/fr/3/tutorial/introduction.html#lists"
+        }
+      ]
+    },
+    {
+      "slug": "python-boucle-for",
+      "titre": "Répéter avec la boucle for",
+      "resume": "Traiter chaque élément d'une liste, répéter une action un nombre précis de fois et accumuler un résultat.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-listes"
+      ],
+      "objectifs": [
+        "Parcourir une liste avec for",
+        "Répéter une action avec range",
+        "Calculer un total ou filtrer des valeurs dans une boucle"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **boucle** répète un bloc de code. La boucle `for` le répète **pour chaque élément** d'une liste : à chaque tour, la variable prend la valeur suivante."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "for prenom in [\"Ana\", \"Bruno\", \"Chloé\"]:\n    print(f\"Bonjour {prenom} !\")\n",
+          "executable": true,
+          "sortie_attendue": "Bonjour Ana !\nBonjour Bruno !\nBonjour Chloé !\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`range(début, fin)` produit une suite de nombres, de `début` inclus à `fin` exclu. Pratique pour répéter une action un nombre précis de fois."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "for numero in range(1, 4):\n    print(f\"Relance n°{numero}\")\n",
+          "executable": true,
+          "sortie_attendue": "Relance n°1\nRelance n°2\nRelance n°3\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Accumuler un résultat\n\nOn crée une variable **avant** la boucle, puis on la met à jour à chaque tour."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "ventes = [120, 85, 230, 40]\ntotal = 0\nfor vente in ventes:\n    total += vente\nprint(\"Total :\", total)\n",
+          "executable": true,
+          "sortie_attendue": "Total : 475\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Filtrer\n\nEn combinant `for` et `if`, on garde seulement les éléments qui nous intéressent."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "montants = [120, 85, 230, 40, 310]\ngrosses_commandes = []\nfor montant in montants:\n    if montant >= 100:\n        grosses_commandes.append(montant)\nprint(grosses_commandes)\n",
+          "executable": true,
+          "sortie_attendue": "[120, 230, 310]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Besoin de la position en plus de la valeur ? `for index, valeur in enumerate(liste):` te donne les deux."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Pour chaque prix hors taxes, affiche une ligne `10 € HT -> 12.00 € TTC` (TVA à 20 %). Affiche ensuite le total TTC : `Total TTC : 90.00 €`.",
+          "code": "prix_ht = [10, 25, 40]\ntotal_ttc = 0\n# Ta boucle ici\nprint(f\"Total TTC : {total_ttc:.2f} €\")\n",
+          "solution": "prix_ht = [10, 25, 40]\ntotal_ttc = 0\nfor prix in prix_ht:\n    ttc = prix * 1.2\n    print(f\"{prix} € HT -> {ttc:.2f} € TTC\")\n    total_ttc += ttc\nprint(f\"Total TTC : {total_ttc:.2f} €\")\n",
+          "sortie_attendue": "10 € HT -> 12.00 € TTC\n25 € HT -> 30.00 € TTC\n40 € HT -> 48.00 € TTC\nTotal TTC : 90.00 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `for element in liste:` répète le bloc pour chaque élément.\n- `range(1, 4)` donne 1, 2, 3.\n- Variable créée avant la boucle + mise à jour dedans = un total, un compteur, une liste filtrée."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : l'instruction for",
+          "url": "https://docs.python.org/fr/3/tutorial/controlflow.html#for-statements"
+        }
+      ]
+    },
+    {
+      "slug": "python-boucle-while",
+      "titre": "Répéter tant que : la boucle while",
+      "resume": "Répéter une action tant qu'une condition reste vraie, et sortir d'une boucle avec break.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "python-boucle-for"
+      ],
+      "objectifs": [
+        "Écrire une boucle while",
+        "Éviter une boucle infinie",
+        "Sortir d'une boucle avec break"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "La boucle `while` (« tant que ») répète un bloc **tant qu'une condition est vraie**. On l'utilise quand on ne sait pas à l'avance combien de tours il faudra.\n\nCombien d'années faut-il pour qu'une épargne de 1 000 € placée à 5 % atteigne 1 500 € ?"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "capital = 1000\nannees = 0\nwhile capital < 1500:\n    capital = capital * 1.05\n    annees += 1\nprint(f\"{annees} ans, capital : {capital:.2f} €\")\n",
+          "executable": true,
+          "sortie_attendue": "9 ans, capital : 1551.33 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "À chaque tour, Python vérifie la condition. Dès qu'elle devient fausse, il passe à la suite du programme.\n\n## Sortir plus tôt avec break\n\n`break` arrête la boucle immédiatement, même si la condition est encore vraie."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "codes_saisis = [\"1111\", \"2580\", \"1234\", \"9999\"]\ncode_correct = \"1234\"\n\nessai = 0\nwhile essai < len(codes_saisis):\n    if codes_saisis[essai] == code_correct:\n        print(\"Accès autorisé\")\n        break\n    print(\"Code incorrect\")\n    essai += 1\n",
+          "executable": true,
+          "sortie_attendue": "Code incorrect\nCode incorrect\nAccès autorisé\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Si la condition ne devient jamais fausse, la boucle tourne sans fin : c'est une **boucle infinie**. Vérifie qu'une variable de la condition change à chaque tour. Sur cette plateforme, un programme trop long est arrêté au bout de quelques secondes."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un stock de 50 unités baisse de 8 unités par jour. Avec une boucle `while`, calcule dans combien de jours il passera **sous** 10 unités.\n\nRésultat attendu : `Réapprovisionner dans 6 jours (stock restant : 2)`.",
+          "code": "stock = 50\njours = 0\n# Ta boucle ici\nprint(f\"Réapprovisionner dans {jours} jours (stock restant : {stock})\")\n",
+          "solution": "stock = 50\njours = 0\nwhile stock >= 10:\n    stock -= 8\n    jours += 1\nprint(f\"Réapprovisionner dans {jours} jours (stock restant : {stock})\")\n",
+          "sortie_attendue": "Réapprovisionner dans 6 jours (stock restant : 2)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `while condition:` répète tant que la condition est vraie.\n- Une variable de la condition doit évoluer dans la boucle.\n- `break` sort de la boucle tout de suite (avec `for` aussi)."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : break et continue",
+          "url": "https://docs.python.org/fr/3/tutorial/controlflow.html#break-and-continue-statements"
+        }
+      ]
+    },
+    {
+      "slug": "python-dictionnaires",
+      "titre": "Les dictionnaires",
+      "resume": "Associer des clés à des valeurs pour décrire une fiche client, un stock ou compter des occurrences.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-boucle-for"
+      ],
+      "objectifs": [
+        "Créer un dictionnaire et lire une valeur par sa clé",
+        "Ajouter et modifier des entrées",
+        "Parcourir un dictionnaire avec items"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un **dictionnaire** associe des **clés** à des **valeurs**, comme une fiche : à la clé `\"ville\"` correspond la valeur `\"Lyon\"`.\n\nOn l'écrit entre accolades `{}`, avec `clé: valeur`. On lit une valeur avec sa clé entre crochets."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "client = {\"nom\": \"Diallo\", \"ville\": \"Lyon\", \"commandes\": 3}\nprint(client[\"nom\"])\n\nclient[\"commandes\"] += 1\nclient[\"email\"] = \"s.diallo@exemple.fr\"\nprint(client)\n",
+          "executable": true,
+          "sortie_attendue": "Diallo\n{'nom': 'Diallo', 'ville': 'Lyon', 'commandes': 4, 'email': 's.diallo@exemple.fr'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Lire une clé absente provoque une erreur `KeyError`. La méthode `get` renvoie plutôt une valeur par défaut."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "client = {\"nom\": \"Diallo\", \"ville\": \"Lyon\"}\nprint(client.get(\"telephone\", \"non renseigné\"))\nprint(\"ville\" in client)\n",
+          "executable": true,
+          "sortie_attendue": "non renseigné\nTrue\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Parcourir un dictionnaire\n\n`items()` donne chaque paire clé-valeur. On les récupère dans deux variables."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "stock = {\"stylos\": 120, \"cahiers\": 45, \"agrafeuses\": 8, \"trombones\": 3}\n\nfor article, quantite in stock.items():\n    if quantite < 10:\n        print(f\"À recommander : {article} ({quantite} restants)\")\n",
+          "executable": true,
+          "sortie_attendue": "À recommander : agrafeuses (8 restants)\nÀ recommander : trombones (3 restants)\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Compter\n\nUn usage très courant : compter combien de fois chaque valeur apparaît."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "services = [\"RH\", \"Ventes\", \"RH\", \"IT\", \"Ventes\", \"RH\"]\neffectifs = {}\nfor service in services:\n    effectifs[service] = effectifs.get(service, 0) + 1\nprint(effectifs)\n",
+          "executable": true,
+          "sortie_attendue": "{'RH': 3, 'Ventes': 2, 'IT': 1}\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Calcule la valeur du stock. Pour chaque article, affiche `stylos : 60.00 €` (quantité × prix unitaire), puis la valeur totale : `Valeur totale : 214.00 €`.",
+          "code": "stock = {\"stylos\": 120, \"cahiers\": 45, \"agrafeuses\": 8}\nprix = {\"stylos\": 0.5, \"cahiers\": 2.0, \"agrafeuses\": 8.0}\ntotal = 0\n# Parcours le stock avec items()\nprint(f\"Valeur totale : {total:.2f} €\")\n",
+          "solution": "stock = {\"stylos\": 120, \"cahiers\": 45, \"agrafeuses\": 8}\nprix = {\"stylos\": 0.5, \"cahiers\": 2.0, \"agrafeuses\": 8.0}\ntotal = 0\nfor article, quantite in stock.items():\n    valeur = quantite * prix[article]\n    print(f\"{article} : {valeur:.2f} €\")\n    total += valeur\nprint(f\"Valeur totale : {total:.2f} €\")\n",
+          "sortie_attendue": "stylos : 60.00 €\ncahiers : 90.00 €\nagrafeuses : 64.00 €\nValeur totale : 214.00 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `{\"cle\": valeur}` crée un dictionnaire, `d[\"cle\"]` lit une valeur.\n- `d[\"cle\"] = valeur` ajoute ou modifie.\n- `get` évite l'erreur sur une clé absente, `items()` permet de tout parcourir."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les dictionnaires",
+          "url": "https://docs.python.org/fr/3/tutorial/datastructures.html#dictionaries"
+        }
+      ]
+    },
+    {
+      "slug": "python-tuples-et-ensembles",
+      "titre": "Tuples et ensembles",
+      "resume": "Regrouper des valeurs fixes avec les tuples, et éliminer les doublons ou comparer des groupes avec les ensembles.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "python-dictionnaires"
+      ],
+      "objectifs": [
+        "Créer et décomposer un tuple",
+        "Supprimer des doublons avec un ensemble",
+        "Comparer deux ensembles"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Les tuples\n\nUn **tuple** ressemble à une liste, mais il ne se modifie pas. On l'écrit entre parenthèses. Il sert à regrouper des valeurs qui vont ensemble : des coordonnées, un nom et un salaire.\n\nOn peut le **décomposer** : ranger chacune de ses valeurs dans une variable, en une ligne."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "bureau = (45.76, 4.84)\nlatitude, longitude = bureau\nprint(latitude)\n\nsalaries = [(\"Ana\", 35000), (\"Bruno\", 42000)]\nfor nom, salaire in salaries:\n    print(f\"{nom} : {salaire} €\")\n",
+          "executable": true,
+          "sortie_attendue": "45.76\nAna : 35000 €\nBruno : 42000 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les ensembles\n\nUn **ensemble** (`set`) contient des valeurs **sans doublon** et **sans ordre**. On l'écrit entre accolades, sans `clé:`.\n\nIl permet de dédoublonner une liste, ou de comparer deux groupes :\n\n- `&` : les éléments communs ;\n- `|` : tous les éléments ;\n- `-` : ceux du premier qui ne sont pas dans le second."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "emails = [\"ana@ex.fr\", \"bruno@ex.fr\", \"ana@ex.fr\", \"chloe@ex.fr\"]\nprint(len(emails), \"emails,\", len(set(emails)), \"différents\")\n\nlundi = {\"Ana\", \"Bruno\", \"Chloé\"}\nmardi = {\"Bruno\", \"David\"}\nprint(sorted(lundi & mardi))\nprint(sorted(lundi | mardi))\nprint(sorted(lundi - mardi))\n",
+          "executable": true,
+          "sortie_attendue": "4 emails, 3 différents\n['Bruno']\n['Ana', 'Bruno', 'Chloé', 'David']\n['Ana', 'Chloé']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un ensemble n'a pas d'ordre : il peut s'afficher différemment d'une exécution à l'autre. Utilise `sorted` pour un affichage stable."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Deux équipes ont répondu à un sondage, et certaines personnes ont répondu plusieurs fois.\n\nAffiche la liste triée des personnes présentes dans **les deux** équipes, puis le nombre de personnes différentes au total : `['Bruno', 'Chloé']` puis `4`.",
+          "code": "equipe_a = [\"Ana\", \"Bruno\", \"Chloé\", \"Ana\"]\nequipe_b = [\"Bruno\", \"David\", \"Chloé\"]\n# Utilise des ensembles\n",
+          "solution": "equipe_a = [\"Ana\", \"Bruno\", \"Chloé\", \"Ana\"]\nequipe_b = [\"Bruno\", \"David\", \"Chloé\"]\na = set(equipe_a)\nb = set(equipe_b)\nprint(sorted(a & b))\nprint(len(a | b))\n",
+          "sortie_attendue": "['Bruno', 'Chloé']\n4\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Tuple `(a, b)` : des valeurs fixes, que l'on décompose avec `x, y = tuple`.\n- Ensemble `{a, b}` : pas de doublon, pas d'ordre.\n- `set(liste)` dédoublonne une liste."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : tuples et ensembles",
+          "url": "https://docs.python.org/fr/3/tutorial/datastructures.html#tuples-and-sequences"
+        }
+      ]
+    },
+    {
+      "slug": "python-comprehensions",
+      "titre": "Les compréhensions de liste",
+      "resume": "Créer une liste à partir d'une autre en une seule ligne lisible, en transformant et en filtrant ses éléments.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "python-boucle-for"
+      ],
+      "objectifs": [
+        "Transformer une liste avec une compréhension",
+        "Filtrer une liste avec une compréhension"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Créer une liste à partir d'une autre est si courant que Python propose une écriture courte : la **compréhension de liste**.\n\nCompare ces deux versions : elles font exactement la même chose."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "prix_ht = [10, 25, 40]\n\n# Avec une boucle\nprix_ttc = []\nfor prix in prix_ht:\n    prix_ttc.append(prix * 1.2)\nprint(prix_ttc)\n\n# Avec une compréhension\nprix_ttc = [prix * 1.2 for prix in prix_ht]\nprint(prix_ttc)\n",
+          "executable": true,
+          "sortie_attendue": "[12.0, 30.0, 48.0]\n[12.0, 30.0, 48.0]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Elle se lit presque comme une phrase : « `prix * 1.2` pour chaque `prix` dans `prix_ht` ».\n\nOn peut ajouter un `if` à la fin pour **filtrer**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "montants = [120, 85, 230, 40, 310]\ngrosses_commandes = [m for m in montants if m >= 100]\nprint(grosses_commandes)\n\nnoms = [\"  ana \", \"BRUNO\", \" Chloé\"]\npropres = [nom.strip().capitalize() for nom in noms]\nprint(propres)\n",
+          "executable": true,
+          "sortie_attendue": "[120, 230, 310]\n['Ana', 'Bruno', 'Chloé']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une compréhension doit rester lisible d'un coup d'œil. Si elle devient longue, reviens à une boucle `for` : c'est tout aussi correct."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "En **une seule ligne**, crée la liste des adresses de l'entreprise : celles qui se terminent par `@renard.fr`, écrites en minuscules.\n\nIndice : `texte.endswith(\"fin\")` vaut `True` si `texte` se termine par `\"fin\"`.",
+          "code": "emails = [\"Ana@renard.fr\", \"bruno@gmail.com\", \"CHLOE@RENARD.FR\", \"david@renard.fr\"]\ninternes = []\nprint(internes)\n",
+          "solution": "emails = [\"Ana@renard.fr\", \"bruno@gmail.com\", \"CHLOE@RENARD.FR\", \"david@renard.fr\"]\ninternes = [e.lower() for e in emails if e.lower().endswith(\"@renard.fr\")]\nprint(internes)\n",
+          "sortie_attendue": "['ana@renard.fr', 'chloe@renard.fr', 'david@renard.fr']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "`[expression for element in liste if condition]` : transformer et filtrer en une ligne."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : compréhensions de listes",
+          "url": "https://docs.python.org/fr/3/tutorial/datastructures.html#list-comprehensions"
+        }
+      ]
+    },
+    {
+      "slug": "python-fonctions",
+      "titre": "Écrire ses propres fonctions",
+      "resume": "Regrouper des instructions dans une fonction réutilisable, avec des paramètres et une valeur de retour.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-conditions",
+        "python-boucle-for"
+      ],
+      "objectifs": [
+        "Définir une fonction avec def",
+        "Passer des paramètres à une fonction",
+        "Renvoyer un résultat avec return"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Tu utilises déjà des fonctions : `print`, `len`, `sum`. Tu peux aussi créer les tiennes, pour ne pas réécrire le même code à plusieurs endroits.\n\nOn définit une fonction avec `def`, son nom, et ses **paramètres** entre parenthèses : les valeurs qu'elle attend. Le corps est indenté."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def saluer(prenom):\n    print(f\"Bonjour {prenom}, bienvenue dans l'équipe !\")\n\n\nsaluer(\"Ana\")\nsaluer(\"Bruno\")\n",
+          "executable": true,
+          "sortie_attendue": "Bonjour Ana, bienvenue dans l'équipe !\nBonjour Bruno, bienvenue dans l'équipe !\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Renvoyer un résultat\n\n`return` renvoie une valeur à celui qui appelle la fonction. On peut alors la ranger dans une variable ou l'utiliser dans un calcul."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def prix_ttc(prix_ht, taux):\n    return round(prix_ht * (1 + taux), 2)\n\n\nlivre = prix_ttc(20, 0.055)\ncasque = prix_ttc(80, 0.2)\nprint(livre, casque)\nprint(\"Total :\", livre + casque)\n",
+          "executable": true,
+          "sortie_attendue": "21.1 96.0\nTotal : 117.1\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## print ou return ?\n\n`print` **affiche** une valeur à l'écran, mais la fonction ne renvoie rien (en Python, « rien » s'écrit `None`). `return` **renvoie** la valeur pour qu'on puisse s'en servir."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def afficher_double(x):\n    print(x * 2)\n\n\ndef double(x):\n    return x * 2\n\n\nresultat = afficher_double(5)\nprint(resultat)\nprint(double(5) + 1)\n",
+          "executable": true,
+          "sortie_attendue": "10\nNone\n11\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Donne à tes fonctions un nom qui commence par un verbe et décrit **une** tâche : `calculer_remise`, `envoyer_relance`. Si tu as du mal à la nommer, elle en fait sans doute trop."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète la fonction `prix_avec_remise(prix, pourcentage)` : elle **renvoie** le prix après remise, arrondi à 2 décimales.\n\nLes appels de l'exemple doivent afficher `60.0` puis `17.99`.",
+          "code": "def prix_avec_remise(prix, pourcentage):\n    # À compléter\n    return prix\n\n\nprint(prix_avec_remise(80, 25))\nprint(prix_avec_remise(19.99, 10))\n",
+          "solution": "def prix_avec_remise(prix, pourcentage):\n    return round(prix * (1 - pourcentage / 100), 2)\n\n\nprint(prix_avec_remise(80, 25))\nprint(prix_avec_remise(19.99, 10))\n",
+          "sortie_attendue": "60.0\n17.99\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `def nom(parametres):` définit une fonction.\n- `return` renvoie un résultat, `print` ne fait qu'afficher.\n- Une fonction s'écrit une fois et s'utilise partout."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : définir des fonctions",
+          "url": "https://docs.python.org/fr/3/tutorial/controlflow.html#defining-functions"
+        }
+      ]
+    },
+    {
+      "slug": "python-fonctions-parametres",
+      "titre": "Paramètres par défaut et arguments nommés",
+      "resume": "Rendre tes fonctions plus souples : valeurs par défaut, arguments nommés, plusieurs résultats et documentation.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "python-fonctions"
+      ],
+      "objectifs": [
+        "Donner une valeur par défaut à un paramètre",
+        "Appeler une fonction avec des arguments nommés",
+        "Renvoyer plusieurs valeurs"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un paramètre peut avoir une **valeur par défaut**, utilisée quand on ne la précise pas.\n\nÀ l'appel, on peut aussi nommer les **arguments** (les valeurs qu'on transmet) : l'ordre n'a alors plus d'importance, et l'appel devient plus lisible.\n\nLa chaîne entre triples guillemets juste sous `def` est une **docstring** : elle documente la fonction."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def formater_montant(montant, devise=\"€\"):\n    \"\"\"Affiche un montant avec deux décimales et sa devise.\"\"\"\n    return f\"{montant:.2f} {devise}\"\n\n\nprint(formater_montant(12.5))\nprint(formater_montant(12.5, \"$\"))\nprint(formater_montant(devise=\"CHF\", montant=8))\n",
+          "executable": true,
+          "sortie_attendue": "12.50 €\n12.50 $\n8.00 CHF\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Renvoyer plusieurs valeurs\n\nUne fonction peut renvoyer plusieurs valeurs séparées par des virgules : Python en fait un tuple, que tu décomposes à l'appel."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def statistiques(valeurs):\n    \"\"\"Renvoie le minimum, le maximum et la moyenne.\"\"\"\n    moyenne = sum(valeurs) / len(valeurs)\n    return min(valeurs), max(valeurs), moyenne\n\n\nbas, haut, moyenne = statistiques([12, 18, 9, 15])\nprint(f\"De {bas} à {haut}, moyenne {moyenne}\")\n",
+          "executable": true,
+          "sortie_attendue": "De 9 à 18, moyenne 13.5\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Les paramètres avec une valeur par défaut se placent **après** ceux qui n'en ont pas : `def f(a, b=1)` est correct, `def f(a=1, b)` provoque une erreur."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris `creer_identifiant(prenom, nom, separateur=\".\")`. Elle renvoie le prénom et le nom en minuscules, reliés par le séparateur.\n\nRésultat attendu : `ana.martin` puis `bruno_diallo`.",
+          "code": "def creer_identifiant(prenom, nom):\n    return prenom + nom\n\n\nprint(creer_identifiant(\"Ana\", \"Martin\"))\nprint(creer_identifiant(\"Bruno\", \"Diallo\"))\n",
+          "solution": "def creer_identifiant(prenom, nom, separateur=\".\"):\n    return f\"{prenom}{separateur}{nom}\".lower()\n\n\nprint(creer_identifiant(\"Ana\", \"Martin\"))\nprint(creer_identifiant(\"Bruno\", \"Diallo\", separateur=\"_\"))\n",
+          "sortie_attendue": "ana.martin\nbruno_diallo\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `def f(x, option=\"defaut\")` : un paramètre facultatif.\n- `f(option=\"autre\", x=3)` : des arguments nommés, dans l'ordre que tu veux.\n- `return a, b` renvoie plusieurs valeurs."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : plus sur les fonctions",
+          "url": "https://docs.python.org/fr/3/tutorial/controlflow.html#more-on-defining-functions"
+        }
+      ]
+    },
+    {
+      "slug": "python-erreurs-et-exceptions",
+      "titre": "Comprendre et gérer les erreurs",
+      "resume": "Lire un message d'erreur, intercepter une exception avec try et except, et signaler toi-même un problème avec raise.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "python-fonctions"
+      ],
+      "objectifs": [
+        "Lire un message d'erreur Python",
+        "Intercepter une erreur avec try et except",
+        "Lever une exception avec raise"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Quand Python ne peut pas exécuter une instruction, il s'arrête et affiche une **exception** : un message qui décrit l'erreur. Par exemple :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "print(int(\"douze\"))\n# ValueError: invalid literal for int() with base 10: 'douze'\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "Lis le message en partant de la fin : le **type d'erreur** (`ValueError`, une valeur invalide), puis l'explication. Python indique aussi le numéro de la ligne fautive.\n\n## Intercepter une erreur\n\nCertaines erreurs sont prévisibles : une saisie mal remplie, une division par zéro. Avec `try` et `except`, tu les traites sans arrêter le programme."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "saisies = [\"12\", \"douze\", \"7\"]\n\nfor saisie in saisies:\n    try:\n        quantite = int(saisie)\n        print(f\"{saisie} -> {quantite}\")\n    except ValueError:\n        print(f\"« {saisie} » n'est pas un nombre\")\n",
+          "executable": true,
+          "sortie_attendue": "12 -> 12\n« douze » n'est pas un nombre\n7 -> 7\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Python essaie le bloc `try`. En cas d'erreur du type indiqué, il exécute le bloc `except` à la place, puis continue."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def taux_de_reussite(reussites, total):\n    try:\n        return reussites / total\n    except ZeroDivisionError:\n        return None\n\n\nprint(taux_de_reussite(15, 20))\nprint(taux_de_reussite(0, 0))\n",
+          "executable": true,
+          "sortie_attendue": "0.75\nNone\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Signaler un problème\n\nDans tes propres fonctions, `raise` lève une exception quand une règle n'est pas respectée. `as erreur` récupère le message."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def retirer(solde, montant):\n    if montant > solde:\n        raise ValueError(\"solde insuffisant\")\n    return solde - montant\n\n\nprint(retirer(100, 30))\ntry:\n    retirer(50, 80)\nexcept ValueError as erreur:\n    print(\"Opération refusée :\", erreur)\n",
+          "executable": true,
+          "sortie_attendue": "70\nOpération refusée : solde insuffisant\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "N'écris jamais un `except` qui avale toutes les erreurs sans rien dire : tu cacherais de vrais bugs. Intercepte seulement les erreurs que tu sais traiter."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète `lire_age(texte)` : elle renvoie l'âge en nombre entier, ou `None` si le texte n'est pas un nombre. Le programme ne doit plus s'arrêter sur « quarante ».\n\nIndice : décommente la dernière ligne quand ta fonction est prête.",
+          "code": "def lire_age(texte):\n    return int(texte)\n\n\nfor texte in [\"42\", \"7\"]:  # ajoute \"quarante\" à la liste\n    print(texte, \"->\", lire_age(texte))\n",
+          "solution": "def lire_age(texte):\n    try:\n        return int(texte)\n    except ValueError:\n        return None\n\n\nfor texte in [\"42\", \"quarante\", \"7\"]:\n    print(texte, \"->\", lire_age(texte))\n",
+          "sortie_attendue": "42 -> 42\nquarante -> None\n7 -> 7\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un message d'erreur se lit de bas en haut : type, explication, ligne.\n- `try` / `except TypeErreur:` traite une erreur prévue.\n- `raise ValueError(\"...\")` signale un problème."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : erreurs et exceptions",
+          "url": "https://docs.python.org/fr/3/tutorial/errors.html"
+        }
+      ]
+    },
+    {
+      "slug": "python-modules",
+      "titre": "Utiliser les modules de Python",
+      "resume": "Importer des outils prêts à l'emploi de la bibliothèque standard : calculs mathématiques, statistiques et dates.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "python-fonctions"
+      ],
+      "objectifs": [
+        "Importer un module avec import",
+        "Importer un élément précis avec from",
+        "Calculer avec math, statistics et datetime"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Python est livré avec une **bibliothèque standard** : des centaines de **modules**, c'est-à-dire des fichiers de code prêts à l'emploi. Pas besoin de tout réécrire.\n\n`import nom` charge un module. On utilise ensuite ses fonctions avec un point : `math.sqrt`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import math\n\nprint(math.sqrt(16))   # racine carrée\nprint(math.ceil(4.2))  # arrondi à l'entier supérieur\nprint(math.pi)\n",
+          "executable": true,
+          "sortie_attendue": "4.0\n5\n3.141592653589793\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le module `statistics` calcule moyennes et médianes. La **médiane** est la valeur du milieu, une fois les valeurs triées : elle résiste mieux aux valeurs extrêmes que la moyenne."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import statistics\n\ndelais_livraison = [2, 3, 3, 4, 15]\nprint(statistics.mean(delais_livraison))\nprint(statistics.median(delais_livraison))\n",
+          "executable": true,
+          "sortie_attendue": "5.4\n3\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Importer seulement ce qu'il faut\n\n`from module import element` importe un élément précis, qu'on utilise ensuite sans le préfixe du module. Le module `datetime` sert à manipuler des dates."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from datetime import date, timedelta\n\nfacture = date(2026, 10, 5)\necheance = facture + timedelta(days=30)\nprint(echeance)\nprint(echeance.strftime(\"%d/%m/%Y\"))\nprint((echeance - facture).days, \"jours\")\n",
+          "executable": true,
+          "sortie_attendue": "2026-11-04\n04/11/2026\n30 jours\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Avant d'écrire une fonction générale (trier, calculer une date, lire un CSV), cherche si la bibliothèque standard ne la propose pas déjà. C'est souvent le cas."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Une facture émise le **15 novembre 2026** est payable à **45 jours**.\n\nAvec le module `datetime`, affiche la date d'échéance au format `jj/mm/aaaa`. Puis, avec `math.ceil`, affiche combien de cartons de 12 bouteilles il faut pour en livrer 100.",
+          "code": "from datetime import date, timedelta\nimport math\n\nfacture = date(2026, 11, 15)\n# Calcule l'échéance, puis le nombre de cartons\n",
+          "solution": "from datetime import date, timedelta\nimport math\n\nfacture = date(2026, 11, 15)\necheance = facture + timedelta(days=45)\nprint(echeance.strftime(\"%d/%m/%Y\"))\nprint(math.ceil(100 / 12), \"cartons\")\n",
+          "sortie_attendue": "30/12/2026\n9 cartons\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `import module`, puis `module.fonction()`.\n- `from module import fonction`, puis `fonction()`.\n- `math`, `statistics` et `datetime` font partie de la bibliothèque standard."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Documentation Python : la bibliothèque standard",
+          "url": "https://docs.python.org/fr/3/library/index.html"
+        }
+      ]
+    },
+    {
+      "slug": "python-classes-et-objets",
+      "titre": "Classes et objets",
+      "resume": "Créer tes propres types avec une classe : regrouper des données et les actions qui vont avec.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 18,
+      "prerequis": [
+        "python-fonctions-parametres",
+        "python-erreurs-et-exceptions"
+      ],
+      "objectifs": [
+        "Définir une classe avec un constructeur",
+        "Créer plusieurs objets à partir d'une classe",
+        "Écrire et appeler une méthode"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **classe** est un modèle qui décrit un type d'objet : ses données (les **attributs**) et ce qu'il sait faire (les **méthodes**). Un **objet** est un exemplaire créé à partir de ce modèle.\n\nPar exemple, la classe `CompteBancaire` décrit ce qu'est un compte. Le compte d'Ana et celui de Bruno sont deux objets de cette classe."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class CompteBancaire:\n    def __init__(self, titulaire, solde=0):\n        self.titulaire = titulaire\n        self.solde = solde\n\n    def deposer(self, montant):\n        self.solde += montant\n\n    def afficher(self):\n        print(f\"{self.titulaire} : {self.solde} €\")\n\n\ncompte_ana = CompteBancaire(\"Ana\", 100)\ncompte_bruno = CompteBancaire(\"Bruno\")\n\ncompte_ana.deposer(50)\ncompte_ana.afficher()\ncompte_bruno.afficher()\n",
+          "executable": true,
+          "sortie_attendue": "Ana : 150 €\nBruno : 0 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Quelques repères :\n\n- `__init__` est le **constructeur** : Python l'appelle quand on crée un objet avec `CompteBancaire(...)` ;\n- `self` désigne l'objet lui-même. `self.solde` est le solde de **ce** compte-là ;\n- une méthode est une fonction définie dans la classe. On l'appelle avec un point : `compte_ana.deposer(50)`."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Protéger les règles\n\nUne méthode peut vérifier une règle avant de modifier l'objet. Ainsi, la règle est écrite à un seul endroit."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class CompteBancaire:\n    def __init__(self, titulaire, solde=0):\n        self.titulaire = titulaire\n        self.solde = solde\n\n    def retirer(self, montant):\n        if montant > self.solde:\n            raise ValueError(\"solde insuffisant\")\n        self.solde -= montant\n\n\ncompte = CompteBancaire(\"Ana\", 100)\ncompte.retirer(30)\nprint(compte.solde)\n\ntry:\n    compte.retirer(500)\nexcept ValueError as erreur:\n    print(\"Refusé :\", erreur)\nprint(compte.solde)\n",
+          "executable": true,
+          "sortie_attendue": "70\nRefusé : solde insuffisant\n70\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des listes d'objets\n\nLes objets se rangent dans des listes comme n'importe quelle valeur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Article:\n    def __init__(self, nom, prix, quantite):\n        self.nom = nom\n        self.prix = prix\n        self.quantite = quantite\n\n    def sous_total(self):\n        return self.prix * self.quantite\n\n\npanier = [Article(\"Clavier\", 45, 2), Article(\"Souris\", 20, 3), Article(\"Écran\", 180, 1)]\n\ntotal = 0\nfor article in panier:\n    print(f\"{article.nom} : {article.sous_total()} €\")\n    total += article.sous_total()\nprint(\"Total :\", total, \"€\")\n",
+          "executable": true,
+          "sortie_attendue": "Clavier : 90 €\nSouris : 60 €\nÉcran : 180 €\nTotal : 330 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Par convention, le nom d'une classe commence par une majuscule et colle les mots : `CompteBancaire`. Les variables et les fonctions restent en minuscules avec des `_`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète la classe `Panier` :\n\n- `ajouter(nom, prix)` ajoute un article à la liste `self.articles` ;\n- `total()` renvoie la somme des prix.\n\nLe programme doit afficher `2 articles, total : 65 €`.",
+          "code": "class Panier:\n    def __init__(self):\n        self.articles = []\n\n    def ajouter(self, nom, prix):\n        pass  # À compléter\n\n    def total(self):\n        return 0  # À compléter\n\n\npanier = Panier()\npanier.ajouter(\"Clavier\", 45)\npanier.ajouter(\"Souris\", 20)\nprint(f\"{len(panier.articles)} articles, total : {panier.total()} €\")\n",
+          "solution": "class Panier:\n    def __init__(self):\n        self.articles = []\n\n    def ajouter(self, nom, prix):\n        self.articles.append((nom, prix))\n\n    def total(self):\n        somme = 0\n        for nom, prix in self.articles:\n            somme += prix\n        return somme\n\n\npanier = Panier()\npanier.ajouter(\"Clavier\", 45)\npanier.ajouter(\"Souris\", 20)\nprint(f\"{len(panier.articles)} articles, total : {panier.total()} €\")\n",
+          "sortie_attendue": "2 articles, total : 65 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `class Nom:` définit un modèle, `Nom(...)` crée un objet.\n- `__init__` initialise les attributs, `self` désigne l'objet.\n- Les méthodes regroupent les actions et les règles de l'objet.\n\nPour aller plus loin, le parcours « Design patterns en Python pour les API critiques » s'appuie sur ces notions."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les classes",
+          "url": "https://docs.python.org/fr/3/tutorial/classes.html"
+        }
+      ]
+    },
+    {
+      "slug": "python-projet-suivi-des-depenses",
+      "titre": "Mini-projet : un suivi de dépenses",
+      "resume": "Assembler listes, dictionnaires, boucles, conditions, fonctions et exceptions dans un petit outil de suivi de dépenses.",
+      "theme": "python",
+      "niveau": "debutant",
+      "duree_minutes": 18,
+      "prerequis": [
+        "python-classes-et-objets"
+      ],
+      "objectifs": [
+        "Combiner les notions du parcours dans un même programme",
+        "Découper un problème en petites fonctions",
+        "Produire un rapport lisible"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour finir, construisons un outil complet. Une équipe a noté ses dépenses du mois sous forme de lignes de texte, comme dans un fichier CSV. On veut :\n\n1. lire chaque ligne, en écartant celles qui sont mal remplies ;\n2. calculer le total par catégorie ;\n3. signaler les catégories qui dépassent leur budget.\n\nChaque étape est une petite fonction. Lis le code de haut en bas : tu connais déjà chacune des notions utilisées."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "lignes = [\n    \"2026-10-01;Transport;42.50\",\n    \"2026-10-02;Repas;18.90\",\n    \"2026-10-03;Transport;61.00\",\n    \"2026-10-03;Fournitures;douze\",\n    \"2026-10-04;Repas;23.40\",\n    \"2026-10-05;Logiciels;49.00\",\n    \"2026-10-06;Repas;31.20\",\n]\n\nbudgets = {\"Transport\": 100, \"Repas\": 60, \"Logiciels\": 50, \"Fournitures\": 30}\n\n\ndef lire_depense(ligne):\n    \"\"\"Transforme une ligne en dictionnaire. Lève ValueError si le montant est invalide.\"\"\"\n    date, categorie, montant = ligne.split(\";\")\n    return {\"date\": date, \"categorie\": categorie, \"montant\": float(montant)}\n\n\ndef lire_toutes(lignes):\n    depenses = []\n    for ligne in lignes:\n        try:\n            depenses.append(lire_depense(ligne))\n        except ValueError:\n            print(f\"Ligne ignorée : {ligne}\")\n    return depenses\n\n\ndef totaux_par_categorie(depenses):\n    totaux = {}\n    for depense in depenses:\n        categorie = depense[\"categorie\"]\n        totaux[categorie] = totaux.get(categorie, 0) + depense[\"montant\"]\n    return totaux\n\n\ndef afficher_rapport(totaux, budgets):\n    print()\n    print(\"Rapport du mois\")\n    for categorie in sorted(totaux):\n        total = totaux[categorie]\n        budget = budgets.get(categorie, 0)\n        alerte = \"  <- budget dépassé\" if total > budget else \"\"\n        print(f\"{categorie:<12} {total:>7.2f} € / {budget} €{alerte}\")\n    print(f\"{'Total':<12} {sum(totaux.values()):>7.2f} €\")\n\n\ndepenses = lire_toutes(lignes)\nafficher_rapport(totaux_par_categorie(depenses), budgets)\n",
+          "executable": true,
+          "sortie_attendue": "Ligne ignorée : 2026-10-03;Fournitures;douze\n\nRapport du mois\nLogiciels      49.00 € / 50 €\nRepas          73.50 € / 60 €  <- budget dépassé\nTransport     103.50 € / 100 €  <- budget dépassé\nTotal         226.00 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Quelques détails nouveaux :\n\n- `valeur_si_vrai if condition else valeur_si_faux` est une condition sur une seule ligne ;\n- dans une f-string, `<12` aligne à gauche sur 12 caractères, et `>7.2f` aligne à droite sur 7 caractères avec deux décimales : le rapport forme des colonnes bien droites ;\n- `sorted(totaux)` parcourt les clés du dictionnaire par ordre alphabétique."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "À toi de jouer : corrige la ligne « douze » en `12.00`, ajoute une catégorie « Formation » avec un budget, ou affiche la dépense la plus élevée du mois."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète `plus_grosse_depense(depenses)` : elle renvoie la dépense au montant le plus élevé.\n\nLe programme doit afficher `Plus grosse dépense : 61.00 € (Transport, 2026-10-03)`.",
+          "code": "depenses = [\n    {\"date\": \"2026-10-01\", \"categorie\": \"Transport\", \"montant\": 42.50},\n    {\"date\": \"2026-10-02\", \"categorie\": \"Repas\", \"montant\": 18.90},\n    {\"date\": \"2026-10-03\", \"categorie\": \"Transport\", \"montant\": 61.00},\n    {\"date\": \"2026-10-05\", \"categorie\": \"Logiciels\", \"montant\": 49.00},\n]\n\n\ndef plus_grosse_depense(depenses):\n    return depenses[0]  # À compléter\n\n\nd = plus_grosse_depense(depenses)\nprint(f\"Plus grosse dépense : {d['montant']:.2f} € ({d['categorie']}, {d['date']})\")\n",
+          "solution": "depenses = [\n    {\"date\": \"2026-10-01\", \"categorie\": \"Transport\", \"montant\": 42.50},\n    {\"date\": \"2026-10-02\", \"categorie\": \"Repas\", \"montant\": 18.90},\n    {\"date\": \"2026-10-03\", \"categorie\": \"Transport\", \"montant\": 61.00},\n    {\"date\": \"2026-10-05\", \"categorie\": \"Logiciels\", \"montant\": 49.00},\n]\n\n\ndef plus_grosse_depense(depenses):\n    plus_grosse = depenses[0]\n    for depense in depenses:\n        if depense[\"montant\"] > plus_grosse[\"montant\"]:\n            plus_grosse = depense\n    return plus_grosse\n\n\nd = plus_grosse_depense(depenses)\nprint(f\"Plus grosse dépense : {d['montant']:.2f} € ({d['categorie']}, {d['date']})\")\n",
+          "sortie_attendue": "Plus grosse dépense : 61.00 € (Transport, 2026-10-03)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Un programme lisible, c'est une suite de petites fonctions qui font chacune une chose. Bravo : tu as fait le tour des fondamentaux de Python !"
+        }
+      ],
+      "sources": []
+    }
+  ]
+}

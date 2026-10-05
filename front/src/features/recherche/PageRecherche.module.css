@@ -1,0 +1,100 @@
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  padding: var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.saisie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--esp-3);
+}
+
+.saisie > :first-child {
+  flex: 1 1 18rem;
+}
+
+/* Aligne le bouton sur le champ, sous son libellé. */
+.saisie > button {
+  margin-top: calc(1lh + var(--esp-1));
+}
+
+.filtres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--esp-4);
+}
+
+.annonce {
+  margin: var(--esp-6) 0 0;
+  font-weight: 700;
+}
+
+.section {
+  margin-top: var(--esp-8);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lecon {
+  padding: var(--esp-4) var(--esp-6);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.lecon p {
+  margin: var(--esp-2) 0 0;
+}
+
+.titre {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.titre a {
+  color: var(--texte);
+}
+
+.meta {
+  color: var(--texte-doux);
+  font-size: 1rem;
+}
+
+.terminee {
+  color: var(--succes);
+  font-weight: 700;
+}
+
+.extrait {
+  padding-left: var(--esp-3);
+  border-left: 3px solid var(--turquoise);
+}
+
+.section mark {
+  border-radius: 4px;
+  background: var(--surlignage);
+  /* Même dans un texte secondaire : le contraste est calculé avec la couleur du texte. */
+  color: var(--texte);
+}

@@ -1,0 +1,73 @@
+.carte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+  overflow: hidden;
+  transition: transform var(--duree-animation);
+}
+
+.carte:hover {
+  transform: translateY(-2px);
+}
+
+/* Les pastels sont clairs dans les deux thèmes : le texte de l'en-tête reste foncé. */
+.entete {
+  padding: var(--esp-6) var(--esp-4) var(--esp-3);
+  color: var(--sur-pastel);
+}
+
+.theme {
+  font-weight: 800;
+  font-size: 0.9375rem;
+}
+
+.corps {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--esp-2);
+  padding: var(--esp-4);
+}
+
+.titre {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+/* Toute la carte est cliquable, mais le lien reste le titre (une seule cible au clavier). */
+.lien {
+  color: var(--texte);
+  text-decoration: none;
+}
+
+.lien::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.lien:hover,
+.lien:focus-visible {
+  text-decoration: underline;
+}
+
+.carte:has(.lien:focus-visible) {
+  box-shadow:
+    var(--ombre),
+    0 0 0 3px var(--primaire);
+}
+
+.meta,
+.description {
+  margin: 0;
+  color: var(--texte-doux);
+  font-size: 0.9375rem;
+}
+
+.progression {
+  margin-top: auto;
+  padding-top: var(--esp-2);
+}

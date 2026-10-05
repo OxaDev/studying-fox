@@ -1,0 +1,63 @@
+.bloc {
+  margin: var(--esp-6) 0;
+  border: 1px solid var(--bordure);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.barre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  padding: var(--esp-2) var(--esp-4);
+  border-bottom: 1px solid var(--bordure);
+  font-weight: 700;
+}
+
+.titre {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+}
+
+.statique {
+  margin: 0;
+  padding: var(--esp-4);
+  overflow-x: auto;
+  font-size: 1rem;
+}
+
+.sortie:not(:empty) {
+  padding: var(--esp-3) var(--esp-4);
+  border-top: 1px solid var(--bordure);
+}
+
+.sortie p {
+  margin: 0 0 var(--esp-2);
+}
+
+.statut {
+  font-weight: 700;
+}
+
+.console {
+  margin: 0;
+  padding: var(--esp-3);
+  border-radius: 8px;
+  background: var(--fond);
+  font-size: 1rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.erreur {
+  color: var(--erreur);
+}

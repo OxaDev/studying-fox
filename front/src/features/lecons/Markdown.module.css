@@ -1,0 +1,85 @@
+.markdown {
+  max-width: 46rem;
+}
+
+.markdown :where(p, ul, ol) {
+  margin-block: var(--esp-4);
+}
+
+.markdown :where(code):not(pre code) {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: var(--fond);
+  font-size: 0.95em;
+}
+
+.markdown img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.encadre {
+  margin-block: var(--esp-6);
+  padding: var(--esp-4) var(--esp-6);
+  border-left: 6px solid var(--primaire);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.encadre[data-variante="attention"] {
+  border-left-color: var(--erreur);
+}
+
+.encadre[data-variante="a_retenir"] {
+  border-left-color: var(--succes-icone);
+}
+
+.encadre > :last-child {
+  margin-bottom: 0;
+}
+
+.titreEncadre {
+  margin: 0 0 var(--esp-2);
+  font-weight: 800;
+}
+
+.exercice {
+  margin-block: var(--esp-6);
+  padding: var(--esp-4) var(--esp-6);
+  border: 2px solid var(--primaire);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.exercice > :last-child {
+  margin-bottom: 0;
+}
+
+.solution {
+  margin-block: var(--esp-4);
+}
+
+.boutonSolution {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  min-height: 44px;
+  padding: var(--esp-2) var(--esp-3);
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--primaire);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.boutonSolution[data-hovered] {
+  text-decoration: underline;
+}
+
+.boutonSolution[data-focus-visible] {
+  box-shadow: var(--focus);
+}

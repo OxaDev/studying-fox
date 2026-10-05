@@ -1,0 +1,72 @@
+.entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-4);
+  padding: var(--esp-4) var(--esp-6);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.logo {
+  font-weight: 800;
+  color: var(--texte);
+  text-decoration: none;
+}
+
+.menu {
+  display: flex;
+  gap: var(--esp-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu a {
+  color: var(--texte);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.menu a[aria-current="page"] {
+  color: var(--primaire);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.compte {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  font-weight: 700;
+}
+
+.recherche {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--rayon-bouton);
+  color: var(--texte);
+}
+
+.recherche:hover,
+.recherche[aria-current="page"] {
+  background: var(--survol-secondaire);
+  color: var(--primaire);
+}
+
+.recherche svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.contenu {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--esp-8) var(--esp-4);
+}
