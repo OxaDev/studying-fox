@@ -20,3 +20,5 @@ front/public/pyodide/
 # Système
 .DS_Store
 api/medias/
+local_ignore
+local_ignore/*

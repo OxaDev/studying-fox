@@ -10,7 +10,7 @@
     "id": "311004f1-e9d5-48ac-a31c-301251175a97",
     "slug": "automatiser-excel-avec-vba",
     "titre": "Automatiser Excel avec VBA",
-    "description": "Découvrir le VBA sans prérequis : écrire des macros, lire et remplir les cellules, décider, répéter, découper son code, mettre en forme et gérer les erreurs. Des exemples tirés du bureau, et un rapport des ventes automatique pour finir.",
+    "description": "Découvrir le VBA sans prérequis : écrire des macros, lire et remplir les cellules, décider, répéter, découper son code, mettre en forme, gérer les erreurs et écrire des formules. Des exemples tirés du bureau, et un rapport des ventes automatique pour finir.",
     "niveau": "debutant",
     "theme": "vba",
     "lecons": [
@@ -23,6 +23,7 @@
       "vba-procedures-et-fonctions",
       "vba-mise-en-forme",
       "vba-gerer-les-erreurs",
+      "vba-ecrire-des-formules",
       "vba-projet-rapport-des-ventes"
     ]
   },
@@ -781,6 +782,114 @@
       ]
     },
     {
+      "id": "eebcb43e-18a3-40c2-b75e-d092185ca77c",
+      "slug": "vba-ecrire-des-formules",
+      "titre": "Écrire des formules par macro",
+      "resume": "Faire écrire des formules Excel par une macro : Formula en anglais, FormulaLocal en français, recopie relative et erreurs de cellule.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "vba-gerer-les-erreurs"
+      ],
+      "objectifs": [
+        "Écrire une formule dans une cellule avec Formula",
+        "Remplir toute une colonne avec une seule formule",
+        "Utiliser FormulaLocal pour écrire en français",
+        "Repérer et rattraper une erreur de cellule"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Jusqu'ici, la macro calculait elle-même et écrivait des **valeurs**. Elle peut aussi écrire une **formule** : la cellule se recalcule alors toute seule quand les données changent, même après la fin de la macro.\n\nAvec `.Formula`, la formule s'écrit **en anglais**, avec des virgules entre les arguments : `=SUM(A1:A3)`."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = \"Prix HT\": Range(\"B1\").Value = 200\n    Range(\"A2\").Value = \"TVA\": Range(\"B2\").Formula = \"=B1*0.2\"\n    Range(\"A3\").Value = \"Prix TTC\": Range(\"B3\").Formula = \"=B1+B2\"\n    Debug.Print \"TTC : \" & Range(\"B3\").Value\n\n    Range(\"B1\").Value = 500\n    Debug.Print \"TTC après changement : \" & Range(\"B3\").Value\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "TTC : 240\nTTC après changement : 600\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`.Value` renvoie le **résultat** de la formule, `.Formula` son **texte**. `.HasFormula` dit si la cellule contient une formule."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = 200\n    Range(\"A2\").Formula = \"=A1*1.2\"\n    Debug.Print \"Formule : \" & Range(\"A2\").Formula\n    Debug.Print \"Résultat : \" & Range(\"A2\").Value\n    Debug.Print \"A1 a une formule : \" & Range(\"A1\").HasFormula\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Formule : =A1*1.2\nRésultat : 240\nA1 a une formule : Faux\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Toute une colonne d'un coup\n\nDonne une formule à une **plage** : Excel l'écrit pour la première cellule, puis la **recopie** vers le bas en décalant les références, comme quand tu tires la poignée de recopie. `=B2*C2` devient `=B3*C3` sur la ligne suivante.\n\nUne référence avec des `$`, comme `$F$1`, est **absolue** : elle ne se décale pas. C'est utile pour un taux rangé dans une seule cellule."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1:D1\").Value = Array(\"Produit\", \"Prix\", \"Quantité\", \"Total remisé\")\n    Range(\"A2:C2\").Value = Array(\"Stylos\", 10, 3)\n    Range(\"A3:C3\").Value = Array(\"Cahiers\", 4, 5)\n    Range(\"A4:C4\").Value = Array(\"Agendas\", 25, 2)\n    Range(\"F1\").Value = 0.1   ' taux de remise\n\n    Range(\"D2:D4\").Formula = \"=B2*C2*(1-$F$1)\"\n    Debug.Print Range(\"D3\").Formula & \" = \" & Range(\"D3\").Value\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "=B3*C3*(1-$F$1) = 18\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## En français : FormulaLocal\n\n`.FormulaLocal` accepte la formule comme tu la tapes dans un Excel français : noms français et points-virgules, `=SOMME(D2:D4)`. Les deux propriétés décrivent la même formule."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1:A3\").Value = 30\n    Range(\"A4\").FormulaLocal = \"=SOMME(A1:A3)\"\n    Range(\"A5\").FormulaLocal = \"=SI(A4>50;\"\"Objectif atteint\"\";\"\"En cours\"\")\"\n    Debug.Print Range(\"A4\").Formula & \" vaut \" & Range(\"A4\").Value\n    Debug.Print Range(\"A5\").Formula\n    Debug.Print Range(\"A5\").Value\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "=SUM(A1:A3) vaut 90\n=IF(A4>50,\"Objectif atteint\",\"En cours\")\nObjectif atteint\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Dans une chaîne VBA, un guillemet s'écrit en double : `\"\"Objectif atteint\"\"`. Et `.Formula` exige l'anglais avec des virgules : `\"=SOMME(A1;A2)\"` y provoque l'erreur 1004. En français, utilise `.FormulaLocal`."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les erreurs de cellule\n\nUne formule impossible affiche une **erreur de cellule** : `#DIV/0!` pour une division par zéro, `#N/A` pour une recherche sans résultat, `#NAME?` pour une fonction inconnue. En VBA, `IsError` la repère, et `.Text` la montre.\n\nPour éviter l'erreur, la formule elle-même peut la rattraper avec `IFERROR` (`SIERREUR` en français)."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = 120: Range(\"B1\").Value = 0\n    Range(\"C1\").Formula = \"=A1/B1\"\n    Debug.Print \"Résultat : \" & Range(\"C1\").Text\n    If IsError(Range(\"C1\").Value) Then Debug.Print \"C1 contient une erreur\"\n\n    Range(\"C1\").Formula = \"=IFERROR(A1/B1,\"\"-\"\")\"\n    Debug.Print \"Avec IFERROR : \" & Range(\"C1\").Text\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Résultat : #DIV/0!\nC1 contient une erreur\nAvec IFERROR : -\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "L'enregistreur de macros écrit ses formules avec `.FormulaR1C1` : `ActiveCell.FormulaR1C1 = \"=RC[-2]*RC[-1]\"`. `RC[-2]` veut dire « même ligne, deux colonnes à gauche ». Tu sais maintenant relire ce code."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Les notes sont en B2:B5. Écris **en une seule instruction** une formule en C2:C5 qui affiche `Admis` si la note est d'au moins 10, `Ajourné` sinon.\n\nÉcris ensuite en C6 une formule qui compte les `Admis`, et affiche : `Admis : 3`.",
+          "code": "Sub Main()\n    Range(\"B2\").Value = 12\n    Range(\"B3\").Value = 8\n    Range(\"B4\").Value = 15\n    Range(\"B5\").Value = 10\n\n    ' Écris la formule de C2:C5, puis celle de C6\nEnd Sub\n",
+          "solution": "Sub Main()\n    Range(\"B2\").Value = 12\n    Range(\"B3\").Value = 8\n    Range(\"B4\").Value = 15\n    Range(\"B5\").Value = 10\n\n    Range(\"C2:C5\").Formula = \"=IF(B2>=10,\"\"Admis\"\",\"\"Ajourné\"\")\"\n    Range(\"C6\").Formula = \"=COUNTIF(C2:C5,\"\"Admis\"\")\"\n    Debug.Print \"Admis : \" & Range(\"C6\").Value\nEnd Sub\n",
+          "sortie_attendue": "Admis : 3\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `.Formula = \"=...\"` écrit une formule en anglais, `.FormulaLocal` en français.\n- Une formule donnée à une plage se recopie en relatif ; `$A$1` ne bouge pas.\n- `.Value` donne le résultat, `.Formula` le texte ; `IsError` repère une erreur de cellule."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Propriété Range.Formula",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range.formula"
+        },
+        {
+          "titre": "Propriété Range.FormulaLocal",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range.formulalocal"
+        }
+      ]
+    },
+    {
       "id": "d30777aa-3bf1-4c6d-b3ac-a5dee1877cf9",
       "slug": "vba-projet-rapport-des-ventes",
       "titre": "Projet : un rapport des ventes automatique",
@@ -789,12 +898,13 @@
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
-        "vba-gerer-les-erreurs"
+        "vba-ecrire-des-formules"
       ],
       "objectifs": [
         "Organiser une macro complète en procédures",
         "Calculer un total, un maximum et un nombre de ventes",
-        "Écrire un rapport mis en forme sur la feuille"
+        "Écrire un rapport mis en forme sur la feuille",
+        "Ajouter au rapport une formule qui reste à jour"
       ],
       "blocs": [
         {
@@ -838,15 +948,15 @@
         {
           "type": "exercice",
           "langage": "vba",
-          "consigne": "Complète `EcrireRapport` : ajoute en D4 le libellé **Moyenne**, et en E4 la moyenne des ventes (le total divisé par le nombre de ventes), au format `\"#,##0 €\"`.\n\nAffiche enfin le texte de E4 : `Moyenne : 1 044 €`.",
-          "code": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    ' Affiche le texte de E4\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double, nombre As Long\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n        nombre = nombre + 1\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\n    ' Ajoute la moyenne en D4:E4\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
-          "solution": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    Debug.Print \"Moyenne : \" & Range(\"E4\").Text\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double, nombre As Long\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n        nombre = nombre + 1\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\n    Range(\"D4\").Value = \"Moyenne\"\n    Range(\"E4\").Value = total / nombre\n    Range(\"E4\").NumberFormat = \"#,##0 €\"\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "consigne": "Complète `EcrireRapport` : ajoute en D4 le libellé **Moyenne**, et en E4 une **formule** `AVERAGE` sur les montants de la colonne B, au format `\"#,##0 €\"`. Construis l'adresse avec `DerniereLigne()` pour que la formule suive la taille du tableau.\n\nAffiche enfin le texte de E4 : `Moyenne : 1 044 €`. Contrairement à une valeur calculée par la macro, cette moyenne restera juste si quelqu'un modifie un montant dans Excel.",
+          "code": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    ' Affiche le texte de E4\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\n    ' Ajoute la moyenne en D4:E4\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "solution": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    Debug.Print \"Moyenne : \" & Range(\"E4\").Text\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\n    Range(\"D4\").Value = \"Moyenne\"\n    Range(\"E4\").Formula = \"=AVERAGE(B2:B\" & DerniereLigne() & \")\"\n    Range(\"E4\").NumberFormat = \"#,##0 €\"\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
           "sortie_attendue": "Moyenne : 1 044 €\n"
         },
         {
           "type": "encadre",
           "variante": "a_retenir",
-          "markdown": "- Une macro complète se découpe en procédures : préparer, calculer, écrire.\n- Une fonction comme `DerniereLigne` rend le code indépendant de la taille du tableau.\n- Pour aller plus loin dans Excel : l'enregistreur de macros (onglet Développeur) montre le code VBA de tes actions."
+          "markdown": "- Une macro complète se découpe en procédures : préparer, calculer, écrire.\n- Une fonction comme `DerniereLigne` rend le code indépendant de la taille du tableau.\n- Une formule écrite par la macro reste à jour quand les données changent.\n- Pour aller plus loin dans Excel : l'enregistreur de macros (onglet Développeur) montre le code VBA de tes actions."
         }
       ],
       "sources": [
