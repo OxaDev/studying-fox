@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["vite.config.ts", "playwright.config.ts", "csp.ts", "e2e"]
+  "include": ["vite.config.ts", "playwright.config.ts", "csp.ts", "e2e", "scripts/*.ts"]
 }

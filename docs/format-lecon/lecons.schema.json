@@ -53,7 +53,8 @@
     "langage": {
       "enum": [
         "python",
-        "javascript"
+        "javascript",
+        "vba"
       ]
     },
     "generation": {

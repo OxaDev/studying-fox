@@ -100,6 +100,41 @@ describe("Bloc de code exécutable", () => {
     expect(screen.getByText(/SyntaxError/)).toBeInTheDocument();
   });
 
+  it("affiche les feuilles Excel laissées par un code VBA", async () => {
+    const utilisateur = userEvent.setup();
+    const { container, executer } = afficherMarkdown("```vba run\nSub Main()\nEnd Sub\n```", {
+      sorties: [],
+      statut: "ok",
+      tronque: false,
+      feuilles: [
+        {
+          nom: "Ventes",
+          lignes: [
+            [
+              { texte: "Produit", gras: true, italique: false, nombre: false },
+              { texte: "Prix", gras: true, italique: false, nombre: false },
+            ],
+            [{ texte: "Café", gras: false, italique: false, nombre: false }, null],
+          ],
+          tronquee: false,
+        },
+      ],
+    });
+
+    await utilisateur.click(screen.getByRole("button", { name: "Exécuter" }));
+
+    expect(executer).toHaveBeenCalledWith("vba", "Sub Main()\nEnd Sub", expect.anything());
+    expect(
+      await screen.findByText("Le classeur contient la feuille « Ventes », affichée ci-dessous."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Le code n'a rien affiché.")).toBeNull();
+    const feuille = screen.getByRole("table", { name: "Feuille « Ventes »" });
+    expect(within(feuille).getByRole("columnheader", { name: "B" })).toBeInTheDocument();
+    expect(within(feuille).getByRole("rowheader", { name: "2" })).toBeInTheDocument();
+    expect(within(feuille).getByText("Produit")).toHaveProperty("tagName", "STRONG");
+    expect(await violationsAxe(container)).toEqual([]);
+  });
+
   it("donne un nom accessible à l'éditeur", () => {
     afficherMarkdown("```python run\nprint(1)\n```");
 

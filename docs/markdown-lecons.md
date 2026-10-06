@@ -30,7 +30,7 @@ print("Exemple que l'apprenant peut modifier et lancer")
 ```
 ````
 
-- Langages exécutables : `python` et `javascript` ([ADR 0009](adr/0009-execution-code-navigateur.md)).
+- Langages exécutables : `python`, `javascript` ([ADR 0009](adr/0009-execution-code-navigateur.md)) et `vba` ([ADR 0026](adr/0026-interpreteur-vba.md)).
 - Le mot `run` après le langage rend le bloc exécutable.
 
 ## Encadrés

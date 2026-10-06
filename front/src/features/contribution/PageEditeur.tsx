@@ -29,6 +29,11 @@ const BLOCS = [
     texte: '\n```javascript run\nconsole.log("Bonjour !");\n```\n',
   },
   {
+    libelle: "Code VBA exécutable",
+    texte:
+      '\n```vba run\nSub Main()\n    Range("A1").Value = "Bonjour !"\n    Debug.Print Range("A1").Value\nEnd Sub\n```\n',
+  },
+  {
     libelle: "Exercice Python",
     texte:
       '\n> [!exercice]\n> La consigne de l\'exercice.\n>\n> ```python run\n> # Code de départ\n> ```\n>\n> ```python solution\n> print("Solution")\n> ```\n',

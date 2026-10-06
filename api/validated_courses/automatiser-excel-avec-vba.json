@@ -1,0 +1,864 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "311004f1-e9d5-48ac-a31c-301251175a97",
+    "slug": "automatiser-excel-avec-vba",
+    "titre": "Automatiser Excel avec VBA",
+    "description": "Découvrir le VBA sans prérequis : écrire des macros, lire et remplir les cellules, décider, répéter, découper son code, mettre en forme et gérer les erreurs. Des exemples tirés du bureau, et un rapport des ventes automatique pour finir.",
+    "niveau": "debutant",
+    "theme": "vba",
+    "lecons": [
+      "vba-premiere-macro",
+      "vba-lire-et-ecrire-des-cellules",
+      "vba-variables",
+      "vba-conditions",
+      "vba-boucle-for",
+      "vba-for-each-et-do-while",
+      "vba-procedures-et-fonctions",
+      "vba-mise-en-forme",
+      "vba-gerer-les-erreurs",
+      "vba-projet-rapport-des-ventes"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "e1bb1ab0-3e16-41c7-815a-7e3576d8f88c",
+      "slug": "vba-premiere-macro",
+      "titre": "Ta première macro",
+      "resume": "Découvrir le VBA, écrire une première macro et afficher des messages avec Debug.Print et MsgBox.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [],
+      "objectifs": [
+        "Écrire une macro avec Sub et End Sub",
+        "Afficher un message avec Debug.Print",
+        "Afficher une boîte de dialogue avec MsgBox",
+        "Écrire un commentaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **VBA** (Visual Basic for Applications) est le langage de programmation intégré à Excel, Word et Outlook. Il sert à **automatiser** ce que tu fais à la main : remplir un tableau, le mettre en forme, préparer un rapport chaque lundi…\n\nUn programme VBA s'appelle une **macro**. Elle commence par `Sub`, suivi de son nom et de parenthèses, et se termine par `End Sub`. Entre les deux, les **instructions** s'exécutent dans l'ordre, de haut en bas.\n\nIci, le code s'exécute directement dans ton navigateur, sur un classeur Excel simulé. Clique sur **Exécuter**."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Debug.Print \"Bonjour !\"\n    Debug.Print \"Je découvre VBA.\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Bonjour !\nJe découvre VBA.\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`Debug.Print` affiche une ligne dans la **fenêtre Exécution** de l'éditeur VBA. C'est l'outil idéal pour vérifier ce que fait ta macro. Le texte s'écrit entre guillemets : on l'appelle une **chaîne de caractères**.\n\n`MsgBox` ouvre une boîte de dialogue devant l'utilisateur. Ici, son message s'affiche dans la console."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    MsgBox \"Le rapport est prêt.\"\n    Debug.Print \"Fin de la macro\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Le rapport est prêt.\nFin de la macro\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les commentaires\n\nTout ce qui suit une apostrophe `'` est un **commentaire** : VBA l'ignore. Il explique le code aux humains, y compris à toi dans six mois."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    ' Message envoyé à l'équipe chaque lundi\n    Debug.Print \"Point d'équipe à 9 h 30\" ' salle B\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Point d'équipe à 9 h 30\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Et dans Excel ?\n\nDans un vrai classeur, ouvre l'éditeur VBA avec **Alt + F11**, puis choisis **Insertion › Module**. Colle ta macro, place le curseur dedans et appuie sur **F5** pour la lancer. La fenêtre Exécution s'ouvre avec **Ctrl + G**.\n\nEnregistre ensuite le classeur au format **.xlsm** (classeur prenant en charge les macros) : un fichier .xlsx perd ses macros."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "VBA ne fait pas la différence entre majuscules et minuscules : `debug.print` marche aussi, et l'éditeur d'Excel corrige la casse tout seul. En revanche, chaque guillemet ouvert doit être fermé."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Affiche une carte de visite sur trois lignes avec `Debug.Print` : le prénom **Camille**, le métier **Comptable**, puis la ville **Nantes**.\n\nAjoute au-dessus un commentaire qui explique ce que fait la macro.",
+          "code": "Sub Main()\n    ' Écris tes trois Debug.Print ici\nEnd Sub\n",
+          "solution": "Sub Main()\n    ' Carte de visite de Camille\n    Debug.Print \"Camille\"\n    Debug.Print \"Comptable\"\n    Debug.Print \"Nantes\"\nEnd Sub\n",
+          "sortie_attendue": "Camille\nComptable\nNantes\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une macro s'écrit entre `Sub Nom()` et `End Sub`.\n- `Debug.Print` affiche une ligne dans la fenêtre Exécution, `MsgBox` une boîte de dialogue.\n- `'` commence un commentaire."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Prise en main de VBA dans Office",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/library-reference/concepts/getting-started-with-vba-in-office"
+        },
+        {
+          "titre": "Fonction MsgBox",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/msgbox-function"
+        }
+      ]
+    },
+    {
+      "id": "4fbe86a5-9fd9-4d77-bb6b-f47cc869eb63",
+      "slug": "vba-lire-et-ecrire-des-cellules",
+      "titre": "Lire et écrire dans les cellules",
+      "resume": "Remplir et relire les cellules d'une feuille avec Range et Cells, une cellule ou une plage entière.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "vba-premiere-macro"
+      ],
+      "objectifs": [
+        "Écrire une valeur dans une cellule avec Range",
+        "Désigner une cellule par ses numéros avec Cells",
+        "Lire la valeur d'une cellule",
+        "Remplir une plage entière"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une macro sert presque toujours à travailler sur des **cellules**. Pour en désigner une, on utilise `Range` avec son adresse, comme dans Excel : `Range(\"A1\")`.\n\nSa propriété `.Value` est son contenu. Pour écrire, on lui **affecte** une valeur avec le signe `=`."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = \"Produit\"\n    Range(\"B1\").Value = \"Prix\"\n    Range(\"A2\").Value = \"Café\"\n    Range(\"B2\").Value = 2.5\n    Debug.Print \"Le tableau est rempli.\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Le tableau est rempli.\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "La feuille s'affiche sous la console : c'est l'état du classeur à la fin de la macro.\n\nDans le code, un nombre décimal s'écrit toujours avec un **point** : `2.5`. Excel réglé en français l'affiche avec une virgule : `2,5`."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Cells : la ligne, puis la colonne\n\n`Cells(ligne, colonne)` désigne une cellule par ses numéros : `Cells(2, 1)` est la cellule A2 (ligne 2, colonne 1). C'est moins lisible que `Range`, mais très pratique dès qu'on calcule la position, dans une boucle par exemple.\n\nPour **lire** une cellule, on utilise sa valeur dans une expression. Le signe `&` colle deux morceaux de texte bout à bout."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Cells(1, 1).Value = \"Ville\"\n    Cells(1, 2).Value = \"Habitants\"\n    Cells(2, 1).Value = \"Lyon\"\n    Cells(2, 2).Value = 522000\n    Debug.Print Cells(2, 1).Value & \" compte \" & Range(\"B2\").Value & \" habitants.\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Lyon compte 522000 habitants.\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Toute une plage d'un coup\n\n`Range(\"A2:A4\")` désigne une **plage** de plusieurs cellules. Lui affecter une valeur remplit toutes ses cellules."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = \"Tâche\"\n    Range(\"B1\").Value = \"Statut\"\n    Range(\"A2\").Value = \"Relancer le client\"\n    Range(\"A3\").Value = \"Préparer le devis\"\n    Range(\"A4\").Value = \"Envoyer la facture\"\n    Range(\"B2:B4\").Value = \"À faire\"\nEnd Sub\n",
+          "executable": true
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`.Value` est la propriété par défaut d'une cellule : `Range(\"A1\") = 5` revient à écrire `Range(\"A1\").Value = 5`. Écrire `.Value` rend le code plus clair."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Écris **Nom** en A1, **Service** en B1, **Camille** en A2 et **Comptabilité** en B2.\n\nAffiche ensuite, en relisant les cellules A2 et B2 : `Camille travaille en Comptabilité`.",
+          "code": "Sub Main()\n    ' Remplis les quatre cellules\n\n    ' Puis affiche la phrase en relisant A2 et B2\nEnd Sub\n",
+          "solution": "Sub Main()\n    Range(\"A1\").Value = \"Nom\"\n    Range(\"B1\").Value = \"Service\"\n    Range(\"A2\").Value = \"Camille\"\n    Range(\"B2\").Value = \"Comptabilité\"\n    Debug.Print Range(\"A2\").Value & \" travaille en \" & Range(\"B2\").Value\nEnd Sub\n",
+          "sortie_attendue": "Camille travaille en Comptabilité\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `Range(\"A1\").Value = ...` écrit dans une cellule, `Range(\"A1\").Value` la lit.\n- `Cells(ligne, colonne)` désigne une cellule par ses numéros.\n- `Range(\"A2:B4\")` désigne une plage entière.\n- `&` colle des morceaux de texte."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Objet Range",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range(object)"
+        },
+        {
+          "titre": "Propriété Range.Cells",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range.cells"
+        }
+      ]
+    },
+    {
+      "id": "bff6b7ed-b825-40a5-81c9-5d54a0ad5a8d",
+      "slug": "vba-variables",
+      "titre": "Les variables et leurs types",
+      "resume": "Ranger des valeurs dans des variables typées avec Dim, faire des calculs et éviter les fautes de frappe avec Option Explicit.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "vba-lire-et-ecrire-des-cellules"
+      ],
+      "objectifs": [
+        "Déclarer une variable avec Dim",
+        "Choisir le bon type : Long, Double, String, Boolean",
+        "Calculer avec des variables",
+        "Utiliser Option Explicit et Const"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **variable** est une boîte qui porte un nom et contient une valeur. On la **déclare** avec `Dim`, en précisant son **type** avec `As` : le type dit ce que la boîte peut contenir."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim produit As String\n    Dim prix As Double\n    Dim quantite As Long\n\n    produit = \"Café\"\n    prix = 2.5\n    quantite = 3\n    Debug.Print produit & \" : \" & prix * quantite & \" €\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Café : 7,5 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Les types les plus utiles :\n\n- `Long` : un nombre entier, comme `quantite = 3` ;\n- `Double` : un nombre à virgule, comme `prix = 2.5` ;\n- `String` : du texte, comme `produit = \"Café\"` ;\n- `Boolean` : Vrai ou Faux, comme `paye = True` ;\n- `Date` : une date, comme `echeance = Date`.\n\nLes calculs s'écrivent comme dans Excel : `+`, `-`, `*`, `/`, et des parenthèses pour l'ordre des opérations."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Option Explicit et Const\n\nPlacée tout en haut du module, la ligne `Option Explicit` oblige à déclarer chaque variable. Une faute de frappe dans un nom devient une erreur claire, au lieu d'un calcul faux et silencieux.\n\nUne **constante**, déclarée avec `Const`, est une valeur qui ne change pas : un taux, un seuil. Son nom rend le calcul lisible."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Option Explicit\n\nConst TAUX_TVA As Double = 0.2\n\nSub Main()\n    Dim prixHT As Double\n    Dim prixTTC As Double\n\n    prixHT = 100\n    prixTTC = prixHT * (1 + TAUX_TVA)\n    Debug.Print \"Prix TTC : \" & prixTTC & \" €\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Prix TTC : 120 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Avec `Option Explicit`, cette faute de frappe est signalée avant même que la macro ne démarre : « Variable non définie »."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Option Explicit\n\nSub Main()\n    Dim total As Long\n    totla = 10   ' faute de frappe : « totla » n'est pas déclarée\nEnd Sub\n",
+          "executable": false
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Le type `Integer` ne va que jusqu'à 32 767 : au-delà, VBA s'arrête sur l'erreur « Dépassement de capacité ». Pour les nombres entiers, préfère `Long`, qui va au-delà de deux milliards."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Calcule le **salaire annuel** à partir d'un salaire mensuel de **2 500 €** sur **12 mois**, et affiche : `Salaire annuel : 30000 €`.",
+          "code": "Option Explicit\n\nSub Main()\n    Dim salaireMensuel As Double\n    Dim mois As Long\n    Dim salaireAnnuel As Double\n\n    ' Donne leur valeur aux variables, calcule, puis affiche\nEnd Sub\n",
+          "solution": "Option Explicit\n\nSub Main()\n    Dim salaireMensuel As Double\n    Dim mois As Long\n    Dim salaireAnnuel As Double\n\n    salaireMensuel = 2500\n    mois = 12\n    salaireAnnuel = salaireMensuel * mois\n    Debug.Print \"Salaire annuel : \" & salaireAnnuel & \" €\"\nEnd Sub\n",
+          "sortie_attendue": "Salaire annuel : 30000 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `Dim nom As Type` déclare une variable : `Long`, `Double`, `String`, `Boolean`, `Date`.\n- `Option Explicit`, en haut du module, oblige à déclarer chaque variable.\n- `Const` donne un nom à une valeur fixe."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Instruction Dim",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/dim-statement"
+        },
+        {
+          "titre": "Instruction Option Explicit",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/option-explicit-statement"
+        }
+      ]
+    },
+    {
+      "id": "d379cdb3-605b-472f-8661-885ea0eb1fda",
+      "slug": "vba-conditions",
+      "titre": "Prendre des décisions : If et Select Case",
+      "resume": "Faire réagir une macro selon les valeurs : If, ElseIf, Else, les opérateurs de comparaison et Select Case.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "vba-variables"
+      ],
+      "objectifs": [
+        "Écrire une condition avec If … Then … End If",
+        "Enchaîner les cas avec ElseIf et Else",
+        "Combiner des conditions avec And et Or",
+        "Choisir parmi plusieurs cas avec Select Case"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **condition** permet à la macro de choisir quoi faire. `If` teste une expression : si elle est vraie, les instructions jusqu'à `Else` s'exécutent ; sinon, celles après `Else`.\n\nPour comparer : `=` (égal), `<>` (différent), `<`, `>`, `<=`, `>=`."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim montant As Double\n    montant = 1250\n\n    If montant > 1000 Then\n        Debug.Print \"Validation du responsable requise\"\n    Else\n        Debug.Print \"Validation automatique\"\n    End If\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Validation du responsable requise\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Plusieurs cas avec ElseIf\n\n`ElseIf` ajoute un test. VBA les essaie dans l'ordre et s'arrête au premier qui est vrai.\n\nLes conditions peuvent aussi porter sur des cellules."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = \"Stock\"\n    Range(\"B1\").Value = 3\n\n    If Range(\"B1\").Value = 0 Then\n        Range(\"C1\").Value = \"Rupture\"\n    ElseIf Range(\"B1\").Value < 5 Then\n        Range(\"C1\").Value = \"Stock faible : commander\"\n    Else\n        Range(\"C1\").Value = \"OK\"\n    End If\n    Debug.Print Range(\"C1\").Value\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Stock faible : commander\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`And` exige que les deux conditions soient vraies, `Or` qu'au moins une le soit."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim anciennete As Long\n    Dim objectifAtteint As Boolean\n    anciennete = 4\n    objectifAtteint = True\n\n    If anciennete >= 2 And objectifAtteint Then\n        Debug.Print \"Prime accordée\"\n    End If\n    If anciennete > 10 Or objectifAtteint Then\n        Debug.Print \"Entretien de félicitations\"\n    End If\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Prime accordée\nEntretien de félicitations\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Select Case\n\nQuand on compare **une même valeur** à beaucoup de cas, `Select Case` est plus lisible. Un cas peut être une valeur, une liste (`1, 2`), un intervalle (`10 To 49`) ou une comparaison (`Is >= 50`)."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim quantite As Long\n    quantite = 25\n\n    Select Case quantite\n        Case 1 To 9\n            Debug.Print \"Pas de remise\"\n        Case 10 To 49\n            Debug.Print \"Remise de 5 %\"\n        Case Is >= 50\n            Debug.Print \"Remise de 10 %\"\n        Case Else\n            Debug.Print \"Quantité incorrecte\"\n    End Select\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Remise de 5 %\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Change la valeur de `quantite`, puis relance : vérifie que chaque cas réagit comme prévu, y compris les limites (9, 10, 49, 50)."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Une commande coûte **75 €**. Affiche les frais de livraison :\n\n- à partir de 100 € : `Livraison offerte`\n- à partir de 50 € : `Livraison : 4,90 €`\n- sinon : `Livraison : 9,90 €`",
+          "code": "Sub Main()\n    Dim total As Double\n    total = 75\n\n    ' Écris ta condition ici\nEnd Sub\n",
+          "solution": "Sub Main()\n    Dim total As Double\n    total = 75\n\n    If total >= 100 Then\n        Debug.Print \"Livraison offerte\"\n    ElseIf total >= 50 Then\n        Debug.Print \"Livraison : 4,90 €\"\n    Else\n        Debug.Print \"Livraison : 9,90 €\"\n    End If\nEnd Sub\n",
+          "sortie_attendue": "Livraison : 4,90 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `If … Then … ElseIf … Else … End If` choisit selon des conditions.\n- Comparaisons : `=`, `<>`, `<`, `>`, `<=`, `>=` ; combinaisons : `And`, `Or`, `Not`.\n- `Select Case` compare une valeur à plusieurs cas."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Instruction If...Then...Else",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/ifthenelse-statement"
+        },
+        {
+          "titre": "Instruction Select Case",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/select-case-statement"
+        }
+      ]
+    },
+    {
+      "id": "6d9a5e5f-abd3-44e8-b492-a850f3310acd",
+      "slug": "vba-boucle-for",
+      "titre": "Répéter avec For … Next",
+      "resume": "Répéter des instructions avec For … Next, parcourir les lignes d'un tableau et trouver sa dernière ligne.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "vba-conditions"
+      ],
+      "objectifs": [
+        "Répéter des instructions avec For … Next",
+        "Parcourir les lignes d'un tableau avec Cells",
+        "Trouver la dernière ligne remplie avec End(xlUp)",
+        "Sortir d'une boucle avec Exit For"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **boucle** répète des instructions. `For i = 1 To 5` exécute le bloc cinq fois : la variable `i`, le **compteur**, vaut 1, puis 2, puis 3… jusqu'à 5. `Next` marque la fin du bloc.\n\nAvec `Cells(i, 1)`, le compteur sert de numéro de ligne."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim i As Long\n    For i = 1 To 5\n        Cells(i, 1).Value = \"Ligne \" & i\n    Next i\n    Debug.Print \"5 lignes écrites\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "5 lignes écrites\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`Step` change le pas du compteur. Avec un pas négatif, on compte à rebours."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim i As Long\n    For i = 3 To 1 Step -1\n        Debug.Print \"Départ dans \" & i\n    Next i\n    Debug.Print \"Partez !\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Départ dans 3\nDépart dans 2\nDépart dans 1\nPartez !\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Parcourir un tableau\n\nLe cas le plus courant : additionner ou traiter chaque ligne d'un tableau. Ici, une première macro, `PreparerDonnees`, remplit la feuille ; `Main` la lance avec son nom, puis fait le calcul.\n\nPour ne pas fixer le nombre de lignes à l'avance, on cherche la **dernière ligne remplie** : `Cells(Rows.Count, 1).End(xlUp).Row` part tout en bas de la colonne A et remonte jusqu'à la première cellule non vide, comme **Ctrl + ↑** dans Excel."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim derniere As Long, ligne As Long\n    Dim total As Double\n\n    PreparerDonnees\n    derniere = Cells(Rows.Count, 1).End(xlUp).Row\n    For ligne = 2 To derniere\n        total = total + Cells(ligne, 2).Value\n    Next ligne\n    Debug.Print \"Dernière ligne : \" & derniere\n    Debug.Print \"Total des ventes : \" & total & \" €\"\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Mois\"\n    Range(\"B1\").Value = \"Ventes\"\n    Range(\"A2\").Value = \"Janvier\": Range(\"B2\").Value = 320\n    Range(\"A3\").Value = \"Février\": Range(\"B3\").Value = 410\n    Range(\"A4\").Value = \"Mars\": Range(\"B4\").Value = 280\n    Range(\"A5\").Value = \"Avril\": Range(\"B5\").Value = 440\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Dernière ligne : 5\nTotal des ventes : 1450 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les deux-points `:` permettent d'écrire deux instructions sur la même ligne. Réserve-les aux instructions très courtes."
+        },
+        {
+          "type": "texte",
+          "markdown": "`Exit For` quitte la boucle avant la fin, par exemple dès qu'on a trouvé ce qu'on cherchait."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim i As Long\n    Range(\"A1\").Value = \"Lundi\"\n    Range(\"A2\").Value = \"Mardi\"\n    Range(\"A3\").Value = \"Mercredi\"\n\n    For i = 1 To 3\n        If Cells(i, 1).Value = \"Mardi\" Then\n            Debug.Print \"Mardi trouvé en ligne \" & i\n            Exit For\n        End If\n    Next i\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Mardi trouvé en ligne 2\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Affiche la table de multiplication de **7**, de 1 à 5, une ligne par calcul : `7 x 1 = 7`, `7 x 2 = 14`…",
+          "code": "Sub Main()\n    Dim i As Long\n    ' Écris ta boucle For ici\nEnd Sub\n",
+          "solution": "Sub Main()\n    Dim i As Long\n    For i = 1 To 5\n        Debug.Print \"7 x \" & i & \" = \" & 7 * i\n    Next i\nEnd Sub\n",
+          "sortie_attendue": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `For i = 1 To n … Next i` répète un bloc ; `Step` change le pas.\n- `Cells(i, colonne)` parcourt les lignes d'un tableau.\n- `Cells(Rows.Count, 1).End(xlUp).Row` donne la dernière ligne remplie de la colonne A.\n- `Exit For` sort de la boucle."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Instruction For...Next",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/fornext-statement"
+        },
+        {
+          "titre": "Propriété Range.End",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range.end"
+        }
+      ]
+    },
+    {
+      "id": "a32af543-ff9f-4549-a059-164f7381c8fd",
+      "slug": "vba-for-each-et-do-while",
+      "titre": "Parcourir les données : For Each et Do While",
+      "resume": "Parcourir chaque cellule d'une plage avec For Each, et répéter tant qu'une condition est vraie avec Do While.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "vba-boucle-for"
+      ],
+      "objectifs": [
+        "Parcourir les cellules d'une plage avec For Each",
+        "Modifier les cellules voisines avec Offset",
+        "Répéter tant qu'une condition est vraie avec Do While"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "`For Each` parcourt **chaque élément** d'un ensemble, sans compteur. Avec une plage, la variable désigne une cellule après l'autre. On la déclare `As Range`, le type des cellules et des plages."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim cellule As Range\n    Range(\"A1\").Value = \"Paris\"\n    Range(\"A2\").Value = \"Lyon\"\n    Range(\"A3\").Value = \"Lille\"\n\n    For Each cellule In Range(\"A1:A3\")\n        Debug.Print \"Agence de \" & cellule.Value\n    Next cellule\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Agence de Paris\nAgence de Lyon\nAgence de Lille\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Offset : la cellule d'à côté\n\n`cellule.Offset(lignes, colonnes)` désigne une cellule décalée : `Offset(0, 1)` est la cellule juste à droite. C'est parfait pour écrire un résultat à côté de chaque valeur."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim cellule As Range\n    Range(\"A1\").Value = 1200\n    Range(\"A2\").Value = 80\n    Range(\"A3\").Value = 450\n\n    For Each cellule In Range(\"A1:A3\")\n        If cellule.Value >= 400 Then\n            cellule.Offset(0, 1).Value = \"À vérifier\"\n        End If\n    Next cellule\n    Debug.Print \"Contrôle terminé\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Contrôle terminé\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Do While : tant que…\n\n`Do While condition … Loop` répète le bloc **tant que** la condition est vraie. On ne connaît pas toujours le nombre de tours à l'avance : ici, on avance jusqu'à la première cellule vide."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim ligne As Long\n    Range(\"A1\").Value = \"Facture 101\"\n    Range(\"A2\").Value = \"Facture 102\"\n    Range(\"A3\").Value = \"Facture 103\"\n\n    ligne = 1\n    Do While Cells(ligne, 1).Value <> \"\"\n        Debug.Print \"Traitement : \" & Cells(ligne, 1).Value\n        ligne = ligne + 1\n    Loop\n    Debug.Print ligne - 1 & \" factures traitées\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Traitement : Facture 101\nTraitement : Facture 102\nTraitement : Facture 103\n3 factures traitées\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Dans une boucle `Do While`, n'oublie pas de faire avancer ce que teste la condition (ici `ligne = ligne + 1`). Sinon la boucle ne s'arrête jamais : la plateforme l'interrompt au bout de 10 secondes, Excel se fige."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Les ventes de la semaine sont en B2:B6. Compte avec `For Each` celles qui dépassent **100 €**, et affiche : `3 ventes dépassent 100 €`.",
+          "code": "Sub Main()\n    Dim cellule As Range\n    Dim nombre As Long\n    Range(\"B2\").Value = 150\n    Range(\"B3\").Value = 90\n    Range(\"B4\").Value = 210\n    Range(\"B5\").Value = 60\n    Range(\"B6\").Value = 120\n\n    ' Parcours B2:B6 et compte les ventes de plus de 100 €\nEnd Sub\n",
+          "solution": "Sub Main()\n    Dim cellule As Range\n    Dim nombre As Long\n    Range(\"B2\").Value = 150\n    Range(\"B3\").Value = 90\n    Range(\"B4\").Value = 210\n    Range(\"B5\").Value = 60\n    Range(\"B6\").Value = 120\n\n    For Each cellule In Range(\"B2:B6\")\n        If cellule.Value > 100 Then\n            nombre = nombre + 1\n        End If\n    Next cellule\n    Debug.Print nombre & \" ventes dépassent 100 €\"\nEnd Sub\n",
+          "sortie_attendue": "3 ventes dépassent 100 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `For Each cellule In Range(\"A1:A10\") … Next` parcourt chaque cellule.\n- `Offset(lignes, colonnes)` désigne une cellule décalée.\n- `Do While condition … Loop` répète tant que la condition est vraie."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Instruction For Each...Next",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/for-eachnext-statement"
+        },
+        {
+          "titre": "Instruction Do...Loop",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/doloop-statement"
+        }
+      ]
+    },
+    {
+      "id": "96ddef60-1189-4bfc-ab50-2c6a872d2d33",
+      "slug": "vba-procedures-et-fonctions",
+      "titre": "Découper son code : Sub et Function",
+      "resume": "Organiser une macro en procédures qui reçoivent des arguments, et créer ses propres fonctions qui renvoient une valeur.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "vba-for-each-et-do-while"
+      ],
+      "objectifs": [
+        "Appeler une procédure Sub avec des arguments",
+        "Écrire une fonction avec Function",
+        "Renvoyer une valeur depuis une fonction"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Quand une macro grandit, on la découpe en **procédures** courtes, chacune avec une tâche précise. Une `Sub` peut recevoir des **arguments** : des valeurs qu'on lui transmet entre parenthèses, avec leur type.\n\nPour l'appeler, on écrit son nom suivi des arguments, séparés par des virgules."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Saluer \"Camille\", \"Comptabilité\"\n    Saluer \"Karim\", \"Ventes\"\nEnd Sub\n\nSub Saluer(prenom As String, service As String)\n    Debug.Print \"Bienvenue \" & prenom & \", service \" & service\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Bienvenue Camille, service Comptabilité\nBienvenue Karim, service Ventes\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Dans Excel, tu choisis la macro à lancer. Ici, la plateforme lance la **première `Sub` sans argument** du module : garde `Main` en premier."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Function : une procédure qui renvoie une valeur\n\nUne `Function` calcule et **renvoie** un résultat. Pour cela, on affecte la valeur au nom de la fonction. On précise après les parenthèses le type renvoyé.\n\nOn l'utilise ensuite dans une expression, avec ses arguments entre parenthèses."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Function PrixTTC(prixHT As Double) As Double\n    PrixTTC = prixHT * 1.2\nEnd Function\n\nSub Main()\n    Debug.Print \"Écran : \" & PrixTTC(150) & \" € TTC\"\n    Debug.Print \"Clavier : \" & PrixTTC(45) & \" € TTC\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Écran : 180 € TTC\nClavier : 54 € TTC\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ici, `PrixTTC` est écrite avant `Main` : la plateforme lance quand même `Main`, car c'est la première `Sub`.\n\nDans Excel, une `Function` publique d'un module s'utilise même **dans une formule** de cellule : `=PrixTTC(A2)`. C'est une façon simple de créer tes propres fonctions de calcul."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Par défaut, VBA transmet la variable elle-même (`ByRef`) : si la procédure la modifie, l'appelant voit le changement. Écris `ByVal` devant un argument pour transmettre une copie."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Écris une fonction `Mention(note As Double) As String` qui renvoie :\n\n- `Bien` à partir de 14,\n- `Assez bien` à partir de 10,\n- `Insuffisant` sinon.\n\n`Main` affiche déjà la mention des notes 15, 11 et 8.",
+          "code": "Sub Main()\n    Debug.Print 15 & \" : \" & Mention(15)\n    Debug.Print 11 & \" : \" & Mention(11)\n    Debug.Print 8 & \" : \" & Mention(8)\nEnd Sub\n\nFunction Mention(note As Double) As String\n    ' À toi de jouer\nEnd Function\n",
+          "solution": "Sub Main()\n    Debug.Print 15 & \" : \" & Mention(15)\n    Debug.Print 11 & \" : \" & Mention(11)\n    Debug.Print 8 & \" : \" & Mention(8)\nEnd Sub\n\nFunction Mention(note As Double) As String\n    If note >= 14 Then\n        Mention = \"Bien\"\n    ElseIf note >= 10 Then\n        Mention = \"Assez bien\"\n    Else\n        Mention = \"Insuffisant\"\n    End If\nEnd Function\n",
+          "sortie_attendue": "15 : Bien\n11 : Assez bien\n8 : Insuffisant\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une `Sub` réalise une tâche ; elle peut recevoir des arguments.\n- Une `Function` renvoie une valeur : on l'affecte à son nom.\n- On découpe une longue macro en procédures courtes, aux noms clairs."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Instruction Sub",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/sub-statement"
+        },
+        {
+          "titre": "Instruction Function",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/function-statement"
+        }
+      ]
+    },
+    {
+      "id": "b5a6c427-eee4-41ae-ae26-95b96152c2e7",
+      "slug": "vba-mise-en-forme",
+      "titre": "Mettre en forme un tableau",
+      "resume": "Mettre en forme les cellules par macro : gras, couleur de fond, format des nombres et des dates, avec le bloc With.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "vba-procedures-et-fonctions"
+      ],
+      "objectifs": [
+        "Mettre du texte en gras ou en italique avec Font",
+        "Colorer le fond d'une cellule avec Interior",
+        "Choisir le format des nombres et des dates avec NumberFormat",
+        "Raccourcir le code avec With"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une macro peut aussi **mettre en forme**, comme le ruban Accueil d'Excel. Chaque cellule a une police, `Font`, et un fond, `Interior` :\n\n- `.Font.Bold = True` met en gras, `.Font.Italic = True` en italique ;\n- `.Interior.Color = RGB(rouge, vert, bleu)` colore le fond."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = \"Produit\"\n    Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Licences\"\n    Range(\"B2\").Value = 1250\n\n    Range(\"A1:B1\").Font.Bold = True\n    Range(\"A1:B1\").Interior.Color = RGB(221, 235, 247)\n    Range(\"A2\").Font.Italic = True\n    Debug.Print \"En-têtes en gras : \" & Range(\"A1\").Font.Bold\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "En-têtes en gras : Vrai\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "La feuille affichée ici montre le gras et l'italique. Les couleurs sont bien enregistrées, mais pas dessinées.\n\n## Le format des nombres\n\n`.NumberFormat` choisit l'affichage d'un nombre ou d'une date, sans changer sa valeur. Les codes sont ceux de la boîte **Format de cellule** d'Excel. `.Text` renvoie le texte affiché."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = 1250\n    Range(\"A1\").NumberFormat = \"#,##0.00 €\"\n    Range(\"A2\").Value = 0.153\n    Range(\"A2\").NumberFormat = \"0.0%\"\n\n    Debug.Print \"Valeur : \" & Range(\"A1\").Value\n    Debug.Print \"Affiché : \" & Range(\"A1\").Text\n    Debug.Print \"Affiché : \" & Range(\"A2\").Text\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Valeur : 1250\nAffiché : 1 250,00 €\nAffiché : 15,3%\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## With : ne pas répéter l'objet\n\nEntre `With objet` et `End With`, chaque instruction qui commence par un point s'applique à cet objet. Le code est plus court et plus lisible."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Range(\"A1\").Value = \"Rapport mensuel\"\n    With Range(\"A1\")\n        .Font.Bold = True\n        .Font.Italic = True\n        .Interior.Color = RGB(255, 242, 204)\n    End With\n    Debug.Print \"Titre mis en forme\"\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Titre mis en forme\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Écris la date du **15 mars 2026** en A1 avec `DateSerial(2026, 3, 15)`, puis donne-lui le format `\"dddd d mmmm yyyy\"` et mets-la en gras.\n\nAffiche enfin son texte : `dimanche 15 mars 2026`.",
+          "code": "Sub Main()\n    Range(\"A1\").Value = DateSerial(2026, 3, 15)\n    ' Mets en forme A1, puis affiche son texte\nEnd Sub\n",
+          "solution": "Sub Main()\n    Range(\"A1\").Value = DateSerial(2026, 3, 15)\n    With Range(\"A1\")\n        .NumberFormat = \"dddd d mmmm yyyy\"\n        .Font.Bold = True\n    End With\n    Debug.Print Range(\"A1\").Text\nEnd Sub\n",
+          "sortie_attendue": "dimanche 15 mars 2026\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `.Font.Bold`, `.Font.Italic` : le style du texte ; `.Interior.Color = RGB(…)` : le fond.\n- `.NumberFormat` choisit l'affichage, `.Text` le renvoie.\n- `With … End With` évite de répéter l'objet."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Objet Font",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.font(object)"
+        },
+        {
+          "titre": "Propriété Range.NumberFormat",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range.numberformat"
+        }
+      ]
+    },
+    {
+      "id": "f6eb8361-6d9c-41ce-8964-2311313f6ab7",
+      "slug": "vba-gerer-les-erreurs",
+      "titre": "Gérer les erreurs",
+      "resume": "Comprendre les erreurs d'exécution et les intercepter avec On Error, pour qu'une macro s'arrête proprement avec un message clair.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "vba-mise-en-forme"
+      ],
+      "objectifs": [
+        "Lire un message d'erreur d'exécution",
+        "Intercepter une erreur avec On Error GoTo",
+        "Utiliser l'objet Err pour connaître l'erreur",
+        "Tester une opération risquée avec On Error Resume Next"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Quand une instruction est impossible, VBA s'arrête sur une **erreur d'exécution**, avec un numéro et un message. Par exemple, une division par zéro donne l'erreur 11 :\n\n« Erreur d'exécution 11 : Division par zéro »"
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim quantite As Long\n    quantite = 0\n    Debug.Print 500 / quantite   ' erreur 11 : Division par zéro\nEnd Sub\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "## On Error GoTo : intercepter l'erreur\n\n`On Error GoTo Gestion` dit à VBA : en cas d'erreur, saute à l'**étiquette** `Gestion:`. L'objet `Err` décrit alors l'erreur : `Err.Number` et `Err.Description`.\n\n`Exit Sub`, juste avant l'étiquette, termine la macro quand tout s'est bien passé, sans exécuter la gestion d'erreur."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    On Error GoTo Gestion\n    Dim quantite As Long\n    quantite = 0\n    Debug.Print \"Prix unitaire : \" & 500 / quantite\n    Exit Sub\n\nGestion:\n    MsgBox \"Erreur \" & Err.Number & \" : \" & Err.Description\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "Erreur 11 : Division par zéro\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## On Error Resume Next : essayer, puis vérifier\n\n`On Error Resume Next` passe à l'instruction suivante en cas d'erreur. On vérifie ensuite `Err.Number` : il vaut 0 si tout s'est bien passé. C'est pratique pour tester si une feuille existe."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim feuille As Worksheet\n\n    On Error Resume Next\n    Set feuille = Worksheets(\"Budget\")\n    If Err.Number <> 0 Then\n        Debug.Print \"La feuille Budget n'existe pas (erreur \" & Err.Number & \")\"\n    End If\n    On Error GoTo 0\nEnd Sub\n",
+          "executable": true,
+          "sortie_attendue": "La feuille Budget n'existe pas (erreur 9)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "`On Error Resume Next` masque **toutes** les erreurs qui suivent. Limite-le à l'instruction risquée, puis rétablis le comportement normal avec `On Error GoTo 0`."
+        },
+        {
+          "type": "texte",
+          "markdown": "`Set` sert à ranger un **objet** (une feuille, une plage) dans une variable. Les valeurs simples, nombres ou textes, s'affectent sans `Set`."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Protège ce calcul : en cas d'erreur, affiche `Impossible de calculer : ` suivi de la description de l'erreur.\n\nAvec une quantité de 0, la macro doit afficher : `Impossible de calculer : Division par zéro`.",
+          "code": "Sub Main()\n    Dim total As Double, quantite As Long\n    total = 240\n    quantite = 0\n    Debug.Print \"Prix moyen : \" & total / quantite\nEnd Sub\n",
+          "solution": "Sub Main()\n    Dim total As Double, quantite As Long\n    On Error GoTo Gestion\n    total = 240\n    quantite = 0\n    Debug.Print \"Prix moyen : \" & total / quantite\n    Exit Sub\n\nGestion:\n    Debug.Print \"Impossible de calculer : \" & Err.Description\nEnd Sub\n",
+          "sortie_attendue": "Impossible de calculer : Division par zéro\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `On Error GoTo Etiquette` saute à la gestion d'erreur ; `Exit Sub` juste avant l'étiquette.\n- `Err.Number` et `Err.Description` décrivent l'erreur.\n- `On Error Resume Next` continue malgré l'erreur ; `On Error GoTo 0` rétablit l'arrêt."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Instruction On Error",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/on-error-statement"
+        },
+        {
+          "titre": "Objet Err",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/language/reference/user-interface-help/err-object"
+        }
+      ]
+    },
+    {
+      "id": "d30777aa-3bf1-4c6d-b3ac-a5dee1877cf9",
+      "slug": "vba-projet-rapport-des-ventes",
+      "titre": "Projet : un rapport des ventes automatique",
+      "resume": "Mettre bout à bout tout le parcours : lire un tableau de ventes, calculer des indicateurs et écrire un rapport mis en forme.",
+      "theme": "vba",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "vba-gerer-les-erreurs"
+      ],
+      "objectifs": [
+        "Organiser une macro complète en procédures",
+        "Calculer un total, un maximum et un nombre de ventes",
+        "Écrire un rapport mis en forme sur la feuille"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour finir, une vraie tâche de bureau : chaque mois, tu reçois les ventes de l'équipe et tu prépares un petit rapport. On va l'automatiser.\n\nLe tableau des ventes est en colonnes A (vendeur) et B (montant). `PreparerDonnees` le remplit ; dans ton classeur, il serait déjà là."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    PreparerDonnees\n    Debug.Print \"Ventes saisies : \" & DerniereLigne() - 1\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "executable": true,
+          "sortie_attendue": "Ventes saisies : 5\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Calculer les indicateurs\n\nUne seule boucle suffit pour calculer le **total**, la **meilleure vente** et son vendeur."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    Dim ligne As Long\n    Dim total As Double, meilleure As Double\n    Dim meilleurVendeur As String\n\n    PreparerDonnees\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n        If Cells(ligne, 2).Value > meilleure Then\n            meilleure = Cells(ligne, 2).Value\n            meilleurVendeur = Cells(ligne, 1).Value\n        End If\n    Next ligne\n    Debug.Print \"Total : \" & total & \" €\"\n    Debug.Print \"Meilleure vente : \" & meilleure & \" € (\" & meilleurVendeur & \")\"\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "executable": true,
+          "sortie_attendue": "Total : 5220 €\nMeilleure vente : 2100 € (Inès)\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Écrire le rapport\n\nLe rapport s'écrit à droite du tableau, en D1:E3, avec des en-têtes en gras et des montants au format monétaire. Une procédure par tâche : la macro principale se lit comme un sommaire."
+        },
+        {
+          "type": "code",
+          "langage": "vba",
+          "code": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    Debug.Print \"Rapport écrit en D1:E3\"\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double, grosses As Long\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n        If Cells(ligne, 2).Value >= 1000 Then grosses = grosses + 1\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D3\").Value = \"Ventes de 1 000 € ou plus\": Range(\"E3\").Value = grosses\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "executable": true,
+          "sortie_attendue": "Rapport écrit en D1:E3\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Ajoute une ligne au tableau dans `PreparerDonnees`, puis relance : grâce à `DerniereLigne`, le rapport la prend en compte sans autre changement."
+        },
+        {
+          "type": "exercice",
+          "langage": "vba",
+          "consigne": "Complète `EcrireRapport` : ajoute en D4 le libellé **Moyenne**, et en E4 la moyenne des ventes (le total divisé par le nombre de ventes), au format `\"#,##0 €\"`.\n\nAffiche enfin le texte de E4 : `Moyenne : 1 044 €`.",
+          "code": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    ' Affiche le texte de E4\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double, nombre As Long\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n        nombre = nombre + 1\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\n    ' Ajoute la moyenne en D4:E4\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "solution": "Sub Main()\n    PreparerDonnees\n    EcrireRapport\n    Debug.Print \"Moyenne : \" & Range(\"E4\").Text\nEnd Sub\n\nSub EcrireRapport()\n    Dim ligne As Long, total As Double, nombre As Long\n\n    For ligne = 2 To DerniereLigne()\n        total = total + Cells(ligne, 2).Value\n        nombre = nombre + 1\n    Next ligne\n\n    Range(\"D1\").Value = \"Indicateur\": Range(\"E1\").Value = \"Valeur\"\n    Range(\"D2\").Value = \"Total\": Range(\"E2\").Value = total\n    Range(\"D1:E1\").Font.Bold = True\n    Range(\"E2\").NumberFormat = \"#,##0 €\"\n    Range(\"D4\").Value = \"Moyenne\"\n    Range(\"E4\").Value = total / nombre\n    Range(\"E4\").NumberFormat = \"#,##0 €\"\nEnd Sub\n\nSub PreparerDonnees()\n    Range(\"A1\").Value = \"Vendeur\": Range(\"B1\").Value = \"Montant\"\n    Range(\"A2\").Value = \"Camille\": Range(\"B2\").Value = 1200\n    Range(\"A3\").Value = \"Karim\": Range(\"B3\").Value = 850\n    Range(\"A4\").Value = \"Camille\": Range(\"B4\").Value = 430\n    Range(\"A5\").Value = \"Inès\": Range(\"B5\").Value = 2100\n    Range(\"A6\").Value = \"Karim\": Range(\"B6\").Value = 640\nEnd Sub\n\nFunction DerniereLigne() As Long\n    DerniereLigne = Cells(Rows.Count, 1).End(xlUp).Row\nEnd Function\n",
+          "sortie_attendue": "Moyenne : 1 044 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une macro complète se découpe en procédures : préparer, calculer, écrire.\n- Une fonction comme `DerniereLigne` rend le code indépendant de la taille du tableau.\n- Pour aller plus loin dans Excel : l'enregistreur de macros (onglet Développeur) montre le code VBA de tes actions."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Référence VBA pour Excel",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/overview/excel"
+        },
+        {
+          "titre": "Propriété Range.Text",
+          "url": "https://learn.microsoft.com/fr-fr/office/vba/api/excel.range.text"
+        }
+      ]
+    }
+  ]
+}

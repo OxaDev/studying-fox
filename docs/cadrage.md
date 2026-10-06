@@ -191,7 +191,7 @@ Statuts d'une leçon : `brouillon` → `en_relecture` → `publiée`, ou `à_cor
 
 Questions tranchées :
 
-- Langages exécutables : Python et JavaScript seulement.
+- Langages exécutables : Python, JavaScript et VBA, sur un classeur Excel simulé ([ADR 0026](adr/0026-interpreteur-vba.md)).
 - Référencement : une vitrine publique ([ADR 0016](adr/0016-pages-publiques-referencement.md)).
 - Licence des contenus : CC BY-SA 4.0 ([ADR 0017](adr/0017-licence-contenus-cc-by-sa.md)).
 - Contenus IA : fichiers JSON importés, l'IA est gérée par le porteur du projet ([ADR 0019](adr/0019-import-lecons-json.md)).

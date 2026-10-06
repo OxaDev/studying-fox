@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from app.lecons.modeles import Niveau
 
 Slug = Annotated[str, Field(pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$", max_length=80)]
-Langage = Literal["python", "javascript"]
+Langage = Literal["python", "javascript", "vba"]
 
 
 class Strict(BaseModel):

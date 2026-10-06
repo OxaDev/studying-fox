@@ -32,7 +32,8 @@ journal_technique = logging.getLogger(__name__)
 # Plusieurs processus de l'API peuvent démarrer ensemble : un seul charge à la fois.
 VERROU = 0x52454E41  # « RENA »
 
-NOMS_THEMES = {"python": "Python", "javascript": "JavaScript"}
+# Un thème par langage exécutable : ils sont créés au démarrage, s'ils manquent.
+NOMS_THEMES = {"python": "Python", "javascript": "JavaScript", "vba": "VBA"}
 
 
 class FichierInvalide(Exception):
@@ -104,6 +105,12 @@ async def _theme(db: AsyncSession, slug: str) -> Theme:
     return theme
 
 
+async def creer_themes_par_defaut(db: AsyncSession) -> None:
+    """Les thèmes des langages existent toujours : on importe sans passer par l'admin."""
+    for slug in NOMS_THEMES:
+        await _theme(db, slug)
+
+
 async def charger_paquet(db: AsyncSession, paquet: Paquet) -> Bilan:
     """Crée et publie les leçons et le parcours absents. Lève FichierInvalide."""
     erreurs = await erreurs_d_identite(db, paquet)
@@ -163,12 +170,13 @@ async def charger_paquet(db: AsyncSession, paquet: Paquet) -> Bilan:
 
 
 async def charger_parcours_valides(db: AsyncSession, dossier: Path) -> Bilan:
-    """Charge chaque fichier du dossier, et valide la transaction.
+    """Crée les thèmes par défaut, charge chaque fichier du dossier, et valide la transaction.
 
     Un fichier invalide est signalé dans les logs et ignoré : les autres sont chargés.
     """
     fichiers = await asyncio.to_thread(lire_dossier, dossier)
     await db.execute(text("SELECT pg_advisory_xact_lock(:verrou)"), {"verrou": VERROU})
+    await creer_themes_par_defaut(db)
     total = Bilan()
     for nom, lu in fichiers:
         try:

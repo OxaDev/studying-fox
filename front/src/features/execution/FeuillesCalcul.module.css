@@ -1,0 +1,47 @@
+.feuilles {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0 var(--esp-4) var(--esp-3);
+}
+
+/* La feuille défile seule si elle est plus large que le bloc. */
+.cadre {
+  overflow-x: auto;
+}
+
+.feuille {
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.feuille caption {
+  padding-bottom: var(--esp-2);
+  font-weight: 700;
+  text-align: left;
+}
+
+.feuille th,
+.feuille td {
+  min-width: 4.5rem;
+  padding: var(--esp-1) var(--esp-2);
+  border: 1px solid var(--bordure);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.feuille th {
+  min-width: 2.5rem;
+  background: var(--fond);
+  color: var(--texte-doux);
+  font-weight: 700;
+  text-align: center;
+}
+
+.feuille thead td {
+  min-width: 2.5rem;
+  background: var(--fond);
+}
+
+.feuille .nombre {
+  text-align: right;
+}

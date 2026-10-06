@@ -6,6 +6,7 @@ import styles from "./BlocCode.module.css";
 import { useExecuteur } from "./contexte";
 import { DELAI_MS } from "./executeur";
 import { EditeurCode } from "./EditeurCode";
+import { FeuillesCalcul, resumeFeuilles } from "./FeuillesCalcul";
 import { estLangage, LANGAGES, type Langage, type Resultat } from "./types";
 
 interface Props {
@@ -103,6 +104,9 @@ function BlocExecutable({
         {etat === "chargement" && <p>Chargement de Python… (la première fois seulement)</p>}
         {resultat && <AffichageResultat resultat={resultat} />}
       </div>
+      {resultat?.feuilles && resultat.feuilles.length > 0 && (
+        <FeuillesCalcul feuilles={resultat.feuilles} />
+      )}
     </div>
   );
 }
@@ -115,11 +119,12 @@ const MESSAGES: Record<Resultat["statut"], string> = {
 
 function AffichageResultat({ resultat }: { resultat: Resultat }) {
   const vide = resultat.sorties.length === 0;
+  const feuilles = resultat.feuilles ?? [];
   return (
     <>
       <p className={styles.statut}>{MESSAGES[resultat.statut]}</p>
       {vide ? (
-        resultat.statut === "ok" && <p>Le code n&apos;a rien affiché.</p>
+        resultat.statut === "ok" && feuilles.length === 0 && <p>Le code n&apos;a rien affiché.</p>
       ) : (
         <pre className={styles.console}>
           {resultat.sorties.map((sortie, index) => (
@@ -130,6 +135,7 @@ function AffichageResultat({ resultat }: { resultat: Resultat }) {
         </pre>
       )}
       {resultat.tronque && <p>La sortie était trop longue : seul le début est affiché.</p>}
+      {feuilles.length > 0 && <p>{resumeFeuilles(feuilles)}</p>}
     </>
   );
 }

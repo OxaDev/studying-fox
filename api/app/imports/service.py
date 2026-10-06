@@ -11,7 +11,7 @@ from app.admin.journal import journaliser
 from app.comptes.modeles import Utilisateur
 from app.config import get_config
 from app.imports.conversion import lecon_en_markdown
-from app.imports.format import BlocCode, BlocExercice, BlocImage, LeconImportee, Paquet
+from app.imports.format import BlocCode, BlocExercice, BlocImage, Langage, LeconImportee, Paquet
 from app.imports.identite import (
     erreurs_d_identite,
     erreurs_de_format,
@@ -49,7 +49,7 @@ class CodeAVerifier:
 
     lecon: str
     bloc: int
-    langage: Literal["python", "javascript"]
+    langage: Langage
     code: str
     sortie_attendue: str | None
     # Vrai pour la solution d'un exercice : son code de départ n'est pas vérifié.

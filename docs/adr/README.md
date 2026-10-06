@@ -38,6 +38,8 @@ Un ADR, c'est une fiche courte qui répond à trois questions :
 | [0023](0023-inscription-sans-verification-email.md) | Inscription sans vérification de l'email, en attendant un service d'envoi | Accepté |
 | [0024](0024-choix-du-theme.md) | Choix du thème, retenu dans le navigateur | Accepté |
 | [0025](0025-parcours-valides.md) | Parcours validés dans le dépôt, identifiés par un UUID | Accepté |
+| [0026](0026-interpreteur-vba.md) | VBA : un interpréteur maison et un classeur Excel simulé | Accepté |
+| [0027](0027-formules-excel.md) | Formules Excel : un mini-moteur de calcul maison | Accepté |
 
 ## Écrire un nouvel ADR
 

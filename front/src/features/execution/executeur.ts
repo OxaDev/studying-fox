@@ -1,4 +1,4 @@
-import type { Demande, Langage, Message, Resultat, Sortie } from "./types";
+import type { Demande, FeuilleAffichee, Langage, Message, Resultat, Sortie } from "./types";
 
 export const DELAI_MS = 10_000;
 export const TAILLE_MAX = 10_000;
@@ -13,10 +13,17 @@ export interface WorkerExecution {
 
 export type FabriqueWorker = (langage: Langage) => WorkerExecution;
 
-const fabriqueParDefaut: FabriqueWorker = (langage) =>
-  langage === "python"
-    ? new Worker(new URL("./workers/python.ts", import.meta.url), { type: "module" })
-    : new Worker(new URL("./workers/javascript.ts", import.meta.url), { type: "module" });
+/** Un worker par langage. Les adresses restent écrites en entier : Vite les repère ainsi. */
+const fabriqueParDefaut: FabriqueWorker = (langage) => {
+  switch (langage) {
+    case "python":
+      return new Worker(new URL("./workers/python.ts", import.meta.url), { type: "module" });
+    case "javascript":
+      return new Worker(new URL("./workers/javascript.ts", import.meta.url), { type: "module" });
+    case "vba":
+      return new Worker(new URL("./workers/vba.ts", import.meta.url), { type: "module" });
+  }
+};
 
 export interface Suivi {
   /** Python se charge (une seule fois par page, quelques secondes). */
@@ -64,6 +71,7 @@ export class Executeur {
   private lancer(langage: Langage, code: string, suivi: Suivi): Promise<Resultat> {
     const worker = this.worker(langage);
     const sorties: Sortie[] = [];
+    let feuilles: FeuilleAffichee[] | undefined;
     let taille = 0;
     let tronque = false;
     let minuteur: ReturnType<typeof setTimeout> | undefined;
@@ -72,7 +80,7 @@ export class Executeur {
       const terminer = (statut: Resultat["statut"], erreur: string | null) => {
         clearTimeout(minuteur);
         if (erreur) sorties.push({ flux: "stderr", texte: erreur });
-        resolve({ sorties, statut, tronque });
+        resolve({ sorties, statut, tronque, ...(feuilles && { feuilles }) });
       };
 
       worker.onmessage = (evenement: MessageEvent<Message>) => {
@@ -100,6 +108,9 @@ export class Executeur {
             sorties.push({ flux: message.flux, texte });
             break;
           }
+          case "feuilles":
+            feuilles = message.feuilles;
+            break;
           case "fin":
             terminer(message.erreur ? "erreur" : "ok", message.erreur);
             break;

@@ -14,10 +14,12 @@
 	# Workers d'exécution du code des leçons (ADR 0009) : CSP plus stricte que la page.
 	@worker_javascript path /app/assets/worker-javascript-*
 	@worker_python path /app/assets/worker-python-*
+	@worker_vba path /app/assets/worker-vba-*
 	@medias path /medias/*
-	@page not path /app/assets/worker-javascript-* /app/assets/worker-python-* /medias/*
+	@page not path /app/assets/worker-javascript-* /app/assets/worker-python-* /app/assets/worker-vba-* /medias/*
 	header @worker_javascript Content-Security-Policy "default-src 'none'; script-src 'unsafe-eval'"
 	header @worker_python Content-Security-Policy "default-src 'none'; script-src {scheme}://{hostport}/app/pyodide/ 'wasm-unsafe-eval'; connect-src {scheme}://{hostport}/app/pyodide/"
+	header @worker_vba Content-Security-Policy "default-src 'none'"
 	header @medias Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
 	header @page Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 

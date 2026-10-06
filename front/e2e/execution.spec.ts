@@ -2,11 +2,13 @@ import { expect, type Page, test } from "@playwright/test";
 
 import { LECON, simulerLecons } from "./simulation";
 
-function bloc(page: Page, langage: "Python" | "JavaScript") {
+type NomLangage = "Python" | "JavaScript" | "VBA";
+
+function bloc(page: Page, langage: NomLangage) {
   return page.getByRole("group", { name: `Exemple ${langage} à essayer` });
 }
 
-async function remplacerCode(page: Page, langage: "Python" | "JavaScript", code: string) {
+async function remplacerCode(page: Page, langage: NomLangage, code: string) {
   const editeur = bloc(page, langage).getByRole("textbox", { name: `Code ${langage}, modifiable` });
   await editeur.click();
   await page.keyboard.press("ControlOrMeta+a");
@@ -43,6 +45,26 @@ test("montre une erreur Python lisible", async ({ page }) => {
   await expect(sortie).toContainText("NameError", { timeout: 60_000 });
   await expect(sortie).toContainText('File "<lecon>", line 1');
   await expect(sortie).not.toContainText("_pyodide");
+});
+
+test("exécute du VBA et affiche la feuille Excel", async ({ page }) => {
+  const worker = page.waitForResponse(/\/worker-vba-/);
+  await bloc(page, "VBA").getByRole("button", { name: "Exécuter" }).click();
+
+  await expect(bloc(page, "VBA").locator("pre")).toHaveText("Bonjour depuis VBA");
+  const feuille = bloc(page, "VBA").getByRole("table", { name: "Feuille « Feuil1 »" });
+  await expect(feuille.getByRole("row", { name: "1 Total 12,5" })).toBeVisible();
+  // Le worker VBA n'a droit à rien : ni eval, ni réseau (ADR 0026).
+  expect((await worker).headers()["content-security-policy"]).toBe("default-src 'none'");
+});
+
+test("montre une erreur VBA avec sa ligne", async ({ page }) => {
+  await remplacerCode(page, "VBA", "Sub Main()\nDim x As Integer\nx = 40000\nEnd Sub");
+  await bloc(page, "VBA").getByRole("button", { name: "Exécuter" }).click();
+
+  await expect(bloc(page, "VBA").locator("pre")).toHaveText(
+    "Erreur d'exécution 6 (ligne 3) : Dépassement de capacité",
+  );
 });
 
 test("Maj+Entrée exécute le code depuis l'éditeur", async ({ page }) => {

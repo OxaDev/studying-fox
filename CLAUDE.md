@@ -13,6 +13,7 @@ Le porteur du projet travaille seul : **c'est toi qui écris le code, lui qui re
 | [docs/identite-visuelle.md](docs/identite-visuelle.md) | Avant toute interface |
 | [docs/format-lecon/](docs/format-lecon/README.md) | Pour écrire des leçons ou coder l'import |
 | [docs/markdown-lecons.md](docs/markdown-lecons.md) | Pour le rendu ou l'édition du contenu des leçons |
+| [docs/format-lecon/vba.md](docs/format-lecon/vba.md) | Pour écrire des leçons VBA, ou compléter l'interpréteur |
 
 Tu veux changer une décision ? N'enfreins pas l'ADR : propose un nouvel ADR (`Proposé`) et demande.
 
@@ -47,6 +48,8 @@ Après un changement d'API, régénérer les types du front (la CI vérifie qu'i
 ```bash
 cd api && uv run python -m app.openapi && cd ../front && npm run api:types
 ```
+
+Exécuter un code VBA comme la plateforme, pour écrire la `sortie_attendue` d'une leçon : `cd front && npm run vba -- mon-code.bas` (ADR 0026).
 
 Charger les leçons de `docs/format-lecon/exemple.json` en base de dev : `cd api && uv run python -m app.lecons.commandes charger-exemple`.
 

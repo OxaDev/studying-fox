@@ -16,4 +16,6 @@ Un jalon est découpé en petites pull requests, une par fonctionnalité.
 | 8 | **Administration et RGPD** ✅ | Écrans de gestion des utilisateurs (l’API existe déjà) et des thèmes, journal des actions, export et suppression du compte, purge des comptes non confirmés après 30 jours | Un utilisateur télécharge ses données et supprime son compte | 0014 |
 | 9 | **Mise en ligne** | VPS, sauvegardes, supervision, mentions légales, CGU, déclaration d'accessibilité, audit manuel au lecteur d'écran | Le site est en ligne et conforme | 0012, 0013 |
 
+**Nouveaux langages**, en parallèle des jalons : VBA sur un classeur Excel simulé (ADR 0026), puis Java, puis Go.
+
 **Bloquants à lever avant le jalon 9** : nom de domaine, service d'envoi d'emails. Avec ce service, activer la vérification de l'email en suivant l'ADR 0023 (migration des comptes existants).

@@ -37,6 +37,7 @@ import { useEffect, useId, useRef } from "react";
 
 import styles from "./EditeurCode.module.css";
 import type { Langage } from "./types";
+import { vba } from "./vba/langage";
 
 // Couleurs des jetons de tokens.css : contrastes vérifiés en thème clair et sombre.
 const coloration = HighlightStyle.define([
@@ -252,9 +253,9 @@ interface Props {
   surExecution?: () => void;
 }
 
-const MODES = { python, javascript, markdown };
-// Python : 4 espaces (PEP 8). JavaScript et Markdown : 2, l'usage courant.
-const INDENTATION = { python: "    ", javascript: "  ", markdown: "  " };
+const MODES = { python, javascript, vba, markdown };
+// Python : 4 espaces (PEP 8). VBA : 4, comme l'éditeur d'Excel. JavaScript et Markdown : 2.
+const INDENTATION = { python: "    ", javascript: "  ", vba: "    ", markdown: "  " };
 
 /**
  * Éditeur de code accessible. Tab indente comme dans un IDE ; une aide visible

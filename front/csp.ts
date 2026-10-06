@@ -32,6 +32,12 @@ export function cspWorkerPython(origine: string): string {
 }
 
 /**
+ * Worker VBA : l'interpréteur est du TypeScript ordinaire (ADR 0026).
+ * Il n'a besoin ni d'eval, ni du réseau : tout lui est interdit.
+ */
+export const CSP_WORKER_VBA = "default-src 'none'";
+
+/**
  * Images des leçons (/medias/). Une image SVG peut contenir du script :
  * `sandbox` l'empêche de s'exécuter si quelqu'un ouvre l'image directement.
  */
@@ -40,10 +46,12 @@ export const CSP_MEDIAS = "default-src 'none'; style-src 'unsafe-inline'; sandbo
 /** Fichiers des workers, nommés ainsi par la config Vite (worker.rollupOptions). */
 export const PREFIXE_WORKER_JAVASCRIPT = "/app/assets/worker-javascript-";
 export const PREFIXE_WORKER_PYTHON = "/app/assets/worker-python-";
+export const PREFIXE_WORKER_VBA = "/app/assets/worker-vba-";
 
 export function cspPour(chemin: string, origine: string): string {
   if (chemin.startsWith("/medias/")) return CSP_MEDIAS;
   if (chemin.startsWith(PREFIXE_WORKER_JAVASCRIPT)) return CSP_WORKER_JAVASCRIPT;
   if (chemin.startsWith(PREFIXE_WORKER_PYTHON)) return cspWorkerPython(origine);
+  if (chemin.startsWith(PREFIXE_WORKER_VBA)) return CSP_WORKER_VBA;
   return CSP_PAGE;
 }

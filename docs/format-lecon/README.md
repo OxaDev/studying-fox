@@ -9,6 +9,7 @@ On produit un fichier, un utilisateur l'importe dans la plateforme, puis il reli
 |---|---|
 | [lecons.schema.json](lecons.schema.json) | Le format officiel (JSON Schema). Il fait foi. |
 | [exemple.json](exemple.json) | Un paquet complet : un parcours de deux leçons. |
+| [vba.md](vba.md) | Ce qu'il faut savoir pour écrire des leçons VBA. |
 
 - **Sans image** : un seul fichier `.json`.
 - **Avec images** : une archive `.zip` qui contient `lecons.json` à la racine et un dossier `images/`.
@@ -58,7 +59,7 @@ Chaque leçon et le parcours ont un `id` : un **UUID**, qui devient leur identif
 | Type | À quoi il sert | Champs |
 |---|---|---|
 | `texte` | Expliquer | `markdown` |
-| `code` | Montrer, ou faire essayer si `executable: true` | `langage` (python, javascript), `code`, `executable`, `sortie_attendue` |
+| `code` | Montrer, ou faire essayer si `executable: true` | `langage` (python, javascript, vba), `code`, `executable`, `sortie_attendue` |
 | `exercice` | Faire pratiquer : une consigne, un code de départ, une solution masquée. **Version 2 du format.** | `langage`, `consigne`, `code`, `solution`, `sortie_attendue` |
 | `encadre` | Mettre en avant | `variante` (astuce, attention, a_retenir), `markdown` |
 | `image` | Illustrer | `fichier`, `alt`, `legende`, `licence`, `source` |
@@ -101,8 +102,8 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 - Markdown simple : gras, italique, `code`, listes, titres `##` au maximum. **Pas de HTML.**
 
 **Le code**
-- Python 3 ou JavaScript moderne, rien d'autre.
-- Le code doit **tourner tel quel** dans le navigateur : pas de fichiers, pas de réseau, pas de `input()`.
+- Python 3, JavaScript moderne ou VBA, rien d'autre. Pour le VBA, lis d'abord [vba.md](vba.md) : le code tourne sur un classeur Excel simulé.
+- Le code doit **tourner tel quel** dans le navigateur : pas de fichiers, pas de réseau, pas de `input()` ni d'`InputBox`.
 - Indique `sortie_attendue` dès que le code affiche quelque chose. La plateforme la compare au résultat réel au moment de l'import.
 
 **Les droits**
@@ -114,9 +115,9 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 
 1. Le fichier est valide par rapport au schéma :
    `check-jsonschema --schemafile lecons.schema.json mon-paquet.json`
-2. Chaque exemple de code, et chaque solution d'exercice, a été exécuté, et sa sortie correspond à `sortie_attendue`.
+2. Chaque exemple de code, et chaque solution d'exercice, a été exécuté, et sa sortie correspond à `sortie_attendue`. Pour le VBA : `cd front && npm run vba -- mon-code.bas`.
 3. Chaque leçon et le parcours ont un `id` (UUID) : nouveau pour une nouvelle leçon, repris tel quel pour une leçon existante. Les `slug` sont uniques et parlants.
-4. Les thèmes utilisés existent déjà sur la plateforme (`python`, `javascript`…).
+4. Les thèmes utilisés existent déjà sur la plateforme (`python`, `javascript`, `vba`…).
 
 ## Après l'import
 

@@ -120,6 +120,22 @@ describe("Exécuteur", () => {
     });
   });
 
+  it("transmet les feuilles du classeur après un code VBA", async () => {
+    const feuilles = [{ nom: "Feuil1", lignes: [[null]], tronquee: false }];
+    const executeur = new Executeur(
+      () =>
+        new FauxWorker(() => [
+          { type: "debut" },
+          { type: "feuilles", feuilles },
+          { type: "fin", erreur: null },
+        ]),
+    );
+
+    const resultat = await executeur.executer("vba", "...");
+
+    expect(resultat.feuilles).toEqual(feuilles);
+  });
+
   it("signale une erreur", async () => {
     const executeur = new Executeur(
       () => new FauxWorker(() => [{ type: "debut" }, { type: "fin", erreur: "Boum" }]),

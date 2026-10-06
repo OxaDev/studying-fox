@@ -849,7 +849,7 @@ export interface components {
              * Langage
              * @enum {string}
              */
-            langage: "python" | "javascript";
+            langage: "python" | "javascript" | "vba";
             /** Code */
             code: string;
             /** Sortie Attendue */

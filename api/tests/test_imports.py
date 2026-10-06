@@ -173,6 +173,31 @@ async def test_seule_la_solution_d_un_exercice_est_verifiee(
     }
 
 
+async def test_un_bloc_vba_est_verifie_et_stocke_en_markdown(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    paquet = exemple()
+    code = 'Sub Main()\n    Debug.Print "Bonjour"\nEnd Sub\n'
+    cast(list[dict[str, object]], lecon(paquet)["blocs"]).append(
+        {
+            "type": "code",
+            "langage": "vba",
+            "code": code,
+            "executable": True,
+            "sortie_attendue": "Bonjour\n",
+        }
+    )
+
+    analyse = (await analyser(client, csrf, en_json(paquet))).json()
+
+    assert analyse["valide"] is True
+    assert [c["langage"] for c in analyse["codes"] if c["code"] == code] == ["vba"]
+    assert (await importer(client, csrf, en_json(paquet))).status_code == 201
+    async with SessionLocale() as db:
+        contenus = list(await db.scalars(select(Revision.contenu)))
+    assert any(f"```vba run\n{code}```" in c for c in contenus)
+
+
 async def test_un_exercice_importe_est_stocke_en_markdown(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
@@ -213,7 +238,7 @@ async def test_erreur_de_format_localisee_en_francais(
     assert analyse["erreurs"] == [
         {
             "emplacement": "Leçon « afficher-du-texte-en-python » › bloc 2 › langage",
-            "message": "Valeur non autorisée. Attendu : 'python' ou 'javascript'.",
+            "message": "Valeur non autorisée. Attendu : 'python', 'javascript' ou 'vba'.",
         }
     ]
 

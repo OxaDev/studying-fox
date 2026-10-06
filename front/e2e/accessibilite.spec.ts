@@ -125,6 +125,20 @@ for (const theme of ["light", "dark"] as const) {
 }
 
 for (const theme of ["light", "dark"] as const) {
+  test(`la feuille Excel d'un code VBA est accessible (thème ${theme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: theme });
+    await simulerLecons(page);
+    await page.goto(`./lecons/${LECON.slug}`);
+    await page
+      .getByRole("group", { name: "Exemple VBA à essayer" })
+      .getByRole("button", { name: "Exécuter" })
+      .click();
+    await expect(page.getByRole("table", { name: "Feuille « Feuil1 »" })).toBeVisible();
+    await verifierAccessibilite(page);
+  });
+}
+
+for (const theme of ["light", "dark"] as const) {
   test(`l'éditeur de code, suggestions et sélection affichées, est accessible (thème ${theme})`, async ({
     page,
   }) => {

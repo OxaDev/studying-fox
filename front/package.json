@@ -19,6 +19,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "api:types": "openapi-typescript src/api/openapi.json -o src/api/schema.d.ts",
+    "vba": "vite-node scripts/executer-vba.ts",
     "postinstall": "node scripts/copier-pyodide.mjs"
   },
   "dependencies": {
