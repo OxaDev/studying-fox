@@ -12,6 +12,12 @@ from app.comptes.modeles import Utilisateur
 from app.config import get_config
 from app.imports.conversion import lecon_en_markdown
 from app.imports.format import BlocCode, BlocExercice, BlocImage, LeconImportee, Paquet
+from app.imports.identite import (
+    erreurs_d_identite,
+    erreurs_de_format,
+    trouver_lecon,
+    trouver_parcours,
+)
 from app.imports.lecture import Erreur, FichierLu, lire_fichier
 from app.imports.modeles import Import
 from app.lecons.modeles import Lecon, Revision, StatutRevision, Theme
@@ -95,10 +101,8 @@ async def analyser(db: AsyncSession, nom_fichier: str, contenu: bytes) -> Analys
         return analyse
 
     themes = set(await db.scalars(select(Theme.slug)))
-    slugs = [lecon.slug for lecon in paquet.lecons]
-    existantes = {
-        lecon.slug: lecon for lecon in await db.scalars(select(Lecon).where(Lecon.slug.in_(slugs)))
-    }
+    analyse.erreurs.extend(erreurs_de_format(paquet))
+    analyse.erreurs.extend(await erreurs_d_identite(db, paquet))
 
     vus: set[str] = set()
     for lecon in paquet.lecons:
@@ -111,7 +115,7 @@ async def analyser(db: AsyncSession, nom_fichier: str, contenu: bytes) -> Analys
             analyse.erreurs.append(
                 Erreur(f"{ici} › theme", f"Thème inconnu. Thèmes disponibles : {disponibles}.")
             )
-        existante = existantes.get(lecon.slug)
+        existante = await trouver_lecon(db, lecon)
         if existante and (existante.theme.slug != lecon.theme or existante.niveau != lecon.niveau):
             analyse.erreurs.append(
                 Erreur(
@@ -168,7 +172,7 @@ async def _analyser_parcours(
                     f"La leçon « {slug} » n'existe ni dans le paquet ni sur le site.",
                 )
             )
-    existe = await db.scalar(select(Parcours.id).where(Parcours.slug == parcours.slug))
+    existe = await trouver_parcours(db, parcours)
     analyse.parcours = ApercuParcours(
         slug=parcours.slug,
         titre=parcours.titre,
@@ -200,10 +204,13 @@ async def importer(
     medias = f"/medias/imports/{envoi.id}"
     themes = {theme.slug: theme for theme in await db.scalars(select(Theme))}
     for importee in paquet.lecons:
-        lecon = await db.scalar(select(Lecon).where(Lecon.slug == importee.slug))
+        lecon = await trouver_lecon(db, importee)
         if lecon is None:
             lecon = Lecon(
-                slug=importee.slug, theme_id=themes[importee.theme].id, niveau=importee.niveau
+                id=importee.id or uuid.uuid4(),
+                slug=importee.slug,
+                theme_id=themes[importee.theme].id,
+                niveau=importee.niveau,
             )
             db.add(lecon)
             await db.flush()
@@ -251,9 +258,9 @@ async def _importer_parcours(db: AsyncSession, paquet: Paquet, themes: dict[str,
         lecon.slug: lecon.id
         for lecon in await db.scalars(select(Lecon).where(Lecon.slug.in_(importe.lecons)))
     }
-    parcours = await db.scalar(select(Parcours).where(Parcours.slug == importe.slug))
+    parcours = await trouver_parcours(db, importe)
     if parcours is None:
-        parcours = Parcours(slug=importe.slug, publie=True)
+        parcours = Parcours(id=importe.id or uuid.uuid4(), slug=importe.slug, publie=True)
         db.add(parcours)
     parcours.titre = importe.titre
     parcours.description = importe.description

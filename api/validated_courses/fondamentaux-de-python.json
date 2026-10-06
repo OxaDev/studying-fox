@@ -1,12 +1,13 @@
 {
   "format": "renard-etudiant/lecons",
-  "version": 2,
+  "version": 3,
   "generation": {
     "assiste_par_ia": true,
     "outil": "Claude Opus 5.5",
     "date": "2026-10-05"
   },
   "parcours": {
+    "id": "919174c3-a97d-4ab3-b694-9a0b5539bd3a",
     "slug": "fondamentaux-de-python",
     "titre": "Les fondamentaux de Python",
     "description": "Apprendre Python pas à pas, sans prérequis : variables, calculs, texte, conditions, listes, boucles, dictionnaires, fonctions, erreurs, modules et classes. Des exemples tirés de la vie professionnelle, et un mini-projet pour finir.",
@@ -34,6 +35,7 @@
   },
   "lecons": [
     {
+      "id": "a1febf49-6df5-427e-a6dd-0975a46b9f41",
       "slug": "python-premier-programme",
       "titre": "Ton premier programme",
       "resume": "Écrire et lancer tes premières lignes de Python : afficher du texte et commenter ton code.",
@@ -112,6 +114,7 @@
       ]
     },
     {
+      "id": "6dee883e-35e1-41de-bf26-ae83f175d754",
       "slug": "python-variables-et-types",
       "titre": "Variables et types de données",
       "resume": "Ranger des valeurs dans des variables et connaître les types de base : nombres entiers, décimaux, texte et booléens.",
@@ -201,6 +204,7 @@
       "sources": []
     },
     {
+      "id": "83af6215-4e14-4149-bbed-969015834b2f",
       "slug": "python-calculs",
       "titre": "Faire des calculs",
       "resume": "Utiliser Python comme une calculatrice : opérations, priorités, division entière, reste et arrondis.",
@@ -287,6 +291,7 @@
       ]
     },
     {
+      "id": "3b81e048-6025-44ad-9050-9d163d723bd9",
       "slug": "python-chaines-de-caracteres",
       "titre": "Manipuler du texte",
       "resume": "Assembler, formater et nettoyer du texte : f-strings, longueur, majuscules, remplacement et recherche.",
@@ -373,6 +378,7 @@
       ]
     },
     {
+      "id": "5928b716-a99c-4f07-81fa-3ece3af19ab3",
       "slug": "python-conditions",
       "titre": "Prendre des décisions avec if",
       "resume": "Exécuter du code seulement quand une condition est vraie, grâce à if, elif et else.",
@@ -464,6 +470,7 @@
       ]
     },
     {
+      "id": "ce713b4f-1001-4b9d-b0eb-c488ace42852",
       "slug": "python-listes",
       "titre": "Les listes",
       "resume": "Ranger plusieurs valeurs dans une liste, y accéder, la modifier et en tirer des statistiques simples.",
@@ -550,6 +557,7 @@
       ]
     },
     {
+      "id": "74e1f7bd-8469-4c56-a633-c0e7458fb742",
       "slug": "python-boucle-for",
       "titre": "Répéter avec la boucle for",
       "resume": "Traiter chaque élément d'une liste, répéter une action un nombre précis de fois et accumuler un résultat.",
@@ -636,6 +644,7 @@
       ]
     },
     {
+      "id": "b4b52c7b-c0ff-4146-a9b0-a6eb06a5d2a6",
       "slug": "python-boucle-while",
       "titre": "Répéter tant que : la boucle while",
       "resume": "Répéter une action tant qu'une condition reste vraie, et sortir d'une boucle avec break.",
@@ -700,6 +709,7 @@
       ]
     },
     {
+      "id": "1e87dd26-09af-4bb7-87a6-97daad763690",
       "slug": "python-dictionnaires",
       "titre": "Les dictionnaires",
       "resume": "Associer des clés à des valeurs pour décrire une fiche client, un stock ou compter des occurrences.",
@@ -781,6 +791,7 @@
       ]
     },
     {
+      "id": "830b8902-1677-498c-a301-653543c32325",
       "slug": "python-tuples-et-ensembles",
       "titre": "Tuples et ensembles",
       "resume": "Regrouper des valeurs fixes avec les tuples, et éliminer les doublons ou comparer des groupes avec les ensembles.",
@@ -845,6 +856,7 @@
       ]
     },
     {
+      "id": "7357f53a-6552-40bd-b595-ca5adbc99d56",
       "slug": "python-comprehensions",
       "titre": "Les compréhensions de liste",
       "resume": "Créer une liste à partir d'une autre en une seule ligne lisible, en transformant et en filtrant ses éléments.",
@@ -908,6 +920,7 @@
       ]
     },
     {
+      "id": "c479cb14-18c7-4087-9e6f-bd23e61183a9",
       "slug": "python-fonctions",
       "titre": "Écrire ses propres fonctions",
       "resume": "Regrouper des instructions dans une fonction réutilisable, avec des paramètres et une valeur de retour.",
@@ -984,6 +997,7 @@
       ]
     },
     {
+      "id": "f01bd128-343d-4f22-99d3-8f63ae688404",
       "slug": "python-fonctions-parametres",
       "titre": "Paramètres par défaut et arguments nommés",
       "resume": "Rendre tes fonctions plus souples : valeurs par défaut, arguments nommés, plusieurs résultats et documentation.",
@@ -1048,6 +1062,7 @@
       ]
     },
     {
+      "id": "85d22692-c237-4b90-a470-5f7f61a0dc4d",
       "slug": "python-erreurs-et-exceptions",
       "titre": "Comprendre et gérer les erreurs",
       "resume": "Lire un message d'erreur, intercepter une exception avec try et except, et signaler toi-même un problème avec raise.",
@@ -1133,6 +1148,7 @@
       ]
     },
     {
+      "id": "cf47c7d3-8e7b-46aa-bb9a-55a722702a43",
       "slug": "python-modules",
       "titre": "Utiliser les modules de Python",
       "resume": "Importer des outils prêts à l'emploi de la bibliothèque standard : calculs mathématiques, statistiques et dates.",
@@ -1208,6 +1224,7 @@
       ]
     },
     {
+      "id": "e879adf3-773b-4a5c-a36c-77b2cf942d3b",
       "slug": "python-classes-et-objets",
       "titre": "Classes et objets",
       "resume": "Créer tes propres types avec une classe : regrouper des données et les actions qui vont avec.",
@@ -1288,6 +1305,7 @@
       ]
     },
     {
+      "id": "e6bf1da8-8ba0-45c4-a701-09e3756a2362",
       "slug": "python-projet-suivi-des-depenses",
       "titre": "Mini-projet : un suivi de dépenses",
       "resume": "Assembler listes, dictionnaires, boucles, conditions, fonctions et exceptions dans un petit outil de suivi de dépenses.",

@@ -13,7 +13,8 @@ from app.modeles import __all__ as _tous_les_modeles  # noqa: F401  (enregistre 
 
 config = context.config
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    # Sans couper les loggers de l'API : les tests appliquent les migrations dans le même processus.
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 target_metadata = Base.metadata
 

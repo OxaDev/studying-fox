@@ -50,6 +50,8 @@ cd api && uv run python -m app.openapi && cd ../front && npm run api:types
 
 Charger les leçons de `docs/format-lecon/exemple.json` en base de dev : `cd api && uv run python -m app.lecons.commandes charger-exemple`.
 
+Les parcours validés de `api/validated_courses/` sont créés et publiés au démarrage de l'API s'ils manquent en base (ADR 0025). À la main : `cd api && uv run python -m app.imports.parcours_valides`.
+
 Comptes de test des tests de bout en bout : `admin@exemple.fr`, `relectrice@exemple.fr`, `contributeur@exemple.fr`, `apprenant@exemple.fr` et `partant@exemple.fr` (qui supprime son compte), mot de passe dans `api/app/dev.py`.
 
 Nommer le premier admin (le compte doit exister) : `cd api && uv run python -m app.comptes.commandes promouvoir-admin <email>`.

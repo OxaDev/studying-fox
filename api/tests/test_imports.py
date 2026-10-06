@@ -1,5 +1,6 @@
 import io
 import json
+import uuid
 import zipfile
 from pathlib import Path
 from typing import cast
@@ -13,7 +14,8 @@ from app.comptes.modeles import Role
 from app.config import get_config
 from app.db import SessionLocale
 from app.emails import ExpediteurMemoire
-from app.lecons.modeles import Revision, StatutRevision
+from app.lecons.modeles import Lecon, Revision, StatutRevision
+from app.parcours.modeles import Parcours
 from tests.outils import connecter, creer_compte, creer_lecon, creer_themes
 
 EXEMPLE = Path(__file__).parents[2] / "docs" / "format-lecon" / "exemple.json"
@@ -29,6 +31,22 @@ def exemple() -> Paquet:
 
 def lecon(paquet: Paquet, index: int = 0) -> dict[str, object]:
     return cast(list[dict[str, object]], paquet["lecons"])[index]
+
+
+def parcours(paquet: Paquet) -> dict[str, object]:
+    return cast(dict[str, object], paquet["parcours"])
+
+
+def en_version(paquet: Paquet, version: int) -> Paquet:
+    """Ramène l'exemple à une version antérieure : les identifiants n'existent qu'en version 3."""
+    paquet["version"] = version
+    if version < 3:
+        for element in [*cast(list[dict[str, object]], paquet["lecons"]), parcours(paquet)]:
+            element.pop("id")
+    return paquet
+
+
+ID_LECON = uuid.UUID(str(lecon(exemple())["id"]))
 
 
 def en_json(paquet: Paquet) -> Fichier:
@@ -122,7 +140,7 @@ EXERCICE: dict[str, object] = {
 
 
 async def test_un_exercice_demande_la_version_2(client: AsyncClient, csrf: dict[str, str]) -> None:
-    paquet = exemple()
+    paquet = en_version(exemple(), 1)
     cast(list[dict[str, object]], lecon(paquet)["blocs"]).append(EXERCICE)
 
     analyse = (await analyser(client, csrf, en_json(paquet))).json()
@@ -139,8 +157,7 @@ async def test_un_exercice_demande_la_version_2(client: AsyncClient, csrf: dict[
 async def test_seule_la_solution_d_un_exercice_est_verifiee(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
-    paquet = exemple()
-    paquet["version"] = 2
+    paquet = en_version(exemple(), 2)
     cast(list[dict[str, object]], lecon(paquet)["blocs"]).append(EXERCICE)
 
     analyse = (await analyser(client, csrf, en_json(paquet))).json()
@@ -159,8 +176,7 @@ async def test_seule_la_solution_d_un_exercice_est_verifiee(
 async def test_un_exercice_importe_est_stocke_en_markdown(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
-    paquet = exemple()
-    paquet["version"] = 2
+    paquet = en_version(exemple(), 2)
     cast(list[dict[str, object]], lecon(paquet)["blocs"]).append(EXERCICE)
 
     assert (await importer(client, csrf, en_json(paquet))).status_code == 201
@@ -212,14 +228,133 @@ async def test_theme_inconnu(client: AsyncClient, csrf: dict[str, str]) -> None:
     assert "Thème inconnu" in analyse["erreurs"][0]["message"]
 
 
-async def test_lecon_existante_devient_une_nouvelle_version(
+async def test_sans_identifiant_le_slug_designe_la_lecon(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    await creer_lecon("afficher-du-texte-en-python")
+
+    analyse = (await analyser(client, csrf, en_json(en_version(exemple(), 2)))).json()
+
+    assert analyse["lecons"][0]["action"] == "nouvelle_version"
+
+
+# --- Identifiants (version 3, ADR 0025) ---------------------------------------------------
+
+
+async def test_meme_identifiant_devient_une_nouvelle_version(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    await creer_lecon("afficher-du-texte-en-python", identifiant=ID_LECON)
+
+    analyse = (await analyser(client, csrf, en_json(exemple()))).json()
+
+    assert analyse["valide"] is True
+    assert analyse["lecons"][0]["action"] == "nouvelle_version"
+
+
+async def test_un_slug_pris_par_une_autre_lecon_est_refuse(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
     await creer_lecon("afficher-du-texte-en-python")
 
     analyse = (await analyser(client, csrf, en_json(exemple()))).json()
 
-    assert analyse["lecons"][0]["action"] == "nouvelle_version"
+    assert analyse["valide"] is False
+    assert analyse["erreurs"] == [
+        {
+            "emplacement": "Leçon « afficher-du-texte-en-python »",
+            "message": "Ce slug est déjà pris par une autre leçon du site.",
+        }
+    ]
+
+
+async def test_le_slug_d_une_lecon_existante_ne_change_pas(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    await creer_lecon("ancien-slug", identifiant=ID_LECON)
+
+    analyse = (await analyser(client, csrf, en_json(exemple()))).json()
+
+    assert analyse["erreurs"] == [
+        {
+            "emplacement": "Leçon « afficher-du-texte-en-python »",
+            "message": "Cette leçon existe sous le slug « ancien-slug » : il ne change pas.",
+        }
+    ]
+
+
+async def test_l_identifiant_est_obligatoire_en_version_3(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    paquet = exemple()
+    del parcours(paquet)["id"]
+
+    analyse = (await analyser(client, csrf, en_json(paquet))).json()
+
+    assert analyse["erreurs"] == [
+        {
+            "emplacement": "Parcours « premiers-pas-en-python » › id",
+            "message": "Champ obligatoire à partir de la version 3 du format.",
+        }
+    ]
+
+
+async def test_l_identifiant_demande_la_version_3(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    paquet = exemple()
+    paquet["version"] = 2
+
+    analyse = (await analyser(client, csrf, en_json(paquet))).json()
+
+    assert analyse["valide"] is False
+    assert {e["message"] for e in analyse["erreurs"]} == {
+        "L'identifiant demande la version 3 du format."
+    }
+
+
+async def test_un_identifiant_en_double_est_refuse(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    paquet = exemple()
+    lecon(paquet, 1)["id"] = lecon(paquet)["id"]
+
+    analyse = (await analyser(client, csrf, en_json(paquet))).json()
+
+    assert analyse["erreurs"] == [
+        {
+            "emplacement": "Leçon « les-variables-en-python » › id",
+            "message": "Cet identifiant apparaît deux fois.",
+        }
+    ]
+
+
+async def test_un_identifiant_mal_forme_est_explique(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    paquet = exemple()
+    lecon(paquet)["id"] = "pas-un-uuid"
+
+    analyse = (await analyser(client, csrf, en_json(paquet))).json()
+
+    assert analyse["erreurs"][0]["emplacement"] == "Leçon « afficher-du-texte-en-python » › id"
+    assert analyse["erreurs"][0]["message"].startswith("Doit être un UUID")
+
+
+async def test_reimporter_le_meme_fichier_ne_cree_pas_de_doublon(
+    client: AsyncClient, csrf: dict[str, str]
+) -> None:
+    assert (await importer(client, csrf, en_json(exemple()))).status_code == 201
+    assert (await importer(client, csrf, en_json(exemple()))).status_code == 201
+
+    async with SessionLocale() as db:
+        lecons = list(await db.scalars(select(Lecon)))
+        tous_les_parcours = list(await db.scalars(select(Parcours)))
+        revisions = list(await db.scalars(select(Revision).where(Revision.lecon_id == ID_LECON)))
+    attendues = cast(list[dict[str, object]], exemple()["lecons"])
+    assert {e.id for e in lecons} == {uuid.UUID(str(e["id"])) for e in attendues}
+    assert [p.id for p in tous_les_parcours] == [uuid.UUID(str(parcours(exemple())["id"]))]
+    assert sorted(r.numero for r in revisions) == [1, 2]
 
 
 async def test_mauvaise_extension(client: AsyncClient, csrf: dict[str, str]) -> None:

@@ -1,12 +1,13 @@
 {
   "format": "renard-etudiant/lecons",
-  "version": 1,
+  "version": 3,
   "generation": {
     "assiste_par_ia": true,
     "outil": "Claude Opus 5.5",
     "date": "2026-10-05"
   },
   "parcours": {
+    "id": "8a0c6f52-3e1b-4d7a-9c25-6b1f0e4d2a91",
     "slug": "premiers-pas-en-python",
     "titre": "Premiers pas en Python",
     "description": "Découvrir les bases de Python : afficher du texte, stocker des valeurs et faire des calculs simples.",
@@ -16,6 +17,7 @@
   },
   "lecons": [
     {
+      "id": "2f7d9b3c-5a64-4e18-b0c2-7d3e9a1f6c58",
       "slug": "afficher-du-texte-en-python",
       "titre": "Afficher du texte",
       "resume": "Utiliser la fonction print pour afficher un message à l'écran.",
@@ -43,6 +45,7 @@
       ]
     },
     {
+      "id": "c41e8a07-9d25-4b6f-8e3a-1f5c7b2d9e60",
       "slug": "les-variables-en-python",
       "titre": "Les variables",
       "resume": "Stocker une valeur dans une variable pour la réutiliser plus tard.",

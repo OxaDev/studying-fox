@@ -14,6 +14,7 @@ RUN uv sync --frozen --no-dev
 COPY alembic.ini ./
 COPY alembic ./alembic
 COPY app ./app
+COPY validated_courses ./validated_courses
 
 RUN useradd --system --uid 1000 renard && mkdir -p /srv/medias && chown renard /srv/medias
 USER renard

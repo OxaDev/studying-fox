@@ -17,9 +17,10 @@
     "version": {
       "enum": [
         1,
-        2
+        2,
+        3
       ],
-      "description": "2 ajoute le bloc « exercice ». Un fichier en version 1 reste accepté."
+      "description": "2 ajoute le bloc « exercice », 3 les identifiants (id). Les versions précédentes restent acceptées."
     },
     "generation": {
       "$ref": "#/$defs/generation"
@@ -33,37 +34,6 @@
       "maxItems": 50,
       "items": {
         "$ref": "#/$defs/lecon"
-      }
-    }
-  },
-  "if": {
-    "properties": {
-      "version": {
-        "const": 1
-      }
-    }
-  },
-  "then": {
-    "properties": {
-      "lecons": {
-        "items": {
-          "properties": {
-            "blocs": {
-              "items": {
-                "not": {
-                  "properties": {
-                    "type": {
-                      "const": "exercice"
-                    }
-                  },
-                  "required": [
-                    "type"
-                  ]
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
@@ -121,6 +91,9 @@
         "lecons"
       ],
       "properties": {
+        "id": {
+          "$ref": "#/$defs/identifiant"
+        },
         "slug": {
           "$ref": "#/$defs/slug"
         },
@@ -164,6 +137,9 @@
         "blocs"
       ],
       "properties": {
+        "id": {
+          "$ref": "#/$defs/identifiant"
+        },
         "slug": {
           "$ref": "#/$defs/slug"
         },
@@ -426,6 +402,92 @@
           "source"
         ]
       }
+    },
+    "identifiant": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "UUID stable (version 3). Généré une fois, il ne change jamais : on retrouve la leçon ou le parcours par lui, sans créer de doublon."
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "version": {
+            "const": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "lecons": {
+            "items": {
+              "properties": {
+                "blocs": {
+                  "items": {
+                    "not": {
+                      "properties": {
+                        "type": {
+                          "const": "exercice"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "version": {
+            "const": 3
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "lecons": {
+            "items": {
+              "required": [
+                "id"
+              ]
+            }
+          },
+          "parcours": {
+            "required": [
+              "id"
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "lecons": {
+            "items": {
+              "not": {
+                "required": [
+                  "id"
+                ]
+              }
+            }
+          },
+          "parcours": {
+            "not": {
+              "required": [
+                "id"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
 }

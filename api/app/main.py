@@ -18,6 +18,7 @@ from app.admin.themes import router as themes_router
 from app.comptes.routes import router as comptes_router
 from app.config import get_config
 from app.contribution.routes import router as contribution_router
+from app.imports.parcours_valides import charger_au_demarrage
 from app.imports.routes import router as imports_router
 from app.lecons.routes import router as lecons_router
 from app.parcours.routes import router as parcours_router
@@ -36,9 +37,11 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s : %(messa
 
 @asynccontextmanager
 async def cycle_de_vie(_: FastAPI) -> AsyncIterator[None]:
-    """Applique les durées de conservation chaque jour (ADR 0014), sauf pendant les tests."""
+    """Charge les parcours validés (ADR 0025) et applique les durées de conservation chaque jour
+    (ADR 0014). Rien de tout ça pendant les tests : chacun part d'une base vide."""
     tache = None
     if get_config().environnement != "test":
+        await charger_au_demarrage()
         tache = asyncio.create_task(purger_chaque_jour())
     yield
     if tache:

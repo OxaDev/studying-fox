@@ -1,6 +1,7 @@
 """Raccourcis pour les tests : créer un compte, se connecter, lire un email."""
 
 import re
+import uuid
 from dataclasses import dataclass
 
 from httpx import ASGITransport, AsyncClient
@@ -80,6 +81,7 @@ async def creer_lecon(
     resume: str = "Stocker une valeur pour la réutiliser.",
     contenu: str = "Une **variable** est une boîte.\n\n```python run\nprint(1)\n```\n",
     niveau: Niveau = Niveau.DEBUTANT,
+    identifiant: uuid.UUID | None = None,
 ) -> None:
     """Crée une leçon de thème Python avec une révision au statut demandé."""
     async with SessionLocale() as db:
@@ -93,7 +95,7 @@ async def creer_lecon(
             if auteur_email
             else None
         )
-        lecon = Lecon(slug=slug, theme_id=theme.id, niveau=niveau)
+        lecon = Lecon(id=identifiant or uuid.uuid4(), slug=slug, theme_id=theme.id, niveau=niveau)
         db.add(lecon)
         await db.flush()
         publiee = statut is StatutRevision.PUBLIEE

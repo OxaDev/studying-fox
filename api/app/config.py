@@ -27,6 +27,9 @@ class Config(BaseSettings):
     # Images des leçons, servies sous /medias/ (par Caddy en production).
     dossier_medias: Path = Path("medias")
 
+    # Parcours validés, chargés au démarrage s'ils manquent en base (ADR 0025).
+    dossier_parcours_valides: Path = Path(__file__).parents[1] / "validated_courses"
+
 
 @lru_cache
 def get_config() -> Config:

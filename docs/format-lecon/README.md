@@ -17,15 +17,41 @@ On produit un fichier, un utilisateur l'importe dans la plateforme, puis il reli
 
 ```
 paquet
-├── format, version      → "renard-etudiant/lecons", et 1 ou 2 (2 pour utiliser des exercices)
+├── format, version      → "renard-etudiant/lecons", et 3 (la version actuelle)
 ├── generation           → assisté par IA ? quel outil ? quelle date ?
-├── parcours (facultatif)→ regroupe les leçons dans un ordre
+├── parcours (facultatif)→ id, slug… : regroupe les leçons dans un ordre
 └── lecons[]             → 1 à 50 leçons
-    ├── slug, titre, resume, theme, niveau, duree_minutes
+    ├── id, slug, titre, resume, theme, niveau, duree_minutes
     ├── prerequis, objectifs
     ├── blocs[]          → texte | code | exercice | encadre | image
     └── sources
 ```
+
+## Les versions du format
+
+| Version | Ce qu'elle ajoute |
+|---|---|
+| 1 | Le format de départ |
+| 2 | Le bloc `exercice` |
+| 3 | Un **identifiant** (`id`) obligatoire sur chaque leçon et sur le parcours |
+
+**Écris tes paquets en version 3.** Les versions 1 et 2 restent acceptées à l'import : la leçon est alors retrouvée par son slug.
+
+## Les identifiants (version 3)
+
+Chaque leçon et le parcours ont un `id` : un **UUID**, qui devient leur identifiant sur la plateforme (voir [ADR 0025](../adr/0025-parcours-valides.md)).
+
+```json
+{
+  "id": "2f7d9b3c-5a64-4e18-b0c2-7d3e9a1f6c58",
+  "slug": "afficher-du-texte-en-python",
+  "titre": "Afficher du texte"
+}
+```
+
+- **Une nouvelle leçon, un nouvel `id`.** Pour en générer un : `python3 -c "import uuid; print(uuid.uuid4())"`. N'invente pas l'UUID à la main, et ne copie pas celui de l'exemple.
+- **L'`id` ne change jamais.** Pour une nouvelle version d'une leçon existante, garde son `id` : l'import crée une nouvelle version de cette leçon, jamais un doublon.
+- **Le slug d'une leçon existante ne change pas non plus.** L'import refuse un `id` connu avec un autre slug, et un slug déjà pris par une leçon d'un autre `id`.
 
 ## Les 5 types de blocs
 
@@ -55,7 +81,7 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 }
 ```
 
-- Le paquet doit déclarer `"version": 2`. Un fichier en version 1 reste accepté, mais sans exercice.
+- Le paquet doit déclarer `"version": 2` ou plus. Un fichier en version 1 reste accepté, mais sans exercice.
 - À l'import, c'est la **solution** qui est exécutée et comparée à `sortie_attendue`. Le code de départ ne l'est pas : il peut être incomplet.
 - Une bonne consigne dit précisément ce que le programme doit afficher. Le code de départ prépare les données, et laisse un commentaire là où l'apprenant doit écrire.
 
@@ -89,7 +115,7 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 1. Le fichier est valide par rapport au schéma :
    `check-jsonschema --schemafile lecons.schema.json mon-paquet.json`
 2. Chaque exemple de code, et chaque solution d'exercice, a été exécuté, et sa sortie correspond à `sortie_attendue`.
-3. Les `slug` sont uniques et parlants. Si un slug existe déjà sur la plateforme, l'import crée une **nouvelle version** de cette leçon : on ne crée pas de doublon.
+3. Chaque leçon et le parcours ont un `id` (UUID) : nouveau pour une nouvelle leçon, repris tel quel pour une leçon existante. Les `slug` sont uniques et parlants.
 4. Les thèmes utilisés existent déjà sur la plateforme (`python`, `javascript`…).
 
 ## Après l'import
@@ -98,4 +124,16 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 2. La personne qui importe le relit et décide : **publier**, **demander des corrections** ou **refuser** (un commentaire est alors obligatoire).
    Pour publier plusieurs leçons d'un coup, coche-les : juste après l'import (toutes cochées : tout le parcours est publié), ou dans la file de relecture. Chaque leçon garde sa propre décision dans l'historique.
 3. Une leçon publiée apparaît pour les apprenants. Un parcours apparaît dès qu'une de ses leçons est publiée, et il ne montre que ses leçons publiées.
-4. Réimporter une leçon existante crée une **nouvelle version**. L'ancienne reste en ligne tant que la nouvelle n'est pas publiée, et l'historique garde toutes les versions.
+4. Réimporter une leçon existante (même `id`) crée une **nouvelle version**. L'ancienne reste en ligne tant que la nouvelle n'est pas publiée, et l'historique garde toutes les versions.
+
+## Les parcours validés
+
+Un parcours relu et prêt peut rejoindre le dossier [`api/validated_courses/`](../../api/validated_courses/README.md), dans une pull request.
+Au démarrage, l'API crée et **publie** ce qui manque en base. Une base vidée retrouve donc ces parcours sans réimport ni nouvelle relecture.
+
+- Un fichier = un paquet en **version 3**, avec **un parcours et toutes ses leçons**. Pas d'image pour l'instant.
+- La relecture se fait **dans la pull request** : le fichier est publié tel quel.
+- Ce qui existe déjà en base (même `id`) **n'est pas modifié** : le fichier sert à reconstruire une base vide, pas à corriger une leçon en ligne. Pour une correction, passe par l'éditeur ou l'import.
+- Un test vérifie chaque fichier du dossier. Au démarrage, un fichier invalide est signalé dans les logs et ignoré.
+
+À la main : `cd api && uv run python -m app.imports.parcours_valides`.

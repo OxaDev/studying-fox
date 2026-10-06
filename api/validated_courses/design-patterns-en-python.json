@@ -1,12 +1,13 @@
 {
   "format": "renard-etudiant/lecons",
-  "version": 2,
+  "version": 3,
   "generation": {
     "assiste_par_ia": true,
     "outil": "Claude Opus 5.5",
     "date": "2026-10-05"
   },
   "parcours": {
+    "id": "6cd76f94-3375-48b9-97eb-e5b1984f47e8",
     "slug": "design-patterns-en-python",
     "titre": "Design patterns en Python pour les API critiques",
     "description": "Les patrons de conception qu'utilisent les équipes des banques et des plateformes de données : Stratégie, Fabrique, Adaptateur, Décorateur, Observateur, Dépôt, Unité de travail, réessai, disjoncteur, limiteur de débit, idempotence, cache, saga et event sourcing. Prérequis : savoir écrire des fonctions et des classes en Python.",
@@ -33,6 +34,7 @@
   },
   "lecons": [
     {
+      "id": "fa0f4410-fe6b-40bc-9711-5d68b15f15ba",
       "slug": "design-patterns-introduction",
       "titre": "Les design patterns, à quoi ça sert ?",
       "resume": "Comprendre ce qu'est un design pattern et pourquoi les API critiques (banque, paiement, big data) en dépendent.",
@@ -107,6 +109,7 @@
       ]
     },
     {
+      "id": "ea6bcf39-93a4-436d-926d-71bbee7944a6",
       "slug": "patron-strategie",
       "titre": "Stratégie : changer de règle sans changer le code",
       "resume": "Remplacer une cascade de if par des stratégies interchangeables, par exemple pour calculer des frais bancaires.",
@@ -185,6 +188,7 @@
       ]
     },
     {
+      "id": "46eeb477-d0ce-48a7-a4a4-d3f30d24ffa8",
       "slug": "patron-fabrique",
       "titre": "Fabrique : créer le bon objet à partir de la configuration",
       "resume": "Centraliser la création des objets, par exemple choisir la passerelle de paiement à partir d'un fichier de configuration.",
@@ -242,6 +246,7 @@
       ]
     },
     {
+      "id": "d2f54374-7d8a-4c05-9b62-561f53626811",
       "slug": "patron-adaptateur",
       "titre": "Adaptateur : brancher un vieux système sans le subir",
       "resume": "Faire parler une API moderne avec un système historique, comme le système central d'une banque, sans le modifier.",
@@ -299,6 +304,7 @@
       ]
     },
     {
+      "id": "5ba403b4-ab4a-4a7c-baa9-e037303f5dd7",
       "slug": "patron-decorateur",
       "titre": "Décorateur : ajouter un comportement autour d'une fonction",
       "resume": "Ajouter journalisation, contrôle d'accès ou mesures autour d'une fonction, sans modifier son code.",
@@ -371,6 +377,7 @@
       ]
     },
     {
+      "id": "4db5c8e6-1362-48ee-b96d-f415eb14df30",
       "slug": "patron-observateur",
       "titre": "Observateur : réagir aux événements sans tout coupler",
       "resume": "Prévenir plusieurs services quand un virement a lieu (notification, audit, anti-fraude), sans que le virement les connaisse.",
@@ -439,6 +446,7 @@
       ]
     },
     {
+      "id": "7ace1997-02d0-413a-ae6c-1ab5548bda3d",
       "slug": "patron-depot",
       "titre": "Dépôt (Repository) : isoler l'accès aux données",
       "resume": "Séparer les règles métier de la base de données, pour pouvoir tester sans base et changer de stockage sans tout réécrire.",
@@ -501,6 +509,7 @@
       ]
     },
     {
+      "id": "fe62fd56-c554-4d66-9cb4-7b30ec401c5d",
       "slug": "patron-unite-de-travail",
       "titre": "Unité de travail : tout ou rien",
       "resume": "Regrouper plusieurs modifications pour qu'elles soient toutes validées, ou toutes annulées, comme un débit et son crédit.",
@@ -573,6 +582,7 @@
       ]
     },
     {
+      "id": "dc372ef2-7df1-4a42-8f43-e8872417c157",
       "slug": "patron-reessai-backoff",
       "titre": "Réessai avec attente exponentielle",
       "resume": "Réessayer intelligemment un appel qui échoue de façon passagère, sans écraser le service qui peine déjà.",
@@ -638,6 +648,7 @@
       ]
     },
     {
+      "id": "81ea0e65-c043-4646-b7ad-cb15c7b22c67",
       "slug": "patron-disjoncteur",
       "titre": "Disjoncteur : arrêter d'appeler un service en panne",
       "resume": "Couper les appels vers un service défaillant pour protéger ton API, puis tester prudemment son retour.",
@@ -703,6 +714,7 @@
       ]
     },
     {
+      "id": "09b7b280-25b5-4c85-8775-e3ddb58f1d77",
       "slug": "patron-limiteur-de-debit",
       "titre": "Limiteur de débit : le seau à jetons",
       "resume": "Limiter le nombre de requêtes par client pour protéger ton API des abus et des pics de charge.",
@@ -760,6 +772,7 @@
       ]
     },
     {
+      "id": "41ba689d-8c0a-4582-a4dc-8a2d45f15838",
       "slug": "patron-cle-idempotence",
       "titre": "Clé d'idempotence : ne jamais débiter deux fois",
       "resume": "Permettre au client de renvoyer une requête de paiement sans risque de double débit, grâce à une clé d'idempotence.",
@@ -818,6 +831,7 @@
       ]
     },
     {
+      "id": "09bc8316-3e10-4de6-a77e-d419befc8bf4",
       "slug": "patron-cache-aside",
       "titre": "Cache à la demande (cache-aside)",
       "resume": "Soulager la base de données en gardant les lectures fréquentes en cache, avec une durée de vie et une invalidation.",
@@ -875,6 +889,7 @@
       ]
     },
     {
+      "id": "28e1296d-a521-4984-871f-07605d95c857",
       "slug": "patron-saga",
       "titre": "Saga : des transactions entre plusieurs services",
       "resume": "Enchaîner des étapes réparties sur plusieurs services, et les défaire proprement avec des compensations en cas d'échec.",
@@ -932,6 +947,7 @@
       ]
     },
     {
+      "id": "3fe6544b-159d-4c52-bd19-565bb92cf62c",
       "slug": "patron-event-sourcing",
       "titre": "Event sourcing : garder chaque événement",
       "resume": "Enregistrer l'historique complet des événements d'un compte, au lieu de son seul état, et en déduire le solde à tout moment.",
@@ -1004,6 +1020,7 @@
       ]
     },
     {
+      "id": "faf4bfd9-c0bd-4734-9a27-ca4b35c38bec",
       "slug": "design-patterns-api-de-paiement",
       "titre": "Synthèse : une API de paiement robuste",
       "resume": "Assembler limiteur de débit, clé d'idempotence, réessai et disjoncteur dans une même route de paiement.",

@@ -114,9 +114,9 @@ def test_exercice() -> None:
     )
 
 
-def test_un_paquet_en_version_3_est_refuse() -> None:
+def test_une_version_inconnue_est_refusee() -> None:
     donnees = json.loads(EXEMPLE.read_text(encoding="utf-8"))
-    donnees["version"] = 3
+    donnees["version"] = 4
 
     with pytest.raises(ValidationError):
         Paquet.model_validate(donnees)

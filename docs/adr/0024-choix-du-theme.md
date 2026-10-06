@@ -1,6 +1,6 @@
 # 0024 — Choix du thème, retenu dans le navigateur
 
-- **Statut** : Proposé
+- **Statut** : Accepté
 - **Date** : 2026-10-06
 - **Précise** : [0014](0014-rgpd.md). Une préférence d'affichage s'ajoute au cookie de session.
 

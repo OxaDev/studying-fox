@@ -107,6 +107,8 @@ MESSAGES = {
     "literal_error": "Valeur non autorisée. Attendu : {expected}.",
     "union_tag_invalid": "Type de bloc inconnu. Types possibles : {expected_tags}.",
     "union_tag_not_found": "Le champ « type » est obligatoire.",
+    "uuid_parsing": "Doit être un UUID, par exemple 3f6c2a1e-8b4d-4c2a-9f1e-2d7b5a9c0e41.",
+    "uuid_type": "Doit être un UUID, par exemple 3f6c2a1e-8b4d-4c2a-9f1e-2d7b5a9c0e41.",
 }
 
 

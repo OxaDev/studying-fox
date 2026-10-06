@@ -4,6 +4,7 @@ Reflet en Pydantic de docs/format-lecon/lecons.schema.json. Les tests vérifient
 l'exemple officiel passe ici aussi : si l'un change, l'autre doit suivre.
 """
 
+import uuid
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -82,6 +83,8 @@ class Source(Strict):
 
 
 class LeconImportee(Strict):
+    # Identifiant stable de la leçon, obligatoire à partir de la version 3 (ADR 0025).
+    id: uuid.UUID | None = None
     slug: Slug
     titre: str = Field(min_length=3, max_length=100)
     resume: str = Field(min_length=20, max_length=300)
@@ -95,6 +98,7 @@ class LeconImportee(Strict):
 
 
 class ParcoursImporte(Strict):
+    id: uuid.UUID | None = None
     slug: Slug
     titre: str = Field(min_length=3, max_length=100)
     description: str = Field(min_length=20, max_length=500)
@@ -105,8 +109,9 @@ class ParcoursImporte(Strict):
 
 class Paquet(Strict):
     format: Literal["renard-etudiant/lecons"]
-    # La version 2 ajoute le bloc « exercice ». La version 1 reste acceptée (ADR 0019).
-    version: Literal[1, 2]
+    # La version 2 ajoute le bloc « exercice », la version 3 les identifiants (ADR 0025).
+    # Les versions précédentes restent acceptées (ADR 0019).
+    version: Literal[1, 2, 3]
     generation: Generation | None = None
     parcours: ParcoursImporte | None = None
     lecons: list[LeconImportee] = Field(min_length=1, max_length=50)

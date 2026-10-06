@@ -37,6 +37,7 @@ La vitrine publique s'ouvre sur http://localhost:5173/, l'application sur http:/
 ```bash
 # Dans un terminal
 cd api/
+source .venv/bin/activate
 python -m app.comptes.commandes promouvoir-admin <email>
 ```
 

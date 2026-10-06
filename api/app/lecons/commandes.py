@@ -8,6 +8,7 @@ En production, les leçons passent par l'import et la relecture (jalon 4).
 
 import argparse
 import asyncio
+import uuid
 from pathlib import Path
 
 from sqlalchemy import select
@@ -43,7 +44,13 @@ async def charger_paquet(db: AsyncSession, paquet: Paquet) -> list[str]:
         if await db.scalar(select(Lecon.id).where(Lecon.slug == importee.slug)):
             continue
         theme = await _theme(db, importee.theme)
-        lecon = Lecon(slug=importee.slug, theme_id=theme.id, niveau=importee.niveau)
+        # Mêmes identifiants que le fichier (version 3) : pas de doublon avec validated_courses.
+        lecon = Lecon(
+            id=importee.id or uuid.uuid4(),
+            slug=importee.slug,
+            theme_id=theme.id,
+            niveau=importee.niveau,
+        )
         db.add(lecon)
         await db.flush()
         revision = Revision(
@@ -80,6 +87,7 @@ async def _charger_parcours(db: AsyncSession, paquet: Paquet) -> None:
     }
     db.add(
         Parcours(
+            id=importe.id or uuid.uuid4(),
             slug=importe.slug,
             titre=importe.titre,
             description=importe.description,
