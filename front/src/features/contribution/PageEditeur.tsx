@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { EditorView } from "codemirror";
-import { useDeferredValue, useEffect, useId, useRef, useState } from "react";
+import type { EditorView } from "@codemirror/view";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { Button, CheckboxButton, CheckboxField, Form, Toolbar } from "react-aria-components";
 import { Link, useNavigate, useParams } from "react-router";
 
@@ -130,7 +130,6 @@ function Editeur({ contribution }: { contribution: Contribution }) {
   const moi = useMoiConnecte();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const idAide = useId();
   const vue = useRef<EditorView | null>(null);
   const [champs, setChamps] = useState(() => champsDepuis(contribution));
   const [enregistres, setEnregistres] = useState(() => champsDepuis(contribution));
@@ -332,15 +331,11 @@ function Editeur({ contribution }: { contribution: Contribution }) {
           </Toolbar>
           <div className={styles.edition}>
             <div className={styles.saisie}>
-              <p id={idAide} className={formulaire.aide}>
-                La touche Tab permet de quitter l&apos;éditeur.
-              </p>
               <EditeurCode
                 langage="markdown"
                 label="Contenu de la leçon, en Markdown"
                 valeur={champs.contenu}
                 onChange={changer("contenu")}
-                idDescription={idAide}
                 surVue={(editeur) => {
                   vue.current = editeur;
                 }}

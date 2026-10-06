@@ -45,6 +45,16 @@ test("montre une erreur Python lisible", async ({ page }) => {
   await expect(sortie).not.toContainText("_pyodide");
 });
 
+test("Maj+Entrée exécute le code depuis l'éditeur", async ({ page }) => {
+  await remplacerCode(page, "JavaScript", 'console.log("raccourci")');
+  await page.keyboard.press("Shift+Enter");
+
+  await expect(bloc(page, "JavaScript").locator("pre")).toHaveText("raccourci");
+  await expect(
+    bloc(page, "JavaScript").getByRole("textbox", { name: "Code JavaScript, modifiable" }),
+  ).toHaveText('console.log("raccourci")');
+});
+
 test("le bouton Réinitialiser restaure le code d'origine", async ({ page }) => {
   await remplacerCode(page, "JavaScript", 'console.log("modifié")');
   await bloc(page, "JavaScript").getByRole("button", { name: "Réinitialiser" }).click();
@@ -79,4 +89,53 @@ test("une boucle infinie est arrêtée", async ({ page }) => {
   await bloc(page, "JavaScript").getByRole("button", { name: "Réinitialiser" }).click();
   await bloc(page, "JavaScript").getByRole("button", { name: "Exécuter" }).click();
   await expect(bloc(page, "JavaScript").locator("pre")).toHaveText("Bonjour depuis JavaScript");
+});
+
+test.describe("clavier de l'éditeur, comme dans un IDE", () => {
+  async function saisir(page: Page, texte: string) {
+    await remplacerCode(page, "Python", "");
+    await page.keyboard.type(texte);
+    await expect(page.getByRole("listbox")).toBeVisible();
+    // CodeMirror ignore les touches sur la liste juste après son ouverture (interactionDelay).
+    await page.waitForTimeout(100);
+  }
+
+  function editeur(page: Page) {
+    return bloc(page, "Python").getByRole("textbox", { name: "Code Python, modifiable" });
+  }
+
+  test("Tab valide la suggestion", async ({ page }) => {
+    await saisir(page, "pri");
+    await page.keyboard.press("Tab");
+
+    await expect(editeur(page)).toHaveText("print");
+    await expect(editeur(page)).toBeFocused();
+  });
+
+  test("les flèches parcourent les suggestions", async ({ page }) => {
+    await saisir(page, "pr");
+    await page.keyboard.press("ArrowDown");
+
+    await expect(page.getByRole("option").nth(1)).toHaveAttribute("aria-selected", "true");
+    await expect(editeur(page).locator(".cm-line")).toHaveText(["pr"]);
+  });
+
+  test("Entrée va à la ligne sans valider la suggestion", async ({ page }) => {
+    await saisir(page, "pri");
+    await page.keyboard.press("Enter");
+
+    await expect(editeur(page).locator(".cm-line")).toHaveText(["pri", ""]);
+  });
+
+  test("Tab indente, Échap puis Tab quitte l'éditeur", async ({ page }) => {
+    await remplacerCode(page, "Python", "x = 1");
+    await page.keyboard.press("Home");
+    await page.keyboard.press("Tab");
+    await expect(editeur(page)).toHaveText("    x = 1");
+    await expect(editeur(page)).toBeFocused();
+
+    await page.keyboard.press("Escape");
+    await page.keyboard.press("Tab");
+    await expect(editeur(page)).not.toBeFocused();
+  });
 });

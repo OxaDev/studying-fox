@@ -95,6 +95,9 @@ function BlocExecutable({
         langage={langage}
         label={`Code ${nom}, modifiable`}
         onChange={setValeur}
+        surExecution={() => {
+          if (etat === "repos") void lancer();
+        }}
       />
       <div className={styles.sortie} aria-live="polite">
         {etat === "chargement" && <p>Chargement de Python… (la première fois seulement)</p>}

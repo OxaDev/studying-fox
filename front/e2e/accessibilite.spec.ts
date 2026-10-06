@@ -123,3 +123,25 @@ for (const theme of ["light", "dark"] as const) {
     await verifierAccessibilite(page);
   });
 }
+
+for (const theme of ["light", "dark"] as const) {
+  test(`l'éditeur de code, suggestions et sélection affichées, est accessible (thème ${theme})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: theme });
+    await simulerLecons(page);
+    await page.goto(`./lecons/${LECON.slug}`);
+    const editeur = page.getByRole("textbox", { name: "Code Python, modifiable" });
+    await editeur.click();
+    await page.keyboard.press("End");
+    await page.keyboard.press("Enter");
+    await page.keyboard.type("pre");
+    await expect(page.getByRole("listbox")).toBeVisible();
+    await verifierAccessibilite(page);
+
+    // Texte sélectionné, sur la ligne active comprise.
+    await page.keyboard.press("Escape");
+    await page.keyboard.press("ControlOrMeta+a");
+    await verifierAccessibilite(page);
+  });
+}

@@ -1,0 +1,6 @@
+.aide {
+  margin: 0;
+  padding: var(--esp-1) var(--esp-4);
+  color: var(--texte-doux);
+  font-size: 0.875rem;
+}
