@@ -40,6 +40,7 @@ Un ADR, c'est une fiche courte qui répond à trois questions :
 | [0025](0025-parcours-valides.md) | Parcours validés dans le dépôt, identifiés par un UUID | Accepté |
 | [0026](0026-interpreteur-vba.md) | VBA : un interpréteur maison et un classeur Excel simulé | Accepté |
 | [0027](0027-formules-excel.md) | Formules Excel : un mini-moteur de calcul maison | Accepté |
+| [0028](0028-bibliotheques-python.md) | Bibliothèques Python hébergées et chargées à la demande | Proposé |
 
 ## Écrire un nouvel ADR
 

@@ -12,7 +12,7 @@
     "titre": "Design patterns en Python pour les API critiques",
     "description": "Les patrons de conception qu'utilisent les équipes des banques et des plateformes de données : Stratégie, Fabrique, Adaptateur, Décorateur, Observateur, Dépôt, Unité de travail, réessai, disjoncteur, limiteur de débit, idempotence, cache, saga et event sourcing. Prérequis : savoir écrire des fonctions et des classes en Python.",
     "niveau": "intermediaire",
-    "theme": "python",
+    "theme": "python-poo",
     "lecons": [
       "design-patterns-introduction",
       "patron-strategie",
@@ -38,7 +38,7 @@
       "slug": "design-patterns-introduction",
       "titre": "Les design patterns, à quoi ça sert ?",
       "resume": "Comprendre ce qu'est un design pattern et pourquoi les API critiques (banque, paiement, big data) en dépendent.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 13,
       "prerequis": [],
@@ -113,7 +113,7 @@
       "slug": "patron-strategie",
       "titre": "Stratégie : changer de règle sans changer le code",
       "resume": "Remplacer une cascade de if par des stratégies interchangeables, par exemple pour calculer des frais bancaires.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 13,
       "prerequis": [
@@ -192,7 +192,7 @@
       "slug": "patron-fabrique",
       "titre": "Fabrique : créer le bon objet à partir de la configuration",
       "resume": "Centraliser la création des objets, par exemple choisir la passerelle de paiement à partir d'un fichier de configuration.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 13,
       "prerequis": [
@@ -250,7 +250,7 @@
       "slug": "patron-adaptateur",
       "titre": "Adaptateur : brancher un vieux système sans le subir",
       "resume": "Faire parler une API moderne avec un système historique, comme le système central d'une banque, sans le modifier.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 13,
       "prerequis": [
@@ -308,7 +308,7 @@
       "slug": "patron-decorateur",
       "titre": "Décorateur : ajouter un comportement autour d'une fonction",
       "resume": "Ajouter journalisation, contrôle d'accès ou mesures autour d'une fonction, sans modifier son code.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -381,7 +381,7 @@
       "slug": "patron-observateur",
       "titre": "Observateur : réagir aux événements sans tout coupler",
       "resume": "Prévenir plusieurs services quand un virement a lieu (notification, audit, anti-fraude), sans que le virement les connaisse.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -450,7 +450,7 @@
       "slug": "patron-depot",
       "titre": "Dépôt (Repository) : isoler l'accès aux données",
       "resume": "Séparer les règles métier de la base de données, pour pouvoir tester sans base et changer de stockage sans tout réécrire.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 13,
       "prerequis": [
@@ -513,7 +513,7 @@
       "slug": "patron-unite-de-travail",
       "titre": "Unité de travail : tout ou rien",
       "resume": "Regrouper plusieurs modifications pour qu'elles soient toutes validées, ou toutes annulées, comme un débit et son crédit.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -586,7 +586,7 @@
       "slug": "patron-reessai-backoff",
       "titre": "Réessai avec attente exponentielle",
       "resume": "Réessayer intelligemment un appel qui échoue de façon passagère, sans écraser le service qui peine déjà.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -652,7 +652,7 @@
       "slug": "patron-disjoncteur",
       "titre": "Disjoncteur : arrêter d'appeler un service en panne",
       "resume": "Couper les appels vers un service défaillant pour protéger ton API, puis tester prudemment son retour.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 18,
       "prerequis": [
@@ -718,7 +718,7 @@
       "slug": "patron-limiteur-de-debit",
       "titre": "Limiteur de débit : le seau à jetons",
       "resume": "Limiter le nombre de requêtes par client pour protéger ton API des abus et des pics de charge.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -776,7 +776,7 @@
       "slug": "patron-cle-idempotence",
       "titre": "Clé d'idempotence : ne jamais débiter deux fois",
       "resume": "Permettre au client de renvoyer une requête de paiement sans risque de double débit, grâce à une clé d'idempotence.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -835,7 +835,7 @@
       "slug": "patron-cache-aside",
       "titre": "Cache à la demande (cache-aside)",
       "resume": "Soulager la base de données en gardant les lectures fréquentes en cache, avec une durée de vie et une invalidation.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 15,
       "prerequis": [
@@ -893,7 +893,7 @@
       "slug": "patron-saga",
       "titre": "Saga : des transactions entre plusieurs services",
       "resume": "Enchaîner des étapes réparties sur plusieurs services, et les défaire proprement avec des compensations en cas d'échec.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 18,
       "prerequis": [
@@ -951,7 +951,7 @@
       "slug": "patron-event-sourcing",
       "titre": "Event sourcing : garder chaque événement",
       "resume": "Enregistrer l'historique complet des événements d'un compte, au lieu de son seul état, et en déduire le solde à tout moment.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 18,
       "prerequis": [
@@ -1024,7 +1024,7 @@
       "slug": "design-patterns-api-de-paiement",
       "titre": "Synthèse : une API de paiement robuste",
       "resume": "Assembler limiteur de débit, clé d'idempotence, réessai et disjoncteur dans une même route de paiement.",
-      "theme": "python",
+      "theme": "python-poo",
       "niveau": "intermediaire",
       "duree_minutes": 18,
       "prerequis": [

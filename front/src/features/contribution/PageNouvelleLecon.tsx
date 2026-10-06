@@ -14,13 +14,18 @@ import { MOTIF_SLUG, versSlug } from "./slug";
 
 type Niveau = keyof typeof NIVEAUX;
 
+const THEME_PAR_DEFAUT = "python-bases";
+
 export function PageNouvelleLecon() {
   const navigate = useNavigate();
   const { data: themes } = useQuery({ queryKey: ["themes"], queryFn: contributionApi.themes });
   const [titre, setTitre] = useState("");
   const [slug, setSlug] = useState("");
   const [slugModifie, setSlugModifie] = useState(false);
-  const [theme, setTheme] = useState("python");
+  const [themeChoisi, setTheme] = useState<string | null>(null);
+  // Par défaut, les bases de Python ; sinon le premier thème proposé par l'API.
+  const theme =
+    themeChoisi ?? (themes?.find((t) => t.slug === THEME_PAR_DEFAUT) ?? themes?.[0])?.slug ?? "";
   const [niveau, setNiveau] = useState<Niveau>("debutant");
   const creation = useMutation({
     mutationFn: contributionApi.creer,
@@ -87,7 +92,7 @@ export function PageNouvelleLecon() {
           name="theme"
           valeur={theme}
           onChange={setTheme}
-          options={(themes ?? [{ slug: "python", nom: "Python" }]).map((t) => ({
+          options={(themes ?? []).map((t) => ({
             valeur: t.slug,
             libelle: t.nom,
           }))}

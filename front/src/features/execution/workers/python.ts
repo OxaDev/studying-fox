@@ -1,11 +1,13 @@
 /**
  * Worker d'exécution Python avec Pyodide (ADR 0009).
  * Pyodide est hébergé chez nous, sous /app/pyodide/ (RGPD, ADR 0014), et chargé au premier usage.
+ * Les bibliothèques (SQLAlchemy, FastAPI, Django…) y sont aussi, chargées à la demande (ADR 0028).
  * Sa politique CSP ne l'autorise à charger que ces fichiers (csp.ts).
  */
 import type { PyodideAPI } from "pyodide";
 
-import { FICHIER_LECON, nettoyerTraceback } from "../traceback";
+import { aDesPaquetsACharger, chargerPaquets, executerPython } from "../lanceurPython";
+import { nettoyerTraceback } from "../traceback";
 import type { Demande, Message } from "../types";
 
 function envoyer(message: Message): void {
@@ -32,14 +34,6 @@ async function chargerPyodide(): Promise<PyodideAPI> {
   return instance;
 }
 
-/**
- * Chaque exécution part d'un espace de noms vide : les exemples restent indépendants.
- * Le code est transmis comme chaîne JSON, qui est aussi une chaîne Python valide.
- */
-function lanceur(code: string): string {
-  return `exec(compile(${JSON.stringify(code)}, "${FICHIER_LECON}", "exec"), {"__name__": "__main__"})`;
-}
-
 self.onmessage = async (evenement: MessageEvent<Demande>) => {
   if (!pyodide) {
     envoyer({ type: "chargement" });
@@ -54,9 +48,26 @@ self.onmessage = async (evenement: MessageEvent<Demande>) => {
     return;
   }
 
+  const code = evenement.data.code;
+  try {
+    if (aDesPaquetsACharger(instance, code)) {
+      envoyer({ type: "chargement" });
+      await chargerPaquets(instance, code);
+    }
+  } catch (erreur) {
+    // La cause exacte aide à diagnostiquer : fichier absent, empreinte différente, réseau coupé…
+    const detail = erreur instanceof Error ? erreur.message : String(erreur);
+    console.error("Chargement des bibliothèques Python impossible :", erreur);
+    envoyer({
+      type: "fin",
+      erreur: `Impossible de charger les bibliothèques Python. Vérifie ta connexion.\n(${detail})`,
+    });
+    return;
+  }
+
   envoyer({ type: "debut" });
   try {
-    instance.runPython(lanceur(evenement.data.code));
+    await executerPython(instance, code);
     envoyer({ type: "fin", erreur: null });
   } catch (erreur) {
     const message = erreur instanceof Error ? erreur.message : String(erreur);

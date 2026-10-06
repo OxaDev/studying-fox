@@ -1,0 +1,628 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "16d9689e-cabd-46d9-94a7-e68c876c063c",
+    "slug": "sqlalchemy-intermediaire",
+    "titre": "SQLAlchemy : niveau intermédiaire",
+    "description": "Aller plus loin avec l'ORM de SQLAlchemy 2 : relations plusieurs-à-plusieurs, stratégies de chargement et problème N+1, sous-requêtes, transactions et points de sauvegarde, contraintes, propriétés hybrides, héritage de modèles, événements et types personnalisés. Prérequis : le parcours SQLAlchemy, les bases.",
+    "niveau": "intermediaire",
+    "theme": "python-fastapi",
+    "lecons": [
+      "sqla-inter-plusieurs-a-plusieurs",
+      "sqla-inter-chargement-et-n-plus-1",
+      "sqla-inter-sous-requetes",
+      "sqla-inter-transactions",
+      "sqla-inter-contraintes-et-index",
+      "sqla-inter-proprietes-hybrides",
+      "sqla-inter-heritage-de-modeles",
+      "sqla-inter-evenements-et-types"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "2fd86c3f-e439-434a-993f-8cd827741571",
+      "slug": "sqla-inter-plusieurs-a-plusieurs",
+      "titre": "Les relations plusieurs-à-plusieurs",
+      "resume": "Relier deux modèles par une table d'association : des articles et leurs étiquettes, puis une association qui porte ses propres données.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "sqla-projet-carnet-de-commandes"
+      ],
+      "objectifs": [
+        "Déclarer une table d'association",
+        "Relier deux modèles avec secondary",
+        "Utiliser un objet d'association qui porte des données"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un projet a plusieurs collaborateurs, et un collaborateur travaille sur plusieurs projets : c'est une relation **plusieurs-à-plusieurs**. La base la représente avec une **table d'association**, qui contient seulement les deux clés étrangères.\n\n`relationship(secondary=...)` indique cette table : SQLAlchemy la remplit et la lit tout seul."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import Column, ForeignKey, Table, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\naffectation = Table(\n    \"affectation\",\n    Base.metadata,\n    Column(\"projet_id\", ForeignKey(\"projet.id\"), primary_key=True),\n    Column(\"collaborateur_id\", ForeignKey(\"collaborateur.id\"), primary_key=True),\n)\n\n\nclass Projet(Base):\n    __tablename__ = \"projet\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    equipe: Mapped[list[\"Collaborateur\"]] = relationship(secondary=affectation, back_populates=\"projets\")\n\n\nclass Collaborateur(Base):\n    __tablename__ = \"collaborateur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    projets: Mapped[list[Projet]] = relationship(secondary=affectation, back_populates=\"equipe\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    camille, karim = Collaborateur(nom=\"Camille\"), Collaborateur(nom=\"Karim\")\n    session.add_all([\n        Projet(nom=\"Site web\", equipe=[camille, karim]),\n        Projet(nom=\"Migration\", equipe=[camille]),\n    ])\n    session.commit()\n\n    print(sorted(p.nom for p in camille.projets))\n    print(len(session.execute(select(affectation)).all()), \"affectations\")\n    requete = select(Projet.nom).join(Projet.equipe).where(Collaborateur.nom == \"Karim\")\n    print(session.scalars(requete).all())\n",
+          "executable": true,
+          "sortie_attendue": "['Migration', 'Site web']\n3 affectations\n['Site web']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "La table d'association n'est pas un modèle : on ne la manipule jamais directement, on ajoute ou retire des objets des listes `equipe` et `projets`.\n\n## Quand l'association porte des données\n\nSi l'affectation a ses propres informations (un rôle, une date), elle devient un **modèle d'association** à part entière, avec deux relations un-à-plusieurs."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Affectation(Base):\n    __tablename__ = \"affectation\"\n    projet_id: Mapped[int] = mapped_column(ForeignKey(\"projet.id\"), primary_key=True)\n    collaborateur_id: Mapped[int] = mapped_column(ForeignKey(\"collaborateur.id\"), primary_key=True)\n    role: Mapped[str]\n    projet: Mapped[\"Projet\"] = relationship(back_populates=\"affectations\")\n    collaborateur: Mapped[\"Collaborateur\"] = relationship(back_populates=\"affectations\")\n\n\nclass Projet(Base):\n    __tablename__ = \"projet\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    affectations: Mapped[list[Affectation]] = relationship(back_populates=\"projet\")\n\n\nclass Collaborateur(Base):\n    __tablename__ = \"collaborateur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    affectations: Mapped[list[Affectation]] = relationship(back_populates=\"collaborateur\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    site = Projet(nom=\"Site web\")\n    camille, karim = Collaborateur(nom=\"Camille\"), Collaborateur(nom=\"Karim\")\n    site.affectations = [\n        Affectation(collaborateur=camille, role=\"cheffe de projet\"),\n        Affectation(collaborateur=karim, role=\"développeur\"),\n    ]\n    session.add(site)\n    session.commit()\n    for a in site.affectations:\n        print(f\"{a.collaborateur.nom} : {a.role}\")\n",
+          "executable": true,
+          "sortie_attendue": "Camille : cheffe de projet\nKarim : développeur\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une table d'association avec `secondary` suffit tant qu'elle ne contient que les deux clés. Dès qu'une donnée s'y ajoute, passe au modèle d'association : c'est plus simple que de contourner l'ORM."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris des `Article` et des `Etiquette` reliés en plusieurs-à-plusieurs. Crée l'article « Bien démarrer » avec les étiquettes python et débutant, et l'article « Les dataclasses » avec l'étiquette python.\n\nAffiche ensuite les titres des articles étiquetés python, triés : `['Bien démarrer', 'Les dataclasses']`.",
+          "code": "from sqlalchemy import Column, ForeignKey, Table, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\n# Écris la table d'association, Article et Etiquette\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n",
+          "solution": "from sqlalchemy import Column, ForeignKey, Table, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\netiquetage = Table(\n    \"etiquetage\",\n    Base.metadata,\n    Column(\"article_id\", ForeignKey(\"article.id\"), primary_key=True),\n    Column(\"etiquette_id\", ForeignKey(\"etiquette.id\"), primary_key=True),\n)\n\n\nclass Article(Base):\n    __tablename__ = \"article\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titre: Mapped[str]\n    etiquettes: Mapped[list[\"Etiquette\"]] = relationship(secondary=etiquetage)\n\n\nclass Etiquette(Base):\n    __tablename__ = \"etiquette\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    python, debutant = Etiquette(nom=\"python\"), Etiquette(nom=\"débutant\")\n    session.add_all([\n        Article(titre=\"Bien démarrer\", etiquettes=[python, debutant]),\n        Article(titre=\"Les dataclasses\", etiquettes=[python]),\n    ])\n    session.commit()\n    requete = select(Article.titre).join(Article.etiquettes).where(Etiquette.nom == \"python\").order_by(Article.titre)\n    print(session.scalars(requete).all())\n",
+          "sortie_attendue": "['Bien démarrer', 'Les dataclasses']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une relation plusieurs-à-plusieurs passe par une table d'association et `relationship(secondary=...)`.\n- On manipule les listes d'objets, jamais la table d'association.\n- Si l'association porte des données, elle devient un modèle à part entière."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Relations plusieurs-à-plusieurs",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html#many-to-many"
+        }
+      ]
+    },
+    {
+      "id": "021df49c-a9ca-48de-ac9c-94165ec3c992",
+      "slug": "sqla-inter-chargement-et-n-plus-1",
+      "titre": "Chargement des relations et problème N+1",
+      "resume": "Comprendre le chargement paresseux, mesurer le problème N+1 en comptant les requêtes, et le corriger avec selectinload et joinedload.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "sqla-inter-plusieurs-a-plusieurs"
+      ],
+      "objectifs": [
+        "Expliquer le chargement paresseux",
+        "Mesurer le nombre de requêtes envoyées",
+        "Corriger un problème N+1 avec selectinload",
+        "Choisir entre selectinload et joinedload"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Par défaut, une relation est chargée de façon **paresseuse** (*lazy*) : `client.commandes` n'est lu qu'au premier accès, par une nouvelle requête. C'est pratique… jusqu'à la boucle.\n\nAfficher les commandes de 5 clients envoie alors **1** requête pour les clients, puis **1 par client** : c'est le problème **N+1**. Avec 1 000 clients, la page envoie 1 001 requêtes.\n\nOn le mesure en écoutant l'événement `before_cursor_execute`, appelé à chaque requête SQL."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, event, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, joinedload, mapped_column, relationship, selectinload\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nrequetes = []\nevent.listen(engine, \"before_cursor_execute\", lambda *args: requetes.append(args[2]))\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=f\"Client {i}\", commandes=[Commande(montant=10 * i)]) for i in range(1, 6)])\n    session.commit()\n\n    requetes.clear()\n    for client in session.scalars(select(Client)):\n        total = sum(c.montant for c in client.commandes)\n    print(len(requetes), \"requêtes\")\n",
+          "executable": true,
+          "sortie_attendue": "6 requêtes\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## selectinload : une requête de plus, pas N\n\n`options(selectinload(Client.commandes))` charge les commandes de **tous** les clients en une seconde requête, avec `WHERE client_id IN (...)`. Deux requêtes, quel que soit le nombre de clients."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, event, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, joinedload, mapped_column, relationship, selectinload\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nrequetes = []\nevent.listen(engine, \"before_cursor_execute\", lambda *args: requetes.append(args[2]))\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=f\"Client {i}\", commandes=[Commande(montant=10 * i)]) for i in range(1, 6)])\n    session.commit()\n\n    session.expunge_all()\n    requetes.clear()\n    for client in session.scalars(select(Client).options(selectinload(Client.commandes))):\n        total = sum(c.montant for c in client.commandes)\n    print(len(requetes), \"requêtes\")\n    print(\"IN (\" in requetes[1])\n",
+          "executable": true,
+          "sortie_attendue": "2 requêtes\nTrue\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`session.expunge_all()` vide la session : sinon, les objets déjà chargés seraient réutilisés et on ne mesurerait rien.\n\n## joinedload : une seule requête avec une jointure\n\n`joinedload` lit tout en **une** requête, avec une jointure. C'est idéal pour une relation vers **un** objet (la commande vers son client). Pour une liste, la jointure répète les colonnes du parent sur chaque ligne : `selectinload` est en général préférable."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, event, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, joinedload, mapped_column, relationship, selectinload\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nrequetes = []\nevent.listen(engine, \"before_cursor_execute\", lambda *args: requetes.append(args[2]))\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=f\"Client {i}\", commandes=[Commande(montant=10 * i)]) for i in range(1, 6)])\n    session.commit()\n\n    session.expunge_all()\n    requetes.clear()\n    for commande in session.scalars(select(Commande).options(joinedload(Commande.client))):\n        nom = commande.client.nom\n    print(len(requetes), \"requête\")\n    print(\"JOIN\" in requetes[0])\n",
+          "executable": true,
+          "sortie_attendue": "1 requête\nTrue\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Pour repérer les N+1 pendant le développement, `create_engine(..., echo=True)` affiche chaque requête. Et `relationship(lazy=\"raise\")` lève une erreur au lieu de charger en douce : l'oubli d'un `selectinload` ne passe plus inaperçu."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Corrige la boucle pour qu'elle n'envoie que **2** requêtes, puis affiche le nombre de requêtes : `2 requêtes`.",
+          "code": "from sqlalchemy import ForeignKey, create_engine, event, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, joinedload, mapped_column, relationship, selectinload\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nrequetes = []\nevent.listen(engine, \"before_cursor_execute\", lambda *args: requetes.append(args[2]))\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=f\"Client {i}\", commandes=[Commande(montant=10 * i)]) for i in range(1, 6)])\n    session.commit()\n\n    session.expunge_all()\n    requetes.clear()\n    noms = [f\"{client.nom} : {len(client.commandes)}\" for client in session.scalars(select(Client))]\n    print(len(requetes), \"requêtes\")\n",
+          "solution": "from sqlalchemy import ForeignKey, create_engine, event, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, joinedload, mapped_column, relationship, selectinload\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nrequetes = []\nevent.listen(engine, \"before_cursor_execute\", lambda *args: requetes.append(args[2]))\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=f\"Client {i}\", commandes=[Commande(montant=10 * i)]) for i in range(1, 6)])\n    session.commit()\n\n    session.expunge_all()\n    requetes.clear()\n    requete = select(Client).options(selectinload(Client.commandes))\n    noms = [f\"{client.nom} : {len(client.commandes)}\" for client in session.scalars(requete)]\n    print(len(requetes), \"requêtes\")\n",
+          "sortie_attendue": "2 requêtes\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une relation est chargée au premier accès : dans une boucle, cela fait N+1 requêtes.\n- `selectinload` charge une liste liée en une seconde requête.\n- `joinedload` charge par jointure, idéal vers un seul objet."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Techniques de chargement des relations",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/queryguide/relationships.html"
+        }
+      ]
+    },
+    {
+      "id": "6ebe0dc0-dfd5-445a-9b57-e20118bc747c",
+      "slug": "sqla-inter-sous-requetes",
+      "titre": "Sous-requêtes, alias et exists",
+      "resume": "Écrire des requêtes en plusieurs étapes : sous-requêtes, sous-requêtes scalaires, auto-jointures avec aliased et tests d'existence.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "sqla-inter-chargement-et-n-plus-1"
+      ],
+      "objectifs": [
+        "Utiliser une sous-requête comme une table",
+        "Comparer à une valeur calculée avec scalar_subquery",
+        "Joindre une table à elle-même avec aliased",
+        "Tester l'existence de lignes liées avec exists"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Certaines questions se posent en deux temps : « quels vendeurs ont fait plus que la moyenne des ventes ? » demande d'abord de calculer la moyenne, puis de comparer.\n\n`.scalar_subquery()` transforme une requête qui renvoie **une** valeur en expression utilisable dans un `where`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, exists, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, aliased, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vendeur(Base):\n    __tablename__ = \"vendeur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    responsable_id: Mapped[int | None] = mapped_column(ForeignKey(\"vendeur.id\"))\n    ventes: Mapped[list[\"Vente\"]] = relationship()\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur_id: Mapped[int] = mapped_column(ForeignKey(\"vendeur.id\"))\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Vendeur(nom=\"Inès\", ventes=[Vente(montant=2100)])\n    session.add(ines)\n    session.flush()\n    session.add_all([\n        Vendeur(nom=\"Camille\", responsable_id=ines.id, ventes=[Vente(montant=1200), Vente(montant=430)]),\n        Vendeur(nom=\"Karim\", responsable_id=ines.id, ventes=[Vente(montant=850), Vente(montant=640)]),\n        Vendeur(nom=\"Paul\", responsable_id=ines.id),\n    ])\n    session.commit()\n\n    moyenne = select(func.avg(Vente.montant)).scalar_subquery()\n    requete = select(Vente.montant).where(Vente.montant > moyenne).order_by(Vente.montant)\n    print(session.scalars(requete).all())\n",
+          "executable": true,
+          "sortie_attendue": "[1200.0, 2100.0]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Une sous-requête comme une table\n\n`.subquery()` donne une requête qu'on joint comme une table. Ici, on calcule d'abord le total par vendeur, puis on joint ce résultat aux vendeurs. Ses colonnes se lisent dans `.c`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, exists, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, aliased, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vendeur(Base):\n    __tablename__ = \"vendeur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    responsable_id: Mapped[int | None] = mapped_column(ForeignKey(\"vendeur.id\"))\n    ventes: Mapped[list[\"Vente\"]] = relationship()\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur_id: Mapped[int] = mapped_column(ForeignKey(\"vendeur.id\"))\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Vendeur(nom=\"Inès\", ventes=[Vente(montant=2100)])\n    session.add(ines)\n    session.flush()\n    session.add_all([\n        Vendeur(nom=\"Camille\", responsable_id=ines.id, ventes=[Vente(montant=1200), Vente(montant=430)]),\n        Vendeur(nom=\"Karim\", responsable_id=ines.id, ventes=[Vente(montant=850), Vente(montant=640)]),\n        Vendeur(nom=\"Paul\", responsable_id=ines.id),\n    ])\n    session.commit()\n\n    totaux = (\n        select(Vente.vendeur_id, func.sum(Vente.montant).label(\"total\"))\n        .group_by(Vente.vendeur_id)\n        .subquery()\n    )\n    requete = (\n        select(Vendeur.nom, totaux.c.total)\n        .join(totaux, Vendeur.id == totaux.c.vendeur_id)\n        .where(totaux.c.total > 1500)\n        .order_by(totaux.c.total.desc())\n    )\n    for nom, total in session.execute(requete):\n        print(nom, total)\n",
+          "executable": true,
+          "sortie_attendue": "Inès 2100.0\nCamille 1630.0\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Joindre une table à elle-même\n\nChaque vendeur a un responsable, lui-même vendeur. Pour joindre `vendeur` à elle-même, on donne un **alias** à la seconde occurrence avec `aliased`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, exists, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, aliased, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vendeur(Base):\n    __tablename__ = \"vendeur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    responsable_id: Mapped[int | None] = mapped_column(ForeignKey(\"vendeur.id\"))\n    ventes: Mapped[list[\"Vente\"]] = relationship()\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur_id: Mapped[int] = mapped_column(ForeignKey(\"vendeur.id\"))\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Vendeur(nom=\"Inès\", ventes=[Vente(montant=2100)])\n    session.add(ines)\n    session.flush()\n    session.add_all([\n        Vendeur(nom=\"Camille\", responsable_id=ines.id, ventes=[Vente(montant=1200), Vente(montant=430)]),\n        Vendeur(nom=\"Karim\", responsable_id=ines.id, ventes=[Vente(montant=850), Vente(montant=640)]),\n        Vendeur(nom=\"Paul\", responsable_id=ines.id),\n    ])\n    session.commit()\n\n    responsable = aliased(Vendeur)\n    requete = (\n        select(Vendeur.nom, responsable.nom)\n        .join(responsable, Vendeur.responsable_id == responsable.id)\n        .order_by(Vendeur.nom)\n    )\n    for nom, chef in session.execute(requete):\n        print(f\"{nom} -> {chef}\")\n",
+          "executable": true,
+          "sortie_attendue": "Camille -> Inès\nKarim -> Inès\nPaul -> Inès\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## exists : y a-t-il des lignes liées ?\n\n`exists()` teste si une sous-requête renvoie au moins une ligne. Avec `~` (non), on trouve les vendeurs **sans** aucune vente."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, exists, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, aliased, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vendeur(Base):\n    __tablename__ = \"vendeur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    responsable_id: Mapped[int | None] = mapped_column(ForeignKey(\"vendeur.id\"))\n    ventes: Mapped[list[\"Vente\"]] = relationship()\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur_id: Mapped[int] = mapped_column(ForeignKey(\"vendeur.id\"))\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Vendeur(nom=\"Inès\", ventes=[Vente(montant=2100)])\n    session.add(ines)\n    session.flush()\n    session.add_all([\n        Vendeur(nom=\"Camille\", responsable_id=ines.id, ventes=[Vente(montant=1200), Vente(montant=430)]),\n        Vendeur(nom=\"Karim\", responsable_id=ines.id, ventes=[Vente(montant=850), Vente(montant=640)]),\n        Vendeur(nom=\"Paul\", responsable_id=ines.id),\n    ])\n    session.commit()\n\n    a_vendu = exists().where(Vente.vendeur_id == Vendeur.id)\n    print(session.scalars(select(Vendeur.nom).where(~a_vendu)).all())\n    print(session.scalars(select(Vendeur.nom).where(a_vendu).order_by(Vendeur.nom)).all())\n",
+          "executable": true,
+          "sortie_attendue": "['Paul']\n['Camille', 'Inès', 'Karim']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une sous-requête de la forme « valeur de la ligne courante » (ici `Vente.vendeur_id == Vendeur.id`) est **corrélée** : la base l'évalue pour chaque vendeur. SQLAlchemy relie automatiquement les tables des deux niveaux."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Affiche le nom du ou des vendeurs dont la **plus grosse** vente dépasse 1 000 €, triés par nom : `['Camille', 'Inès']`.\n\nIndice : une sous-requête qui calcule le maximum par vendeur, jointe aux vendeurs.",
+          "code": "from sqlalchemy import ForeignKey, create_engine, exists, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, aliased, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vendeur(Base):\n    __tablename__ = \"vendeur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    responsable_id: Mapped[int | None] = mapped_column(ForeignKey(\"vendeur.id\"))\n    ventes: Mapped[list[\"Vente\"]] = relationship()\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur_id: Mapped[int] = mapped_column(ForeignKey(\"vendeur.id\"))\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Vendeur(nom=\"Inès\", ventes=[Vente(montant=2100)])\n    session.add(ines)\n    session.flush()\n    session.add_all([\n        Vendeur(nom=\"Camille\", responsable_id=ines.id, ventes=[Vente(montant=1200), Vente(montant=430)]),\n        Vendeur(nom=\"Karim\", responsable_id=ines.id, ventes=[Vente(montant=850), Vente(montant=640)]),\n        Vendeur(nom=\"Paul\", responsable_id=ines.id),\n    ])\n    session.commit()\n\n    # Écris ta requête ici\n",
+          "solution": "from sqlalchemy import ForeignKey, create_engine, exists, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, aliased, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vendeur(Base):\n    __tablename__ = \"vendeur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    responsable_id: Mapped[int | None] = mapped_column(ForeignKey(\"vendeur.id\"))\n    ventes: Mapped[list[\"Vente\"]] = relationship()\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur_id: Mapped[int] = mapped_column(ForeignKey(\"vendeur.id\"))\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Vendeur(nom=\"Inès\", ventes=[Vente(montant=2100)])\n    session.add(ines)\n    session.flush()\n    session.add_all([\n        Vendeur(nom=\"Camille\", responsable_id=ines.id, ventes=[Vente(montant=1200), Vente(montant=430)]),\n        Vendeur(nom=\"Karim\", responsable_id=ines.id, ventes=[Vente(montant=850), Vente(montant=640)]),\n        Vendeur(nom=\"Paul\", responsable_id=ines.id),\n    ])\n    session.commit()\n\n    maximums = (\n        select(Vente.vendeur_id, func.max(Vente.montant).label(\"maximum\"))\n        .group_by(Vente.vendeur_id)\n        .subquery()\n    )\n    requete = (\n        select(Vendeur.nom)\n        .join(maximums, Vendeur.id == maximums.c.vendeur_id)\n        .where(maximums.c.maximum > 1000)\n        .order_by(Vendeur.nom)\n    )\n    print(session.scalars(requete).all())\n",
+          "sortie_attendue": "['Camille', 'Inès']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `.scalar_subquery()` : une valeur calculée, utilisable dans un `where`.\n- `.subquery()` : un résultat intermédiaire qu'on joint comme une table, lu par `.c`.\n- `aliased` permet de joindre une table à elle-même ; `exists()` teste des lignes liées."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Sous-requêtes et CTE",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/data_select.html#subqueries-and-ctes"
+        }
+      ]
+    },
+    {
+      "id": "fb97b970-6032-4d50-b51e-b7b14eda09ac",
+      "slug": "sqla-inter-transactions",
+      "titre": "Transactions, erreurs et points de sauvegarde",
+      "resume": "Garantir qu'une opération en plusieurs étapes se fait entièrement ou pas du tout, gérer les erreurs d'intégrité et annuler une partie avec un point de sauvegarde.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "sqla-inter-sous-requetes"
+      ],
+      "objectifs": [
+        "Écrire une opération atomique avec session.begin()",
+        "Rattraper une IntegrityError et annuler",
+        "Annuler une partie du travail avec begin_nested",
+        "Comprendre flush et commit"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un virement débite un compte et en crédite un autre. Si la seconde étape échoue, la première doit être **annulée** : sinon de l'argent disparaît. Une **transaction** garantit ce « tout ou rien ».\n\n`with session.begin():` ouvre une transaction : elle est validée à la fin du bloc, ou annulée si une exception en sort."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import CheckConstraint, create_engine, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Compte(Base):\n    __tablename__ = \"compte\"\n    __table_args__ = (CheckConstraint(\"solde >= 0\", name=\"solde_positif\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titulaire: Mapped[str]\n    solde: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Compte(titulaire=\"Camille\", solde=100), Compte(titulaire=\"Karim\", solde=50)])\n    session.commit()\n\ndef virer(session, depuis, vers, montant):\n    with session.begin():\n        session.get(Compte, depuis).solde -= montant\n        session.get(Compte, vers).solde += montant\n\n\nwith Session(engine) as session:\n    virer(session, 1, 2, 30)\n    try:\n        virer(session, 1, 2, 500)  # le solde deviendrait négatif\n    except IntegrityError:\n        print(\"Virement refusé : rien n'a bougé\")\n\nwith Session(engine) as session:\n    print([(c.titulaire, c.solde) for c in session.scalars(select(Compte))])\n",
+          "executable": true,
+          "sortie_attendue": "Virement refusé : rien n'a bougé\n[('Camille', 70.0), ('Karim', 80.0)]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "La contrainte `CheckConstraint(\"solde >= 0\")` est vérifiée **par la base**. Au moment d'écrire, la base refuse, SQLAlchemy lève une `IntegrityError`, et `session.begin()` annule les deux modifications.\n\n## flush et commit\n\n`session.flush()` envoie les modifications en attente à la base, **sans** valider la transaction : les identifiants sont attribués, les contraintes vérifiées, mais tout reste annulable. `commit()` fait un `flush()`, puis valide."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import CheckConstraint, create_engine, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Compte(Base):\n    __tablename__ = \"compte\"\n    __table_args__ = (CheckConstraint(\"solde >= 0\", name=\"solde_positif\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titulaire: Mapped[str]\n    solde: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Compte(titulaire=\"Camille\", solde=100), Compte(titulaire=\"Karim\", solde=50)])\n    session.commit()\n\nwith Session(engine) as session:\n    nouveau = Compte(titulaire=\"Inès\", solde=0)\n    session.add(nouveau)\n    session.flush()\n    print(\"id après flush :\", nouveau.id)\n    session.rollback()\n    print(\"comptes :\", len(session.scalars(select(Compte)).all()))\n",
+          "executable": true,
+          "sortie_attendue": "id après flush : 3\ncomptes : 2\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Annuler une partie avec un point de sauvegarde\n\n`session.begin_nested()` pose un **point de sauvegarde** (*SAVEPOINT*). En cas d'erreur, seul le travail fait depuis ce point est annulé ; le reste de la transaction continue. C'est utile pour importer des lignes en sautant celles qui sont invalides."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import CheckConstraint, create_engine, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Compte(Base):\n    __tablename__ = \"compte\"\n    __table_args__ = (CheckConstraint(\"solde >= 0\", name=\"solde_positif\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titulaire: Mapped[str]\n    solde: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Compte(titulaire=\"Camille\", solde=100), Compte(titulaire=\"Karim\", solde=50)])\n    session.commit()\n\nlignes = [(\"Inès\", 20), (\"Paul\", -5), (\"Léa\", 35)]\nwith Session(engine) as session:\n    for titulaire, solde in lignes:\n        try:\n            with session.begin_nested():\n                session.add(Compte(titulaire=titulaire, solde=solde))\n        except IntegrityError:\n            print(f\"Ligne ignorée : {titulaire}\")\n    session.commit()\n    print(session.scalars(select(Compte.titulaire).order_by(Compte.id)).all())\n",
+          "executable": true,
+          "sortie_attendue": "Ligne ignorée : Paul\n['Camille', 'Karim', 'Inès', 'Léa']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Après une erreur dans une transaction, la session doit être annulée (`rollback`) avant de resservir. `session.begin()` et `begin_nested()` le font pour toi : préfère-les à des `commit` et `rollback` écrits à la main."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris `retirer(session, compte_id, montant)` qui retire le montant dans une transaction, et renvoie `True` si c'est fait, `False` si la base refuse (solde négatif).\n\nLe code affiche `True`, `False`, puis `40.0`.",
+          "code": "from sqlalchemy import CheckConstraint, create_engine, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Compte(Base):\n    __tablename__ = \"compte\"\n    __table_args__ = (CheckConstraint(\"solde >= 0\", name=\"solde_positif\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titulaire: Mapped[str]\n    solde: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Compte(titulaire=\"Camille\", solde=100), Compte(titulaire=\"Karim\", solde=50)])\n    session.commit()\n\ndef retirer(session, compte_id, montant):\n    # À toi de jouer\n    pass\n\n\nwith Session(engine) as session:\n    print(retirer(session, 1, 60))\n    print(retirer(session, 1, 60))\n    print(session.get(Compte, 1).solde)\n",
+          "solution": "from sqlalchemy import CheckConstraint, create_engine, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Compte(Base):\n    __tablename__ = \"compte\"\n    __table_args__ = (CheckConstraint(\"solde >= 0\", name=\"solde_positif\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titulaire: Mapped[str]\n    solde: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Compte(titulaire=\"Camille\", solde=100), Compte(titulaire=\"Karim\", solde=50)])\n    session.commit()\n\ndef retirer(session, compte_id, montant):\n    try:\n        with session.begin():\n            session.get(Compte, compte_id).solde -= montant\n        return True\n    except IntegrityError:\n        return False\n\n\nwith Session(engine) as session:\n    print(retirer(session, 1, 60))\n    print(retirer(session, 1, 60))\n    print(session.get(Compte, 1).solde)\n",
+          "sortie_attendue": "True\nFalse\n40.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `with session.begin():` valide à la fin, annule si une exception sort du bloc.\n- `flush()` écrit sans valider ; `commit()` écrit et valide.\n- `begin_nested()` pose un point de sauvegarde pour annuler une partie seulement."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Transactions et gestion des connexions",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/session_transaction.html"
+        }
+      ]
+    },
+    {
+      "id": "26323047-9950-4a0e-bd41-8cea9255776b",
+      "slug": "sqla-inter-contraintes-et-index",
+      "titre": "Contraintes, valeurs par défaut et index",
+      "resume": "Faire garantir la qualité des données par la base : contraintes d'unicité et de vérification, valeurs par défaut côté serveur et index.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "sqla-inter-transactions"
+      ],
+      "objectifs": [
+        "Déclarer des contraintes avec __table_args__",
+        "Distinguer default et server_default",
+        "Créer un index simple ou composite",
+        "Lire les contraintes d'une table existante"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Valider en Python ne suffit pas : un autre programme, un script ou une erreur peut écrire dans la base. Les **contraintes** sont vérifiées par la base elle-même, pour tout le monde.\n\nLes contraintes qui portent sur plusieurs colonnes se déclarent dans `__table_args__`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import CheckConstraint, String, UniqueConstraint, create_engine\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Reservation(Base):\n    __tablename__ = \"reservation\"\n    __table_args__ = (\n        UniqueConstraint(\"salle\", \"creneau\", name=\"une_reservation_par_creneau\"),\n        CheckConstraint(\"participants BETWEEN 1 AND 20\", name=\"taille_de_salle\"),\n    )\n    id: Mapped[int] = mapped_column(primary_key=True)\n    salle: Mapped[str] = mapped_column(String(20))\n    creneau: Mapped[str]\n    participants: Mapped[int]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nessais = [(\"Iroise\", \"lundi 9h\", 6), (\"Iroise\", \"lundi 9h\", 4), (\"Iroise\", \"lundi 10h\", 35)]\nwith Session(engine) as session:\n    for salle, creneau, participants in essais:\n        try:\n            with session.begin_nested():\n                session.add(Reservation(salle=salle, creneau=creneau, participants=participants))\n            print(\"Réservé :\", creneau, participants)\n        except IntegrityError as erreur:\n            print(\"Refusé :\", creneau, participants, \"->\", type(erreur.orig).__name__)\n",
+          "executable": true,
+          "sortie_attendue": "Réservé : lundi 9h 6\nRefusé : lundi 9h 4 -> IntegrityError\nRefusé : lundi 10h 35 -> IntegrityError\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## default ou server_default ?\n\n- `default=` est calculé **par Python**, au moment de l'insertion par SQLAlchemy ;\n- `server_default=` est écrit **dans la table** : la base l'applique, même pour une insertion faite hors de Python.\n\n`func.now()` ou `text(\"0\")` donnent une expression SQL comme valeur par défaut."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, inspect, select, text\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Ticket(Base):\n    __tablename__ = \"ticket\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titre: Mapped[str]\n    priorite: Mapped[int] = mapped_column(default=3)\n    statut: Mapped[str] = mapped_column(server_default=\"ouvert\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith engine.begin() as connexion:  # une insertion faite hors de l'ORM\n    connexion.execute(text(\"INSERT INTO ticket (titre, priorite) VALUES ('Panne imprimante', 1)\"))\n\nwith Session(engine) as session:\n    session.add(Ticket(titre=\"Nouvel écran\"))\n    session.commit()\n    for ticket in session.scalars(select(Ticket).order_by(Ticket.id)):\n        print(ticket.titre, ticket.priorite, ticket.statut)\n\ncolonnes = {c[\"name\"]: c[\"default\"] for c in inspect(engine).get_columns(\"ticket\")}\nprint(colonnes[\"priorite\"], colonnes[\"statut\"])\n",
+          "executable": true,
+          "sortie_attendue": "Panne imprimante 1 ouvert\nNouvel écran 3 ouvert\nNone 'ouvert'\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les index\n\nUn **index** accélère les recherches sur une colonne, au prix d'écritures un peu plus lentes. `index=True` indexe une colonne ; `Index(...)` crée un index sur plusieurs colonnes, utile pour les filtres combinés."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import Index, create_engine, inspect\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    __table_args__ = (Index(\"ix_commande_client_date\", \"client_id\", \"passee_le\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    reference: Mapped[str] = mapped_column(index=True, unique=True)\n    client_id: Mapped[int]\n    passee_le: Mapped[str]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nfor index in sorted(inspect(engine).get_indexes(\"commande\"), key=lambda i: i[\"name\"]):\n    print(index[\"name\"], index[\"column_names\"], \"unique\" if index[\"unique\"] else \"\")\n",
+          "executable": true,
+          "sortie_attendue": "ix_commande_client_date ['client_id', 'passee_le'] \nix_commande_reference ['reference'] unique\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Indexe les colonnes que tu utilises souvent dans un `where`, un `join` ou un `order_by`. Une clé étrangère sans index rend lentes les jointures et les suppressions en cascade."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris le modèle `Inscription` (un email et un événement) avec une contrainte : un même email ne peut s'inscrire qu'une fois au même événement. Essaie d'inscrire deux fois camille@exemple.fr à « Forum », et affiche le nombre d'inscriptions enregistrées : `1`.",
+          "code": "from sqlalchemy import UniqueConstraint, create_engine, func, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\n# Écris le modèle Inscription ici\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n",
+          "solution": "from sqlalchemy import UniqueConstraint, create_engine, func, select\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Inscription(Base):\n    __tablename__ = \"inscription\"\n    __table_args__ = (UniqueConstraint(\"email\", \"evenement\"),)\n    id: Mapped[int] = mapped_column(primary_key=True)\n    email: Mapped[str]\n    evenement: Mapped[str]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    for _ in range(2):\n        try:\n            with session.begin_nested():\n                session.add(Inscription(email=\"camille@exemple.fr\", evenement=\"Forum\"))\n        except IntegrityError:\n            pass\n    session.commit()\n    print(session.scalar(select(func.count(Inscription.id))))\n",
+          "sortie_attendue": "1\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Les contraintes (`UniqueConstraint`, `CheckConstraint`) sont garanties par la base.\n- `default` est appliqué par Python, `server_default` par la base.\n- `index=True` et `Index(...)` accélèrent les recherches fréquentes."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Contraintes et index",
+          "url": "https://docs.sqlalchemy.org/en/20/core/constraints.html"
+        }
+      ]
+    },
+    {
+      "id": "e423b9b1-4d0b-4a77-8786-beb48d7d9ed1",
+      "slug": "sqla-inter-proprietes-hybrides",
+      "titre": "Propriétés hybrides et validations",
+      "resume": "Écrire un calcul une seule fois, utilisable en Python et dans les requêtes SQL grâce à hybrid_property, et valider les valeurs avec validates.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "sqla-inter-contraintes-et-index"
+      ],
+      "objectifs": [
+        "Écrire une propriété hybride",
+        "Utiliser une propriété hybride dans un where ou un order_by",
+        "Valider une valeur avec @validates"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une propriété Python (`@property`) calcule une valeur sur un objet chargé. Mais on ne peut pas l'utiliser dans une requête : `where(Ligne.total > 100)` ne marche pas avec une `property`.\n\n`hybrid_property` résout ce problème : le même calcul marche **sur un objet** (en Python) et **sur la classe** (il produit une expression SQL)."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, select\nfrom sqlalchemy.ext.hybrid import hybrid_property\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Ligne(Base):\n    __tablename__ = \"ligne\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    produit: Mapped[str]\n    prix: Mapped[float]\n    quantite: Mapped[int]\n\n    @hybrid_property\n    def total(self):\n        return self.prix * self.quantite\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Ligne(produit=\"Écran\", prix=180, quantite=1), Ligne(produit=\"Câble\", prix=8, quantite=3), Ligne(produit=\"Clavier\", prix=45, quantite=3)])\n    session.commit()\n\n    print(session.get(Ligne, 2).total)  # en Python\n    grosses = select(Ligne.produit).where(Ligne.total > 100).order_by(Ligne.total.desc())  # en SQL\n    print(session.scalars(grosses).all())\n",
+          "executable": true,
+          "sortie_attendue": "24.0\n['Écran', 'Clavier']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Quand le calcul Python ne se traduit pas tel quel en SQL, on écrit une version SQL séparée avec `@total.inplace.expression`. Ici, `max()` de Python devient `CASE` en SQL."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import case, create_engine, select\nfrom sqlalchemy.ext.hybrid import hybrid_property\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Compte(Base):\n    __tablename__ = \"compte\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titulaire: Mapped[str]\n    solde: Mapped[float]\n\n    @hybrid_property\n    def decouvert(self):\n        return max(-self.solde, 0)\n\n    @decouvert.inplace.expression\n    @classmethod\n    def _decouvert(cls):\n        return case((cls.solde < 0, -cls.solde), else_=0)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Compte(titulaire=\"Camille\", solde=120), Compte(titulaire=\"Karim\", solde=-45)])\n    session.commit()\n    print(session.get(Compte, 2).decouvert)\n    print(session.scalars(select(Compte.titulaire).where(Compte.decouvert > 0)).all())\n",
+          "executable": true,
+          "sortie_attendue": "45.0\n['Karim']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## @validates : contrôler chaque affectation\n\nLe décorateur `@validates` appelle une méthode à chaque fois qu'on affecte une colonne, y compris dans le constructeur. Elle renvoie la valeur à enregistrer, éventuellement nettoyée, ou lève une erreur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, validates\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    email: Mapped[str]\n\n    @validates(\"email\")\n    def valider_email(self, cle, valeur):\n        valeur = valeur.strip().lower()\n        if \"@\" not in valeur:\n            raise ValueError(f\"Email invalide : {valeur}\")\n        return valeur\n\n\nprint(Client(email=\"  Camille@Exemple.FR \").email)\ntry:\n    Client(email=\"camille.exemple.fr\")\nexcept ValueError as erreur:\n    print(erreur)\n",
+          "executable": true,
+          "sortie_attendue": "camille@exemple.fr\nEmail invalide : camille.exemple.fr\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`@validates` protège ce qui passe par l'ORM ; une contrainte en base protège tout le reste. Les deux se complètent : un message clair côté Python, une garantie côté base."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute au modèle `Produit` une propriété hybride `prix_ttc` (prix multiplié par 1,2), puis affiche, triés, les noms des produits dont le prix TTC dépasse 50 € : `['Agenda', 'Lampe']`.",
+          "code": "from sqlalchemy import create_engine, select\nfrom sqlalchemy.ext.hybrid import hybrid_property\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n\n    # Écris la propriété hybride prix_ttc\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Produit(nom=\"Lampe\", prix=60), Produit(nom=\"Stylo\", prix=2), Produit(nom=\"Agenda\", prix=45)])\n    session.commit()\n    # Affiche les produits de plus de 50 € TTC\n",
+          "solution": "from sqlalchemy import create_engine, select\nfrom sqlalchemy.ext.hybrid import hybrid_property\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n\n    @hybrid_property\n    def prix_ttc(self):\n        return self.prix * 1.2\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Produit(nom=\"Lampe\", prix=60), Produit(nom=\"Stylo\", prix=2), Produit(nom=\"Agenda\", prix=45)])\n    session.commit()\n    print(session.scalars(select(Produit.nom).where(Produit.prix_ttc > 50).order_by(Produit.nom)).all())\n",
+          "sortie_attendue": "['Agenda', 'Lampe']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `hybrid_property` : un calcul utilisable sur un objet et dans les requêtes.\n- `.inplace.expression` donne une version SQL quand le calcul Python ne se traduit pas.\n- `@validates` contrôle et nettoie chaque valeur affectée."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Attributs hybrides",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/extensions/hybrid.html"
+        },
+        {
+          "titre": "Validateurs simples",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/mapped_attributes.html#simple-validators"
+        }
+      ]
+    },
+    {
+      "id": "44b474a0-f9eb-4200-a542-17f3a6f35cc9",
+      "slug": "sqla-inter-heritage-de-modeles",
+      "titre": "L'héritage de modèles",
+      "resume": "Ranger plusieurs types d'objets apparentés dans une même table avec l'héritage à table unique, et les lire de façon polymorphe.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "sqla-inter-proprietes-hybrides"
+      ],
+      "objectifs": [
+        "Configurer l'héritage à table unique",
+        "Choisir la colonne discriminante et les identités",
+        "Lire des objets de types différents en une requête",
+        "Connaître les autres stratégies d'héritage"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un moyen de paiement peut être une carte, un virement ou un prélèvement. Ils partagent des colonnes (montant, date) et en ont de propres (numéro de carte, IBAN).\n\nAvec l'**héritage à table unique**, tous sont rangés dans **une** table. Une colonne **discriminante** (ici `type`) dit de quelle classe est chaque ligne. SQLAlchemy recrée le bon objet à la lecture."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Paiement(Base):\n    __tablename__ = \"paiement\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    type: Mapped[str]\n    __mapper_args__ = {\"polymorphic_on\": \"type\", \"polymorphic_identity\": \"paiement\"}\n\n    def frais(self):\n        return 0.0\n\n\nclass Carte(Paiement):\n    derniers_chiffres: Mapped[str | None]\n    __mapper_args__ = {\"polymorphic_identity\": \"carte\"}\n\n    def frais(self):\n        return round(self.montant * 0.015, 2)\n\n\nclass Virement(Paiement):\n    iban: Mapped[str | None]\n    __mapper_args__ = {\"polymorphic_identity\": \"virement\"}\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Carte(montant=80, derniers_chiffres=\"4242\"), Virement(montant=200, iban=\"FR76...\"), Carte(montant=20, derniers_chiffres=\"1881\")])\n    session.commit()\n\n    for paiement in session.scalars(select(Paiement).order_by(Paiement.id)):\n        print(type(paiement).__name__, paiement.montant, paiement.frais())\n    print(len(session.scalars(select(Carte)).all()), \"paiements par carte\")\n    print(sorted(Base.metadata.tables))\n",
+          "executable": true,
+          "sortie_attendue": "Carte 80.0 1.2\nVirement 200.0 0.0\nCarte 20.0 0.3\n2 paiements par carte\n['paiement']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ce qu'il faut retenir de la configuration :\n\n- la classe mère déclare la colonne discriminante dans `polymorphic_on` ;\n- chaque classe a son `polymorphic_identity`, la valeur rangée dans `type` ;\n- les classes filles n'ont pas de `__tablename__` : leurs colonnes s'ajoutent à la table de la mère, et doivent donc être **facultatives**.\n\n`select(Paiement)` renvoie des `Carte` et des `Virement` : c'est le polymorphisme, côté base. `select(Carte)` filtre tout seul sur `type = 'carte'`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Paiement(Base):\n    __tablename__ = \"paiement\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    type: Mapped[str]\n    __mapper_args__ = {\"polymorphic_on\": \"type\", \"polymorphic_identity\": \"paiement\"}\n\n\nclass Carte(Paiement):\n    __mapper_args__ = {\"polymorphic_identity\": \"carte\"}\n\n\nclass Virement(Paiement):\n    __mapper_args__ = {\"polymorphic_identity\": \"virement\"}\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Carte(montant=80), Virement(montant=200), Carte(montant=20)])\n    session.commit()\n    requete = select(Paiement.type, func.sum(Paiement.montant)).group_by(Paiement.type).order_by(Paiement.type)\n    print(session.execute(requete).all())\n",
+          "executable": true,
+          "sortie_attendue": "[('carte', 100.0), ('virement', 200.0)]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Deux autres stratégies existent : l'héritage **joint** (une table par classe, reliées par la clé primaire) quand les classes filles ont beaucoup de colonnes propres, et l'héritage **concret** (des tables indépendantes). La table unique reste la plus simple et la plus rapide."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute un type de paiement `Prelevement`, dont les frais sont fixes : 0,5 €. Enregistre un prélèvement de 60 € et une carte de 100 €, puis affiche la somme des frais de tous les paiements : `2.0`.",
+          "code": "from sqlalchemy import create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Paiement(Base):\n    __tablename__ = \"paiement\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    type: Mapped[str]\n    __mapper_args__ = {\"polymorphic_on\": \"type\", \"polymorphic_identity\": \"paiement\"}\n\n    def frais(self):\n        return 0.0\n\n\nclass Carte(Paiement):\n    __mapper_args__ = {\"polymorphic_identity\": \"carte\"}\n\n    def frais(self):\n        return round(self.montant * 0.015, 2)\n\n\n# Écris Prelevement ici\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n",
+          "solution": "from sqlalchemy import create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Paiement(Base):\n    __tablename__ = \"paiement\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    type: Mapped[str]\n    __mapper_args__ = {\"polymorphic_on\": \"type\", \"polymorphic_identity\": \"paiement\"}\n\n    def frais(self):\n        return 0.0\n\n\nclass Carte(Paiement):\n    __mapper_args__ = {\"polymorphic_identity\": \"carte\"}\n\n    def frais(self):\n        return round(self.montant * 0.015, 2)\n\n\nclass Prelevement(Paiement):\n    __mapper_args__ = {\"polymorphic_identity\": \"prelevement\"}\n\n    def frais(self):\n        return 0.5\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Prelevement(montant=60), Carte(montant=100)])\n    session.commit()\n    print(sum(p.frais() for p in session.scalars(select(Paiement))))\n",
+          "sortie_attendue": "2.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Héritage à table unique : une table, une colonne discriminante (`polymorphic_on`).\n- Chaque classe déclare son `polymorphic_identity`.\n- Une requête sur la classe mère renvoie des objets du bon type."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Héritage de modèles",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/inheritance.html"
+        }
+      ]
+    },
+    {
+      "id": "fefabcad-6c76-415e-a835-f07c26b36c11",
+      "slug": "sqla-inter-evenements-et-types",
+      "titre": "Événements et types personnalisés",
+      "resume": "Réagir automatiquement à l'écriture des objets avec les événements de l'ORM, et ranger des valeurs métier avec un TypeDecorator.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "sqla-inter-heritage-de-modeles"
+      ],
+      "objectifs": [
+        "Mettre à jour une date automatiquement avec un événement",
+        "Écouter les insertions et les modifications",
+        "Créer un type de colonne personnalisé avec TypeDecorator"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Les **événements** de SQLAlchemy appellent une fonction à des moments précis : avant l'insertion d'un objet, avant sa mise à jour, à chaque requête SQL… On s'en sert pour des règles **transversales**, comme mettre à jour une date de modification sur tous les modèles.\n\n`@event.listens_for(Classe, \"before_update\")` enregistre la fonction."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from datetime import datetime\n\nfrom sqlalchemy import create_engine, event\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\nHORLOGE = iter([datetime(2026, 3, 1, 9, 0), datetime(2026, 3, 2, 14, 30)])\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Document(Base):\n    __tablename__ = \"document\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    titre: Mapped[str]\n    modifie_le: Mapped[datetime | None]\n\n\n@event.listens_for(Document, \"before_insert\")\n@event.listens_for(Document, \"before_update\")\ndef horodater(mapper, connexion, document):\n    document.modifie_le = next(HORLOGE)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    doc = Document(titre=\"Contrat\")\n    session.add(doc)\n    session.commit()\n    print(doc.modifie_le)\n    doc.titre = \"Contrat signé\"\n    session.commit()\n    print(doc.modifie_le)\n",
+          "executable": true,
+          "sortie_attendue": "2026-03-01 09:00:00\n2026-03-02 14:30:00\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ici, l'horloge est une liste de dates fixées, pour que l'exemple donne toujours le même résultat. Dans une vraie application, ce serait `datetime.now(UTC)`.\n\n## Un type de colonne métier\n\nUn `TypeDecorator` adapte un type existant : il convertit la valeur Python avant l'écriture (`process_bind_param`), et la valeur de la base à la lecture (`process_result_value`). On range ainsi un montant en **centimes entiers**, sans erreur d'arrondi, tout en manipulant des `Decimal` en Python."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from decimal import Decimal\n\nfrom sqlalchemy import Integer, create_engine, text\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\nfrom sqlalchemy.types import TypeDecorator\n\n\nclass Centimes(TypeDecorator):\n    impl = Integer\n    cache_ok = True\n\n    def process_bind_param(self, valeur, dialect):\n        return None if valeur is None else int(valeur * 100)\n\n    def process_result_value(self, valeur, dialect):\n        return None if valeur is None else Decimal(valeur) / 100\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Facture(Base):\n    __tablename__ = \"facture\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[Decimal] = mapped_column(Centimes)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add(Facture(montant=Decimal(\"19.99\")))\n    session.commit()\n\nwith Session(engine) as session:\n    print(repr(session.get(Facture, 1).montant))\nwith engine.connect() as connexion:\n    print(connexion.execute(text(\"SELECT montant FROM facture\")).scalar())\n",
+          "executable": true,
+          "sortie_attendue": "Decimal('19.99')\n1999\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un événement est invisible quand on lit le modèle : si tu en abuses, le comportement devient difficile à suivre. Réserve-les aux règles techniques communes (dates, journal d'audit) ; une règle métier se lit mieux dans une méthode explicite."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris un événement `before_insert` sur `Utilisateur` qui remplit `pseudo` à partir de l'email (la partie avant le `@`), s'il n'a pas été donné.\n\nLe code affiche `camille`, puis `kiki`.",
+          "code": "from sqlalchemy import create_engine, event\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Utilisateur(Base):\n    __tablename__ = \"utilisateur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    email: Mapped[str]\n    pseudo: Mapped[str | None]\n\n\n# Écris l'événement ici\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    a = Utilisateur(email=\"camille@exemple.fr\")\n    b = Utilisateur(email=\"karim@exemple.fr\", pseudo=\"kiki\")\n    session.add_all([a, b])\n    session.commit()\n    print(a.pseudo)\n    print(b.pseudo)\n",
+          "solution": "from sqlalchemy import create_engine, event\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Utilisateur(Base):\n    __tablename__ = \"utilisateur\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    email: Mapped[str]\n    pseudo: Mapped[str | None]\n\n\n@event.listens_for(Utilisateur, \"before_insert\")\ndef pseudo_par_defaut(mapper, connexion, utilisateur):\n    if utilisateur.pseudo is None:\n        utilisateur.pseudo = utilisateur.email.split(\"@\")[0]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    a = Utilisateur(email=\"camille@exemple.fr\")\n    b = Utilisateur(email=\"karim@exemple.fr\", pseudo=\"kiki\")\n    session.add_all([a, b])\n    session.commit()\n    print(a.pseudo)\n    print(b.pseudo)\n",
+          "sortie_attendue": "camille\nkiki\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `@event.listens_for(Modele, \"before_insert\")` réagit à l'écriture d'un objet.\n- Les événements conviennent aux règles techniques communes, pas au cœur du métier.\n- `TypeDecorator` convertit une valeur métier à l'écriture et à la lecture."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Événements de l'ORM",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/events.html"
+        },
+        {
+          "titre": "Types personnalisés",
+          "url": "https://docs.sqlalchemy.org/en/20/core/custom_types.html"
+        }
+      ]
+    }
+  ]
+}

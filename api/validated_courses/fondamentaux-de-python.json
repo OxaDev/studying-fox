@@ -12,7 +12,7 @@
     "titre": "Les fondamentaux de Python",
     "description": "Apprendre Python pas à pas, sans prérequis : variables, calculs, texte, conditions, listes, boucles, dictionnaires, fonctions, erreurs, modules et classes. Des exemples tirés de la vie professionnelle, et un mini-projet pour finir.",
     "niveau": "debutant",
-    "theme": "python",
+    "theme": "python-bases",
     "lecons": [
       "python-premier-programme",
       "python-variables-et-types",
@@ -39,7 +39,7 @@
       "slug": "python-premier-programme",
       "titre": "Ton premier programme",
       "resume": "Écrire et lancer tes premières lignes de Python : afficher du texte et commenter ton code.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 11,
       "prerequis": [],
@@ -118,7 +118,7 @@
       "slug": "python-variables-et-types",
       "titre": "Variables et types de données",
       "resume": "Ranger des valeurs dans des variables et connaître les types de base : nombres entiers, décimaux, texte et booléens.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 16,
       "prerequis": [
@@ -208,7 +208,7 @@
       "slug": "python-calculs",
       "titre": "Faire des calculs",
       "resume": "Utiliser Python comme une calculatrice : opérations, priorités, division entière, reste et arrondis.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -295,7 +295,7 @@
       "slug": "python-chaines-de-caracteres",
       "titre": "Manipuler du texte",
       "resume": "Assembler, formater et nettoyer du texte : f-strings, longueur, majuscules, remplacement et recherche.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -382,7 +382,7 @@
       "slug": "python-conditions",
       "titre": "Prendre des décisions avec if",
       "resume": "Exécuter du code seulement quand une condition est vraie, grâce à if, elif et else.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -474,7 +474,7 @@
       "slug": "python-listes",
       "titre": "Les listes",
       "resume": "Ranger plusieurs valeurs dans une liste, y accéder, la modifier et en tirer des statistiques simples.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -561,7 +561,7 @@
       "slug": "python-boucle-for",
       "titre": "Répéter avec la boucle for",
       "resume": "Traiter chaque élément d'une liste, répéter une action un nombre précis de fois et accumuler un résultat.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -648,7 +648,7 @@
       "slug": "python-boucle-while",
       "titre": "Répéter tant que : la boucle while",
       "resume": "Répéter une action tant qu'une condition reste vraie, et sortir d'une boucle avec break.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -713,7 +713,7 @@
       "slug": "python-dictionnaires",
       "titre": "Les dictionnaires",
       "resume": "Associer des clés à des valeurs pour décrire une fiche client, un stock ou compter des occurrences.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -795,7 +795,7 @@
       "slug": "python-tuples-et-ensembles",
       "titre": "Tuples et ensembles",
       "resume": "Regrouper des valeurs fixes avec les tuples, et éliminer les doublons ou comparer des groupes avec les ensembles.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -860,7 +860,7 @@
       "slug": "python-comprehensions",
       "titre": "Les compréhensions de liste",
       "resume": "Créer une liste à partir d'une autre en une seule ligne lisible, en transformant et en filtrant ses éléments.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 11,
       "prerequis": [
@@ -924,7 +924,7 @@
       "slug": "python-fonctions",
       "titre": "Écrire ses propres fonctions",
       "resume": "Regrouper des instructions dans une fonction réutilisable, avec des paramètres et une valeur de retour.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -1001,7 +1001,7 @@
       "slug": "python-fonctions-parametres",
       "titre": "Paramètres par défaut et arguments nommés",
       "resume": "Rendre tes fonctions plus souples : valeurs par défaut, arguments nommés, plusieurs résultats et documentation.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -1066,7 +1066,7 @@
       "slug": "python-erreurs-et-exceptions",
       "titre": "Comprendre et gérer les erreurs",
       "resume": "Lire un message d'erreur, intercepter une exception avec try et except, et signaler toi-même un problème avec raise.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [
@@ -1152,7 +1152,7 @@
       "slug": "python-modules",
       "titre": "Utiliser les modules de Python",
       "resume": "Importer des outils prêts à l'emploi de la bibliothèque standard : calculs mathématiques, statistiques et dates.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -1228,7 +1228,7 @@
       "slug": "python-classes-et-objets",
       "titre": "Classes et objets",
       "resume": "Créer tes propres types avec une classe : regrouper des données et les actions qui vont avec.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 18,
       "prerequis": [
@@ -1309,7 +1309,7 @@
       "slug": "python-projet-suivi-des-depenses",
       "titre": "Mini-projet : un suivi de dépenses",
       "resume": "Assembler listes, dictionnaires, boucles, conditions, fonctions et exceptions dans un petit outil de suivi de dépenses.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 18,
       "prerequis": [

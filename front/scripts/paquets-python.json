@@ -1,0 +1,31 @@
+{
+  "pyodide": [
+    "sqlalchemy",
+    "typing-extensions",
+    "pydantic",
+    "fastapi",
+    "httpx",
+    "markupsafe",
+    "tzdata"
+  ],
+  "pypi": {
+    "asgiref": { "version": "3", "imports": ["asgiref"], "depends": [] },
+    "sqlparse": { "version": "0.5", "imports": ["sqlparse"], "depends": [] },
+    "django": {
+      "version": "6.0",
+      "imports": ["django"],
+      "depends": ["asgiref", "sqlparse", "tzdata"]
+    },
+    "djangorestframework": {
+      "version": "3.16",
+      "imports": ["rest_framework"],
+      "depends": ["django"]
+    },
+    "mako": { "version": "1.3", "imports": ["mako"], "depends": ["markupsafe"] },
+    "alembic": {
+      "version": "1",
+      "imports": ["alembic"],
+      "depends": ["sqlalchemy", "mako", "typing-extensions"]
+    }
+  }
+}

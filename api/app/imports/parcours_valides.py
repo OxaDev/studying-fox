@@ -32,8 +32,15 @@ journal_technique = logging.getLogger(__name__)
 # Plusieurs processus de l'API peuvent démarrer ensemble : un seul charge à la fois.
 VERROU = 0x52454E41  # « RENA »
 
-# Un thème par langage exécutable : ils sont créés au démarrage, s'ils manquent.
-NOMS_THEMES = {"python": "Python", "javascript": "JavaScript", "vba": "VBA"}
+# Les thèmes de la plateforme (migration 0007) : ils sont créés au démarrage, s'ils manquent.
+NOMS_THEMES = {
+    "python-bases": "Python - Bases",
+    "python-poo": "Python - Programmation Orientée Objet",
+    "python-django": "Python - Django",
+    "python-fastapi": "Python - Suite FastAPI",
+    "javascript": "JavaScript",
+    "vba-bases": "VBA - Bases",
+}
 
 
 class FichierInvalide(Exception):

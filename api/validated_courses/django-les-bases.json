@@ -1,0 +1,654 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "7a842543-25de-4682-952e-fd611911f237",
+    "slug": "django-les-bases",
+    "titre": "Django : les bases",
+    "description": "Construire une application web avec Django : projet et applications, modèles et migrations, requêtes avec l'ORM, relations, vues et adresses, gabarits et formulaires. Chaque exemple fait tourner un vrai mini-projet Django dans le navigateur, et le parcours se termine par un annuaire d'entreprise. Prérequis : la programmation objet en Python.",
+    "niveau": "debutant",
+    "theme": "python-django",
+    "lecons": [
+      "django-premier-projet",
+      "django-modeles-et-migrations",
+      "django-orm-requetes",
+      "django-relations",
+      "django-vues-et-adresses",
+      "django-gabarits",
+      "django-formulaires",
+      "django-projet-annuaire"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "dcdfbcc7-3449-49d5-962a-e42b68e5addc",
+      "slug": "django-premier-projet",
+      "titre": "Django : ton premier projet",
+      "resume": "Découvrir Django, son organisation en projet et en applications, et répondre à une première requête avec une vue et une adresse.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "poo-classes-et-instances"
+      ],
+      "objectifs": [
+        "Expliquer ce qu'est un framework web",
+        "Décrire l'organisation d'un projet Django",
+        "Écrire une première vue et son adresse",
+        "Appeler une page avec le client de test"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "**Django** est un framework web complet, écrit en Python : il gère les adresses, les pages, la base de données, les formulaires, l'authentification et même une interface d'administration. Instagram, Mozilla ou le site de la NASA l'utilisent.\n\nUn **projet** Django regroupe des **applications** : une par grand domaine (la boutique, les comptes, le blog). On crée un projet et une application avec deux commandes :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "pip install django\ndjango-admin startproject monsite\ncd monsite\npython manage.py startapp boutique\n",
+          "executable": false
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "monsite/\n├── manage.py            # l'outil en ligne de commande du projet\n├── monsite/\n│   ├── settings.py      # la configuration : applications, base de données…\n│   └── urls.py          # les adresses du site\n└── boutique/            # une application\n    ├── models.py        # les données\n    ├── views.py         # les vues : une requête entre, une réponse sort\n    └── urls.py          # les adresses de l'application\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "Dans le navigateur, impossible de créer ces fichiers et de lancer un serveur. Chaque exemple commence donc par un **préambule** qui monte un mini-projet en mémoire : il remplace `settings.py` et `apps.py`. Tu peux le lire une fois, puis l'ignorer : la leçon commence après « Fin de la configuration ».\n\nUne **vue** est une fonction qui reçoit la requête et renvoie une réponse. Une **adresse** (`path`) la relie à un chemin. Le **client de test** de Django appelle les pages sans serveur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.http import HttpResponse\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef accueil(request):\n    return HttpResponse(\"Bienvenue dans la boutique !\")\n\n\nurls.urlpatterns = [path(\"\", accueil)]  # dans un vrai projet : boutique/urls.py\n\nreponse = Client().get(\"/\")\nprint(reponse.status_code)\nprint(reponse.content.decode())\n",
+          "executable": true,
+          "sortie_attendue": "200\nBienvenue dans la boutique !\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Dans un vrai projet, on lance le serveur de développement avec `python manage.py runserver`, puis on ouvre `http://127.0.0.1:8000/` dans le navigateur.\n\nUne vue peut aussi renvoyer du **JSON**, avec `JsonResponse`, et lire les paramètres de l'adresse dans `request.GET`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.http import JsonResponse\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef bonjour(request):\n    prenom = request.GET.get(\"prenom\", \"inconnu\")\n    return JsonResponse({\"message\": f\"Bonjour {prenom} !\"})\n\n\nurls.urlpatterns = [path(\"bonjour/\", bonjour)]\n\nprint(Client().get(\"/bonjour/\", {\"prenom\": \"Camille\"}).json())\nprint(Client().get(\"/page-inexistante/\").status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'message': 'Bonjour Camille !'}\n404\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Le préambule utilise un hacheur de mots de passe MD5, rapide mais faible : l'environnement du navigateur n'a pas les fonctions de hachage d'OpenSSL. Dans un vrai projet, ne modifie jamais `PASSWORD_HASHERS` : Django utilise PBKDF2 par défaut, et propose Argon2."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une vue `horaires` qui renvoie le texte `Ouvert du lundi au samedi, de 9 h à 19 h`, à l'adresse `horaires/`. Appelle-la et affiche le contenu de la réponse.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.http import HttpResponse\nfrom django.test import Client\nfrom django.urls import path\n\n# Écris la vue et son adresse ici\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.http import HttpResponse\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef horaires(request):\n    return HttpResponse(\"Ouvert du lundi au samedi, de 9 h à 19 h\")\n\n\nurls.urlpatterns = [path(\"horaires/\", horaires)]\nprint(Client().get(\"/horaires/\").content.decode())\n",
+          "sortie_attendue": "Ouvert du lundi au samedi, de 9 h à 19 h\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un projet Django regroupe des applications ; `manage.py` les administre.\n- Une vue reçoit une requête et renvoie une réponse ; `path` la relie à une adresse.\n- Le client de test appelle les pages sans serveur."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Django, partie 1",
+          "url": "https://docs.djangoproject.com/fr/6.0/intro/tutorial01/"
+        }
+      ]
+    },
+    {
+      "id": "68609d1c-c30d-43b6-a8b9-257ac17f2e1d",
+      "slug": "django-modeles-et-migrations",
+      "titre": "Les modèles et les migrations",
+      "resume": "Décrire les données de l'application avec des modèles, créer les tables avec les migrations, et enregistrer de premiers objets.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "django-premier-projet"
+      ],
+      "objectifs": [
+        "Décrire une table avec un modèle Django",
+        "Choisir les types de champs courants",
+        "Créer et appliquer les migrations",
+        "Créer, modifier et supprimer un objet"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un **modèle** décrit une table de la base de données : une classe qui hérite de `models.Model`, avec un attribut par colonne. Django ajoute tout seul une clé primaire `id`.\n\nLes types de champs courants : `CharField` (texte court, avec `max_length`), `TextField` (texte long), `IntegerField`, `DecimalField` (montants), `BooleanField`, `DateField`, `DateTimeField`, `EmailField`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nstylo = Produit(nom=\"Stylo\", prix=\"1.50\", stock=120)\nstylo.save()\nprint(stylo.id, stylo, stylo.prix, stylo.actif)\nprint([champ.name for champ in Produit._meta.get_fields()])\n",
+          "executable": true,
+          "sortie_attendue": "1 Stylo 1.50 True\n['id', 'nom', 'prix', 'stock', 'actif']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`save()` écrit l'objet dans la base. La méthode `__str__` donne son nom lisible : c'est elle qu'utilise l'administration de Django pour l'afficher.\n\n## Les migrations\n\nLa base ne se modifie pas toute seule quand le modèle change. On passe par deux commandes :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "python manage.py makemigrations   # écrit un fichier de migration à partir des modèles\npython manage.py migrate          # applique les migrations à la base\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "`makemigrations` compare les modèles aux migrations existantes et écrit les différences dans `boutique/migrations/0001_initial.py`. Ce fichier se versionne avec le code. `migrate` l'applique. Dans les exemples, le préambule n'a pas de fichiers : `migrate --run-syncdb` crée directement les tables.\n\n## Créer, modifier, supprimer"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nagenda = Produit.objects.create(nom=\"Agenda\", prix=\"12.00\")  # créer et enregistrer en une ligne\n\nagenda.stock = 30\nagenda.save()                                                # modifier\n\nprint(Produit.objects.get(nom=\"Agenda\").stock)\nagenda.delete()                                              # supprimer\nprint(Produit.objects.count(), \"produit\")\n",
+          "executable": true,
+          "sortie_attendue": "30\n0 produit\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`Produit.objects` est le **gestionnaire** du modèle : le point d'entrée de toutes les requêtes. La leçon suivante l'explore en détail."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris un modèle `Client` avec un nom (100 caractères), un email (`EmailField`) et une date d'inscription (`DateField`). Crée la table, enregistre Camille inscrite le 15 mars 2026, puis affiche : `Camille 2026-03-15`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom datetime import date\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n# Écris le modèle Client, crée la table, puis enregistre Camille\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom datetime import date\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Client(models.Model):\n    nom = models.CharField(max_length=100)\n    email = models.EmailField()\n    inscrit_le = models.DateField()\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\ncamille = Client.objects.create(nom=\"Camille\", email=\"camille@exemple.fr\", inscrit_le=date(2026, 3, 15))\nprint(camille.nom, camille.inscrit_le)\n",
+          "sortie_attendue": "Camille 2026-03-15\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un modèle hérite de `models.Model` ; chaque attribut est une colonne.\n- `makemigrations` écrit les migrations, `migrate` les applique.\n- `save()`, `objects.create()` et `delete()` écrivent dans la base."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Django, partie 2 : modèles",
+          "url": "https://docs.djangoproject.com/fr/6.0/intro/tutorial02/"
+        },
+        {
+          "titre": "Référence des champs de modèle",
+          "url": "https://docs.djangoproject.com/fr/6.0/ref/models/fields/"
+        }
+      ]
+    },
+    {
+      "id": "632eb280-df12-43a1-84b1-aab03fa03959",
+      "slug": "django-orm-requetes",
+      "titre": "Interroger la base avec l'ORM",
+      "resume": "Lire les données avec le gestionnaire objects : filtrer, exclure, trier, chercher avec les recherches de champ et compter, sans écrire de SQL.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "django-modeles-et-migrations"
+      ],
+      "objectifs": [
+        "Filtrer avec filter et exclude",
+        "Utiliser les recherches de champ comme __gte ou __icontains",
+        "Trier, limiter et compter",
+        "Lire un seul objet avec get"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "L'**ORM** de Django traduit des appels Python en SQL. `Produit.objects.filter(...)` renvoie un **QuerySet** : une requête paresseuse, qui n'est exécutée qu'au moment où on lit ses résultats."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nactifs = Produit.objects.filter(actif=True)\nprint([p.nom for p in actifs])\nprint([p.nom for p in actifs.exclude(stock=0).order_by(\"prix\")])\nprint(Produit.objects.filter(actif=True).count(), \"produits actifs\")\n",
+          "executable": true,
+          "sortie_attendue": "['Stylo', 'Cahier', 'Agenda']\n['Stylo', 'Cahier']\n3 produits actifs\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Les QuerySets s'enchaînent : `filter`, `exclude`, `order_by`… `order_by(\"-prix\")` trie par prix décroissant.\n\n## Les recherches de champ\n\nUn double tiret bas ajoute une **recherche** (*lookup*) au nom du champ : `prix__gte=5` veut dire « prix supérieur ou égal à 5 ».\n\n- `__gt`, `__gte`, `__lt`, `__lte` : comparaisons ;\n- `__icontains` : contient un texte, sans tenir compte de la casse ;\n- `__startswith`, `__in`, `__range`, `__isnull`…"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nprint([p.nom for p in Produit.objects.filter(prix__gte=4)])\nprint([p.nom for p in Produit.objects.filter(nom__icontains=\"ca\")])\nprint([p.nom for p in Produit.objects.filter(stock__range=(10, 50))])\nprint(list(Produit.objects.order_by(\"-prix\").values_list(\"nom\", flat=True)[:2]))\n",
+          "executable": true,
+          "sortie_attendue": "['Agenda', 'Classeur']\n['Cahier']\n['Cahier', 'Classeur']\n['Agenda', 'Classeur']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`values_list(\"nom\", flat=True)` ne lit que la colonne `nom`, et `[:2]` devient un `LIMIT 2` en SQL : seuls deux résultats sont lus.\n\n## Un seul objet\n\n`get(...)` renvoie **un** objet. S'il n'y en a aucun, il lève `DoesNotExist` ; s'il y en a plusieurs, `MultipleObjectsReturned`. `first()` renvoie le premier, ou `None`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nprint(Produit.objects.get(nom=\"Cahier\").prix)\ntry:\n    Produit.objects.get(nom=\"Gomme\")\nexcept Produit.DoesNotExist:\n    print(\"Aucune gomme\")\nprint(Produit.objects.filter(stock=0).first())\nprint(Produit.objects.filter(nom=\"Gomme\").exists())\n",
+          "executable": true,
+          "sortie_attendue": "3.20\nAucune gomme\nAgenda\nFalse\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`print(Produit.objects.filter(prix__gte=4).query)` affiche le SQL que Django va envoyer : pratique pour comprendre une requête."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Affiche, triés par nom, les noms des produits **actifs** qui coûtent **moins de 5 €** et dont le stock est **supérieur à 20** : `['Cahier', 'Stylo']`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\n# Écris ta requête ici\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nrequete = Produit.objects.filter(actif=True, prix__lt=5, stock__gt=20).order_by(\"nom\")\nprint([p.nom for p in requete])\n",
+          "sortie_attendue": "['Cahier', 'Stylo']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `filter`, `exclude`, `order_by` construisent un QuerySet, exécuté à la lecture.\n- `champ__gte`, `champ__icontains`, `champ__in`… affinent les filtres.\n- `get` exige un seul résultat ; `first()` et `exists()` sont plus tolérants."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Créer des requêtes",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/db/queries/"
+        },
+        {
+          "titre": "Référence des recherches de champ",
+          "url": "https://docs.djangoproject.com/fr/6.0/ref/models/querysets/#field-lookups"
+        }
+      ]
+    },
+    {
+      "id": "d3b58538-d647-4a0f-85b5-2e25c7649633",
+      "slug": "django-relations",
+      "titre": "Les relations entre modèles",
+      "resume": "Relier les modèles avec ForeignKey et ManyToManyField, naviguer dans les deux sens et filtrer à travers les relations.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "django-orm-requetes"
+      ],
+      "objectifs": [
+        "Relier deux modèles avec une ForeignKey",
+        "Choisir le comportement à la suppression avec on_delete",
+        "Naviguer d'un objet à ses objets liés avec related_name",
+        "Filtrer à travers une relation"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un produit appartient à **une** catégorie ; une catégorie contient **plusieurs** produits. On le décrit avec une `ForeignKey` sur le produit.\n\n- `on_delete` dit quoi faire si la catégorie est supprimée : `CASCADE` supprime ses produits, `PROTECT` interdit la suppression, `SET_NULL` vide le champ ;\n- `related_name` nomme le chemin inverse : `categorie.produits`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Categorie(models.Model):\n    nom = models.CharField(max_length=50)\n\n    def __str__(self):\n        return self.nom\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    categorie = models.ForeignKey(Categorie, on_delete=models.PROTECT, related_name=\"produits\")\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\npapeterie = Categorie.objects.create(nom=\"Papeterie\")\ninformatique = Categorie.objects.create(nom=\"Informatique\")\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", categorie=papeterie)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", categorie=papeterie)\nProduit.objects.create(nom=\"Clavier\", prix=\"45.00\", categorie=informatique)\n\nstylo = Produit.objects.get(nom=\"Stylo\")\nprint(stylo.categorie.nom)\nprint([p.nom for p in papeterie.produits.order_by(\"nom\")])\nprint(papeterie.produits.count())\n",
+          "executable": true,
+          "sortie_attendue": "Papeterie\n['Cahier', 'Stylo']\n2\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Filtrer à travers une relation\n\nLe double tiret bas traverse aussi les relations : `categorie__nom=\"Papeterie\"` filtre les produits sur le nom de leur catégorie. Dans l'autre sens, `produits__prix__gte` filtre les catégories sur les prix de leurs produits."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Categorie(models.Model):\n    nom = models.CharField(max_length=50)\n\n    def __str__(self):\n        return self.nom\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    categorie = models.ForeignKey(Categorie, on_delete=models.PROTECT, related_name=\"produits\")\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\npapeterie = Categorie.objects.create(nom=\"Papeterie\")\ninformatique = Categorie.objects.create(nom=\"Informatique\")\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", categorie=papeterie)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", categorie=papeterie)\nProduit.objects.create(nom=\"Clavier\", prix=\"45.00\", categorie=informatique)\n\nprint([p.nom for p in Produit.objects.filter(categorie__nom=\"Papeterie\").order_by(\"prix\")])\nprint([c.nom for c in Categorie.objects.filter(produits__prix__gte=40)])\n\nfrom django.db.models import ProtectedError\ntry:\n    informatique.delete()\nexcept ProtectedError:\n    print(\"Impossible : la catégorie contient encore des produits\")\n",
+          "executable": true,
+          "sortie_attendue": "['Stylo', 'Cahier']\n['Informatique']\nImpossible : la catégorie contient encore des produits\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Plusieurs à plusieurs\n\nUn produit peut avoir plusieurs étiquettes, et une étiquette plusieurs produits : c'est un `ManyToManyField`. Django crée tout seul la table d'association. On ajoute et retire des liens avec `add` et `remove`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Etiquette(models.Model):\n    nom = models.CharField(max_length=30)\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    etiquettes = models.ManyToManyField(Etiquette, related_name=\"produits\")\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\npromo, eco = Etiquette.objects.create(nom=\"promo\"), Etiquette.objects.create(nom=\"écologique\")\nstylo = Produit.objects.create(nom=\"Stylo\")\ncahier = Produit.objects.create(nom=\"Cahier recyclé\")\nstylo.etiquettes.add(promo)\ncahier.etiquettes.add(promo, eco)\n\nprint(sorted(e.nom for e in cahier.etiquettes.all()))\nprint([p.nom for p in promo.produits.order_by(\"nom\")])\nprint([p.nom for p in Produit.objects.filter(etiquettes__nom=\"écologique\")])\n",
+          "executable": true,
+          "sortie_attendue": "['promo', 'écologique']\n['Cahier recyclé', 'Stylo']\n['Cahier recyclé']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Donne toujours un `related_name` explicite : `categorie.produits` se lit mieux que le nom par défaut, `categorie.produit_set`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris les modèles `Auteur` et `Livre` (un livre a un auteur, avec `related_name=\"livres\"` et `on_delete=models.CASCADE`). Crée Victor Hugo avec deux livres, puis affiche le nombre de livres de l'auteur, et le nom de l'auteur des Misérables : `2` puis `Victor Hugo`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n# Écris Auteur et Livre, crée les tables et les données, puis affiche\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Auteur(models.Model):\n    nom = models.CharField(max_length=100)\n\n\nclass Livre(models.Model):\n    titre = models.CharField(max_length=200)\n    auteur = models.ForeignKey(Auteur, on_delete=models.CASCADE, related_name=\"livres\")\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\nhugo = Auteur.objects.create(nom=\"Victor Hugo\")\nLivre.objects.create(titre=\"Les Misérables\", auteur=hugo)\nLivre.objects.create(titre=\"Notre-Dame de Paris\", auteur=hugo)\nprint(hugo.livres.count())\nprint(Livre.objects.get(titre=\"Les Misérables\").auteur.nom)\n",
+          "sortie_attendue": "2\nVictor Hugo\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `ForeignKey` : plusieurs objets vers un ; `on_delete` règle la suppression.\n- `related_name` nomme le chemin inverse (`categorie.produits`).\n- `ManyToManyField` : plusieurs à plusieurs, avec `add` et `remove`.\n- `champ__autre_champ` filtre à travers les relations."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Relations entre modèles",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/db/models/#relationships"
+        },
+        {
+          "titre": "Requêtes à travers les relations",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/db/queries/#lookups-that-span-relationships"
+        }
+      ]
+    },
+    {
+      "id": "897263c6-2e8b-4333-8983-81cb718c04ab",
+      "slug": "django-vues-et-adresses",
+      "titre": "Les vues et les adresses",
+      "resume": "Écrire des vues qui lisent la base, récupérer des paramètres dans l'adresse, renvoyer une erreur 404 et construire les adresses par leur nom.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "django-relations"
+      ],
+      "objectifs": [
+        "Capturer un paramètre dans l'adresse avec un convertisseur",
+        "Renvoyer une 404 avec get_object_or_404",
+        "Nommer une adresse et la retrouver avec reverse",
+        "Distinguer les méthodes GET et POST dans une vue"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une adresse peut contenir des **parties variables**, avec un convertisseur : `<int:pk>` capture un entier et le passe à la vue sous le nom `pk`. Les convertisseurs courants : `int`, `str`, `slug`, `uuid`.\n\n`get_object_or_404` lit un objet, ou renvoie une page 404 s'il n'existe pas."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django.http import JsonResponse\nfrom django.shortcuts import get_object_or_404\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef detail(request, pk):\n    produit = get_object_or_404(Produit, pk=pk)\n    return JsonResponse({\"nom\": produit.nom, \"prix\": str(produit.prix)})\n\n\nurls.urlpatterns = [path(\"produits/<int:pk>/\", detail)]\n\nclient = Client()\nprint(client.get(\"/produits/2/\").json())\nprint(client.get(\"/produits/99/\").status_code)\nprint(client.get(\"/produits/deux/\").status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'nom': 'Cahier', 'prix': '3.20'}\n404\n404\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`/produits/deux/` ne correspond même pas au motif `<int:pk>` : Django répond 404 sans appeler la vue.\n\n## Nommer les adresses\n\nChaque adresse peut recevoir un `name`. `reverse` reconstruit alors le chemin à partir du nom et des paramètres : si l'adresse change un jour, aucun lien du site n'est à corriger."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django.http import HttpResponse\nfrom django.urls import path, reverse\n\n\ndef detail(request, pk):\n    return HttpResponse()\n\n\nurls.urlpatterns = [path(\"catalogue/produit-<int:pk>/\", detail, name=\"detail-produit\")]\n\nprint(reverse(\"detail-produit\", kwargs={\"pk\": 3}))\n",
+          "executable": true,
+          "sortie_attendue": "/catalogue/produit-3/\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## GET et POST\n\nUne même vue peut lire (`GET`) et créer (`POST`). `request.method` dit laquelle est demandée ; `request.POST` contient les champs envoyés par un formulaire. Après une création réussie, on **redirige** : le navigateur ne renverra pas le formulaire si l'utilisateur recharge la page."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django.http import HttpResponse, HttpResponseNotAllowed\nfrom django.shortcuts import redirect\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef produits(request):\n    if request.method == \"POST\":\n        Produit.objects.create(nom=request.POST[\"nom\"], prix=request.POST[\"prix\"])\n        return redirect(\"/produits/\")\n    if request.method == \"GET\":\n        return HttpResponse(\", \".join(p.nom for p in Produit.objects.order_by(\"nom\")))\n    return HttpResponseNotAllowed([\"GET\", \"POST\"])\n\n\nurls.urlpatterns = [path(\"produits/\", produits)]\n\nclient = Client()\nreponse = client.post(\"/produits/\", {\"nom\": \"Gomme\", \"prix\": \"0.80\"})\nprint(reponse.status_code, reponse[\"Location\"])\nprint(client.get(\"/produits/\").content.decode())\n",
+          "executable": true,
+          "sortie_attendue": "302 /produits/\nAgenda, Cahier, Classeur, Gomme, Stylo\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ici, les données envoyées ne sont pas validées : un prix « abc » ferait planter la vue. C'est le rôle des formulaires Django, vus deux leçons plus loin. Et dans un vrai site, Django protège les formulaires contre les attaques CSRF : le client de test désactive cette protection."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une vue `par_nom(request, nom)` à l'adresse `produits/<str:nom>/` qui renvoie le stock du produit en JSON (`{\"stock\": ...}`), ou une 404 s'il n'existe pas.\n\nLe code affiche `{'stock': 120}`, puis `404`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django.http import JsonResponse\nfrom django.shortcuts import get_object_or_404\nfrom django.test import Client\nfrom django.urls import path\n\n# Écris la vue et son adresse ici\n\nclient = Client()\nprint(client.get(\"/produits/Stylo/\").json())\nprint(client.get(\"/produits/Gomme/\").status_code)\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django.http import JsonResponse\nfrom django.shortcuts import get_object_or_404\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef par_nom(request, nom):\n    produit = get_object_or_404(Produit, nom=nom)\n    return JsonResponse({\"stock\": produit.stock})\n\n\nurls.urlpatterns = [path(\"produits/<str:nom>/\", par_nom)]\n\nclient = Client()\nprint(client.get(\"/produits/Stylo/\").json())\nprint(client.get(\"/produits/Gomme/\").status_code)\n",
+          "sortie_attendue": "{'stock': 120}\n404\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `<int:pk>` capture une partie de l'adresse et la passe à la vue.\n- `get_object_or_404` lit un objet ou renvoie une 404.\n- `name=` et `reverse` construisent les adresses par leur nom.\n- Après un `POST` réussi, on redirige."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Répartition des URL",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/http/urls/"
+        },
+        {
+          "titre": "Fonctions raccourcis",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/http/shortcuts/"
+        }
+      ]
+    },
+    {
+      "id": "adfce87f-83e6-4c60-9987-418daa06b0fe",
+      "slug": "django-gabarits",
+      "titre": "Les gabarits",
+      "resume": "Produire des pages HTML avec le langage de gabarits de Django : variables, boucles, conditions, filtres, héritage et protection contre l'injection.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "django-vues-et-adresses"
+      ],
+      "objectifs": [
+        "Afficher des variables dans un gabarit",
+        "Utiliser les balises for et if",
+        "Transformer une valeur avec un filtre",
+        "Factoriser la mise en page avec extends et block"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Écrire du HTML dans une chaîne Python devient vite illisible. Django sépare la présentation dans des **gabarits** (*templates*) : des fichiers HTML avec quelques marqueurs.\n\n- `{{ variable }}` affiche une valeur, et `{{ produit.nom }}` un attribut ;\n- `{% balise %}` contrôle l'affichage : `{% for %}`, `{% if %}`… ;\n- `{{ valeur|filtre }}` transforme une valeur : `upper`, `date`, `default`…\n\nLa vue appelle `render(request, \"gabarit.html\", contexte)` : le contexte est le dictionnaire des variables du gabarit."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'base.html': '<h1>{% block titre %}Boutique{% endblock %}</h1>{% block contenu %}{% endblock %}',\n    'catalogue.html': \"{% extends 'base.html' %}{% block titre %}Catalogue{% endblock %}{% block contenu %}<ul>{% for p in produits %}<li>{{ p.nom|upper }} : {{ p.prix }} €{% if p.stock == 0 %} (épuisé){% endif %}</li>{% empty %}<li>Aucun produit</li>{% endfor %}</ul>{% endblock %}\",\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django.shortcuts import render\nfrom django.test import Client\nfrom django.urls import path\n\n\ndef catalogue(request):\n    produits = Produit.objects.filter(actif=True).order_by(\"nom\")\n    return render(request, \"catalogue.html\", {\"produits\": produits})\n\n\nurls.urlpatterns = [path(\"catalogue/\", catalogue)]\nprint(Client().get(\"/catalogue/\").content.decode())\n",
+          "executable": true,
+          "sortie_attendue": "<h1>Catalogue</h1><ul><li>AGENDA : 12.00 € (épuisé)</li><li>CAHIER : 3.20 €</li><li>STYLO : 1.50 €</li></ul>\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Dans un vrai projet, les gabarits sont des fichiers, rangés dans `boutique/templates/`. Ici, le préambule les fournit depuis un dictionnaire, `GABARITS`, que tu peux lire en haut du code. Le prix s'affiche avec un point : le préambule garde la langue par défaut de Django, l'anglais. Avec `LANGUAGE_CODE = \"fr-fr\"` dans `settings.py`, Django l'afficherait à la française, `12,00`.\n\n## L'héritage de gabarits\n\n`catalogue.html` commence par `{% extends 'base.html' %}` : il reprend toute la mise en page de `base.html`, et ne remplit que les zones `{% block %}`. Chaque page du site partage ainsi le même en-tête et le même pied de page."
+        },
+        {
+          "type": "texte",
+          "markdown": "## L'échappement automatique\n\nUne valeur affichée avec `{{ }}` est **échappée** : un texte contenant `<script>` s'affiche tel quel, sans s'exécuter. C'est une protection essentielle contre l'injection de code dans les pages (XSS)."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'avis.html': '<p>{{ avis }}</p>',\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.template.loader import render_to_string\n\nprint(render_to_string(\"avis.html\", {\"avis\": \"<script>alert('piège')</script>Très bien\"}))\n",
+          "executable": true,
+          "sortie_attendue": "<p>&lt;script&gt;alert(&#x27;piège&#x27;)&lt;/script&gt;Très bien</p>\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Le filtre `|safe` désactive l'échappement. Ne l'utilise jamais sur une donnée saisie par un utilisateur."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète le gabarit `stock.html` pour qu'il affiche, pour chaque produit, `nom : en stock` ou `nom : épuisé` selon son stock, séparés par des points-virgules.\n\nLe code affiche `Stylo : en stock;Agenda : épuisé;`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'stock.html': '{% for p in produits %}{{ p.nom }}{% endfor %}',\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.template.loader import render_to_string\n\nproduits = [{\"nom\": \"Stylo\", \"stock\": 120}, {\"nom\": \"Agenda\", \"stock\": 0}]\n# Modifie le gabarit dans GABARITS, en haut du code, puis affiche le résultat\nprint(render_to_string(\"stock.html\", {\"produits\": produits}))\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'stock.html': '{% for p in produits %}{{ p.nom }} : {% if p.stock %}en stock{% else %}épuisé{% endif %};{% endfor %}',\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.template.loader import render_to_string\n\nproduits = [{\"nom\": \"Stylo\", \"stock\": 120}, {\"nom\": \"Agenda\", \"stock\": 0}]\nprint(render_to_string(\"stock.html\", {\"produits\": produits}))\n",
+          "sortie_attendue": "Stylo : en stock;Agenda : épuisé;\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `{{ variable }}` affiche, `{% balise %}` contrôle, `|filtre` transforme.\n- `render(request, gabarit, contexte)` produit la page.\n- `{% extends %}` et `{% block %}` partagent la mise en page.\n- Les valeurs sont échappées : jamais de `|safe` sur une saisie utilisateur."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Le langage de gabarit",
+          "url": "https://docs.djangoproject.com/fr/6.0/ref/templates/language/"
+        },
+        {
+          "titre": "Balises et filtres intégrés",
+          "url": "https://docs.djangoproject.com/fr/6.0/ref/templates/builtins/"
+        }
+      ]
+    },
+    {
+      "id": "d4eb3957-99ba-4a76-95a1-22a75a85ea1f",
+      "slug": "django-formulaires",
+      "titre": "Les formulaires",
+      "resume": "Valider les données envoyées par l'utilisateur avec les formulaires Django, afficher les erreurs, et créer des objets avec un ModelForm.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "django-gabarits"
+      ],
+      "objectifs": [
+        "Déclarer un formulaire avec ses champs et ses règles",
+        "Valider des données avec is_valid",
+        "Écrire une règle personnalisée avec clean",
+        "Créer un objet avec un ModelForm"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Toute donnée envoyée par un utilisateur doit être **validée** : un prix doit être un nombre, un email bien formé, une quantité positive. Un **formulaire** Django décrit les champs attendus et leurs règles ; `is_valid()` vérifie tout, et range les valeurs converties dans `cleaned_data`, ou les erreurs dans `errors`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\n\n\nclass FormulaireContact(forms.Form):\n    nom = forms.CharField(max_length=100)\n    email = forms.EmailField()\n    message = forms.CharField(min_length=10)\n    quantite = forms.IntegerField(min_value=1, required=False)\n\n\nbon = FormulaireContact({\"nom\": \"Camille\", \"email\": \"camille@exemple.fr\", \"message\": \"Bonjour, un devis ?\", \"quantite\": \"3\"})\nprint(bon.is_valid(), bon.cleaned_data[\"quantite\"] + 1)\n\nmauvais = FormulaireContact({\"nom\": \"Karim\", \"email\": \"karim.exemple.fr\", \"message\": \"Court\"})\nprint(mauvais.is_valid())\nprint(sorted(mauvais.errors))\n",
+          "executable": true,
+          "sortie_attendue": "True 4\nFalse\n['email', 'message']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`cleaned_data[\"quantite\"]` vaut l'entier `3`, pas le texte `\"3\"` : le formulaire a converti la valeur.\n\n## Des règles sur mesure\n\nUne méthode `clean_<champ>` valide un champ, et `clean` vérifie plusieurs champs ensemble. Elles lèvent `forms.ValidationError` avec le message à afficher."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom datetime import date\n\nfrom django import forms\n\n\nclass FormulaireConges(forms.Form):\n    debut = forms.DateField()\n    fin = forms.DateField()\n\n    def clean_debut(self):\n        debut = self.cleaned_data[\"debut\"]\n        if debut.weekday() >= 5:\n            raise forms.ValidationError(\"Les congés commencent un jour ouvré.\")\n        return debut\n\n    def clean(self):\n        donnees = super().clean()\n        if donnees.get(\"debut\") and donnees.get(\"fin\") and donnees[\"fin\"] < donnees[\"debut\"]:\n            raise forms.ValidationError(\"La fin doit suivre le début.\")\n        return donnees\n\n\nprint(FormulaireConges({\"debut\": \"2026-08-03\", \"fin\": \"2026-08-14\"}).is_valid())\nsamedi = FormulaireConges({\"debut\": \"2026-08-01\", \"fin\": \"2026-08-14\"})\nprint(samedi.is_valid(), samedi.errors[\"debut\"][0])\ninverse = FormulaireConges({\"debut\": \"2026-08-14\", \"fin\": \"2026-08-03\"})\nprint(inverse.is_valid(), inverse.non_field_errors()[0])\n",
+          "executable": true,
+          "sortie_attendue": "True\nFalse Les congés commencent un jour ouvré.\nFalse La fin doit suivre le début.\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## ModelForm : un formulaire tiré du modèle\n\nUn `ModelForm` construit ses champs à partir du modèle, avec ses règles (longueur, type…). `save()` crée l'objet. Dans une vue, le motif classique : afficher le formulaire en `GET`, le valider en `POST`, enregistrer puis rediriger si tout va bien."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django.core.management import call_command\nfrom django.db import models\n\n\nclass Produit(models.Model):\n    nom = models.CharField(max_length=100)\n    prix = models.DecimalField(max_digits=8, decimal_places=2)\n    stock = models.PositiveIntegerField(default=0)\n    actif = models.BooleanField(default=True)\n\n    def __str__(self):\n        return self.nom\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\nProduit.objects.create(nom=\"Stylo\", prix=\"1.50\", stock=120)\nProduit.objects.create(nom=\"Cahier\", prix=\"3.20\", stock=40)\nProduit.objects.create(nom=\"Agenda\", prix=\"12.00\", stock=0)\nProduit.objects.create(nom=\"Classeur\", prix=\"4.90\", stock=15, actif=False)\n\nfrom django import forms\nfrom django.http import HttpResponse\nfrom django.shortcuts import redirect\nfrom django.test import Client\nfrom django.urls import path\n\n\nclass FormulaireProduit(forms.ModelForm):\n    class Meta:\n        model = Produit\n        fields = [\"nom\", \"prix\", \"stock\"]\n\n\ndef nouveau(request):\n    formulaire = FormulaireProduit(request.POST or None)\n    if request.method == \"POST\" and formulaire.is_valid():\n        formulaire.save()\n        return redirect(\"/produits/\")\n    return HttpResponse(str(dict(formulaire.errors)), status=400 if request.method == \"POST\" else 200)\n\n\nurls.urlpatterns = [path(\"produits/nouveau/\", nouveau)]\n\nclient = Client()\nprint(client.post(\"/produits/nouveau/\", {\"nom\": \"Gomme\", \"prix\": \"0.80\", \"stock\": \"50\"}).status_code)\nprint(client.post(\"/produits/nouveau/\", {\"nom\": \"\", \"prix\": \"gratuit\", \"stock\": \"-2\"}).status_code)\nprint(Produit.objects.filter(nom=\"Gomme\").exists())\n",
+          "executable": true,
+          "sortie_attendue": "302\n400\nTrue\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Dans un gabarit, `{{ formulaire }}` affiche tout le formulaire, avec ses étiquettes et ses erreurs. N'oublie pas `{% csrf_token %}` dans la balise `<form method=\"post\">` : sans lui, Django refuse l'envoi."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris un formulaire `FormulaireInscription` avec un pseudo (3 à 20 caractères) et un âge (entier, au moins 18). Ajoute une méthode `clean_pseudo` qui refuse le pseudo « admin ».\n\nLe code affiche `True`, puis `['age', 'pseudo']`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\n\n# Écris le formulaire ici\n\n\nprint(FormulaireInscription({\"pseudo\": \"camille\", \"age\": \"34\"}).is_valid())\nprint(sorted(FormulaireInscription({\"pseudo\": \"admin\", \"age\": \"16\"}).errors))\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\n\n\nclass FormulaireInscription(forms.Form):\n    pseudo = forms.CharField(min_length=3, max_length=20)\n    age = forms.IntegerField(min_value=18)\n\n    def clean_pseudo(self):\n        pseudo = self.cleaned_data[\"pseudo\"]\n        if pseudo.lower() == \"admin\":\n            raise forms.ValidationError(\"Ce pseudo est réservé.\")\n        return pseudo\n\n\nprint(FormulaireInscription({\"pseudo\": \"camille\", \"age\": \"34\"}).is_valid())\nprint(sorted(FormulaireInscription({\"pseudo\": \"admin\", \"age\": \"16\"}).errors))\n",
+          "sortie_attendue": "True\n['age', 'pseudo']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un formulaire décrit les champs et leurs règles ; `is_valid()` valide et convertit.\n- `clean_<champ>` et `clean` ajoutent des règles sur mesure.\n- Un `ModelForm` se construit à partir du modèle, et `save()` crée l'objet."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Travailler avec des formulaires",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/forms/"
+        },
+        {
+          "titre": "Formulaires à partir de modèles",
+          "url": "https://docs.djangoproject.com/fr/6.0/topics/forms/modelforms/"
+        }
+      ]
+    },
+    {
+      "id": "66848711-4e8e-410b-901e-964420888b1d",
+      "slug": "django-projet-annuaire",
+      "titre": "Projet : un annuaire d'entreprise",
+      "resume": "Assembler tout le parcours dans une petite application : modèles liés, liste filtrée, fiche détaillée, ajout par formulaire et gabarits.",
+      "theme": "python-django",
+      "niveau": "debutant",
+      "duree_minutes": 18,
+      "prerequis": [
+        "django-formulaires"
+      ],
+      "objectifs": [
+        "Organiser une application en modèles, formulaires, vues et adresses",
+        "Filtrer une liste à partir des paramètres de l'adresse",
+        "Enchaîner création, redirection et affichage"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour finir, l'annuaire d'une entreprise : des services, des employés, une liste filtrable, une fiche par employé et un formulaire d'ajout. Les commentaires `--- models.py ---`, `--- views.py ---`… indiquent dans quel fichier chaque partie irait dans un vrai projet."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'annuaire.html': '{% for e in employes %}{{ e.nom }} ({{ e.service.nom }}){% if not forloop.last %}, {% endif %}{% endfor %}',\n    'fiche.html': \"{{ employe.nom }} : {{ employe.poste }}, service {{ employe.service.nom }}, poste {{ employe.telephone|default:'non renseigné' }}\",\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\nfrom django.core.management import call_command\nfrom django.db import models\nfrom django.shortcuts import get_object_or_404, redirect, render\nfrom django.test import Client\nfrom django.urls import path\n\n\n# --- models.py ---\nclass Service(models.Model):\n    nom = models.CharField(max_length=50, unique=True)\n\n\nclass Employe(models.Model):\n    nom = models.CharField(max_length=100)\n    poste = models.CharField(max_length=100)\n    telephone = models.CharField(max_length=20, blank=True)\n    service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name=\"employes\")\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\n\n# --- forms.py ---\nclass FormulaireEmploye(forms.ModelForm):\n    class Meta:\n        model = Employe\n        fields = [\"nom\", \"poste\", \"telephone\", \"service\"]\n\n\n# --- views.py ---\ndef annuaire(request):\n    employes = Employe.objects.select_related(\"service\").order_by(\"nom\")\n    service = request.GET.get(\"service\")\n    if service:\n        employes = employes.filter(service__nom=service)\n    return render(request, \"annuaire.html\", {\"employes\": employes})\n\n\ndef fiche(request, pk):\n    return render(request, \"fiche.html\", {\"employe\": get_object_or_404(Employe, pk=pk)})\n\n\ndef nouvel_employe(request):\n    formulaire = FormulaireEmploye(request.POST)\n    if formulaire.is_valid():\n        employe = formulaire.save()\n        return redirect(\"fiche\", pk=employe.pk)\n    return render(request, \"annuaire.html\", {\"employes\": []}, status=400)\n\n\n# --- urls.py ---\nurls.urlpatterns = [\n    path(\"annuaire/\", annuaire, name=\"annuaire\"),\n    path(\"annuaire/<int:pk>/\", fiche, name=\"fiche\"),\n    path(\"annuaire/nouveau/\", nouvel_employe, name=\"nouvel-employe\"),\n]\n\ncompta = Service.objects.create(nom=\"Comptabilité\")\nventes = Service.objects.create(nom=\"Ventes\")\nEmploye.objects.create(nom=\"Camille Martin\", poste=\"comptable\", telephone=\"4012\", service=compta)\nEmploye.objects.create(nom=\"Karim Benali\", poste=\"commercial\", service=ventes)\nclient = Client()\n\nprint(client.get(\"/annuaire/\").content.decode())\nprint(client.get(\"/annuaire/\", {\"service\": \"Ventes\"}).content.decode())\nprint(client.get(\"/annuaire/2/\").content.decode())\nprint(client.get(\"/annuaire/9/\").status_code)\n",
+          "executable": true,
+          "sortie_attendue": "Camille Martin (Comptabilité), Karim Benali (Ventes)\nKarim Benali (Ventes)\nKarim Benali : commercial, service Ventes, poste non renseigné\n404\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Quelques choix à remarquer :\n\n- `select_related(\"service\")` charge le service de chaque employé dans la même requête : sans lui, le gabarit ferait une requête par employé (le problème « N+1 », vu au niveau intermédiaire) ;\n- le filtre par service vient de l'adresse (`?service=Ventes`) : la liste filtrée a sa propre adresse, qu'on peut partager ;\n- `telephone` a `blank=True` (facultatif dans les formulaires), et le gabarit affiche une valeur par défaut avec le filtre `default`.\n\n## L'ajout d'un employé"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'annuaire.html': '{% for e in employes %}{{ e.nom }} ({{ e.service.nom }}){% if not forloop.last %}, {% endif %}{% endfor %}',\n    'fiche.html': \"{{ employe.nom }} : {{ employe.poste }}, service {{ employe.service.nom }}, poste {{ employe.telephone|default:'non renseigné' }}\",\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\nfrom django.core.management import call_command\nfrom django.db import models\nfrom django.shortcuts import get_object_or_404, redirect, render\nfrom django.test import Client\nfrom django.urls import path\n\n\n# --- models.py ---\nclass Service(models.Model):\n    nom = models.CharField(max_length=50, unique=True)\n\n\nclass Employe(models.Model):\n    nom = models.CharField(max_length=100)\n    poste = models.CharField(max_length=100)\n    telephone = models.CharField(max_length=20, blank=True)\n    service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name=\"employes\")\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\n\n# --- forms.py ---\nclass FormulaireEmploye(forms.ModelForm):\n    class Meta:\n        model = Employe\n        fields = [\"nom\", \"poste\", \"telephone\", \"service\"]\n\n\n# --- views.py ---\ndef annuaire(request):\n    employes = Employe.objects.select_related(\"service\").order_by(\"nom\")\n    service = request.GET.get(\"service\")\n    if service:\n        employes = employes.filter(service__nom=service)\n    return render(request, \"annuaire.html\", {\"employes\": employes})\n\n\ndef fiche(request, pk):\n    return render(request, \"fiche.html\", {\"employe\": get_object_or_404(Employe, pk=pk)})\n\n\ndef nouvel_employe(request):\n    formulaire = FormulaireEmploye(request.POST)\n    if formulaire.is_valid():\n        employe = formulaire.save()\n        return redirect(\"fiche\", pk=employe.pk)\n    return render(request, \"annuaire.html\", {\"employes\": []}, status=400)\n\n\n# --- urls.py ---\nurls.urlpatterns = [\n    path(\"annuaire/\", annuaire, name=\"annuaire\"),\n    path(\"annuaire/<int:pk>/\", fiche, name=\"fiche\"),\n    path(\"annuaire/nouveau/\", nouvel_employe, name=\"nouvel-employe\"),\n]\n\ncompta = Service.objects.create(nom=\"Comptabilité\")\nventes = Service.objects.create(nom=\"Ventes\")\nEmploye.objects.create(nom=\"Camille Martin\", poste=\"comptable\", telephone=\"4012\", service=compta)\nEmploye.objects.create(nom=\"Karim Benali\", poste=\"commercial\", service=ventes)\nclient = Client()\n\nreponse = client.post(\"/annuaire/nouveau/\", {\"nom\": \"Inès Morel\", \"poste\": \"juriste\", \"service\": compta.pk})\nprint(reponse.status_code, reponse[\"Location\"])\nprint(client.get(reponse[\"Location\"]).content.decode())\nprint(client.post(\"/annuaire/nouveau/\", {\"nom\": \"Sans service\", \"poste\": \"?\"}).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "302 /annuaire/3/\nInès Morel : juriste, service Comptabilité, poste non renseigné\n400\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`redirect(\"fiche\", pk=...)` accepte directement le nom d'une adresse : Django appelle `reverse` pour toi."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une vue `par_service(request)`, à l'adresse `annuaire/services/`, qui affiche chaque service avec son nombre d'employés, triés par nom : `Comptabilité : 1, Ventes : 1`.\n\nIndice : `Service.objects.annotate(nombre=Count(\"employes\"))`, avec `from django.db.models import Count`, et une simple `HttpResponse`.",
+          "code": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'annuaire.html': '{% for e in employes %}{{ e.nom }} ({{ e.service.nom }}){% if not forloop.last %}, {% endif %}{% endfor %}',\n    'fiche.html': \"{{ employe.nom }} : {{ employe.poste }}, service {{ employe.service.nom }}, poste {{ employe.telephone|default:'non renseigné' }}\",\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\nfrom django.core.management import call_command\nfrom django.db import models\nfrom django.shortcuts import get_object_or_404, redirect, render\nfrom django.test import Client\nfrom django.urls import path\n\n\n# --- models.py ---\nclass Service(models.Model):\n    nom = models.CharField(max_length=50, unique=True)\n\n\nclass Employe(models.Model):\n    nom = models.CharField(max_length=100)\n    poste = models.CharField(max_length=100)\n    telephone = models.CharField(max_length=20, blank=True)\n    service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name=\"employes\")\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\n\n# --- forms.py ---\nclass FormulaireEmploye(forms.ModelForm):\n    class Meta:\n        model = Employe\n        fields = [\"nom\", \"poste\", \"telephone\", \"service\"]\n\n\n# --- views.py ---\ndef annuaire(request):\n    employes = Employe.objects.select_related(\"service\").order_by(\"nom\")\n    service = request.GET.get(\"service\")\n    if service:\n        employes = employes.filter(service__nom=service)\n    return render(request, \"annuaire.html\", {\"employes\": employes})\n\n\ndef fiche(request, pk):\n    return render(request, \"fiche.html\", {\"employe\": get_object_or_404(Employe, pk=pk)})\n\n\ndef nouvel_employe(request):\n    formulaire = FormulaireEmploye(request.POST)\n    if formulaire.is_valid():\n        employe = formulaire.save()\n        return redirect(\"fiche\", pk=employe.pk)\n    return render(request, \"annuaire.html\", {\"employes\": []}, status=400)\n\n\n# --- urls.py ---\nurls.urlpatterns = [\n    path(\"annuaire/\", annuaire, name=\"annuaire\"),\n    path(\"annuaire/<int:pk>/\", fiche, name=\"fiche\"),\n    path(\"annuaire/nouveau/\", nouvel_employe, name=\"nouvel-employe\"),\n]\n\ncompta = Service.objects.create(nom=\"Comptabilité\")\nventes = Service.objects.create(nom=\"Ventes\")\nEmploye.objects.create(nom=\"Camille Martin\", poste=\"comptable\", telephone=\"4012\", service=compta)\nEmploye.objects.create(nom=\"Karim Benali\", poste=\"commercial\", service=ventes)\nclient = Client()\n\nfrom django.db.models import Count\nfrom django.http import HttpResponse\n\n# Écris la vue par_service et ajoute son adresse\n\nprint(client.get(\"/annuaire/services/\").content.decode())\n",
+          "solution": "# --- Mini-projet Django dans ce seul bloc (dans un vrai projet : settings.py et boutique/apps.py) ---\nimport sys, tempfile, types\n\nimport django\nfrom django.apps import AppConfig\nfrom django.conf import settings\n\n\nclass Config(AppConfig):\n    name = \"boutique\"\n    path = tempfile.gettempdir()\n\n    def import_models(self):  # les modèles sont écrits plus bas, dans ce bloc\n        self.models = self.apps.all_models[self.label]\n        self.models_module = sys.modules[\"boutique\"]\n\n\nfor module in (\"boutique\", \"boutique.apps\", \"boutique.urls\"):\n    sys.modules[module] = types.ModuleType(module)\nsys.modules[\"boutique.apps\"].Config = Config\nurls = sys.modules[\"boutique.urls\"]\nGABARITS = {\n    'annuaire.html': '{% for e in employes %}{{ e.nom }} ({{ e.service.nom }}){% if not forloop.last %}, {% endif %}{% endfor %}',\n    'fiche.html': \"{{ employe.nom }} : {{ employe.poste }}, service {{ employe.service.nom }}, poste {{ employe.telephone|default:'non renseigné' }}\",\n}\n\nsettings.configure(\n    INSTALLED_APPS=[\"django.contrib.contenttypes\", \"django.contrib.auth\", \"boutique.apps.Config\"],\n    DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": tempfile.mkdtemp() + \"/db.sqlite3\"}},\n    ROOT_URLCONF=\"boutique.urls\",\n    ALLOWED_HOSTS=[\"testserver\"],\n    SECRET_KEY=\"cle-de-demonstration\",  # en production : une valeur longue et secrète, lue dans l'environnement\n    PASSWORD_HASHERS=[\"django.contrib.auth.hashers.MD5PasswordHasher\"],  # dans le navigateur seulement\n    TEMPLATES=[{\"BACKEND\": \"django.template.backends.django.DjangoTemplates\", \"OPTIONS\": {\"loaders\": [(\"django.template.loaders.locmem.Loader\", GABARITS)]}}],\n)\ndjango.setup()\n__name__ = \"boutique.models\"  # les classes qui suivent appartiennent à l'application boutique\n# --- Fin de la configuration ---\n\nfrom django import forms\nfrom django.core.management import call_command\nfrom django.db import models\nfrom django.shortcuts import get_object_or_404, redirect, render\nfrom django.test import Client\nfrom django.urls import path\n\n\n# --- models.py ---\nclass Service(models.Model):\n    nom = models.CharField(max_length=50, unique=True)\n\n\nclass Employe(models.Model):\n    nom = models.CharField(max_length=100)\n    poste = models.CharField(max_length=100)\n    telephone = models.CharField(max_length=20, blank=True)\n    service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name=\"employes\")\n\n\ncall_command(\"migrate\", run_syncdb=True, verbosity=0)  # « python manage.py migrate »\n\n\n# --- forms.py ---\nclass FormulaireEmploye(forms.ModelForm):\n    class Meta:\n        model = Employe\n        fields = [\"nom\", \"poste\", \"telephone\", \"service\"]\n\n\n# --- views.py ---\ndef annuaire(request):\n    employes = Employe.objects.select_related(\"service\").order_by(\"nom\")\n    service = request.GET.get(\"service\")\n    if service:\n        employes = employes.filter(service__nom=service)\n    return render(request, \"annuaire.html\", {\"employes\": employes})\n\n\ndef fiche(request, pk):\n    return render(request, \"fiche.html\", {\"employe\": get_object_or_404(Employe, pk=pk)})\n\n\ndef nouvel_employe(request):\n    formulaire = FormulaireEmploye(request.POST)\n    if formulaire.is_valid():\n        employe = formulaire.save()\n        return redirect(\"fiche\", pk=employe.pk)\n    return render(request, \"annuaire.html\", {\"employes\": []}, status=400)\n\n\n# --- urls.py ---\nurls.urlpatterns = [\n    path(\"annuaire/\", annuaire, name=\"annuaire\"),\n    path(\"annuaire/<int:pk>/\", fiche, name=\"fiche\"),\n    path(\"annuaire/nouveau/\", nouvel_employe, name=\"nouvel-employe\"),\n]\n\ncompta = Service.objects.create(nom=\"Comptabilité\")\nventes = Service.objects.create(nom=\"Ventes\")\nEmploye.objects.create(nom=\"Camille Martin\", poste=\"comptable\", telephone=\"4012\", service=compta)\nEmploye.objects.create(nom=\"Karim Benali\", poste=\"commercial\", service=ventes)\nclient = Client()\n\nfrom django.db.models import Count\nfrom django.http import HttpResponse\n\n\ndef par_service(request):\n    services = Service.objects.annotate(nombre=Count(\"employes\")).order_by(\"nom\")\n    return HttpResponse(\", \".join(f\"{s.nom} : {s.nombre}\" for s in services))\n\n\nurls.urlpatterns.insert(0, path(\"annuaire/services/\", par_service))\nprint(client.get(\"/annuaire/services/\").content.decode())\n",
+          "sortie_attendue": "Comptabilité : 1, Ventes : 1\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une application se range en modèles, formulaires, vues, adresses et gabarits.\n- Les filtres d'une liste passent par l'adresse (`request.GET`).\n- Créer, rediriger, afficher : le parcours classique d'un formulaire."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Django",
+          "url": "https://docs.djangoproject.com/fr/6.0/intro/tutorial01/"
+        }
+      ]
+    }
+  ]
+}

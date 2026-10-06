@@ -36,6 +36,18 @@ test("exécute du Python avec Pyodide hébergé localement", async ({ page }) =>
   });
 });
 
+test("charge une bibliothèque hébergée avec Pyodide (ADR 0028)", async ({ page }) => {
+  test.slow();
+  await remplacerCode(
+    page,
+    "Python",
+    'import sqlalchemy\nengine = sqlalchemy.create_engine("sqlite://")\nwith engine.connect() as c:\n    print(c.execute(sqlalchemy.text("SELECT 40 + 2")).scalar())',
+  );
+  await bloc(page, "Python").getByRole("button", { name: "Exécuter" }).click();
+
+  await expect(bloc(page, "Python").locator("pre")).toHaveText("42", { timeout: 60_000 });
+});
+
 test("montre une erreur Python lisible", async ({ page }) => {
   test.slow();
   await remplacerCode(page, "Python", "print(prenon)");

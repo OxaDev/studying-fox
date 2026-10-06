@@ -219,7 +219,7 @@ async def test_changer_le_theme_d_une_nouvelle_lecon(
 async def test_liste_des_themes(client: AsyncClient, csrf: dict[str, str]) -> None:
     reponse = await client.get("/api/lecons/themes")
 
-    assert [t["slug"] for t in reponse.json()] == ["javascript", "python"]
+    assert [t["slug"] for t in reponse.json()] == ["javascript", "python", "python-bases"]
 
 
 def test_statuts_ouverts() -> None:

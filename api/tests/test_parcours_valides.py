@@ -57,7 +57,14 @@ async def test_cree_les_themes_des_langages_s_ils_manquent(
 
     async with SessionLocale() as db:
         themes = {theme.slug: theme.nom for theme in await db.scalars(select(Theme))}
-    assert themes == {"javascript": "JavaScript", "python": "Python", "vba": "VBA"}
+    assert themes == {
+        "javascript": "JavaScript",
+        "python-bases": "Python - Bases",
+        "python-django": "Python - Django",
+        "python-fastapi": "Python - Suite FastAPI",
+        "python-poo": "Python - Programmation Orientée Objet",
+        "vba-bases": "VBA - Bases",
+    }
 
 
 async def test_charge_et_publie_un_parcours(client: AsyncClient, tmp_path: Path) -> None:

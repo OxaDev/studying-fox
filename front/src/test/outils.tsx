@@ -291,7 +291,8 @@ export const AVEC_CONTRIBUTION: Record<string, Gestionnaire> = {
     statut: 200,
     corps: [
       { slug: "javascript", nom: "JavaScript" },
-      { slug: "python", nom: "Python" },
+      { slug: "python-bases", nom: "Python - Bases" },
+      { slug: "python-django", nom: "Python - Django" },
     ],
   }),
   "GET /contributions": () => ({

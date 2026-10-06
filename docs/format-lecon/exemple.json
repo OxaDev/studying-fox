@@ -12,7 +12,7 @@
     "titre": "Premiers pas en Python",
     "description": "Découvrir les bases de Python : afficher du texte, stocker des valeurs et faire des calculs simples.",
     "niveau": "debutant",
-    "theme": "python",
+    "theme": "python-bases",
     "lecons": ["afficher-du-texte-en-python", "les-variables-en-python"]
   },
   "lecons": [
@@ -21,7 +21,7 @@
       "slug": "afficher-du-texte-en-python",
       "titre": "Afficher du texte",
       "resume": "Utiliser la fonction print pour afficher un message à l'écran.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 5,
       "objectifs": ["Afficher un message avec print"],
@@ -49,7 +49,7 @@
       "slug": "les-variables-en-python",
       "titre": "Les variables",
       "resume": "Stocker une valeur dans une variable pour la réutiliser plus tard.",
-      "theme": "python",
+      "theme": "python-bases",
       "niveau": "debutant",
       "duree_minutes": 8,
       "prerequis": ["afficher-du-texte-en-python"],

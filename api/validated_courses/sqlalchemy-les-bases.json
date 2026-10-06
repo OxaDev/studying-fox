@@ -1,0 +1,612 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "a0d8bd8f-2634-4586-ad79-cac212fb8d33",
+    "slug": "sqlalchemy-les-bases",
+    "titre": "SQLAlchemy : les bases",
+    "description": "Travailler avec une base de données relationnelle depuis Python avec SQLAlchemy 2 : moteur et connexion, modèles déclaratifs, session, requêtes select, modifications, relations un-à-plusieurs et filtres. Les exemples tournent sur SQLite, directement dans le navigateur. Prérequis : la programmation objet en Python.",
+    "niveau": "debutant",
+    "theme": "python-fastapi",
+    "lecons": [
+      "sqla-moteur-et-connexion",
+      "sqla-modeles-declaratifs",
+      "sqla-session-et-ajout",
+      "sqla-requetes-select",
+      "sqla-modifier-et-supprimer",
+      "sqla-relations-un-a-plusieurs",
+      "sqla-filtres-et-agregats",
+      "sqla-projet-carnet-de-commandes"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "60000f9c-2a25-4b75-8ccd-da68e0c43dcc",
+      "slug": "sqla-moteur-et-connexion",
+      "titre": "Le moteur et la connexion",
+      "resume": "Découvrir SQLAlchemy, créer un moteur vers une base SQLite et exécuter ses premières requêtes SQL avec une connexion.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "poo-classes-et-instances"
+      ],
+      "objectifs": [
+        "Expliquer le rôle de SQLAlchemy",
+        "Créer un moteur avec create_engine",
+        "Exécuter une requête SQL avec text()",
+        "Valider une transaction avec commit"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "**SQLAlchemy** est la bibliothèque de référence pour travailler avec une base de données relationnelle en Python. Elle offre deux niveaux :\n\n- le **Core** : écrire et exécuter des requêtes SQL, quelle que soit la base ;\n- l'**ORM** (*Object Relational Mapper*) : manipuler les lignes de la base comme des objets Python.\n\nTout commence par un **moteur** (*engine*) : l'objet qui sait se connecter à la base. Son adresse indique le type de base. Ici, `sqlite://` crée une base SQLite **en mémoire**, parfaite pour apprendre."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, text\n\nengine = create_engine(\"sqlite://\")\n\nwith engine.connect() as connexion:\n    resultat = connexion.execute(text(\"SELECT 'Bonjour SQLAlchemy'\"))\n    print(resultat.scalar())\n",
+          "executable": true,
+          "sortie_attendue": "Bonjour SQLAlchemy\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`engine.connect()` ouvre une **connexion**. Le bloc `with` la referme à la fin, même en cas d'erreur. `text()` enveloppe une requête SQL écrite à la main.\n\n## Créer une table et insérer des lignes\n\nUne modification n'est enregistrée qu'après `commit()`. `engine.begin()` ouvre une connexion **et** une transaction, validée automatiquement à la fin du bloc."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, text\n\nengine = create_engine(\"sqlite://\")\n\nwith engine.begin() as connexion:\n    connexion.execute(text(\"CREATE TABLE produit (nom TEXT, prix REAL)\"))\n    connexion.execute(\n        text(\"INSERT INTO produit VALUES (:nom, :prix)\"),\n        [{\"nom\": \"Stylo\", \"prix\": 1.5}, {\"nom\": \"Cahier\", \"prix\": 3.2}],\n    )\n\nwith engine.connect() as connexion:\n    for ligne in connexion.execute(text(\"SELECT nom, prix FROM produit ORDER BY prix\")):\n        print(ligne.nom, ligne.prix)\n",
+          "executable": true,
+          "sortie_attendue": "Stylo 1.5\nCahier 3.2\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ne colle jamais une valeur dans une requête avec une f-string : `text(f\"... WHERE nom = '{nom}'\")` ouvre la porte aux **injections SQL**. Utilise des paramètres nommés, comme `:nom`, et passe les valeurs à part : SQLAlchemy les échappe pour toi."
+        },
+        {
+          "type": "texte",
+          "markdown": "Dans un vrai projet, seule l'adresse change : `postgresql+psycopg://utilisateur:motdepasse@serveur/base`. Le reste du code reste le même."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Crée une table `employe (nom TEXT, service TEXT)`, insère Camille (Compta), Karim (Ventes) et Inès (Compta) avec des paramètres nommés, puis affiche le nombre d'employés du service Compta : `2`.",
+          "code": "from sqlalchemy import create_engine, text\n\nengine = create_engine(\"sqlite://\")\n# Crée la table, insère les employés, puis compte ceux du service Compta\n",
+          "solution": "from sqlalchemy import create_engine, text\n\nengine = create_engine(\"sqlite://\")\nwith engine.begin() as connexion:\n    connexion.execute(text(\"CREATE TABLE employe (nom TEXT, service TEXT)\"))\n    connexion.execute(\n        text(\"INSERT INTO employe VALUES (:nom, :service)\"),\n        [\n            {\"nom\": \"Camille\", \"service\": \"Compta\"},\n            {\"nom\": \"Karim\", \"service\": \"Ventes\"},\n            {\"nom\": \"Inès\", \"service\": \"Compta\"},\n        ],\n    )\n    nombre = connexion.execute(\n        text(\"SELECT COUNT(*) FROM employe WHERE service = :service\"),\n        {\"service\": \"Compta\"},\n    ).scalar()\nprint(nombre)\n",
+          "sortie_attendue": "2\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `create_engine(adresse)` crée le moteur ; `sqlite://` est une base en mémoire.\n- `engine.connect()` ouvre une connexion, `engine.begin()` une transaction validée à la fin.\n- Les valeurs passent toujours par des paramètres (`:nom`), jamais par une f-string."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : établir la connexion",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/engine.html"
+        },
+        {
+          "titre": "Tutoriel SQLAlchemy : travailler avec les transactions",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html"
+        }
+      ]
+    },
+    {
+      "id": "9d3254ac-9c01-4dcd-90e5-70cfa77ea226",
+      "slug": "sqla-modeles-declaratifs",
+      "titre": "Décrire ses tables avec des modèles",
+      "resume": "Déclarer des classes Python qui décrivent les tables de la base, avec DeclarativeBase, Mapped et mapped_column, puis créer les tables.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "sqla-moteur-et-connexion"
+      ],
+      "objectifs": [
+        "Créer une base déclarative",
+        "Décrire une table avec Mapped et mapped_column",
+        "Rendre une colonne facultative ou unique",
+        "Créer les tables avec create_all"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Avec l'ORM, chaque table est décrite par une **classe**, appelée **modèle**. Chaque attribut annoté avec `Mapped[...]` devient une colonne. Le type Python donne le type SQL : `int` devient `INTEGER`, `str` devient `VARCHAR`.\n\nTous les modèles héritent d'une même classe de base, qui hérite de `DeclarativeBase`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, inspect\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    email: Mapped[str] = mapped_column(String(200), unique=True)\n    telephone: Mapped[str | None]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nfor colonne in inspect(engine).get_columns(\"client\"):\n    print(colonne[\"name\"], colonne[\"type\"], \"facultatif\" if colonne[\"nullable\"] else \"obligatoire\")\n",
+          "executable": true,
+          "sortie_attendue": "id INTEGER obligatoire\nnom VARCHAR(100) obligatoire\nemail VARCHAR(200) obligatoire\ntelephone VARCHAR facultatif\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ce qu'il faut lire dans ce modèle :\n\n- `__tablename__` donne le nom de la table ;\n- `primary_key=True` fait de `id` la **clé primaire** : SQLAlchemy la remplit tout seul ;\n- `Mapped[str]` rend la colonne **obligatoire** (`NOT NULL`), `Mapped[str | None]` la rend **facultative** ;\n- `String(100)` limite la longueur, `unique=True` interdit les doublons.\n\n`Base.metadata` rassemble la description de toutes les tables ; `create_all` crée celles qui manquent."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from datetime import date\nfrom decimal import Decimal\n\nfrom sqlalchemy import Numeric, create_engine, inspect\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Facture(Base):\n    __tablename__ = \"facture\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[Decimal] = mapped_column(Numeric(10, 2))\n    emise_le: Mapped[date]\n    payee: Mapped[bool] = mapped_column(default=False)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nprint(sorted(Base.metadata.tables))\nprint([c[\"name\"] for c in inspect(engine).get_columns(\"facture\")])\n",
+          "executable": true,
+          "sortie_attendue": "['facture']\n['id', 'montant', 'emise_le', 'payee']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Pour de l'argent, utilise `Decimal` avec `Numeric(10, 2)` : les nombres à virgule (`float`) font des erreurs d'arrondi, comme `0.1 + 0.2` qui ne vaut pas exactement `0.3`."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "`create_all` crée les tables qui manquent, mais ne **modifie** jamais une table existante. Pour faire évoluer une base en production, on utilise des migrations : c'est le rôle d'Alembic, qui a son propre parcours."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris le modèle `Produit` : un identifiant, une référence unique de 20 caractères au plus, un nom obligatoire et une description facultative. Crée la table, puis affiche le nom de ses colonnes facultatives : `['description']`.",
+          "code": "from sqlalchemy import String, create_engine, inspect\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\n# Écris le modèle Produit ici\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nprint([c[\"name\"] for c in inspect(engine).get_columns(\"produit\") if c[\"nullable\"]])\n",
+          "solution": "from sqlalchemy import String, create_engine, inspect\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    reference: Mapped[str] = mapped_column(String(20), unique=True)\n    nom: Mapped[str]\n    description: Mapped[str | None]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nprint([c[\"name\"] for c in inspect(engine).get_columns(\"produit\") if c[\"nullable\"]])\n",
+          "sortie_attendue": "['description']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un modèle est une classe qui hérite de la base déclarative, avec un `__tablename__`.\n- `Mapped[type]` décrit une colonne obligatoire, `Mapped[type | None]` une colonne facultative.\n- `mapped_column(...)` précise la clé primaire, la longueur, l'unicité, la valeur par défaut.\n- `Base.metadata.create_all(engine)` crée les tables qui manquent."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : métadonnées et modèles",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/metadata.html"
+        }
+      ]
+    },
+    {
+      "id": "8e2031e2-63db-491f-8ff7-e396b3fc386d",
+      "slug": "sqla-session-et-ajout",
+      "titre": "La session : enregistrer des objets",
+      "resume": "Ajouter des lignes en créant des objets Python, et comprendre le rôle de la session et de la transaction.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "sqla-modeles-declaratifs"
+      ],
+      "objectifs": [
+        "Ouvrir une session",
+        "Ajouter des objets avec add et add_all",
+        "Valider avec commit",
+        "Récupérer l'identifiant généré"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Avec l'ORM, on ne passe plus par des requêtes `INSERT` : on crée des **objets**, puis on les confie à une **session**. La session suit les objets qu'on lui donne, et les écrit dans la base au moment du `commit()`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    camille = Client(nom=\"Camille\", ville=\"Nantes\")\n    session.add(camille)\n    print(\"Avant commit :\", camille.id)\n    session.commit()\n    print(\"Après commit :\", camille.id)\n",
+          "executable": true,
+          "sortie_attendue": "Avant commit : None\nAprès commit : 1\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Avant le `commit()`, l'objet n'est pas encore dans la base : son `id` vaut `None`. Au `commit()`, SQLAlchemy envoie le `INSERT`, et la base attribue l'identifiant.\n\n`add_all` ajoute plusieurs objets d'un coup. Les modèles reçoivent un constructeur qui accepte les colonnes comme **arguments nommés**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([\n        Client(nom=\"Karim\", ville=\"Lyon\"),\n        Client(nom=\"Inès\", ville=\"Lille\"),\n        Client(nom=\"Paul\", ville=\"Lyon\"),\n    ])\n    session.commit()\n\nwith Session(engine) as session:\n    print(session.scalar(select(Client).where(Client.nom == \"Inès\")).ville)\n    print(len(session.scalars(select(Client)).all()), \"clients\")\n",
+          "executable": true,
+          "sortie_attendue": "Lille\n3 clients\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Tout ou rien\n\nLa session travaille dans une **transaction** : tant que `commit()` n'est pas appelé, rien n'est définitif. `rollback()` annule tout ce qui a été fait depuis le dernier `commit()`. Si le bloc `with` se termine sans `commit()`, les changements sont abandonnés."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add(Client(nom=\"Camille\", ville=\"Nantes\"))\n    session.commit()\n    session.add(Client(nom=\"Erreur\", ville=\"?\"))\n    session.rollback()\n\nwith Session(engine) as session:\n    print([c.nom for c in session.scalars(select(Client))])\n",
+          "executable": true,
+          "sortie_attendue": "['Camille']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une session correspond à une **unité de travail** : on l'ouvre, on fait un ensemble cohérent de modifications, on valide, on la ferme. Dans une API web, c'est en général une session par requête."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute en une fois trois clients (Léa à Paris, Hugo à Paris, Zoé à Brest), valide, puis affiche l'identifiant attribué à Zoé : `3`.",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    # Ajoute les trois clients, valide, puis affiche l'id de Zoé\n    pass\n",
+          "solution": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    zoe = Client(nom=\"Zoé\", ville=\"Brest\")\n    session.add_all([Client(nom=\"Léa\", ville=\"Paris\"), Client(nom=\"Hugo\", ville=\"Paris\"), zoe])\n    session.commit()\n    print(zoe.id)\n",
+          "sortie_attendue": "3\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une session suit les objets ajoutés avec `add` ou `add_all`.\n- `commit()` écrit les changements ; l'identifiant est alors attribué.\n- `rollback()`, ou une session fermée sans `commit()`, annule les changements."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : manipuler les données avec l'ORM",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html"
+        }
+      ]
+    },
+    {
+      "id": "7695d8a1-9d85-42c4-a88f-d283584d486a",
+      "slug": "sqla-requetes-select",
+      "titre": "Lire des données avec select",
+      "resume": "Écrire des requêtes avec select : filtrer avec where, trier, limiter, et récupérer des objets, une seule ligne ou des colonnes.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "sqla-session-et-ajout"
+      ],
+      "objectifs": [
+        "Écrire une requête avec select et where",
+        "Récupérer des objets avec scalars",
+        "Trier et limiter les résultats",
+        "Sélectionner seulement certaines colonnes"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour lire, on construit une requête avec `select(Modele)`, puis on l'exécute dans la session. `session.scalars(requete)` renvoie les **objets** correspondants.\n\n`where` filtre avec des expressions Python : `Client.ville == \"Lyon\"` devient `WHERE client.ville = 'Lyon'`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([\n        Client(nom=\"Camille\", ville=\"Nantes\"),\n        Client(nom=\"Karim\", ville=\"Lyon\"),\n        Client(nom=\"Inès\", ville=\"Lyon\"),\n        Client(nom=\"Paul\", ville=\"Brest\"),\n    ])\n    session.commit()\n\n    requete = select(Client).where(Client.ville == \"Lyon\").order_by(Client.nom)\n    for client in session.scalars(requete):\n        print(client.id, client.nom)\n",
+          "executable": true,
+          "sortie_attendue": "3 Inès\n2 Karim\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Les méthodes s'enchaînent : `where`, `order_by`, `limit`… Chacune renvoie une nouvelle requête. Rien n'est envoyé à la base avant l'exécution.\n\n## Un seul résultat\n\n- `session.scalar(requete)` renvoie le premier objet, ou `None` ;\n- `session.get(Client, 2)` lit directement par clé primaire ;\n- `session.scalars(requete).one()` exige exactement un résultat, sinon lève une erreur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=\"Camille\", ville=\"Nantes\"), Client(nom=\"Karim\", ville=\"Lyon\")])\n    session.commit()\n\n    print(session.get(Client, 2).nom)\n    print(session.scalar(select(Client).where(Client.ville == \"Paris\")))\n    dernier = session.scalar(select(Client).order_by(Client.id.desc()).limit(1))\n    print(dernier.nom)\n",
+          "executable": true,
+          "sortie_attendue": "Karim\nNone\nKarim\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Seulement certaines colonnes\n\n`select(Client.nom, Client.ville)` ne lit que ces colonnes. `session.execute` renvoie alors des **lignes**, qu'on lit comme des tuples ou par nom de colonne."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=\"Camille\", ville=\"Nantes\"), Client(nom=\"Karim\", ville=\"Lyon\")])\n    session.commit()\n\n    for nom, ville in session.execute(select(Client.nom, Client.ville).order_by(Client.ville)):\n        print(f\"{nom} ({ville})\")\n    print(session.scalars(select(Client.nom)).all())\n",
+          "executable": true,
+          "sortie_attendue": "Karim (Lyon)\nCamille (Nantes)\n['Camille', 'Karim']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`print(requete)` affiche le SQL que SQLAlchemy va envoyer : pratique pour comprendre une requête ou la déboguer."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Affiche, triés par ordre alphabétique, les noms des clients qui n'habitent **pas** à Lyon : `['Camille', 'Paul']`.\n\nIndice : l'opérateur « différent de » s'écrit `!=`.",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([\n        Client(nom=\"Paul\", ville=\"Brest\"),\n        Client(nom=\"Karim\", ville=\"Lyon\"),\n        Client(nom=\"Camille\", ville=\"Nantes\"),\n    ])\n    session.commit()\n    # Écris ta requête ici\n",
+          "solution": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([\n        Client(nom=\"Paul\", ville=\"Brest\"),\n        Client(nom=\"Karim\", ville=\"Lyon\"),\n        Client(nom=\"Camille\", ville=\"Nantes\"),\n    ])\n    session.commit()\n    requete = select(Client.nom).where(Client.ville != \"Lyon\").order_by(Client.nom)\n    print(session.scalars(requete).all())\n",
+          "sortie_attendue": "['Camille', 'Paul']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `select(Modele).where(...).order_by(...).limit(n)` construit une requête.\n- `session.scalars` renvoie des objets, `session.scalar` le premier, `session.get` lit par clé primaire.\n- `select(Modele.colonne, ...)` ne lit que certaines colonnes."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : lire les données avec select",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/data_select.html"
+        }
+      ]
+    },
+    {
+      "id": "ca109398-5565-462f-a252-28b464af4067",
+      "slug": "sqla-modifier-et-supprimer",
+      "titre": "Modifier et supprimer",
+      "resume": "Mettre à jour une ligne en modifiant l'objet, supprimer avec la session, et faire des modifications en masse avec update et delete.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "sqla-requetes-select"
+      ],
+      "objectifs": [
+        "Modifier une ligne en changeant un attribut",
+        "Supprimer un objet avec session.delete",
+        "Modifier ou supprimer plusieurs lignes avec update et delete"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour modifier une ligne, on modifie l'**objet** : la session remarque le changement et envoie un `UPDATE` au prochain `commit()`. Il n'y a rien d'autre à faire."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add(Client(nom=\"Camille\", ville=\"Nantes\"))\n    session.commit()\n\n    camille = session.scalar(select(Client).where(Client.nom == \"Camille\"))\n    camille.ville = \"Rennes\"\n    print(\"Modifié en attente :\", camille in session.dirty)\n    session.commit()\n\nwith Session(engine) as session:\n    print(session.get(Client, 1).ville)\n",
+          "executable": true,
+          "sortie_attendue": "Modifié en attente : True\nRennes\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`session.dirty` contient les objets modifiés, pas encore écrits. Pour **supprimer**, on passe l'objet à `session.delete()`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import String, create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(String(100))\n    ville: Mapped[str] = mapped_column(String(100))\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\n\nwith Session(engine) as session:\n    session.add_all([Client(nom=\"Camille\", ville=\"Nantes\"), Client(nom=\"Karim\", ville=\"Lyon\")])\n    session.commit()\n\n    session.delete(session.get(Client, 1))\n    session.commit()\n    print(session.scalars(select(Client.nom)).all())\n",
+          "executable": true,
+          "sortie_attendue": "['Karim']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Modifier beaucoup de lignes d'un coup\n\nCharger des milliers d'objets pour les modifier un par un est lent. Les requêtes `update` et `delete` agissent directement dans la base, en une seule instruction SQL."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, delete, select, update\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n    actif: Mapped[bool] = mapped_column(default=True)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Produit(nom=\"Stylo\", prix=1.5), Produit(nom=\"Cahier\", prix=3.0), Produit(nom=\"Agenda\", prix=12.0)])\n    session.commit()\n\n    resultat = session.execute(update(Produit).where(Produit.prix < 5).values(prix=Produit.prix * 1.1))\n    print(resultat.rowcount, \"prix augmentés\")\n    session.execute(delete(Produit).where(Produit.nom == \"Agenda\"))\n    session.commit()\n\n    for nom, prix in session.execute(select(Produit.nom, Produit.prix)):\n        print(nom, round(prix, 2))\n",
+          "executable": true,
+          "sortie_attendue": "2 prix augmentés\nStylo 1.65\nCahier 3.3\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un `update` ou un `delete` sans `where` touche **toutes** les lignes de la table. Relis toujours la condition avant d'exécuter une modification en masse."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Désactive (`actif=False`) tous les produits de moins de 2 € avec une seule requête `update`, puis affiche les noms des produits encore actifs : `['Agenda']`.",
+          "code": "from sqlalchemy import create_engine, select, update\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n    actif: Mapped[bool] = mapped_column(default=True)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Produit(nom=\"Gomme\", prix=0.8), Produit(nom=\"Crayon\", prix=1.2), Produit(nom=\"Agenda\", prix=12.0)])\n    session.commit()\n    # Désactive les produits de moins de 2 €, puis affiche les actifs\n",
+          "solution": "from sqlalchemy import create_engine, select, update\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n    actif: Mapped[bool] = mapped_column(default=True)\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([Produit(nom=\"Gomme\", prix=0.8), Produit(nom=\"Crayon\", prix=1.2), Produit(nom=\"Agenda\", prix=12.0)])\n    session.commit()\n    session.execute(update(Produit).where(Produit.prix < 2).values(actif=False))\n    session.commit()\n    print(session.scalars(select(Produit.nom).where(Produit.actif)).all())\n",
+          "sortie_attendue": "['Agenda']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Modifier un attribut suffit : la session envoie l'`UPDATE` au `commit()`.\n- `session.delete(objet)` supprime une ligne.\n- `update(...)` et `delete(...)` modifient beaucoup de lignes en une instruction, toujours avec un `where`."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : update et delete",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/data_update.html"
+        }
+      ]
+    },
+    {
+      "id": "299e4e86-b0b1-4287-a471-68afdb5c0b63",
+      "slug": "sqla-relations-un-a-plusieurs",
+      "titre": "Les relations un-à-plusieurs",
+      "resume": "Relier deux tables avec une clé étrangère et relationship : un client a plusieurs commandes, et chaque commande connaît son client.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "sqla-modifier-et-supprimer"
+      ],
+      "objectifs": [
+        "Déclarer une clé étrangère avec ForeignKey",
+        "Relier deux modèles avec relationship et back_populates",
+        "Naviguer d'un objet à ses objets liés",
+        "Supprimer en cascade les objets liés"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un client passe **plusieurs** commandes ; chaque commande appartient à **un** client. C'est une relation **un-à-plusieurs**. Dans la base, la table `commande` a une colonne `client_id`, une **clé étrangère** vers `client.id`.\n\nCôté Python, `relationship` ajoute des attributs pour naviguer : `client.commandes` et `commande.client`. `back_populates` relie les deux côtés."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    camille = Client(nom=\"Camille\")\n    camille.commandes = [Commande(montant=120), Commande(montant=45)]\n    session.add(camille)\n    session.commit()\n\n    print(len(camille.commandes), \"commandes\")\n    commande = camille.commandes[1]\n    print(commande.client.nom, commande.client_id)\n",
+          "executable": true,
+          "sortie_attendue": "2 commandes\nCamille 1\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ajouter une commande à `camille.commandes` remplit tout seul `client_id` au `commit()`. Et `session.add(camille)` ajoute aussi ses commandes : la session suit les objets liés.\n\n## Requêtes sur les relations\n\nOn peut filtrer sur la table liée avec `join`, et compter avec `func.count`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([\n        Client(nom=\"Camille\", commandes=[Commande(montant=120), Commande(montant=45)]),\n        Client(nom=\"Karim\", commandes=[Commande(montant=300)]),\n        Client(nom=\"Inès\"),\n    ])\n    session.commit()\n\n    grosses = select(Client.nom).join(Client.commandes).where(Commande.montant > 100).order_by(Client.nom)\n    print(session.scalars(grosses).all())\n\n    compte = select(Client.nom, func.count(Commande.id)).outerjoin(Client.commandes).group_by(Client.id).order_by(Client.nom)\n    for nom, nombre in session.execute(compte):\n        print(nom, nombre)\n",
+          "executable": true,
+          "sortie_attendue": "['Camille', 'Karim']\nCamille 2\nInès 0\nKarim 1\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`join` ne garde que les clients qui ont des commandes ; `outerjoin` garde aussi ceux qui n'en ont pas (Inès).\n\n## Supprimer en cascade\n\nPar défaut, supprimer un client laisse ses commandes orphelines. `cascade=\"all, delete-orphan\"` supprime les commandes avec leur client."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\", cascade=\"all, delete-orphan\")\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    montant: Mapped[float]\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add(Client(nom=\"Camille\", commandes=[Commande(montant=10), Commande(montant=20)]))\n    session.commit()\n    session.delete(session.get(Client, 1))\n    session.commit()\n    print(session.scalar(select(func.count(Commande.id))), \"commande restante\")\n",
+          "executable": true,
+          "sortie_attendue": "0 commande restante\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Le nom passé à `back_populates` est celui de l'attribut **de l'autre côté** : dans `Client`, `back_populates=\"client\"` désigne `Commande.client`. Une faute de frappe provoque une erreur au premier usage des modèles."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris les modèles `Service` et `Employe` : un service a plusieurs employés. Crée le service Compta avec Camille et Inès, puis affiche les noms de ses employés, triés : `['Camille', 'Inès']`, et le service d'Inès : `Compta`.",
+          "code": "from sqlalchemy import ForeignKey, create_engine\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\n# Écris Service et Employe ici\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n",
+          "solution": "from sqlalchemy import ForeignKey, create_engine\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Service(Base):\n    __tablename__ = \"service\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    employes: Mapped[list[\"Employe\"]] = relationship(back_populates=\"service\")\n\n\nclass Employe(Base):\n    __tablename__ = \"employe\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    service_id: Mapped[int] = mapped_column(ForeignKey(\"service.id\"))\n    service: Mapped[Service] = relationship(back_populates=\"employes\")\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    ines = Employe(nom=\"Inès\")\n    compta = Service(nom=\"Compta\", employes=[Employe(nom=\"Camille\"), ines])\n    session.add(compta)\n    session.commit()\n    print(sorted(e.nom for e in compta.employes))\n    print(ines.service.nom)\n",
+          "sortie_attendue": "['Camille', 'Inès']\nCompta\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une clé étrangère `ForeignKey(\"table.id\")` relie une ligne à une autre table.\n- `relationship(back_populates=...)` ajoute la navigation des deux côtés.\n- `join` et `outerjoin` interrogent les tables liées ; `cascade` gère les suppressions."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : les relations",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/orm_related_objects.html"
+        }
+      ]
+    },
+    {
+      "id": "15dfd7d9-7041-48ae-890b-5bde73083b26",
+      "slug": "sqla-filtres-et-agregats",
+      "titre": "Filtres avancés et agrégats",
+      "resume": "Combiner les conditions, chercher dans du texte, filtrer sur une liste de valeurs, et calculer des totaux, moyennes et regroupements.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "sqla-relations-un-a-plusieurs"
+      ],
+      "objectifs": [
+        "Combiner des conditions avec and_ et or_",
+        "Chercher avec like, in_ et between",
+        "Calculer des agrégats avec func",
+        "Regrouper avec group_by et filtrer avec having"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Plusieurs arguments dans `where` sont combinés par **ET**. Pour un **OU**, on utilise `or_`. Les colonnes offrent aussi des méthodes de recherche :\n\n- `like(\"%Paris%\")` : contient un texte (`%` remplace n'importe quels caractères) ;\n- `in_([...])` : fait partie d'une liste ;\n- `between(a, b)` : entre deux valeurs ;\n- `is_(None)` : vaut `NULL`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, or_, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur: Mapped[str]\n    region: Mapped[str]\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([\n        Vente(vendeur=\"Camille\", region=\"Ouest\", montant=1200),\n        Vente(vendeur=\"Karim\", region=\"Est\", montant=850),\n        Vente(vendeur=\"Camille\", region=\"Ouest\", montant=430),\n        Vente(vendeur=\"Inès\", region=\"Nord\", montant=2100),\n        Vente(vendeur=\"Karim\", region=\"Est\", montant=640),\n    ])\n    session.commit()\n\n    def ids(requete):\n        return session.scalars(requete.order_by(Vente.id)).all()\n\n    print(ids(select(Vente.id).where(Vente.region == \"Est\", Vente.montant > 700)))\n    print(ids(select(Vente.id).where(or_(Vente.region == \"Nord\", Vente.montant < 500))))\n    print(ids(select(Vente.id).where(Vente.vendeur.in_([\"Inès\", \"Karim\"]))))\n    print(ids(select(Vente.id).where(Vente.montant.between(600, 1000))))\n    print(ids(select(Vente.id).where(Vente.vendeur.like(\"Ca%\"))))\n",
+          "executable": true,
+          "sortie_attendue": "[2]\n[3, 4]\n[2, 4, 5]\n[2, 5]\n[1, 3]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les agrégats\n\n`func` donne accès aux fonctions SQL : `func.count`, `func.sum`, `func.avg`, `func.max`… Avec `group_by`, on calcule un résultat **par groupe** ; `having` filtre les groupes, comme `where` filtre les lignes."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    vendeur: Mapped[str]\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([\n        Vente(vendeur=\"Camille\", montant=1200),\n        Vente(vendeur=\"Karim\", montant=850),\n        Vente(vendeur=\"Camille\", montant=430),\n        Vente(vendeur=\"Inès\", montant=2100),\n        Vente(vendeur=\"Karim\", montant=640),\n    ])\n    session.commit()\n\n    print(\"Total :\", session.scalar(select(func.sum(Vente.montant))))\n    print(\"Moyenne :\", session.scalar(select(func.avg(Vente.montant))))\n\n    total = func.sum(Vente.montant).label(\"total\")\n    par_vendeur = (\n        select(Vente.vendeur, func.count(Vente.id), total)\n        .group_by(Vente.vendeur)\n        .having(func.count(Vente.id) > 1)\n        .order_by(total.desc())\n    )\n    for vendeur, nombre, somme in session.execute(par_vendeur):\n        print(f\"{vendeur} : {nombre} ventes, {somme} €\")\n",
+          "executable": true,
+          "sortie_attendue": "Total : 5220.0\nMoyenne : 1044.0\nCamille : 2 ventes, 1630.0 €\nKarim : 2 ventes, 1490.0 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`.label(\"total\")` donne un nom à une colonne calculée. On peut ensuite trier dessus (`total.desc()`), et la lire par son nom dans les résultats."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Affiche, pour chaque région, le montant de la plus grosse vente, triées par région : `Est 850.0`, `Nord 2100.0`, `Ouest 1200.0` (une ligne chacune).",
+          "code": "from sqlalchemy import create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    region: Mapped[str]\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([\n        Vente(region=\"Ouest\", montant=1200), Vente(region=\"Est\", montant=850),\n        Vente(region=\"Ouest\", montant=430), Vente(region=\"Nord\", montant=2100),\n        Vente(region=\"Est\", montant=640),\n    ])\n    session.commit()\n    # Écris ta requête ici\n",
+          "solution": "from sqlalchemy import create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Vente(Base):\n    __tablename__ = \"vente\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    region: Mapped[str]\n    montant: Mapped[float]\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    session.add_all([\n        Vente(region=\"Ouest\", montant=1200), Vente(region=\"Est\", montant=850),\n        Vente(region=\"Ouest\", montant=430), Vente(region=\"Nord\", montant=2100),\n        Vente(region=\"Est\", montant=640),\n    ])\n    session.commit()\n    requete = select(Vente.region, func.max(Vente.montant)).group_by(Vente.region).order_by(Vente.region)\n    for region, maximum in session.execute(requete):\n        print(region, maximum)\n",
+          "sortie_attendue": "Est 850.0\nNord 2100.0\nOuest 1200.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Plusieurs conditions dans `where` font un ET ; `or_` fait un OU.\n- `like`, `in_`, `between`, `is_(None)` cherchent dans les colonnes.\n- `func.sum`, `func.count`… calculent ; `group_by` regroupe, `having` filtre les groupes."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel SQLAlchemy : clause WHERE et agrégats",
+          "url": "https://docs.sqlalchemy.org/en/20/tutorial/data_select.html#the-where-clause"
+        }
+      ]
+    },
+    {
+      "id": "47970b2f-b93c-4e8b-ba67-47c8e2701ca4",
+      "slug": "sqla-projet-carnet-de-commandes",
+      "titre": "Projet : un carnet de commandes",
+      "resume": "Assembler tout le parcours : modèles liés, enregistrement, requêtes et indicateurs, organisés dans un petit dépôt de données.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 18,
+      "prerequis": [
+        "sqla-filtres-et-agregats"
+      ],
+      "objectifs": [
+        "Modéliser un petit domaine avec plusieurs tables liées",
+        "Ranger les requêtes dans un dépôt de données",
+        "Calculer des indicateurs avec des agrégats"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour finir, un carnet de commandes : des clients, des produits, des commandes et leurs lignes. On range les requêtes dans une classe **dépôt** : le reste de l'application l'appelle sans écrire de SQL.\n\nOn commence par les modèles. Une `Ligne` relie une commande à un produit, avec une quantité."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n    lignes: Mapped[list[\"Ligne\"]] = relationship(cascade=\"all, delete-orphan\")\n\n    @property\n    def total(self):\n        return sum(ligne.quantite * ligne.produit.prix for ligne in self.lignes)\n\n\nclass Ligne(Base):\n    __tablename__ = \"ligne\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    commande_id: Mapped[int] = mapped_column(ForeignKey(\"commande.id\"))\n    produit_id: Mapped[int] = mapped_column(ForeignKey(\"produit.id\"))\n    quantite: Mapped[int]\n    produit: Mapped[Produit] = relationship()\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\nprint(sorted(Base.metadata.tables))\n",
+          "executable": true,
+          "sortie_attendue": "['client', 'commande', 'ligne', 'produit']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le dépôt\n\nLe dépôt reçoit une session et offre des méthodes au vocabulaire du métier : `passer_commande`, `chiffre_affaires`, `meilleurs_clients`. La session est **injectée** : le dépôt ne décide pas quand valider."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from sqlalchemy import ForeignKey, create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    commandes: Mapped[list[\"Commande\"]] = relationship(back_populates=\"client\")\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n\n\nclass Commande(Base):\n    __tablename__ = \"commande\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    client_id: Mapped[int] = mapped_column(ForeignKey(\"client.id\"))\n    client: Mapped[Client] = relationship(back_populates=\"commandes\")\n    lignes: Mapped[list[\"Ligne\"]] = relationship(cascade=\"all, delete-orphan\")\n\n    @property\n    def total(self):\n        return sum(ligne.quantite * ligne.produit.prix for ligne in self.lignes)\n\n\nclass Ligne(Base):\n    __tablename__ = \"ligne\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    commande_id: Mapped[int] = mapped_column(ForeignKey(\"commande.id\"))\n    produit_id: Mapped[int] = mapped_column(ForeignKey(\"produit.id\"))\n    quantite: Mapped[int]\n    produit: Mapped[Produit] = relationship()\n\n\nclass DepotCommandes:\n    def __init__(self, session: Session):\n        self.session = session\n\n    def passer_commande(self, client, articles):\n        commande = Commande(client=client, lignes=[Ligne(produit=p, quantite=q) for p, q in articles])\n        self.session.add(commande)\n        return commande\n\n    def chiffre_affaires(self):\n        requete = select(func.sum(Ligne.quantite * Produit.prix)).join(Ligne.produit)\n        return self.session.scalar(requete) or 0\n\n    def meilleurs_clients(self, nombre):\n        total = func.sum(Ligne.quantite * Produit.prix).label(\"total\")\n        requete = (\n            select(Client.nom, total)\n            .join(Client.commandes).join(Commande.lignes).join(Ligne.produit)\n            .group_by(Client.id).order_by(total.desc()).limit(nombre)\n        )\n        return self.session.execute(requete).all()\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    stylo, cahier = Produit(nom=\"Stylo\", prix=1.5), Produit(nom=\"Cahier\", prix=3.0)\n    camille, karim = Client(nom=\"Camille\"), Client(nom=\"Karim\")\n    depot = DepotCommandes(session)\n    premiere = depot.passer_commande(camille, [(stylo, 10), (cahier, 2)])\n    depot.passer_commande(karim, [(cahier, 3)])\n    depot.passer_commande(camille, [(stylo, 4)])\n    session.commit()\n\n    print(\"Première commande :\", premiere.total, \"€\")\n    print(\"Chiffre d'affaires :\", depot.chiffre_affaires(), \"€\")\n    for nom, total in depot.meilleurs_clients(2):\n        print(nom, total)\n",
+          "executable": true,
+          "sortie_attendue": "Première commande : 21.0 €\nChiffre d'affaires : 36.0 €\nCamille 27.0\nKarim 9.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Le calcul `total` existe deux fois : en Python (la propriété `Commande.total`, pratique pour une commande chargée) et en SQL (dans `chiffre_affaires`, rapide sur des milliers de lignes). Le parcours intermédiaire montre comment les réunir avec les propriétés hybrides."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute au dépôt une méthode `produits_vendus()` qui renvoie, pour chaque produit, la quantité totale vendue, triée par nom de produit.\n\nLe code affiche `Cahier 5`, puis `Stylo 14`.",
+          "code": "from sqlalchemy import ForeignKey, create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n\n\nclass Ligne(Base):\n    __tablename__ = \"ligne\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    produit_id: Mapped[int] = mapped_column(ForeignKey(\"produit.id\"))\n    quantite: Mapped[int]\n    produit: Mapped[Produit] = relationship()\n\n\nclass DepotCommandes:\n    def __init__(self, session):\n        self.session = session\n\n    # Écris produits_vendus ici\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    stylo, cahier = Produit(nom=\"Stylo\", prix=1.5), Produit(nom=\"Cahier\", prix=3.0)\n    session.add_all([Ligne(produit=stylo, quantite=10), Ligne(produit=cahier, quantite=5), Ligne(produit=stylo, quantite=4)])\n    session.commit()\n    for nom, quantite in DepotCommandes(session).produits_vendus():\n        print(nom, quantite)\n",
+          "solution": "from sqlalchemy import ForeignKey, create_engine, func, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Produit(Base):\n    __tablename__ = \"produit\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    prix: Mapped[float]\n\n\nclass Ligne(Base):\n    __tablename__ = \"ligne\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    produit_id: Mapped[int] = mapped_column(ForeignKey(\"produit.id\"))\n    quantite: Mapped[int]\n    produit: Mapped[Produit] = relationship()\n\n\nclass DepotCommandes:\n    def __init__(self, session):\n        self.session = session\n\n    def produits_vendus(self):\n        requete = (\n            select(Produit.nom, func.sum(Ligne.quantite))\n            .join(Ligne.produit)\n            .group_by(Produit.id)\n            .order_by(Produit.nom)\n        )\n        return self.session.execute(requete).all()\n\n\nengine = create_engine(\"sqlite://\")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    stylo, cahier = Produit(nom=\"Stylo\", prix=1.5), Produit(nom=\"Cahier\", prix=3.0)\n    session.add_all([Ligne(produit=stylo, quantite=10), Ligne(produit=cahier, quantite=5), Ligne(produit=stylo, quantite=4)])\n    session.commit()\n    for nom, quantite in DepotCommandes(session).produits_vendus():\n        print(nom, quantite)\n",
+          "sortie_attendue": "Cahier 5\nStylo 14\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un domaine se modélise en tables liées par des clés étrangères et des `relationship`.\n- Un dépôt range les requêtes derrière des méthodes au vocabulaire du métier.\n- Les agrégats SQL calculent vite sur beaucoup de lignes."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Documentation SQLAlchemy 2.0",
+          "url": "https://docs.sqlalchemy.org/en/20/"
+        }
+      ]
+    }
+  ]
+}

@@ -103,7 +103,10 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 
 **Le code**
 - Python 3, JavaScript moderne ou VBA, rien d'autre. Pour le VBA, lis d'abord [vba.md](vba.md) : le code tourne sur un classeur Excel simulé.
-- Le code doit **tourner tel quel** dans le navigateur : pas de fichiers, pas de réseau, pas de `input()` ni d'`InputBox`.
+- Le code doit **tourner tel quel** dans le navigateur : pas de réseau, pas de `input()` ni d'`InputBox`. Les fichiers temporaires (`tempfile`) marchent, dans un système de fichiers en mémoire.
+- En Python, `await` est permis au niveau du module : on appelle une API FastAPI avec httpx (`AsyncClient` et `ASGITransport`). N'utilise pas `asyncio.run()`, ni de threads : écris les routes et dépendances FastAPI avec `async def`.
+- Bibliothèques disponibles : celles de `front/scripts/paquets-python.json` (SQLAlchemy, Alembic, FastAPI, Pydantic, httpx, Django, Django REST Framework). Elles sont chargées d'après les `import` du code. Pour une autre bibliothèque, ajoute-la au manifeste ([ADR 0028](../adr/0028-bibliotheques-python.md)).
+- Django n'a pas de fichiers de projet dans le navigateur : chaque exemple commence par un préambule qui configure un mini-projet (`settings.configure`, une application en mémoire, une base SQLite temporaire). Les parcours Django du dossier `api/validated_courses/` en donnent le modèle.
 - Indique `sortie_attendue` dès que le code affiche quelque chose. La plateforme la compare au résultat réel au moment de l'import.
 
 **Les droits**
@@ -115,9 +118,9 @@ Un exercice ressemble à un bloc de code exécutable, avec deux ajouts :
 
 1. Le fichier est valide par rapport au schéma :
    `check-jsonschema --schemafile lecons.schema.json mon-paquet.json`
-2. Chaque exemple de code, et chaque solution d'exercice, a été exécuté, et sa sortie correspond à `sortie_attendue`. Pour le VBA : `cd front && npm run vba -- mon-code.bas`.
+2. Chaque exemple de code, et chaque solution d'exercice, a été exécuté, et sa sortie correspond à `sortie_attendue`. L'outil de la plateforme vérifie tout le paquet d'un coup, dans les mêmes conditions que le navigateur : `cd front && npm run verifier -- mon-paquet.json`.
 3. Chaque leçon et le parcours ont un `id` (UUID) : nouveau pour une nouvelle leçon, repris tel quel pour une leçon existante. Les `slug` sont uniques et parlants.
-4. Les thèmes utilisés existent déjà sur la plateforme (`python`, `javascript`, `vba`…).
+4. Les thèmes utilisés existent déjà sur la plateforme : `python-bases`, `python-poo`, `python-django`, `python-fastapi`, `javascript`, `vba-bases`.
 
 ## Après l'import
 

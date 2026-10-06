@@ -101,7 +101,9 @@ function BlocExecutable({
         }}
       />
       <div className={styles.sortie} aria-live="polite">
-        {etat === "chargement" && <p>Chargement de Python… (la première fois seulement)</p>}
+        {etat === "chargement" && (
+          <p>Chargement de Python et de ses bibliothèques… (la première fois seulement)</p>
+        )}
         {resultat && <AffichageResultat resultat={resultat} />}
       </div>
       {resultat?.feuilles && resultat.feuilles.length > 0 && (

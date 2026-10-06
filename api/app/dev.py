@@ -49,7 +49,12 @@ async def preparer_e2e() -> None:
     async with engine.begin() as connexion:
         await connexion.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
     async with SessionLocale() as db:
-        db.add_all([Theme(slug="python", nom="Python"), Theme(slug="javascript", nom="JavaScript")])
+        db.add_all(
+            [
+                Theme(slug="python-bases", nom="Python - Bases"),
+                Theme(slug="javascript", nom="JavaScript"),
+            ]
+        )
         for email, pseudo, role in COMPTES_E2E:
             db.add(
                 Utilisateur(

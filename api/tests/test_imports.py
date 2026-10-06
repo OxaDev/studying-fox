@@ -269,7 +269,9 @@ async def test_sans_identifiant_le_slug_designe_la_lecon(
 async def test_meme_identifiant_devient_une_nouvelle_version(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
-    await creer_lecon("afficher-du-texte-en-python", identifiant=ID_LECON)
+    await creer_lecon(
+        "afficher-du-texte-en-python", identifiant=ID_LECON, theme_slug="python-bases"
+    )
 
     analyse = (await analyser(client, csrf, en_json(exemple()))).json()
 
@@ -296,7 +298,7 @@ async def test_un_slug_pris_par_une_autre_lecon_est_refuse(
 async def test_le_slug_d_une_lecon_existante_ne_change_pas(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
-    await creer_lecon("ancien-slug", identifiant=ID_LECON)
+    await creer_lecon("ancien-slug", identifiant=ID_LECON, theme_slug="python-bases")
 
     analyse = (await analyser(client, csrf, en_json(exemple()))).json()
 

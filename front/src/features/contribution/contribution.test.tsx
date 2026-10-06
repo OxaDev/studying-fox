@@ -66,7 +66,7 @@ describe("Nouvelle leçon", () => {
     expect(requetes.find((r) => r.cle === "POST /contributions")?.corps).toEqual({
       titre: "Les boucles",
       slug: "les-boucles",
-      theme: "python",
+      theme: "python-bases",
       niveau: "intermediaire",
     });
   });

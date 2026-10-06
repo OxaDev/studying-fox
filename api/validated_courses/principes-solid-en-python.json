@@ -1,0 +1,608 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "0ac61b9b-1691-4ad5-a1ef-bbd6bf186845",
+    "slug": "principes-solid-en-python",
+    "titre": "Les principes SOLID en Python",
+    "description": "Les cinq principes SOLID de la conception objet, appliqués en Python : responsabilité unique, ouvert-fermé, substitution de Liskov, ségrégation des interfaces et inversion des dépendances. Chaque principe part d'un code réel qui pose problème, puis le corrige. Prérequis : le parcours sur la programmation objet.",
+    "niveau": "intermediaire",
+    "theme": "python-poo",
+    "lecons": [
+      "solid-introduction",
+      "solid-responsabilite-unique",
+      "solid-ouvert-ferme",
+      "solid-substitution-de-liskov",
+      "solid-segregation-des-interfaces",
+      "solid-inversion-des-dependances",
+      "solid-tester-grace-a-solid",
+      "solid-projet-refactoring"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "c4b6e374-c08d-46fe-8692-5d6417f0a69e",
+      "slug": "solid-introduction",
+      "titre": "SOLID : pourquoi des principes de conception ?",
+      "resume": "Comprendre ce qui rend un code difficile à faire évoluer, et ce que les cinq principes SOLID proposent pour y remédier.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 11,
+      "prerequis": [
+        "poo-projet-panier-de-commande"
+      ],
+      "objectifs": [
+        "Reconnaître les signes d'un code rigide et fragile",
+        "Citer les cinq principes SOLID",
+        "Expliquer le lien entre couplage et coût des évolutions"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un code qui marche n'est pas forcément un code qui **évolue bien**. Les signes d'alerte sont connus :\n\n- **rigidité** : une petite évolution oblige à modifier beaucoup de fichiers ;\n- **fragilité** : modifier un endroit casse quelque chose ailleurs ;\n- **immobilité** : impossible de réutiliser une partie sans emporter tout le reste.\n\nLa cause est presque toujours la même : des morceaux de code trop **couplés**, qui dépendent les uns des autres."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def traiter_commande(commande):\n    # Calcul, règles métier, base de données, email : tout au même endroit\n    total = sum(l[\"prix\"] * l[\"quantite\"] for l in commande[\"lignes\"])\n    if commande[\"client\"][\"type\"] == \"pro\":\n        total *= 0.9\n    elif commande[\"client\"][\"type\"] == \"vip\":\n        total *= 0.8\n    print(f\"INSERT INTO commandes VALUES ({commande['id']}, {total})\")\n    print(f\"Email à {commande['client']['email']} : total {total:.2f} €\")\n    return total\n\n\ncommande = {\n    \"id\": 7,\n    \"client\": {\"type\": \"pro\", \"email\": \"achat@exemple.fr\"},\n    \"lignes\": [{\"prix\": 20, \"quantite\": 3}, {\"prix\": 5, \"quantite\": 4}],\n}\ntraiter_commande(commande)\n",
+          "executable": true,
+          "sortie_attendue": "INSERT INTO commandes VALUES (7, 72.0)\nEmail à achat@exemple.fr : total 72.00 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Cette fonction marche. Mais un nouveau type de client, un changement de base de données ou un SMS à la place de l'email obligent tous à la modifier. Et pour la tester, il faut une base et un serveur d'emails.\n\n## Les cinq principes\n\n**SOLID** regroupe cinq principes formulés par Robert C. Martin :\n\n- **S**, responsabilité unique : une classe n'a qu'une raison de changer ;\n- **O**, ouvert-fermé : on ajoute un comportement sans modifier le code existant ;\n- **L**, substitution de Liskov : une classe fille peut remplacer sa mère sans surprise ;\n- **I**, ségrégation des interfaces : pas de dépendance à des méthodes inutiles ;\n- **D**, inversion des dépendances : on dépend d'abstractions, pas de détails."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "SOLID n'est pas une loi. Ce sont des repères pour décider où découper le code. Sur un script de vingt lignes, les appliquer à la lettre serait du zèle : on les applique là où le code change souvent."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Sans modifier `traiter_commande`, compte combien de **raisons de changer** elle a. Range-les dans la liste `raisons` (une courte phrase chacune) et affiche leur nombre : `4`.\n\nIndice : calcul du total, remises, enregistrement, notification.",
+          "code": "raisons = [\n    # Écris ici les raisons de changer de traiter_commande\n]\nprint(len(raisons))\n",
+          "solution": "raisons = [\n    \"la façon de calculer le total\",\n    \"les règles de remise par type de client\",\n    \"la façon d'enregistrer la commande\",\n    \"la façon de prévenir le client\",\n]\nprint(len(raisons))\n",
+          "sortie_attendue": "4\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un code couplé est rigide, fragile et difficile à tester.\n- SOLID : responsabilité unique, ouvert-fermé, Liskov, ségrégation des interfaces, inversion des dépendances.\n- On les applique là où le code évolue."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Robert C. Martin, Design Principles and Design Patterns",
+          "url": "https://web.archive.org/web/20150906155800/http://www.objectmentor.com/resources/articles/Principles_and_Patterns.pdf"
+        }
+      ]
+    },
+    {
+      "id": "83cbd566-7ffe-431a-adcf-e95e14832425",
+      "slug": "solid-responsabilite-unique",
+      "titre": "S : le principe de responsabilité unique",
+      "resume": "Découper une classe qui fait tout en classes qui n'ont chacune qu'une raison de changer, et le vérifier sur un générateur de rapports.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "solid-introduction"
+      ],
+      "objectifs": [
+        "Énoncer le principe de responsabilité unique",
+        "Repérer les responsabilités mélangées dans une classe",
+        "Découper une classe en collaborateurs spécialisés"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **principe de responsabilité unique** (*Single Responsibility Principle*) dit : **une classe ne doit avoir qu'une seule raison de changer**.\n\nUne « raison de changer », c'est une personne ou un service qui peut demander une modification : la comptabilité pour un calcul, l'équipe technique pour le stockage, le marketing pour la mise en forme."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class RapportVentes:\n    def __init__(self, ventes):\n        self.ventes = ventes\n\n    def total(self):  # règle métier : demandée par la comptabilité\n        return sum(v[\"montant\"] for v in self.ventes)\n\n    def en_html(self):  # présentation : demandée par la direction\n        return f\"<h1>Ventes</h1><p>{self.total()} €</p>\"\n\n    def enregistrer(self, chemin):  # stockage : demandé par l'équipe technique\n        return f\"écrit dans {chemin}\"\n\n\nrapport = RapportVentes([{\"montant\": 120}, {\"montant\": 80}])\nprint(rapport.en_html())\n",
+          "executable": true,
+          "sortie_attendue": "<h1>Ventes</h1><p>200 €</p>\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Trois métiers différents peuvent demander une modification de `RapportVentes`. Chacune risque de casser les autres, et toute modification oblige à retester la classe entière.\n\nOn découpe : un calcul, une présentation, un stockage. Chaque classe est courte, facile à nommer et à tester seule."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class CalculVentes:\n    def __init__(self, ventes):\n        self.ventes = ventes\n\n    def total(self):\n        return sum(v[\"montant\"] for v in self.ventes)\n\n\nclass PresentationHtml:\n    def rendre(self, titre, total):\n        return f\"<h1>{titre}</h1><p>{total} €</p>\"\n\n\nclass PresentationTexte:\n    def rendre(self, titre, total):\n        return f\"{titre.upper()} : {total} €\"\n\n\ncalcul = CalculVentes([{\"montant\": 120}, {\"montant\": 80}])\nfor presentation in (PresentationHtml(), PresentationTexte()):\n    print(presentation.rendre(\"Ventes\", calcul.total()))\n",
+          "executable": true,
+          "sortie_attendue": "<h1>Ventes</h1><p>200 €</p>\nVENTES : 200 €\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ajouter un format texte n'a demandé **aucune** modification du calcul. Et le calcul se teste sans s'occuper du HTML."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Responsabilité unique ne veut pas dire « une seule méthode ». `CalculVentes` peut avoir `total`, `moyenne` et `meilleure_vente` : ces méthodes changent pour la même raison, les règles de calcul."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "La classe `Inscription` valide un email **et** construit le message de bienvenue. Découpe-la en deux classes :\n\n- `ValidateurEmail`, avec une méthode `est_valide(email)` (l'email contient un `@` et un point après lui) ;\n- `MessageBienvenue`, avec une méthode `rediger(prenom)`.\n\nLe code affiche `True`, `False`, puis `Bienvenue Camille !`.",
+          "code": "class Inscription:\n    def traiter(self, prenom, email):\n        if \"@\" not in email or \".\" not in email.split(\"@\")[-1]:\n            raise ValueError(\"Email invalide\")\n        return f\"Bienvenue {prenom} !\"\n\n\n# Écris ValidateurEmail et MessageBienvenue ici\n\n\nvalidateur = ValidateurEmail()\nprint(validateur.est_valide(\"camille@exemple.fr\"))\nprint(validateur.est_valide(\"camille@exemple\"))\nprint(MessageBienvenue().rediger(\"Camille\"))\n",
+          "solution": "class ValidateurEmail:\n    def est_valide(self, email):\n        return \"@\" in email and \".\" in email.split(\"@\")[-1]\n\n\nclass MessageBienvenue:\n    def rediger(self, prenom):\n        return f\"Bienvenue {prenom} !\"\n\n\nvalidateur = ValidateurEmail()\nprint(validateur.est_valide(\"camille@exemple.fr\"))\nprint(validateur.est_valide(\"camille@exemple\"))\nprint(MessageBienvenue().rediger(\"Camille\"))\n",
+          "sortie_attendue": "True\nFalse\nBienvenue Camille !\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une classe ne doit avoir qu'une raison de changer.\n- Une raison de changer correspond à un métier ou un acteur qui demande des modifications.\n- Découper produit des classes courtes, faciles à nommer et à tester seules."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Robert C. Martin, The Single Responsibility Principle",
+          "url": "https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html"
+        }
+      ]
+    },
+    {
+      "id": "7c730253-10cc-45e9-b4f6-8057487200ed",
+      "slug": "solid-ouvert-ferme",
+      "titre": "O : le principe ouvert-fermé",
+      "resume": "Ajouter de nouveaux comportements sans modifier le code existant, grâce au polymorphisme et à l'enregistrement de règles.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "solid-responsabilite-unique"
+      ],
+      "objectifs": [
+        "Énoncer le principe ouvert-fermé",
+        "Remplacer une cascade de if par des classes interchangeables",
+        "Ajouter une règle par enregistrement, sans modifier le code appelant"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **principe ouvert-fermé** (*Open/Closed Principle*) dit qu'un module doit être **ouvert à l'extension** mais **fermé à la modification** : on ajoute un comportement en écrivant du code nouveau, pas en modifiant du code qui marche.\n\nLe contre-exemple classique : une cascade de `if` qu'il faut rouvrir à chaque nouveau cas."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def frais_de_port(mode, poids):\n    if mode == \"standard\":\n        return 4.9\n    elif mode == \"express\":\n        return 9.9 + poids * 0.5\n    elif mode == \"retrait\":\n        return 0\n    raise ValueError(f\"Mode inconnu : {mode}\")\n\n\nprint(frais_de_port(\"express\", 3))\n",
+          "executable": true,
+          "sortie_attendue": "11.4\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ajouter la livraison par coursier oblige à modifier cette fonction, donc à la retester, et chaque nouveau cas augmente le risque d'erreur.\n\nAvec le polymorphisme, chaque mode de livraison est une classe. Le code qui calcule les frais ne change plus jamais."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Protocol\n\n\nclass Livraison(Protocol):\n    def frais(self, poids: float) -> float: ...\n\n\nclass Standard:\n    def frais(self, poids):\n        return 4.9\n\n\nclass Express:\n    def frais(self, poids):\n        return 9.9 + poids * 0.5\n\n\nclass Coursier:  # nouveau mode : aucune ligne existante modifiée\n    def frais(self, poids):\n        return 15.0 if poids <= 10 else 25.0\n\n\ndef total_commande(montant: float, poids: float, livraison: Livraison) -> float:\n    return round(montant + livraison.frais(poids), 2)\n\n\nfor livraison in (Standard(), Express(), Coursier()):\n    print(type(livraison).__name__, total_commande(50, 3, livraison))\n",
+          "executable": true,
+          "sortie_attendue": "Standard 54.9\nExpress 61.4\nCoursier 65.0\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Enregistrer les règles\n\nQuand le choix se fait à partir d'un texte (une configuration, un champ de formulaire), un **registre** relie chaque nom à sa classe. Un décorateur permet d'enregistrer une nouvelle règle là où on l'écrit."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "MODES = {}\n\n\ndef mode_livraison(nom):\n    def enregistrer(classe):\n        MODES[nom] = classe\n        return classe\n    return enregistrer\n\n\n@mode_livraison(\"standard\")\nclass Standard:\n    def frais(self, poids):\n        return 4.9\n\n\n@mode_livraison(\"relais\")\nclass PointRelais:\n    def frais(self, poids):\n        return 3.5\n\n\ndef frais_de_port(nom, poids):\n    return MODES[nom]().frais(poids)\n\n\nprint(sorted(MODES))\nprint(frais_de_port(\"relais\", 2))\n",
+          "executable": true,
+          "sortie_attendue": "['relais', 'standard']\n3.5\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Aucun code n'est fermé à toutes les évolutions. Le principe demande d'identifier ce qui **varie souvent** (ici les modes de livraison) et de le rendre extensible. Le reste peut rester simple."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Le calcul des commissions des commerciaux est une cascade de `if`. Réécris-le avec une classe par statut (`Junior` à 5 %, `Senior` à 8 %), puis ajoute **sans toucher aux deux premières** un statut `Manager` : 10 %, plus une prime fixe de 200.\n\nLe code affiche `50.0`, `80.0`, puis `300.0`.",
+          "code": "def commission(statut, ventes):\n    if statut == \"junior\":\n        return ventes * 0.05\n    elif statut == \"senior\":\n        return ventes * 0.08\n\n\n# Écris Junior, Senior et Manager, avec une méthode commission(ventes)\n\n\nfor statut in (Junior(), Senior(), Manager()):\n    print(statut.commission(1000))\n",
+          "solution": "class Junior:\n    def commission(self, ventes):\n        return ventes * 0.05\n\n\nclass Senior:\n    def commission(self, ventes):\n        return ventes * 0.08\n\n\nclass Manager:\n    def commission(self, ventes):\n        return ventes * 0.10 + 200\n\n\nfor statut in (Junior(), Senior(), Manager()):\n    print(statut.commission(1000))\n",
+          "sortie_attendue": "50.0\n80.0\n300.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Ouvert à l'extension, fermé à la modification : on ajoute du code, on ne modifie pas celui qui marche.\n- Le polymorphisme remplace les cascades de `if`.\n- Un registre relie un nom (configuration) à la classe qui le traite."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Bertrand Meyer, Object-Oriented Software Construction (principe ouvert-fermé)",
+          "url": "https://fr.wikipedia.org/wiki/Principe_ouvert/ferm%C3%A9"
+        }
+      ]
+    },
+    {
+      "id": "b20fa846-92ee-41be-9a12-7d9b1fe1573a",
+      "slug": "solid-substitution-de-liskov",
+      "titre": "L : le principe de substitution de Liskov",
+      "resume": "Vérifier qu'une classe fille peut toujours remplacer sa classe mère sans surprise, et reconnaître un héritage qui viole le contrat.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "solid-ouvert-ferme"
+      ],
+      "objectifs": [
+        "Énoncer le principe de substitution de Liskov",
+        "Reconnaître une classe fille qui casse le contrat de sa mère",
+        "Corriger une hiérarchie mal conçue",
+        "Tester le contrat sur toutes les classes filles"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **principe de substitution de Liskov**, formulé par Barbara Liskov, dit : **partout où l'on utilise une classe mère, on doit pouvoir utiliser une classe fille sans changer le résultat attendu**.\n\nUne classe fille peut faire **plus**, jamais **moins**. Elle ne doit ni refuser ce que la mère accepte, ni promettre moins que ce qu'elle promet."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Compte:\n    def __init__(self, solde):\n        self.solde = solde\n\n    def retirer(self, montant):\n        self.solde -= montant\n        return self.solde\n\n\nclass CompteEpargne(Compte):\n    def retirer(self, montant):\n        raise RuntimeError(\"Retrait interdit sur un compte épargne\")\n\n\ndef payer_facture(compte: Compte, montant):\n    return compte.retirer(montant)\n\n\nprint(payer_facture(Compte(100), 30))\ntry:\n    payer_facture(CompteEpargne(100), 30)\nexcept RuntimeError as erreur:\n    print(\"Surprise :\", erreur)\n",
+          "executable": true,
+          "sortie_attendue": "70\nSurprise : Retrait interdit sur un compte épargne\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`payer_facture` accepte un `Compte`, et `CompteEpargne` en est un… mais il refuse ce que la mère accepte. Le code appelant devrait tester le type de compte : c'est exactement ce que l'héritage devait éviter.\n\nLa correction : la hiérarchie ment. Un compte épargne n'est pas un compte **sur lequel on peut payer**. On sépare les capacités."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Compte:\n    def __init__(self, solde):\n        self.solde = solde\n\n\nclass CompteCourant(Compte):\n    def retirer(self, montant):\n        self.solde -= montant\n        return self.solde\n\n\nclass CompteEpargne(Compte):\n    def __init__(self, solde, taux):\n        super().__init__(solde)\n        self.taux = taux\n\n    def interets(self):\n        return round(self.solde * self.taux, 2)\n\n\ndef payer_facture(compte: CompteCourant, montant):\n    return compte.retirer(montant)\n\n\nprint(payer_facture(CompteCourant(100), 30))\nprint(CompteEpargne(1000, 0.03).interets())\n",
+          "executable": true,
+          "sortie_attendue": "70\n30.0\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le contrat, c'est aussi le résultat\n\nUne violation plus discrète : la classe fille renvoie un résultat d'une autre nature, ou ne respecte plus une règle de la mère. Un bon réflexe : un même test, exécuté sur **toutes** les classes filles."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Remise:\n    def appliquer(self, total):\n        \"\"\"Contrat : le résultat est entre 0 et le total.\"\"\"\n        return total\n\n\nclass RemiseDixPourcent(Remise):\n    def appliquer(self, total):\n        return total * 0.9\n\n\nclass RemiseFixe(Remise):\n    def appliquer(self, total):\n        return total - 15  # peut devenir négatif !\n\n\ndef respecte_le_contrat(remise):\n    return all(0 <= remise.appliquer(t) <= t for t in (0, 10, 100))\n\n\nfor remise in (Remise(), RemiseDixPourcent(), RemiseFixe()):\n    print(type(remise).__name__, respecte_le_contrat(remise))\n",
+          "executable": true,
+          "sortie_attendue": "Remise True\nRemiseDixPourcent True\nRemiseFixe False\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les signes d'une violation : une méthode redéfinie qui lève `NotImplementedError` ou une erreur « interdit », ou du code appelant qui teste `isinstance` avant d'appeler une méthode."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Corrige `RemiseFixe` pour qu'elle respecte le contrat : le total remisé ne descend jamais sous 0.\n\nLe code affiche `True`, puis `0` et `85`.",
+          "code": "class Remise:\n    def appliquer(self, total):\n        return total\n\n\nclass RemiseFixe(Remise):\n    def appliquer(self, total):\n        return total - 15\n\n\ndef respecte_le_contrat(remise):\n    return all(0 <= remise.appliquer(t) <= t for t in (0, 10, 100))\n\n\nprint(respecte_le_contrat(RemiseFixe()))\nprint(RemiseFixe().appliquer(10), RemiseFixe().appliquer(100))\n",
+          "solution": "class Remise:\n    def appliquer(self, total):\n        return total\n\n\nclass RemiseFixe(Remise):\n    def appliquer(self, total):\n        return max(total - 15, 0)\n\n\ndef respecte_le_contrat(remise):\n    return all(0 <= remise.appliquer(t) <= t for t in (0, 10, 100))\n\n\nprint(respecte_le_contrat(RemiseFixe()))\nprint(RemiseFixe().appliquer(10), RemiseFixe().appliquer(100))\n",
+          "sortie_attendue": "True\n0 85\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une classe fille doit pouvoir remplacer sa mère sans changer le résultat attendu.\n- Elle peut accepter plus et promettre plus, jamais moins.\n- Un test de contrat, exécuté sur toutes les classes filles, détecte les violations."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Principe de substitution de Liskov",
+          "url": "https://fr.wikipedia.org/wiki/Principe_de_substitution_de_Liskov"
+        }
+      ]
+    },
+    {
+      "id": "fb8d03f9-613d-4d8b-b859-d55333bbae2b",
+      "slug": "solid-segregation-des-interfaces",
+      "titre": "I : le principe de ségrégation des interfaces",
+      "resume": "Découper les gros contrats en petites interfaces ciblées, pour que chaque classe ne dépende que des méthodes qu'elle utilise vraiment.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "solid-substitution-de-liskov"
+      ],
+      "objectifs": [
+        "Énoncer le principe de ségrégation des interfaces",
+        "Reconnaître une interface trop large",
+        "Découper un contrat en petits Protocol"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **principe de ségrégation des interfaces** (*Interface Segregation Principle*) dit : **aucun code ne doit dépendre de méthodes qu'il n'utilise pas**.\n\nUne interface trop large oblige chaque classe à écrire des méthodes inutiles, souvent vides ou qui lèvent une erreur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from abc import ABC, abstractmethod\n\n\nclass Imprimante(ABC):\n    @abstractmethod\n    def imprimer(self, document): ...\n\n    @abstractmethod\n    def numeriser(self, document): ...\n\n    @abstractmethod\n    def faxer(self, document): ...\n\n\nclass ImprimanteSimple(Imprimante):\n    def imprimer(self, document):\n        return f\"Impression de {document}\"\n\n    def numeriser(self, document):\n        raise NotImplementedError(\"Pas de scanner\")\n\n    def faxer(self, document):\n        raise NotImplementedError(\"Pas de fax\")\n\n\nprint(ImprimanteSimple().imprimer(\"facture.pdf\"))\n",
+          "executable": true,
+          "sortie_attendue": "Impression de facture.pdf\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`ImprimanteSimple` est obligée de déclarer un scanner et un fax qu'elle n'a pas, et ces méthodes trompeuses violent aussi le principe de Liskov.\n\nOn découpe le contrat en **petites interfaces**, une par capacité. Chaque classe implémente celles qu'elle sait remplir, et chaque fonction ne demande que ce dont elle a besoin."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Protocol\n\n\nclass PeutImprimer(Protocol):\n    def imprimer(self, document: str) -> str: ...\n\n\nclass PeutNumeriser(Protocol):\n    def numeriser(self, document: str) -> str: ...\n\n\nclass ImprimanteSimple:\n    def imprimer(self, document):\n        return f\"Impression de {document}\"\n\n\nclass Multifonction:\n    def imprimer(self, document):\n        return f\"Impression de {document}\"\n\n    def numeriser(self, document):\n        return f\"{document} numérisé\"\n\n\ndef imprimer_tout(appareil: PeutImprimer, documents):\n    return [appareil.imprimer(d) for d in documents]\n\n\ndef archiver(scanner: PeutNumeriser, document):\n    return scanner.numeriser(document)\n\n\nprint(imprimer_tout(ImprimanteSimple(), [\"a.pdf\", \"b.pdf\"]))\nprint(archiver(Multifonction(), \"contrat.pdf\"))\n",
+          "executable": true,
+          "sortie_attendue": "['Impression de a.pdf', 'Impression de b.pdf']\ncontrat.pdf numérisé\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Côté fonctions : demander le minimum\n\nLe principe vaut aussi pour les paramètres. Une fonction qui n'utilise que `lire()` ne devrait pas exiger un objet `Fichier` complet : demander un `Protocol` minimal la rend utilisable avec un fichier, une réponse réseau ou un simple texte en mémoire."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import io\nfrom typing import Protocol\n\n\nclass Lisible(Protocol):\n    def read(self) -> str: ...\n\n\ndef compter_lignes(source: Lisible) -> int:\n    return len(source.read().splitlines())\n\n\nprint(compter_lignes(io.StringIO(\"nom;ville\\nCamille;Nantes\\nKarim;Lyon\")))\n",
+          "executable": true,
+          "sortie_attendue": "3\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les noms en « capacité » (`PeutImprimer`, `Lisible`, `AvecFrais`) aident à garder des interfaces petites : une capacité, une interface."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Le contrat `Employe` impose `travailler()`, `manger()` et `facturer()`. Un robot ne mange pas, un salarié ne facture pas. Découpe-le en trois `Protocol`, puis écris `Robot` (qui travaille et facture) et `Salarie` (qui travaille et mange).\n\nLa boucle fournie affiche `Robot travaille`, puis `Salarie travaille`.",
+          "code": "from typing import Protocol\n\n\n# Écris les trois Protocol, puis Robot et Salarie\n\n\ndef lancer_la_journee(equipe: list[Travailleur]):\n    for membre in equipe:\n        print(membre.travailler())\n\n\nlancer_la_journee([Robot(), Salarie()])\n",
+          "solution": "from typing import Protocol\n\n\nclass Travailleur(Protocol):\n    def travailler(self) -> str: ...\n\n\nclass Mangeur(Protocol):\n    def manger(self) -> str: ...\n\n\nclass Facturable(Protocol):\n    def facturer(self) -> float: ...\n\n\nclass Robot:\n    def travailler(self):\n        return \"Robot travaille\"\n\n    def facturer(self):\n        return 120.0\n\n\nclass Salarie:\n    def travailler(self):\n        return \"Salarie travaille\"\n\n    def manger(self):\n        return \"Pause déjeuner\"\n\n\ndef lancer_la_journee(equipe: list[Travailleur]):\n    for membre in equipe:\n        print(membre.travailler())\n\n\nlancer_la_journee([Robot(), Salarie()])\n",
+          "sortie_attendue": "Robot travaille\nSalarie travaille\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Aucun code ne doit dépendre de méthodes qu'il n'utilise pas.\n- Plusieurs petites interfaces valent mieux qu'une grosse.\n- Une fonction demande le contrat minimal dont elle a besoin."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "typing.Protocol",
+          "url": "https://docs.python.org/fr/3/library/typing.html#typing.Protocol"
+        }
+      ]
+    },
+    {
+      "id": "a2bc2dcf-ea89-4b82-87ce-2559e38a8536",
+      "slug": "solid-inversion-des-dependances",
+      "titre": "D : le principe d'inversion des dépendances",
+      "resume": "Faire dépendre le code métier d'abstractions plutôt que de détails techniques, et injecter les dépendances par le constructeur.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "solid-segregation-des-interfaces"
+      ],
+      "objectifs": [
+        "Énoncer le principe d'inversion des dépendances",
+        "Distinguer le code métier des détails techniques",
+        "Injecter une dépendance par le constructeur",
+        "Changer d'implémentation sans modifier le métier"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **principe d'inversion des dépendances** (*Dependency Inversion Principle*) dit :\n\n- le code **métier** (les règles importantes) ne doit pas dépendre des **détails** techniques (base de données, email, API) ;\n- les deux doivent dépendre d'une **abstraction**.\n\nLe contre-exemple : une classe métier qui crée elle-même ses outils techniques."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class BaseMySQL:\n    def enregistrer(self, commande):\n        return f\"MySQL : commande {commande} enregistrée\"\n\n\nclass ServiceCommande:\n    def __init__(self):\n        self.base = BaseMySQL()  # dépendance figée sur un détail technique\n\n    def valider(self, numero):\n        return self.base.enregistrer(numero)\n\n\nprint(ServiceCommande().valider(42))\n",
+          "executable": true,
+          "sortie_attendue": "MySQL : commande 42 enregistrée\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`ServiceCommande` est soudé à MySQL : impossible de passer à PostgreSQL ou de le tester sans base. La dépendance va du métier vers la technique.\n\nOn **inverse** : le métier définit le contrat dont il a besoin, et reçoit l'implémentation de l'extérieur. C'est l'**injection de dépendances**, ici par le constructeur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Protocol\n\n\nclass DepotCommandes(Protocol):  # l'abstraction, définie par le métier\n    def enregistrer(self, numero: int) -> str: ...\n\n\nclass ServiceCommande:  # le métier ne connaît que l'abstraction\n    def __init__(self, depot: DepotCommandes):\n        self.depot = depot\n\n    def valider(self, numero):\n        return self.depot.enregistrer(numero)\n\n\nclass DepotPostgres:  # un détail technique\n    def enregistrer(self, numero):\n        return f\"PostgreSQL : commande {numero} enregistrée\"\n\n\nclass DepotFichier:  # un autre détail technique\n    def enregistrer(self, numero):\n        return f\"Fichier : commande {numero} ajoutée\"\n\n\nfor depot in (DepotPostgres(), DepotFichier()):\n    print(ServiceCommande(depot).valider(42))\n",
+          "executable": true,
+          "sortie_attendue": "PostgreSQL : commande 42 enregistrée\nFichier : commande 42 ajoutée\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Assembler à un seul endroit\n\nLes objets sont construits et branchés à un seul endroit, au démarrage de l'application : la **racine de composition**. C'est le seul code qui connaît les implémentations concrètes ; il lit souvent la configuration pour choisir."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class DepotMemoire:\n    def __init__(self):\n        self.commandes = []\n\n    def enregistrer(self, numero):\n        self.commandes.append(numero)\n        return f\"Mémoire : {len(self.commandes)} commande(s)\"\n\n\nclass ServiceCommande:\n    def __init__(self, depot):\n        self.depot = depot\n\n    def valider(self, numero):\n        return self.depot.enregistrer(numero)\n\n\ndef construire_application(config):  # la racine de composition\n    depots = {\"memoire\": DepotMemoire}\n    return ServiceCommande(depots[config[\"stockage\"]]())\n\n\nservice = construire_application({\"stockage\": \"memoire\"})\nservice.valider(1)\nprint(service.valider(2))\n",
+          "executable": true,
+          "sortie_attendue": "Mémoire : 2 commande(s)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Inverser les dépendances ne veut pas dire tout abstraire. On le fait aux **frontières** : base de données, services externes, horloge, envoi de messages. Une fonction de calcul pure n'a besoin de rien."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "`Relance` crée elle-même un `EnvoiEmail`. Fais-lui recevoir son canal d'envoi par le constructeur, puis utilise-la avec le `EnvoiSms` fourni.\n\nLe code affiche : `SMS à Camille : facture 12 en retard`.",
+          "code": "class EnvoiEmail:\n    def envoyer(self, destinataire, message):\n        return f\"Email à {destinataire} : {message}\"\n\n\nclass EnvoiSms:\n    def envoyer(self, destinataire, message):\n        return f\"SMS à {destinataire} : {message}\"\n\n\nclass Relance:\n    def __init__(self):\n        self.canal = EnvoiEmail()\n\n    def relancer(self, client, facture):\n        return self.canal.envoyer(client, f\"facture {facture} en retard\")\n\n\n# Utilise Relance avec EnvoiSms\n",
+          "solution": "class EnvoiEmail:\n    def envoyer(self, destinataire, message):\n        return f\"Email à {destinataire} : {message}\"\n\n\nclass EnvoiSms:\n    def envoyer(self, destinataire, message):\n        return f\"SMS à {destinataire} : {message}\"\n\n\nclass Relance:\n    def __init__(self, canal):\n        self.canal = canal\n\n    def relancer(self, client, facture):\n        return self.canal.envoyer(client, f\"facture {facture} en retard\")\n\n\nprint(Relance(EnvoiSms()).relancer(\"Camille\", 12))\n",
+          "sortie_attendue": "SMS à Camille : facture 12 en retard\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Le métier dépend d'abstractions qu'il définit, pas des détails techniques.\n- Les dépendances sont injectées, souvent par le constructeur.\n- Une racine de composition assemble les objets à un seul endroit."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Principe d'inversion des dépendances",
+          "url": "https://fr.wikipedia.org/wiki/Inversion_des_d%C3%A9pendances"
+        }
+      ]
+    },
+    {
+      "id": "5c9681a6-07af-40fa-84fd-90291f6c754e",
+      "slug": "solid-tester-grace-a-solid",
+      "titre": "Tester grâce à SOLID",
+      "resume": "Profiter d'un code bien découpé pour écrire des tests rapides et fiables, avec des doublures à la place des dépendances techniques.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "solid-inversion-des-dependances"
+      ],
+      "objectifs": [
+        "Remplacer une dépendance par une doublure de test",
+        "Distinguer un bouchon d'un espion",
+        "Rendre le temps testable en injectant une horloge"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un code qui respecte SOLID est **facile à tester** : chaque classe a une responsabilité, et ses dépendances sont injectées. Dans un test, on remplace les dépendances techniques par des **doublures** : de petits objets écrits pour le test.\n\n- Un **bouchon** (*stub*) renvoie une réponse fixée à l'avance.\n- Un **espion** (*spy*) enregistre les appels reçus, pour les vérifier ensuite."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class ServiceInscription:\n    def __init__(self, depot, notifieur):\n        self.depot = depot\n        self.notifieur = notifieur\n\n    def inscrire(self, email):\n        if self.depot.existe(email):\n            return \"déjà inscrit\"\n        self.depot.ajouter(email)\n        self.notifieur.envoyer(email, \"Bienvenue !\")\n        return \"inscrit\"\n\n\nclass DepotEnMemoire:  # une vraie implémentation, simple, en mémoire\n    def __init__(self, emails=()):\n        self.emails = set(emails)\n\n    def existe(self, email):\n        return email in self.emails\n\n    def ajouter(self, email):\n        self.emails.add(email)\n\n\nclass NotifieurEspion:  # un espion : il note les messages au lieu de les envoyer\n    def __init__(self):\n        self.envois = []\n\n    def envoyer(self, email, message):\n        self.envois.append((email, message))\n\n\nespion = NotifieurEspion()\nservice = ServiceInscription(DepotEnMemoire({\"karim@exemple.fr\"}), espion)\nassert service.inscrire(\"camille@exemple.fr\") == \"inscrit\"\nassert service.inscrire(\"karim@exemple.fr\") == \"déjà inscrit\"\nassert espion.envois == [(\"camille@exemple.fr\", \"Bienvenue !\")]\nprint(\"Tous les tests passent\")\n",
+          "executable": true,
+          "sortie_attendue": "Tous les tests passent\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ces tests s'exécutent en une fraction de seconde, sans base de données ni serveur d'emails. Et ils vérifient la règle importante : on n'envoie pas de message à quelqu'un déjà inscrit.\n\n## Le temps est une dépendance\n\nUn code qui appelle directement `datetime.now()` est difficile à tester : le résultat change à chaque exécution. On injecte une **horloge**, et le test lui donne une date fixe."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from datetime import date\n\n\nclass Facture:\n    def __init__(self, echeance):\n        self.echeance = echeance\n\n\nclass ControleRetard:\n    def __init__(self, aujourd_hui=date.today):\n        self.aujourd_hui = aujourd_hui\n\n    def en_retard(self, facture):\n        return self.aujourd_hui() > facture.echeance\n\n\ncontrole = ControleRetard(aujourd_hui=lambda: date(2026, 3, 15))\nprint(controle.en_retard(Facture(date(2026, 3, 1))))\nprint(controle.en_retard(Facture(date(2026, 4, 1))))\n",
+          "executable": true,
+          "sortie_attendue": "True\nFalse\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "La bibliothèque standard propose `unittest.mock` pour créer des doublures automatiquement. Les doublures écrites à la main, comme ici, restent souvent plus lisibles, et leur besoin révèle les dépendances d'une classe."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Si une classe demande cinq doublures pour être testée, c'est un signal : elle a probablement trop de responsabilités. Les tests difficiles à écrire montrent où appliquer SOLID."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Teste `Promotion` : le prix est réduit de 20 % le vendredi, et seulement ce jour-là. Injecte une horloge qui renvoie le vendredi 13 mars 2026, puis le samedi 14 mars, et vérifie les deux cas avec `assert`.\n\nAffiche ensuite : `Promotion testée`.",
+          "code": "from datetime import date\n\n\nclass Promotion:\n    def __init__(self, aujourd_hui=date.today):\n        self.aujourd_hui = aujourd_hui\n\n    def prix(self, prix_normal):\n        if self.aujourd_hui().weekday() == 4:  # vendredi\n            return prix_normal * 0.8\n        return prix_normal\n\n\n# Écris tes deux vérifications ici\n",
+          "solution": "from datetime import date\n\n\nclass Promotion:\n    def __init__(self, aujourd_hui=date.today):\n        self.aujourd_hui = aujourd_hui\n\n    def prix(self, prix_normal):\n        if self.aujourd_hui().weekday() == 4:  # vendredi\n            return prix_normal * 0.8\n        return prix_normal\n\n\nassert Promotion(lambda: date(2026, 3, 13)).prix(100) == 80\nassert Promotion(lambda: date(2026, 3, 14)).prix(100) == 100\nprint(\"Promotion testée\")\n",
+          "sortie_attendue": "Promotion testée\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Les dépendances injectées se remplacent par des doublures dans les tests.\n- Un bouchon renvoie une réponse fixée, un espion enregistre les appels.\n- L'horloge est une dépendance : on l'injecte pour tester le temps."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "unittest.mock",
+          "url": "https://docs.python.org/fr/3/library/unittest.mock.html"
+        }
+      ]
+    },
+    {
+      "id": "b4e98f03-5dc3-459d-a131-58c465dd35d1",
+      "slug": "solid-projet-refactoring",
+      "titre": "Projet : refactoriser un service de facturation",
+      "resume": "Appliquer les cinq principes SOLID, étape par étape, à un service de facturation monolithique, sans changer son comportement.",
+      "theme": "python-poo",
+      "niveau": "intermediaire",
+      "duree_minutes": 18,
+      "prerequis": [
+        "solid-tester-grace-a-solid"
+      ],
+      "objectifs": [
+        "Fixer le comportement par un test avant de refactoriser",
+        "Découper un service en responsabilités",
+        "Rendre les règles extensibles et les dépendances injectables"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Voici le service de facturation d'une petite entreprise. Il calcule, applique la TVA selon le pays, formate et envoie : tout est mélangé. On va le refactoriser, c'est-à-dire changer sa structure **sans changer son comportement**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def facturer(client, lignes):\n    total_ht = sum(prix * quantite for prix, quantite in lignes)\n    if client[\"pays\"] == \"FR\":\n        tva = total_ht * 0.20\n    elif client[\"pays\"] == \"BE\":\n        tva = total_ht * 0.21\n    else:\n        tva = 0\n    texte = f\"Facture {client['nom']} : {total_ht:.2f} HT, {total_ht + tva:.2f} TTC\"\n    print(f\"Envoi à {client['email']} -> {texte}\")\n    return round(total_ht + tva, 2)\n\n\nfacturer({\"nom\": \"Atelier Duval\", \"pays\": \"FR\", \"email\": \"compta@duval.fr\"}, [(100, 2), (25, 4)])\n",
+          "executable": true,
+          "sortie_attendue": "Envoi à compta@duval.fr -> Facture Atelier Duval : 300.00 HT, 360.00 TTC\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Étape 1 : découper (S) et rendre la TVA extensible (O)\n\nAvant de toucher au code, on note le résultat attendu : 360 € TTC. Puis on sépare le calcul, les règles de TVA et l'envoi. Chaque pays devient une règle enregistrée dans un dictionnaire : ajouter un pays ne modifiera plus le calcul."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Client:\n    nom: str\n    pays: str\n    email: str\n\n\nTAUX_TVA = {\"FR\": 0.20, \"BE\": 0.21}\n\n\ndef taux_tva(pays):\n    return TAUX_TVA.get(pays, 0)\n\n\ndef calculer(lignes, pays):\n    total_ht = sum(prix * quantite for prix, quantite in lignes)\n    return total_ht, round(total_ht * (1 + taux_tva(pays)), 2)\n\n\nprint(calculer([(100, 2), (25, 4)], \"FR\"))\nTAUX_TVA[\"LU\"] = 0.17  # un nouveau pays : une ligne, aucune fonction modifiée\nprint(calculer([(100, 1)], \"LU\"))\n",
+          "executable": true,
+          "sortie_attendue": "(300, 360.0)\n(100, 117.0)\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Étape 2 : injecter l'envoi (D, I)\n\nL'envoi est un détail technique : le service reçoit un objet qui sait `envoyer`, et rien de plus (une interface minimale). On le teste avec un espion, puis on vérifie que le comportement d'origine est conservé."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\nfrom typing import Protocol\n\n\n@dataclass(frozen=True)\nclass Client:\n    nom: str\n    pays: str\n    email: str\n\n\nTAUX_TVA = {\"FR\": 0.20, \"BE\": 0.21}\n\n\ndef calculer(lignes, pays):\n    total_ht = sum(prix * quantite for prix, quantite in lignes)\n    return total_ht, round(total_ht * (1 + TAUX_TVA.get(pays, 0)), 2)\n\n\nclass Envoi(Protocol):\n    def envoyer(self, destinataire: str, texte: str) -> None: ...\n\n\nclass EnvoiConsole:\n    def envoyer(self, destinataire, texte):\n        print(f\"Envoi à {destinataire} -> {texte}\")\n\n\nclass EnvoiEspion:\n    def __init__(self):\n        self.messages = []\n\n    def envoyer(self, destinataire, texte):\n        self.messages.append(destinataire)\n\n\nclass ServiceFacturation:\n    def __init__(self, envoi: Envoi):\n        self.envoi = envoi\n\n    def facturer(self, client: Client, lignes):\n        total_ht, total_ttc = calculer(lignes, client.pays)\n        texte = f\"Facture {client.nom} : {total_ht:.2f} HT, {total_ttc:.2f} TTC\"\n        self.envoi.envoyer(client.email, texte)\n        return total_ttc\n\n\nduval = Client(\"Atelier Duval\", \"FR\", \"compta@duval.fr\")\nespion = EnvoiEspion()\nassert ServiceFacturation(espion).facturer(duval, [(100, 2), (25, 4)]) == 360.0\nassert espion.messages == [\"compta@duval.fr\"]\nServiceFacturation(EnvoiConsole()).facturer(duval, [(100, 2), (25, 4)])\n",
+          "executable": true,
+          "sortie_attendue": "Envoi à compta@duval.fr -> Facture Atelier Duval : 300.00 HT, 360.00 TTC\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Le comportement est identique à celui du départ : même texte, même total. C'est la règle d'or du refactoring, qu'on garantit en gardant le test du début et en le relançant après chaque étape."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute un envoi par **archive** : `EnvoiArchive` garde chaque texte dans une liste `archives`, sans rien afficher. Facture ensuite le client belge fourni (TVA à 21 %) et affiche le texte archivé.\n\nLe code affiche : `Facture Brasserie Lux : 200.00 HT, 242.00 TTC`.",
+          "code": "from dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Client:\n    nom: str\n    pays: str\n    email: str\n\n\nTAUX_TVA = {\"FR\": 0.20, \"BE\": 0.21}\n\n\ndef calculer(lignes, pays):\n    total_ht = sum(prix * quantite for prix, quantite in lignes)\n    return total_ht, round(total_ht * (1 + TAUX_TVA.get(pays, 0)), 2)\n\n\nclass ServiceFacturation:\n    def __init__(self, envoi):\n        self.envoi = envoi\n\n    def facturer(self, client, lignes):\n        total_ht, total_ttc = calculer(lignes, client.pays)\n        texte = f\"Facture {client.nom} : {total_ht:.2f} HT, {total_ttc:.2f} TTC\"\n        self.envoi.envoyer(client.email, texte)\n        return total_ttc\n\n\n# Écris EnvoiArchive, puis facture Client(\"Brasserie Lux\", \"BE\", \"info@lux.be\") pour [(50, 4)]\n",
+          "solution": "from dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Client:\n    nom: str\n    pays: str\n    email: str\n\n\nTAUX_TVA = {\"FR\": 0.20, \"BE\": 0.21}\n\n\ndef calculer(lignes, pays):\n    total_ht = sum(prix * quantite for prix, quantite in lignes)\n    return total_ht, round(total_ht * (1 + TAUX_TVA.get(pays, 0)), 2)\n\n\nclass ServiceFacturation:\n    def __init__(self, envoi):\n        self.envoi = envoi\n\n    def facturer(self, client, lignes):\n        total_ht, total_ttc = calculer(lignes, client.pays)\n        texte = f\"Facture {client.nom} : {total_ht:.2f} HT, {total_ttc:.2f} TTC\"\n        self.envoi.envoyer(client.email, texte)\n        return total_ttc\n\n\nclass EnvoiArchive:\n    def __init__(self):\n        self.archives = []\n\n    def envoyer(self, destinataire, texte):\n        self.archives.append(texte)\n\n\narchive = EnvoiArchive()\nServiceFacturation(archive).facturer(Client(\"Brasserie Lux\", \"BE\", \"info@lux.be\"), [(50, 4)])\nprint(archive.archives[0])\n",
+          "sortie_attendue": "Facture Brasserie Lux : 200.00 HT, 242.00 TTC\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Refactoriser, c'est changer la structure sans changer le comportement : un test le garantit.\n- On avance par petites étapes : découper, rendre extensible, injecter.\n- Le résultat : de petites pièces, faciles à tester, à remplacer et à étendre."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Martin Fowler, Refactoring",
+          "url": "https://refactoring.com/"
+        }
+      ]
+    }
+  ]
+}

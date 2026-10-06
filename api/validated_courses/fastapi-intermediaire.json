@@ -1,0 +1,658 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "5348c45c-4b47-4837-af6a-a7a8cab999fd",
+    "slug": "fastapi-intermediaire",
+    "titre": "FastAPI : niveau intermédiaire",
+    "description": "Structurer une API FastAPI de production : injection de dépendances, ressources ouvertes et fermées avec yield, routeurs, authentification par jeton, gestion centralisée des erreurs, middlewares et CORS, tâches de fond et cycle de vie, tests avec dependency_overrides, et une API branchée sur SQLAlchemy. Prérequis : FastAPI, les bases.",
+    "niveau": "intermediaire",
+    "theme": "python-fastapi",
+    "lecons": [
+      "fastapi-inter-dependances",
+      "fastapi-inter-dependances-yield",
+      "fastapi-inter-routeurs",
+      "fastapi-inter-authentification",
+      "fastapi-inter-gestion-des-erreurs",
+      "fastapi-inter-middlewares",
+      "fastapi-inter-taches-et-cycle-de-vie",
+      "fastapi-inter-tests",
+      "fastapi-inter-projet-api-avec-base"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "746df561-55b7-4af7-9518-34f76871f70d",
+      "slug": "fastapi-inter-dependances",
+      "titre": "L'injection de dépendances avec Depends",
+      "resume": "Partager du code entre les routes avec Depends : paramètres communs, classes de dépendance et dépendances qui en utilisent d'autres.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "fastapi-projet-api-de-taches"
+      ],
+      "objectifs": [
+        "Déclarer une dépendance avec Depends",
+        "Factoriser des paramètres communs, comme la pagination",
+        "Utiliser une classe comme dépendance",
+        "Enchaîner des dépendances"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Plusieurs routes ont besoin des mêmes choses : la pagination, l'utilisateur connecté, une session de base de données. Plutôt que de répéter ce code, on l'écrit dans une **dépendance** : une fonction que FastAPI appelle **avant** la route, et dont il passe le résultat en paramètre.\n\nOn la déclare avec `Depends`. C'est le principe d'**inversion des dépendances** vu avec SOLID : la route reçoit ce dont elle a besoin, elle ne le fabrique pas."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, Query\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nCLIENTS = [f\"Client {i}\" for i in range(1, 8)]\nFACTURES = [f\"F-{i:03d}\" for i in range(1, 30)]\n\n\nasync def pagination(page: Annotated[int, Query(ge=1)] = 1, taille: Annotated[int, Query(ge=1, le=50)] = 3):\n    return {\"debut\": (page - 1) * taille, \"fin\": page * taille}\n\n\nPagination = Annotated[dict, Depends(pagination)]\n\n\n@app.get(\"/clients\")\nasync def clients(p: Pagination):\n    return CLIENTS[p[\"debut\"]:p[\"fin\"]]\n\n\n@app.get(\"/factures\")\nasync def factures(p: Pagination):\n    return FACTURES[p[\"debut\"]:p[\"fin\"]]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/clients?page=2\")).json())\n    print((await client.get(\"/factures?taille=2\")).json())\n    print((await client.get(\"/factures?taille=500\")).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "['Client 4', 'Client 5', 'Client 6']\n['F-001', 'F-002']\n422\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Les paramètres de la dépendance (`page`, `taille`) deviennent des paramètres de requête des routes, avec leurs règles de validation. `Pagination = Annotated[...]` donne un nom au type : chaque route n'a plus qu'à l'écrire.\n\n## Un modèle pour les paramètres de requête\n\nQuand les paramètres vont ensemble, un modèle Pydantic les regroupe : `Annotated[Tri, Query()]` lit chaque champ du modèle dans l'adresse. C'est plus lisible qu'un dictionnaire, l'éditeur connaît les attributs, et le modèle peut porter des méthodes."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated, Literal\n\nfrom fastapi import FastAPI, Query\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\nPRODUITS = [{\"nom\": \"Stylo\", \"prix\": 1.5}, {\"nom\": \"Agenda\", \"prix\": 12}, {\"nom\": \"Cahier\", \"prix\": 30}]\n\n\nclass Tri(BaseModel):\n    champ: Literal[\"nom\", \"prix\"] = \"nom\"\n    decroissant: bool = False\n\n    def appliquer(self, elements):\n        return sorted(elements, key=lambda e: e[self.champ], reverse=self.decroissant)\n\n\n@app.get(\"/produits\")\nasync def produits(tri: Annotated[Tri, Query()]):\n    return [p[\"nom\"] for p in tri.appliquer(PRODUITS)]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/produits\")).json())\n    print((await client.get(\"/produits?champ=prix&decroissant=true\")).json())\n",
+          "executable": true,
+          "sortie_attendue": "['Agenda', 'Cahier', 'Stylo']\n['Cahier', 'Agenda', 'Stylo']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Sur un vrai serveur, une classe peut aussi servir directement de dépendance, `Annotated[Tri, Depends()]` : FastAPI l'instancie avec les paramètres de son constructeur. Dans le navigateur, préfère le modèle : FastAPI exécute une dépendance qui n'est pas `async` dans un thread, et la plateforme n'en a pas.\n\n## Des dépendances qui en utilisent d'autres\n\nUne dépendance peut elle-même dépendre d'autres dépendances. FastAPI résout tout l'arbre, et n'appelle chaque dépendance **qu'une fois** par requête, même si plusieurs en ont besoin."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, Header\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nappels = []\n\n\nasync def langue(accept_language: Annotated[str, Header()] = \"fr\"):\n    appels.append(\"langue\")\n    return accept_language[:2]\n\n\nasync def messages(code_langue: Annotated[str, Depends(langue)]):\n    return {\"fr\": \"Bonjour\", \"en\": \"Hello\"}.get(code_langue, \"Bonjour\")\n\n\n@app.get(\"/accueil\")\nasync def accueil(message: Annotated[str, Depends(messages)], code_langue: Annotated[str, Depends(langue)]):\n    return {\"message\": message, \"langue\": code_langue}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/accueil\", headers={\"Accept-Language\": \"en-GB\"})).json())\nprint(appels)\n",
+          "executable": true,
+          "sortie_attendue": "{'message': 'Hello', 'langue': 'en'}\n['langue']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`Header()` lit un en-tête HTTP : le paramètre `accept_language` correspond à l'en-tête `Accept-Language`, FastAPI convertit les tirets bas. `Cookie()` lit un cookie de la même façon."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une dépendance `filtre_periode(annee: int = 2026, mois: int | None = None)` qui renvoie un texte : `\"2026\"` ou `\"2026-03\"`. Utilise-la dans `GET /ventes`, qui renvoie `{\"periode\": ...}`.\n\nLe code affiche `{'periode': '2026-03'}`, puis `{'periode': '2025'}`.",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n# Écris la dépendance et la route ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/ventes?mois=3\")).json())\n    print((await client.get(\"/ventes?annee=2025\")).json())\n",
+          "solution": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\nasync def filtre_periode(annee: int = 2026, mois: int | None = None):\n    return f\"{annee}-{mois:02d}\" if mois else str(annee)\n\n\n@app.get(\"/ventes\")\nasync def ventes(periode: Annotated[str, Depends(filtre_periode)]):\n    return {\"periode\": periode}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/ventes?mois=3\")).json())\n    print((await client.get(\"/ventes?annee=2025\")).json())\n",
+          "sortie_attendue": "{'periode': '2026-03'}\n{'periode': '2025'}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `Depends(fonction)` exécute la dépendance avant la route et lui passe son résultat.\n- Ses paramètres deviennent ceux de la route, avec leur validation.\n- Une classe peut servir de dépendance ; les dépendances s'enchaînent et sont mises en cache par requête."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : dépendances",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/dependencies/"
+        }
+      ]
+    },
+    {
+      "id": "96f7da6f-d747-43fb-8991-e466a2bf8bb0",
+      "slug": "fastapi-inter-dependances-yield",
+      "titre": "Ouvrir et fermer des ressources avec yield",
+      "resume": "Écrire des dépendances qui ouvrent une ressource avant la route et la referment après, même en cas d'erreur, comme une session de base de données.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "fastapi-inter-dependances"
+      ],
+      "objectifs": [
+        "Écrire une dépendance avec yield",
+        "Garantir la fermeture d'une ressource avec try et finally",
+        "Valider ou annuler une transaction selon le résultat de la route"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Certaines ressources doivent être **ouvertes** avant la route et **fermées** après : une session de base de données, un fichier, une connexion à un service. Une dépendance avec `yield` le fait :\n\n- le code **avant** `yield` s'exécute avant la route ;\n- la valeur passée à `yield` est donnée à la route ;\n- le code **après** `yield` s'exécute une fois la route terminée."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\nclass Session:\n    def __init__(self):\n        journal.append(\"ouverture\")\n\n    def fermer(self):\n        journal.append(\"fermeture\")\n\n\nasync def session():\n    s = Session()\n    try:\n        yield s\n    finally:\n        s.fermer()\n\n\n@app.get(\"/clients\")\nasync def clients(s: Annotated[Session, Depends(session)]):\n    journal.append(\"route\")\n    return [\"Camille\", \"Karim\"]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    await client.get(\"/clients\")\nprint(journal)\n",
+          "executable": true,
+          "sortie_attendue": "['ouverture', 'route', 'fermeture']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le `try`/`finally` garantit la fermeture, **même si la route lève une erreur**. Sans lui, une exception laisserait la ressource ouverte ; sur un serveur qui tourne des semaines, les connexions s'accumuleraient.\n\n## Valider ou annuler\n\nLe code après `yield` peut savoir si la route a réussi. Le motif classique : valider la transaction si tout va bien, l'annuler en cas d'erreur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\nasync def transaction():\n    journal.append(\"début\")\n    try:\n        yield\n        journal.append(\"commit\")\n    except Exception:\n        journal.append(\"rollback\")\n        raise\n\n\n@app.post(\"/virements\")\nasync def virer(montant: int, _: Annotated[None, Depends(transaction)]):\n    if montant > 1000:\n        raise HTTPException(400, detail=\"Plafond dépassé\")\n    return {\"virement\": montant}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/virements?montant=200\")).status_code)\n    print((await client.post(\"/virements?montant=5000\")).status_code)\nprint(journal)\n",
+          "executable": true,
+          "sortie_attendue": "200\n400\n['début', 'commit', 'début', 'rollback']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Si tu rattrapes l'exception dans la dépendance, **relance-la** avec `raise` : sinon, FastAPI ne saura pas qu'une erreur a eu lieu et la réponse ne correspondra pas à ce qui s'est passé."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "La dernière leçon du parcours utilise exactement ce motif avec une vraie session SQLAlchemy : `with Session(engine) as session: yield session`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une dépendance `chronometre` qui ajoute `\"départ\"` au journal avant la route et `\"arrivée\"` après, dans un `finally`. La route `GET /rapport` ajoute `\"calcul\"` puis lève une `HTTPException` 500.\n\nLe code affiche `500`, puis `['départ', 'calcul', 'arrivée']`.",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n# Écris la dépendance et la route ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/rapport\")).status_code)\nprint(journal)\n",
+          "solution": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\nasync def chronometre():\n    journal.append(\"départ\")\n    try:\n        yield\n    finally:\n        journal.append(\"arrivée\")\n\n\n@app.get(\"/rapport\")\nasync def rapport(_: Annotated[None, Depends(chronometre)]):\n    journal.append(\"calcul\")\n    raise HTTPException(500, detail=\"Échec du calcul\")\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/rapport\")).status_code)\nprint(journal)\n",
+          "sortie_attendue": "500\n['départ', 'calcul', 'arrivée']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une dépendance avec `yield` ouvre une ressource avant la route et la referme après.\n- `try`/`finally` garantit la fermeture, même en cas d'erreur.\n- On valide après `yield`, on annule dans `except`, et on relance l'exception."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : dépendances avec yield",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/dependencies/dependencies-with-yield/"
+        }
+      ]
+    },
+    {
+      "id": "6df85241-0b6c-4115-8a76-f33c61934fc2",
+      "slug": "fastapi-inter-routeurs",
+      "titre": "Organiser une grande API avec APIRouter",
+      "resume": "Découper une API en routeurs par domaine, avec un préfixe, des étiquettes et des dépendances communes, puis les assembler dans l'application.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "fastapi-inter-dependances-yield"
+      ],
+      "objectifs": [
+        "Créer un routeur avec APIRouter",
+        "Donner un préfixe et des étiquettes à un routeur",
+        "Appliquer une dépendance à toutes les routes d'un routeur",
+        "Assembler les routeurs avec include_router"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une vraie API compte des dizaines de routes. On les range **par domaine** (clients, factures, administration), un fichier chacun, avec un `APIRouter` : un mini-routeur qui s'écrit exactement comme `app`.\n\nL'application assemble ensuite les routeurs avec `include_router`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import APIRouter, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\n# clients.py\nclients = APIRouter(prefix=\"/clients\", tags=[\"clients\"])\n\n\n@clients.get(\"\")\nasync def lister_clients():\n    return [\"Camille\", \"Karim\"]\n\n\n@clients.get(\"/{client_id}\")\nasync def lire_client(client_id: int):\n    return {\"id\": client_id}\n\n\n# factures.py\nfactures = APIRouter(prefix=\"/factures\", tags=[\"factures\"])\n\n\n@factures.get(\"\")\nasync def lister_factures():\n    return [\"F-001\"]\n\n\n# main.py\napp = FastAPI()\napp.include_router(clients)\napp.include_router(factures, prefix=\"/v1\")\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/clients\")).json())\n    print((await client.get(\"/clients/3\")).json())\n    print((await client.get(\"/v1/factures\")).json())\n    print(sorted((await client.get(\"/openapi.json\")).json()[\"paths\"]))\n",
+          "executable": true,
+          "sortie_attendue": "['Camille', 'Karim']\n{'id': 3}\n['F-001']\n['/clients', '/clients/{client_id}', '/v1/factures']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "- `prefix` s'ajoute devant toutes les routes du routeur ; `include_router` peut en ajouter un autre, comme une version (`/v1`) ;\n- `tags` regroupe les routes par rubrique dans la documentation `/docs`.\n\n## Des dépendances pour tout un routeur\n\n`dependencies=[Depends(...)]` applique une dépendance à **toutes** les routes du routeur. C'est la bonne façon de protéger tout un espace, par exemple l'administration."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import APIRouter, Depends, FastAPI, Header, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\n\nasync def exiger_admin(x_role: Annotated[str, Header()] = \"visiteur\"):\n    if x_role != \"admin\":\n        raise HTTPException(403, detail=\"Réservé aux administrateurs\")\n\n\nadmin = APIRouter(prefix=\"/admin\", tags=[\"admin\"], dependencies=[Depends(exiger_admin)])\n\n\n@admin.get(\"/statistiques\")\nasync def statistiques():\n    return {\"utilisateurs\": 128}\n\n\n@admin.delete(\"/cache\", status_code=204)\nasync def vider_cache():\n    return None\n\n\napp = FastAPI()\napp.include_router(admin)\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/admin/statistiques\")).status_code)\n    print((await client.get(\"/admin/statistiques\", headers={\"X-Role\": \"admin\"})).json())\n    print((await client.delete(\"/admin/cache\")).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "403\n{'utilisateurs': 128}\n403\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une organisation courante : un dossier par domaine (`clients/`, `factures/`) qui contient son routeur, ses modèles Pydantic et son accès aux données. C'est ce que fait l'API de cette plateforme."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Crée un routeur `produits` avec le préfixe `/produits`, une route `GET \"\"` qui renvoie `[\"Stylo\"]`, et inclus-le dans l'application sous le préfixe `/api`.\n\nLe code affiche `200 ['Stylo']`.",
+          "code": "from fastapi import APIRouter, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\n# Écris le routeur ici\n\napp = FastAPI()\n# Inclus le routeur ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/api/produits\")\n    print(reponse.status_code, reponse.json())\n",
+          "solution": "from fastapi import APIRouter, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\nproduits = APIRouter(prefix=\"/produits\")\n\n\n@produits.get(\"\")\nasync def lister():\n    return [\"Stylo\"]\n\n\napp = FastAPI()\napp.include_router(produits, prefix=\"/api\")\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/api/produits\")\n    print(reponse.status_code, reponse.json())\n",
+          "sortie_attendue": "200 ['Stylo']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `APIRouter` s'écrit comme `app` et regroupe les routes d'un domaine.\n- `prefix` et `tags` organisent les adresses et la documentation.\n- `dependencies=[...]` protège toutes les routes d'un routeur."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : applications plus grandes",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/bigger-applications/"
+        }
+      ]
+    },
+    {
+      "id": "b8cf3524-ba29-4dbf-8cf0-d1aa8baff6a8",
+      "slug": "fastapi-inter-authentification",
+      "titre": "Authentifier avec un jeton",
+      "resume": "Protéger des routes avec un jeton porteur dans l'en-tête Authorization, retrouver l'utilisateur connecté par une dépendance et vérifier ses droits.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 16,
+      "prerequis": [
+        "fastapi-inter-routeurs"
+      ],
+      "objectifs": [
+        "Lire un jeton porteur avec HTTPBearer",
+        "Écrire une dépendance qui renvoie l'utilisateur connecté",
+        "Répondre 401 ou 403 selon le cas",
+        "Vérifier un rôle avec une dépendance paramétrée"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une API protégée demande au client de prouver son identité. Le schéma le plus répandu : à la connexion, le serveur donne un **jeton** (*token*) ; le client l'envoie ensuite dans chaque requête, dans l'en-tête `Authorization: Bearer <jeton>`.\n\n`HTTPBearer` lit cet en-tête. Une dépendance `utilisateur_courant` retrouve l'utilisateur, ou répond **401** (*non authentifié*)."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom fastapi.security import HTTPAuthorizationCredentials, HTTPBearer\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\nJETONS = {\"jeton-camille\": \"camille\", \"jeton-karim\": \"karim\"}\n\n\nclass Utilisateur(BaseModel):\n    pseudo: str\n\n\nasync def utilisateur_courant(\n    identifiants: Annotated[HTTPAuthorizationCredentials | None, Depends(HTTPBearer(auto_error=False))],\n) -> Utilisateur:\n    if identifiants is None or identifiants.credentials not in JETONS:\n        raise HTTPException(\n            status.HTTP_401_UNAUTHORIZED,\n            detail=\"Authentification requise\",\n            headers={\"WWW-Authenticate\": \"Bearer\"},\n        )\n    return Utilisateur(pseudo=JETONS[identifiants.credentials])\n\n\nConnecte = Annotated[Utilisateur, Depends(utilisateur_courant)]\n\n\n@app.get(\"/moi\")\nasync def moi(utilisateur: Connecte):\n    return utilisateur\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/moi\", headers={\"Authorization\": \"Bearer jeton-camille\"})).json())\n    sans = await client.get(\"/moi\")\n    print(sans.status_code, sans.headers[\"www-authenticate\"])\n    print((await client.get(\"/moi\", headers={\"Authorization\": \"Bearer faux\"})).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'pseudo': 'camille'}\n401 Bearer\n401\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Toute route qui reçoit un paramètre `Connecte` est désormais protégée. La documentation `/docs` affiche un bouton « Authorize » pour y saisir le jeton.\n\n## 401 ou 403 ?\n\n- **401** : on ne sait pas qui tu es (jeton absent ou invalide) ;\n- **403** : on sait qui tu es, mais tu n'as pas le droit.\n\nUne dépendance **paramétrée** vérifie le rôle : une fonction qui renvoie une dépendance."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, Header, HTTPException\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\nUTILISATEURS = {\"jeton-camille\": (\"camille\", \"admin\"), \"jeton-karim\": (\"karim\", \"lecteur\")}\n\n\nclass Utilisateur(BaseModel):\n    pseudo: str\n    role: str\n\n\nasync def utilisateur_courant(authorization: Annotated[str, Header()] = \"\") -> Utilisateur:\n    jeton = authorization.removeprefix(\"Bearer \")\n    if jeton not in UTILISATEURS:\n        raise HTTPException(401, detail=\"Authentification requise\")\n    pseudo, role = UTILISATEURS[jeton]\n    return Utilisateur(pseudo=pseudo, role=role)\n\n\ndef exiger_role(*roles: str):\n    async def verifier(utilisateur: Annotated[Utilisateur, Depends(utilisateur_courant)]) -> Utilisateur:\n        if utilisateur.role not in roles:\n            raise HTTPException(403, detail=\"Droits insuffisants\")\n        return utilisateur\n    return verifier\n\n\n@app.delete(\"/clients/{client_id}\")\nasync def supprimer(client_id: int, admin: Annotated[Utilisateur, Depends(exiger_role(\"admin\"))]):\n    return {\"supprime\": client_id, \"par\": admin.pseudo}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for jeton in (\"jeton-camille\", \"jeton-karim\", \"inconnu\"):\n        reponse = await client.delete(\"/clients/7\", headers={\"Authorization\": f\"Bearer {jeton}\"})\n        print(reponse.status_code, reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "200 {'supprime': 7, 'par': 'camille'}\n403 {'detail': 'Droits insuffisants'}\n401 {'detail': 'Authentification requise'}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ici, les jetons sont écrits en dur pour l'exemple. En production, un jeton est long, aléatoire (`secrets.token_urlsafe(32)`) et stocké **haché**, ou signé (JWT). Il ne circule que sur HTTPS, et les mots de passe se hachent avec un algorithme dédié, comme Argon2."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "C'est le motif qu'utilise l'API de cette plateforme : une dépendance donne l'utilisateur connecté, et `exiger_role(...)` restreint une route. Les droits se vérifient **dans l'API**, jamais seulement dans l'interface."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Protège `GET /rapports` pour qu'elle exige un utilisateur connecté (n'importe quel rôle), et renvoie `{\"auteur\": pseudo}`.\n\nLe code affiche `{'auteur': 'karim'}`, puis `401`.",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, Header, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nJETONS = {\"jeton-karim\": \"karim\"}\n\n\nasync def utilisateur_courant(authorization: Annotated[str, Header()] = \"\") -> str:\n    jeton = authorization.removeprefix(\"Bearer \")\n    if jeton not in JETONS:\n        raise HTTPException(401, detail=\"Authentification requise\")\n    return JETONS[jeton]\n\n\n@app.get(\"/rapports\")\nasync def rapports():  # Protège cette route\n    return {\"auteur\": None}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/rapports\", headers={\"Authorization\": \"Bearer jeton-karim\"})).json())\n    print((await client.get(\"/rapports\")).status_code)\n",
+          "solution": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, Header, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nJETONS = {\"jeton-karim\": \"karim\"}\n\n\nasync def utilisateur_courant(authorization: Annotated[str, Header()] = \"\") -> str:\n    jeton = authorization.removeprefix(\"Bearer \")\n    if jeton not in JETONS:\n        raise HTTPException(401, detail=\"Authentification requise\")\n    return JETONS[jeton]\n\n\n@app.get(\"/rapports\")\nasync def rapports(pseudo: Annotated[str, Depends(utilisateur_courant)]):\n    return {\"auteur\": pseudo}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/rapports\", headers={\"Authorization\": \"Bearer jeton-karim\"})).json())\n    print((await client.get(\"/rapports\")).status_code)\n",
+          "sortie_attendue": "{'auteur': 'karim'}\n401\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Le jeton voyage dans `Authorization: Bearer <jeton>` ; `HTTPBearer` le lit.\n- Une dépendance renvoie l'utilisateur connecté, ou répond 401.\n- 403 quand l'utilisateur est connu mais n'a pas le droit ; une dépendance paramétrée vérifie le rôle."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : sécurité",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/security/"
+        }
+      ]
+    },
+    {
+      "id": "2ef73427-92c2-4ca9-9663-f261d45bc1cc",
+      "slug": "fastapi-inter-gestion-des-erreurs",
+      "titre": "Centraliser la gestion des erreurs",
+      "resume": "Lever des exceptions métier dans le code et les traduire en réponses HTTP à un seul endroit, avec des gestionnaires d'exceptions.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "fastapi-inter-authentification"
+      ],
+      "objectifs": [
+        "Définir des exceptions métier",
+        "Les traduire en réponses avec exception_handler",
+        "Personnaliser la réponse des erreurs de validation"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le code métier ne devrait pas connaître HTTP : une règle comme « le stock est insuffisant » se teste et se réutilise sans serveur web. Il lève donc une **exception métier**, et un **gestionnaire d'exceptions**, déclaré une fois dans l'application, la traduit en réponse HTTP."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, Request\nfrom fastapi.responses import JSONResponse\nfrom httpx import ASGITransport, AsyncClient\n\n\nclass ErreurMetier(Exception):\n    statut = 400\n    code = \"erreur_metier\"\n\n    def __init__(self, message):\n        self.message = message\n\n\nclass StockInsuffisant(ErreurMetier):\n    statut = 409\n    code = \"stock_insuffisant\"\n\n\nclass ProduitInconnu(ErreurMetier):\n    statut = 404\n    code = \"produit_inconnu\"\n\n\nSTOCKS = {\"STY-01\": 3}\n\n\ndef reserver(reference, quantite):  # du code métier, sans HTTP\n    if reference not in STOCKS:\n        raise ProduitInconnu(f\"Produit {reference} inconnu\")\n    if STOCKS[reference] < quantite:\n        raise StockInsuffisant(f\"Il ne reste que {STOCKS[reference]} {reference}\")\n    STOCKS[reference] -= quantite\n\n\napp = FastAPI()\n\n\n@app.exception_handler(ErreurMetier)\nasync def traduire(requete: Request, erreur: ErreurMetier):\n    return JSONResponse(status_code=erreur.statut, content={\"code\": erreur.code, \"message\": erreur.message})\n\n\n@app.post(\"/reservations\")\nasync def reservation(reference: str, quantite: int):\n    reserver(reference, quantite)\n    return {\"restant\": STOCKS[reference]}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for reference, quantite in ((\"STY-01\", 2), (\"STY-01\", 5), (\"XXX\", 1)):\n        reponse = await client.post(\"/reservations\", params={\"reference\": reference, \"quantite\": quantite})\n        print(reponse.status_code, reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "200 {'restant': 1}\n409 {'code': 'stock_insuffisant', 'message': 'Il ne reste que 1 STY-01'}\n404 {'code': 'produit_inconnu', 'message': 'Produit XXX inconnu'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le gestionnaire est déclaré pour la classe mère `ErreurMetier` : il traite aussi toutes ses classes filles. Ajouter une nouvelle erreur métier ne demande qu'une classe, avec son statut et son code.\n\n## Les erreurs de validation\n\nOn peut aussi remplacer la réponse par défaut des erreurs 422, par exemple pour la traduire ou la simplifier, avec un gestionnaire pour `RequestValidationError`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, Request\nfrom fastapi.exceptions import RequestValidationError\nfrom fastapi.responses import JSONResponse\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\nMESSAGES = {\"missing\": \"champ obligatoire\", \"int_parsing\": \"nombre entier attendu\"}\n\n\n@app.exception_handler(RequestValidationError)\nasync def validation(requete: Request, erreur: RequestValidationError):\n    champs = {e[\"loc\"][-1]: MESSAGES.get(e[\"type\"], e[\"msg\"]) for e in erreur.errors()}\n    return JSONResponse(status_code=422, content={\"erreurs\": champs})\n\n\nclass Commande(BaseModel):\n    produit: str\n    quantite: int\n\n\n@app.post(\"/commandes\")\nasync def commander(commande: Commande):\n    return commande\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/commandes\", json={\"quantite\": \"deux\"})).json())\n",
+          "executable": true,
+          "sortie_attendue": "{'erreurs': {'produit': 'champ obligatoire', 'quantite': 'nombre entier attendu'}}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Une erreur inattendue (un bug) donne une réponse 500 générique : c'est voulu. Ne la transforme pas en message détaillé pour le client ; journalise-la côté serveur, avec sa trace complète."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une exception `QuotaDepasse(ErreurMetier)` avec le statut 429 et le code `quota_depasse`. La route `POST /exports` la lève avec le message `Trois exports par jour maximum`.\n\nLe code affiche `429 {'code': 'quota_depasse', 'message': 'Trois exports par jour maximum'}`.",
+          "code": "from fastapi import FastAPI, Request\nfrom fastapi.responses import JSONResponse\nfrom httpx import ASGITransport, AsyncClient\n\n\nclass ErreurMetier(Exception):\n    statut = 400\n    code = \"erreur_metier\"\n\n    def __init__(self, message):\n        self.message = message\n\n\n# Écris QuotaDepasse ici\n\napp = FastAPI()\n\n\n@app.exception_handler(ErreurMetier)\nasync def traduire(requete: Request, erreur: ErreurMetier):\n    return JSONResponse(status_code=erreur.statut, content={\"code\": erreur.code, \"message\": erreur.message})\n\n\n@app.post(\"/exports\")\nasync def exporter():\n    pass  # Lève QuotaDepasse ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/exports\")\n    print(reponse.status_code, reponse.json())\n",
+          "solution": "from fastapi import FastAPI, Request\nfrom fastapi.responses import JSONResponse\nfrom httpx import ASGITransport, AsyncClient\n\n\nclass ErreurMetier(Exception):\n    statut = 400\n    code = \"erreur_metier\"\n\n    def __init__(self, message):\n        self.message = message\n\n\nclass QuotaDepasse(ErreurMetier):\n    statut = 429\n    code = \"quota_depasse\"\n\n\napp = FastAPI()\n\n\n@app.exception_handler(ErreurMetier)\nasync def traduire(requete: Request, erreur: ErreurMetier):\n    return JSONResponse(status_code=erreur.statut, content={\"code\": erreur.code, \"message\": erreur.message})\n\n\n@app.post(\"/exports\")\nasync def exporter():\n    raise QuotaDepasse(\"Trois exports par jour maximum\")\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/exports\")\n    print(reponse.status_code, reponse.json())\n",
+          "sortie_attendue": "429 {'code': 'quota_depasse', 'message': 'Trois exports par jour maximum'}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Le code métier lève des exceptions métier, sans rien savoir de HTTP.\n- `@app.exception_handler(Classe)` les traduit en réponses, à un seul endroit.\n- `RequestValidationError` permet de personnaliser les erreurs 422."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : gérer les erreurs",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/handling-errors/"
+        }
+      ]
+    },
+    {
+      "id": "1bb716e7-a5d5-48af-8fa9-e22acf219a89",
+      "slug": "fastapi-inter-middlewares",
+      "titre": "Middlewares et CORS",
+      "resume": "Exécuter du code autour de chaque requête avec un middleware : identifiant de requête, mesure du temps, et autoriser un site web à appeler l'API avec CORS.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 14,
+      "prerequis": [
+        "fastapi-inter-gestion-des-erreurs"
+      ],
+      "objectifs": [
+        "Écrire un middleware HTTP",
+        "Ajouter un en-tête à toutes les réponses",
+        "Comprendre ce que bloque la politique CORS",
+        "Configurer CORSMiddleware"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un **middleware** est une fonction qui s'exécute **autour de chaque requête** : avant la route, et après, sur la réponse. On s'en sert pour ce qui concerne toutes les routes : journaliser, mesurer le temps, ajouter des en-têtes de sécurité, attribuer un identifiant à chaque requête.\n\n`call_next(requete)` appelle la suite (les autres middlewares, puis la route) et renvoie la réponse."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import uuid\n\nfrom fastapi import FastAPI, Request\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\n@app.middleware(\"http\")\nasync def identifiant_de_requete(requete: Request, call_next):\n    identifiant = requete.headers.get(\"X-Request-Id\") or str(uuid.uuid4())\n    journal.append(f\"→ {requete.method} {requete.url.path}\")\n    reponse = await call_next(requete)\n    reponse.headers[\"X-Request-Id\"] = identifiant\n    journal.append(f\"← {reponse.status_code}\")\n    return reponse\n\n\n@app.get(\"/clients\")\nasync def clients():\n    return []\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/clients\", headers={\"X-Request-Id\": \"req-42\"})\n    await client.get(\"/inconnue\")\n\nprint(reponse.headers[\"x-request-id\"])\nprint(journal)\n",
+          "executable": true,
+          "sortie_attendue": "req-42\n['→ GET /clients', '← 200', '→ GET /inconnue', '← 404']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le middleware voit **toutes** les requêtes, même celles qui n'aboutissent à aucune route (le 404). Avec un identifiant renvoyé dans la réponse et écrit dans les journaux, on retrouve facilement une requête signalée par un utilisateur.\n\n## CORS : laisser un site web appeler l'API\n\nPar sécurité, un navigateur interdit à une page de `https://boutique.fr` d'appeler une API d'une **autre origine**, comme `https://api.boutique.fr`, sauf si l'API l'autorise. C'est la politique **CORS** (*Cross-Origin Resource Sharing*). Avant certaines requêtes, le navigateur envoie une requête de vérification `OPTIONS`, dite *preflight*."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"https://boutique.fr\"],\n    allow_methods=[\"GET\", \"POST\"],\n    allow_headers=[\"Authorization\", \"Content-Type\"],\n)\n\n\n@app.get(\"/produits\")\nasync def produits():\n    return [\"Stylo\"]\n\n\nasync def verifier(client, origine):\n    reponse = await client.options(\"/produits\", headers={\"Origin\": origine, \"Access-Control-Request-Method\": \"GET\"})\n    return reponse.status_code, reponse.headers.get(\"access-control-allow-origin\")\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print(await verifier(client, \"https://boutique.fr\"))\n    print(await verifier(client, \"https://pirate.example\"))\n",
+          "executable": true,
+          "sortie_attendue": "(200, 'https://boutique.fr')\n(400, None)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "`allow_origins=[\"*\"]` autorise n'importe quel site à appeler l'API. C'est acceptable pour une API publique sans authentification par cookie, jamais pour une API qui utilise les cookies de session de l'utilisateur."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Si le site et l'API sont servis depuis la **même origine** (un même domaine, l'API sous `/api`), il n'y a pas de CORS à configurer. C'est le choix de cette plateforme."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris un middleware qui ajoute l'en-tête `X-Content-Type-Options: nosniff` à toutes les réponses, une protection classique des navigateurs.\n\nLe code affiche `nosniff`.",
+          "code": "from fastapi import FastAPI, Request\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n# Écris le middleware ici\n\n\n@app.get(\"/\")\nasync def accueil():\n    return {}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/\")).headers.get(\"x-content-type-options\"))\n",
+          "solution": "from fastapi import FastAPI, Request\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.middleware(\"http\")\nasync def en_tetes_de_securite(requete: Request, call_next):\n    reponse = await call_next(requete)\n    reponse.headers[\"X-Content-Type-Options\"] = \"nosniff\"\n    return reponse\n\n\n@app.get(\"/\")\nasync def accueil():\n    return {}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/\")).headers.get(\"x-content-type-options\"))\n",
+          "sortie_attendue": "nosniff\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un middleware entoure chaque requête : `call_next` appelle la suite et renvoie la réponse.\n- Il sert à ce qui concerne toutes les routes : journal, en-têtes, identifiant de requête.\n- `CORSMiddleware` autorise des origines précises à appeler l'API depuis un navigateur."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : middleware",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/middleware/"
+        },
+        {
+          "titre": "Tutoriel FastAPI : CORS",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/cors/"
+        }
+      ]
+    },
+    {
+      "id": "c7ff87e0-4558-4996-a309-2b8bfa06633d",
+      "slug": "fastapi-inter-taches-et-cycle-de-vie",
+      "titre": "Tâches de fond et cycle de vie",
+      "resume": "Répondre vite en déléguant un travail après la réponse avec BackgroundTasks, et préparer des ressources au démarrage de l'application avec lifespan.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 13,
+      "prerequis": [
+        "fastapi-inter-middlewares"
+      ],
+      "objectifs": [
+        "Lancer un travail après la réponse avec BackgroundTasks",
+        "Préparer et libérer des ressources avec lifespan",
+        "Partager une ressource avec app.state"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Certains travaux n'ont pas besoin de faire attendre le client : envoyer un email de confirmation, écrire une ligne de journal, mettre à jour une statistique. `BackgroundTasks` les exécute **après** l'envoi de la réponse."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import BackgroundTasks, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\nasync def envoyer_confirmation(email: str, commande: int):\n    journal.append(f\"email envoyé à {email} pour la commande {commande}\")\n\n\n@app.post(\"/commandes\", status_code=201)\nasync def commander(email: str, taches: BackgroundTasks):\n    journal.append(\"commande enregistrée\")\n    taches.add_task(envoyer_confirmation, email, 1042)\n    return {\"commande\": 1042}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/commandes\", params={\"email\": \"camille@exemple.fr\"})\n\nprint(reponse.status_code, reponse.json())\nprint(journal)\n",
+          "executable": true,
+          "sortie_attendue": "201 {'commande': 1042}\n['commande enregistrée', 'email envoyé à camille@exemple.fr pour la commande 1042']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Une tâche de fond tourne dans le même processus que l'API : si le serveur redémarre, elle est perdue, et une erreur n'est vue de personne. Pour un travail long ou important (facturation, traitement de fichiers), utilise une vraie file de tâches, comme Celery ou ARQ."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le cycle de vie : lifespan\n\nCertaines ressources se préparent **une fois**, au démarrage : un pool de connexions, un modèle chargé en mémoire, un client HTTP partagé. La fonction `lifespan` s'exécute au démarrage jusqu'au `yield`, puis à l'arrêt après lui. On range la ressource dans `app.state`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from contextlib import asynccontextmanager\n\nfrom fastapi import FastAPI, Request\nfrom httpx import ASGITransport, AsyncClient\n\njournal = []\n\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    journal.append(\"démarrage : chargement des taux de change\")\n    app.state.taux = {\"USD\": 1.08, \"GBP\": 0.85}\n    yield\n    journal.append(\"arrêt : libération des ressources\")\n\n\napp = FastAPI(lifespan=lifespan)\n\n\n@app.get(\"/conversion\")\nasync def convertir(montant: float, devise: str, requete: Request):\n    return {\"resultat\": round(montant * requete.app.state.taux[devise], 2)}\n\n\nasync with app.router.lifespan_context(app):  # comme le ferait le serveur\n    async with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n        print((await client.get(\"/conversion\", params={\"montant\": 100, \"devise\": \"USD\"})).json())\n\nprint(journal)\n",
+          "executable": true,
+          "sortie_attendue": "{'resultat': 108.0}\n['démarrage : chargement des taux de change', 'arrêt : libération des ressources']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Sur un vrai serveur, uvicorn appelle `lifespan` tout seul au démarrage et à l'arrêt. Ici, `app.router.lifespan_context(app)` le simule autour des appels."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une tâche de fond à `POST /inscriptions` : `journaliser(pseudo)` ajoute `\"inscription de <pseudo>\"` au journal, après la réponse.\n\nLe code affiche `['inscription de camille']`.",
+          "code": "from fastapi import BackgroundTasks, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\nasync def journaliser(pseudo: str):\n    journal.append(f\"inscription de {pseudo}\")\n\n\n@app.post(\"/inscriptions\")\nasync def inscrire(pseudo: str):  # Ajoute la tâche de fond\n    return {\"pseudo\": pseudo}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    await client.post(\"/inscriptions\", params={\"pseudo\": \"camille\"})\nprint(journal)\n",
+          "solution": "from fastapi import BackgroundTasks, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\njournal = []\n\n\nasync def journaliser(pseudo: str):\n    journal.append(f\"inscription de {pseudo}\")\n\n\n@app.post(\"/inscriptions\")\nasync def inscrire(pseudo: str, taches: BackgroundTasks):\n    taches.add_task(journaliser, pseudo)\n    return {\"pseudo\": pseudo}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    await client.post(\"/inscriptions\", params={\"pseudo\": \"camille\"})\nprint(journal)\n",
+          "sortie_attendue": "['inscription de camille']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `BackgroundTasks.add_task` exécute un travail court après la réponse.\n- Pour un travail long ou critique, une vraie file de tâches.\n- `lifespan` prépare les ressources au démarrage et les libère à l'arrêt ; `app.state` les partage."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : tâches d'arrière-plan",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/background-tasks/"
+        },
+        {
+          "titre": "FastAPI : événements de cycle de vie",
+          "url": "https://fastapi.tiangolo.com/fr/advanced/events/"
+        }
+      ]
+    },
+    {
+      "id": "fc4985d4-5809-4833-9d78-57729c959fd7",
+      "slug": "fastapi-inter-tests",
+      "titre": "Tester une API FastAPI",
+      "resume": "Écrire des tests d'API rapides et fiables : client en mémoire, remplacement des dépendances avec dependency_overrides et vérification des erreurs.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 15,
+      "prerequis": [
+        "fastapi-inter-taches-et-cycle-de-vie"
+      ],
+      "objectifs": [
+        "Tester une route avec un client en mémoire",
+        "Remplacer une dépendance avec dependency_overrides",
+        "Tester les cas d'erreur et les droits"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Depuis le début, chaque exemple appelle l'API avec un client httpx **en mémoire** : c'est exactement ainsi qu'on teste une API FastAPI. Pas de serveur à lancer, les tests sont rapides.\n\nDans un projet, on les écrit avec **pytest** et ses `assert`. Ici, on les écrit comme de simples fonctions, appelées à la fin."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nPRODUITS = {\"STY-01\": {\"nom\": \"Stylo\", \"prix\": 1.5}}\n\n\n@app.get(\"/produits/{reference}\")\nasync def lire(reference: str):\n    if reference not in PRODUITS:\n        raise HTTPException(404, detail=\"Produit introuvable\")\n    return PRODUITS[reference]\n\n\nasync def test_lire_un_produit(client):\n    reponse = await client.get(\"/produits/STY-01\")\n    assert reponse.status_code == 200\n    assert reponse.json() == {\"nom\": \"Stylo\", \"prix\": 1.5}\n\n\nasync def test_produit_inconnu(client):\n    reponse = await client.get(\"/produits/XXX\")\n    assert reponse.status_code == 404\n    assert reponse.json()[\"detail\"] == \"Produit introuvable\"\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for test in (test_lire_un_produit, test_produit_inconnu):\n        await test(client)\n        print(test.__name__, \"OK\")\n",
+          "executable": true,
+          "sortie_attendue": "test_lire_un_produit OK\ntest_produit_inconnu OK\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Remplacer une dépendance\n\nLes dépendances rendent les tests faciles : `app.dependency_overrides[dependance] = remplacante` substitue une dépendance pour toute l'application. On remplace ainsi l'utilisateur connecté, la base de données ou un service externe, sans toucher au code des routes."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\nclass ServicePaiement:\n    async def debiter(self, montant: float) -> str:\n        raise RuntimeError(\"Appel réel à la banque : jamais dans un test !\")\n\n\nasync def service_paiement() -> ServicePaiement:\n    return ServicePaiement()\n\n\n@app.post(\"/paiements\")\nasync def payer(montant: float, service: Annotated[ServicePaiement, Depends(service_paiement)]):\n    return {\"transaction\": await service.debiter(montant)}\n\n\nclass FauxPaiement:\n    def __init__(self):\n        self.debits = []\n\n    async def debiter(self, montant):\n        self.debits.append(montant)\n        return \"TX-TEST-1\"\n\n\nfaux = FauxPaiement()\n\n\nasync def faux_service():\n    return faux\n\n\napp.dependency_overrides[service_paiement] = faux_service\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/paiements\", params={\"montant\": 49.9})\n\napp.dependency_overrides.clear()\nprint(reponse.json(), faux.debits)\n",
+          "executable": true,
+          "sortie_attendue": "{'transaction': 'TX-TEST-1'} [49.9]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le faux service est aussi un **espion** : il enregistre les débits, que le test peut vérifier. `dependency_overrides.clear()` remet les vraies dépendances, pour ne pas contaminer les tests suivants."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Teste en priorité les cas d'erreur et les droits : une route réservée aux administrateurs doit renvoyer 401 sans jeton et 403 pour un simple utilisateur. Ce sont ces tests qui évitent les failles de sécurité."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "La route `GET /moi` dépend de `utilisateur_courant`, qui exige un vrai jeton. Dans le test, remplace cette dépendance par une fonction `async` qui renvoie `\"camille\"`, puis vérifie avec `assert` que la réponse vaut `{\"pseudo\": \"camille\"}`.\n\nAffiche ensuite : `test_moi OK`.",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\nasync def utilisateur_courant() -> str:\n    raise HTTPException(401, detail=\"Authentification requise\")\n\n\n@app.get(\"/moi\")\nasync def moi(pseudo: Annotated[str, Depends(utilisateur_courant)]):\n    return {\"pseudo\": pseudo}\n\n\n# Remplace la dépendance, appelle /moi et vérifie la réponse\n",
+          "solution": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\nasync def utilisateur_courant() -> str:\n    raise HTTPException(401, detail=\"Authentification requise\")\n\n\n@app.get(\"/moi\")\nasync def moi(pseudo: Annotated[str, Depends(utilisateur_courant)]):\n    return {\"pseudo\": pseudo}\n\n\nasync def camille():\n    return \"camille\"\n\n\napp.dependency_overrides[utilisateur_courant] = camille\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/moi\")\napp.dependency_overrides.clear()\nassert reponse.json() == {\"pseudo\": \"camille\"}\nprint(\"test_moi OK\")\n",
+          "sortie_attendue": "test_moi OK\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un client httpx avec `ASGITransport` teste l'API en mémoire, sans serveur.\n- `app.dependency_overrides` remplace une dépendance : utilisateur, base, service externe.\n- On vide les remplacements après chaque test."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : tests",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/testing/"
+        },
+        {
+          "titre": "FastAPI : tester les dépendances",
+          "url": "https://fastapi.tiangolo.com/fr/advanced/testing-dependencies/"
+        }
+      ]
+    },
+    {
+      "id": "d1a13280-f275-462f-9553-b22fc36650a2",
+      "slug": "fastapi-inter-projet-api-avec-base",
+      "titre": "Projet : une API branchée sur SQLAlchemy",
+      "resume": "Relier FastAPI à une vraie base de données avec SQLAlchemy : une session par requête, des modèles et des schémas séparés, et des erreurs propres.",
+      "theme": "python-fastapi",
+      "niveau": "intermediaire",
+      "duree_minutes": 18,
+      "prerequis": [
+        "fastapi-inter-tests"
+      ],
+      "objectifs": [
+        "Fournir une session SQLAlchemy par requête avec une dépendance",
+        "Séparer les modèles de la base des schémas de l'API",
+        "Écrire des routes qui lisent et écrivent en base"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour finir, l'API de clients du parcours précédent, avec une **vraie base de données**. On y retrouve tout :\n\n- une dépendance avec `yield` fournit **une session par requête**, refermée après ;\n- les **modèles** SQLAlchemy (la base) et les **schémas** Pydantic (l'API) sont séparés : la base peut avoir des colonnes que l'API n'expose pas ;\n- `from_attributes=True` permet de renvoyer directement les objets de la base.\n\n`StaticPool` garde une seule connexion : une base SQLite **en mémoire** disparaîtrait sinon entre deux sessions. Avec PostgreSQL, il n'y en a pas besoin."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, ConfigDict\nfrom sqlalchemy import create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\nfrom sqlalchemy.pool import StaticPool\n\n# --- Base de données ---\nengine = create_engine(\"sqlite://\", poolclass=StaticPool)\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    email: Mapped[str] = mapped_column(unique=True)\n\n\nBase.metadata.create_all(engine)\n\n\nasync def session():\n    with Session(engine) as s:\n        yield s\n\n\nSessionBase = Annotated[Session, Depends(session)]\n\n\n# --- Schémas de l'API ---\nclass NouveauClient(BaseModel):\n    nom: str\n    email: str\n\n\nclass ClientPublic(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n    id: int\n    nom: str\n    email: str\n\n\n# --- Routes ---\napp = FastAPI()\n\n\n@app.post(\"/clients\", response_model=ClientPublic, status_code=201)\nasync def creer(nouveau: NouveauClient, s: SessionBase):\n    if s.scalar(select(Client).where(Client.email == nouveau.email)):\n        raise HTTPException(409, detail=\"Email déjà utilisé\")\n    client = Client(**nouveau.model_dump())\n    s.add(client)\n    s.commit()\n    return client\n\n\n@app.get(\"/clients\", response_model=list[ClientPublic])\nasync def lister(s: SessionBase):\n    return s.scalars(select(Client).order_by(Client.nom)).all()\n\n\n@app.get(\"/clients/{client_id}\", response_model=ClientPublic)\nasync def lire(client_id: int, s: SessionBase):\n    client = s.get(Client, client_id)\n    if client is None:\n        raise HTTPException(404, detail=\"Client introuvable\")\n    return client\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/clients\", json={\"nom\": \"Karim\", \"email\": \"karim@exemple.fr\"})).json())\n    await client.post(\"/clients\", json={\"nom\": \"Camille\", \"email\": \"camille@exemple.fr\"})\n    print([c[\"nom\"] for c in (await client.get(\"/clients\")).json()])\n    doublon = await client.post(\"/clients\", json={\"nom\": \"Karim B.\", \"email\": \"karim@exemple.fr\"})\n    print(doublon.status_code, doublon.json())\n    print((await client.get(\"/clients/9\")).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'id': 1, 'nom': 'Karim', 'email': 'karim@exemple.fr'}\n['Camille', 'Karim']\n409 {'detail': 'Email déjà utilisé'}\n404\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Tester avec une base jetable\n\nGrâce à la dépendance `session`, les tests remplacent la base par une base vide, créée pour l'occasion. Chaque test part ainsi d'un état connu."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Ici, les routes sont `async def` mais SQLAlchemy est utilisé en mode synchrone : chaque requête SQL bloque le serveur le temps qu'elle dure. En production, on utilise soit des routes `def` (FastAPI les exécute dans des threads), soit SQLAlchemy en mode asynchrone, avec `AsyncSession` et un pilote comme asyncpg."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une route `DELETE /clients/{client_id}` qui supprime le client (réponse 204), ou renvoie 404 s'il n'existe pas.\n\nLe code affiche `204`, `404`, puis `[]`.",
+          "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, ConfigDict\nfrom sqlalchemy import create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\nfrom sqlalchemy.pool import StaticPool\n\n# --- Base de données ---\nengine = create_engine(\"sqlite://\", poolclass=StaticPool)\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    email: Mapped[str] = mapped_column(unique=True)\n\n\nBase.metadata.create_all(engine)\n\n\nasync def session():\n    with Session(engine) as s:\n        yield s\n\n\nSessionBase = Annotated[Session, Depends(session)]\n\n\n# --- Schémas de l'API ---\nclass NouveauClient(BaseModel):\n    nom: str\n    email: str\n\n\nclass ClientPublic(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n    id: int\n    nom: str\n    email: str\n\n\n# --- Routes ---\napp = FastAPI()\n\n\n@app.post(\"/clients\", response_model=ClientPublic, status_code=201)\nasync def creer(nouveau: NouveauClient, s: SessionBase):\n    if s.scalar(select(Client).where(Client.email == nouveau.email)):\n        raise HTTPException(409, detail=\"Email déjà utilisé\")\n    client = Client(**nouveau.model_dump())\n    s.add(client)\n    s.commit()\n    return client\n\n\n@app.get(\"/clients\", response_model=list[ClientPublic])\nasync def lister(s: SessionBase):\n    return s.scalars(select(Client).order_by(Client.nom)).all()\n\n\n@app.get(\"/clients/{client_id}\", response_model=ClientPublic)\nasync def lire(client_id: int, s: SessionBase):\n    client = s.get(Client, client_id)\n    if client is None:\n        raise HTTPException(404, detail=\"Client introuvable\")\n    return client\n\n\n# Écris la route DELETE ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    await client.post(\"/clients\", json={\"nom\": \"Karim\", \"email\": \"karim@exemple.fr\"})\n    print((await client.delete(\"/clients/1\")).status_code)\n    print((await client.delete(\"/clients/1\")).status_code)\n    print((await client.get(\"/clients\")).json())\n",
+          "solution": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, ConfigDict\nfrom sqlalchemy import create_engine, select\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column\nfrom sqlalchemy.pool import StaticPool\n\n# --- Base de données ---\nengine = create_engine(\"sqlite://\", poolclass=StaticPool)\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n    email: Mapped[str] = mapped_column(unique=True)\n\n\nBase.metadata.create_all(engine)\n\n\nasync def session():\n    with Session(engine) as s:\n        yield s\n\n\nSessionBase = Annotated[Session, Depends(session)]\n\n\n# --- Schémas de l'API ---\nclass NouveauClient(BaseModel):\n    nom: str\n    email: str\n\n\nclass ClientPublic(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n    id: int\n    nom: str\n    email: str\n\n\n# --- Routes ---\napp = FastAPI()\n\n\n@app.post(\"/clients\", response_model=ClientPublic, status_code=201)\nasync def creer(nouveau: NouveauClient, s: SessionBase):\n    if s.scalar(select(Client).where(Client.email == nouveau.email)):\n        raise HTTPException(409, detail=\"Email déjà utilisé\")\n    client = Client(**nouveau.model_dump())\n    s.add(client)\n    s.commit()\n    return client\n\n\n@app.get(\"/clients\", response_model=list[ClientPublic])\nasync def lister(s: SessionBase):\n    return s.scalars(select(Client).order_by(Client.nom)).all()\n\n\n@app.get(\"/clients/{client_id}\", response_model=ClientPublic)\nasync def lire(client_id: int, s: SessionBase):\n    client = s.get(Client, client_id)\n    if client is None:\n        raise HTTPException(404, detail=\"Client introuvable\")\n    return client\n\n\n@app.delete(\"/clients/{client_id}\", status_code=204)\nasync def supprimer(client_id: int, s: SessionBase):\n    client = s.get(Client, client_id)\n    if client is None:\n        raise HTTPException(404, detail=\"Client introuvable\")\n    s.delete(client)\n    s.commit()\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    await client.post(\"/clients\", json={\"nom\": \"Karim\", \"email\": \"karim@exemple.fr\"})\n    print((await client.delete(\"/clients/1\")).status_code)\n    print((await client.delete(\"/clients/1\")).status_code)\n    print((await client.get(\"/clients\")).json())\n",
+          "sortie_attendue": "204\n404\n[]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une dépendance avec `yield` fournit une session par requête, toujours refermée.\n- Modèles SQLAlchemy pour la base, schémas Pydantic pour l'API : deux rôles, deux classes.\n- `from_attributes=True` convertit les objets de la base en réponses."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : bases de données SQL",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/sql-databases/"
+        }
+      ]
+    }
+  ]
+}

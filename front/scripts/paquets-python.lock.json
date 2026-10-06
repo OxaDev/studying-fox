@@ -1,0 +1,40 @@
+{
+  "pypi": {
+    "asgiref": {
+      "version": "3.12.1",
+      "file_name": "asgiref-3.12.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/c0/1b/54f4ad77cd8a584fa70746c47df988e002cf1ee1eba43364d46f87803647/asgiref-3.12.1-py3-none-any.whl",
+      "sha256": "fe386d1c2bff7259ea95929266d12a8cf9a8b5a1c2598402967d8792e7a7c094"
+    },
+    "sqlparse": {
+      "version": "0.5.5",
+      "file_name": "sqlparse-0.5.5-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/49/4b/359f28a903c13438ef59ebeee215fb25da53066db67b305c125f1c6d2a25/sqlparse-0.5.5-py3-none-any.whl",
+      "sha256": "12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba"
+    },
+    "django": {
+      "version": "6.0.8",
+      "file_name": "django-6.0.8-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/2e/b4/23e74d261eebfa9c8baed5e8810f09858b9afd613d1037f42ff7aa95c87f/django-6.0.8-py3-none-any.whl",
+      "sha256": "9b98b7e1902e0e575ea4f42c175fc9512784f7f2580898286aee3388b322219d"
+    },
+    "djangorestframework": {
+      "version": "3.16.1",
+      "file_name": "djangorestframework-3.16.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/b0/ce/bf8b9d3f415be4ac5588545b5fcdbbb841977db1c1d923f7568eeabe1689/djangorestframework-3.16.1-py3-none-any.whl",
+      "sha256": "33a59f47fb9c85ede792cbf88bde71893bcda0667bc573f784649521f1102cec"
+    },
+    "mako": {
+      "version": "1.3.12",
+      "file_name": "mako-1.3.12-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/bc/b1/a0ec7a5a9db730a08daef1fdfb8090435b82465abbf758a596f0ea88727e/mako-1.3.12-py3-none-any.whl",
+      "sha256": "8f61569480282dbf557145ce441e4ba888be453c30989f879f0d652e39f53ea9"
+    },
+    "alembic": {
+      "version": "1.20.0",
+      "file_name": "alembic-1.20.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/3f/27/78a89b55b0904d222183164e079b4ca56208e94eff1d35ad1f1ad5be9b06/alembic-1.20.0-py3-none-any.whl",
+      "sha256": "77eb101048d95f982c0353e9233404889dcd7a6fc244c107836c0e2fc9cf7d9d"
+    }
+  }
+}

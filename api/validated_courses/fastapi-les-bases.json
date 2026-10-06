@@ -1,0 +1,641 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "7b505d7e-f2e5-448e-a906-45be04372d9c",
+    "slug": "fastapi-les-bases",
+    "titre": "FastAPI : les bases",
+    "description": "Construire une API web en Python avec FastAPI : routes, paramètres de chemin et de requête, corps de requête validé par Pydantic, modèles de réponse, erreurs HTTP et validation. Chaque exemple appelle l'API directement dans le navigateur, et le parcours se termine par une API de gestion de tâches. Prérequis : la programmation objet en Python.",
+    "niveau": "debutant",
+    "theme": "python-fastapi",
+    "lecons": [
+      "fastapi-premiere-api",
+      "fastapi-parametres-de-chemin",
+      "fastapi-parametres-de-requete",
+      "fastapi-corps-de-requete",
+      "fastapi-modeles-de-reponse",
+      "fastapi-erreurs-http",
+      "fastapi-validation-des-donnees",
+      "fastapi-projet-api-de-taches"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "7b7f0b31-0c51-45f5-898c-effa3c876c89",
+      "slug": "fastapi-premiere-api",
+      "titre": "Ta première API avec FastAPI",
+      "resume": "Découvrir ce qu'est une API web, créer une application FastAPI avec une première route, et l'appeler comme le ferait un client.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "poo-classes-et-instances"
+      ],
+      "objectifs": [
+        "Expliquer ce qu'est une API web",
+        "Créer une application et une route avec FastAPI",
+        "Appeler une route et lire la réponse JSON",
+        "Lancer l'API avec uvicorn dans un vrai projet"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **API web** permet à des programmes de communiquer par le protocole **HTTP** : une application mobile demande la liste des commandes, le serveur la renvoie au format **JSON**.\n\nChaque échange est une **requête** (une méthode comme `GET` ou `POST`, et une adresse comme `/commandes`) suivie d'une **réponse** (un code d'état comme `200`, et un contenu).\n\n**FastAPI** est un framework Python pour écrire des API : rapide, simple, et qui valide les données tout seul grâce aux annotations de type."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.get(\"/\")\nasync def accueil():\n    return {\"message\": \"Bonjour depuis FastAPI\"}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/\")\n\nprint(reponse.status_code)\nprint(reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "200\n{'message': 'Bonjour depuis FastAPI'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le code se lit en deux parties :\n\n- **l'API** : `FastAPI()` crée l'application ; le décorateur `@app.get(\"/\")` dit que la fonction répond aux requêtes `GET` sur l'adresse `/`. Le dictionnaire renvoyé est converti en JSON ;\n- **le client** : `AsyncClient` de la bibliothèque httpx appelle l'API **en mémoire**, sans serveur ni réseau. C'est ce qu'on fait dans les tests, et ce qui permet de tout essayer ici.\n\nLes fonctions sont déclarées avec `async def`, et appelées avec `await` : FastAPI est un framework **asynchrone**, capable de traiter beaucoup de requêtes en même temps."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Dans un vrai projet\n\nOn range l'application dans un fichier `main.py`, et on la sert avec **uvicorn**. L'API répond alors sur `http://127.0.0.1:8000`, et FastAPI génère une **documentation interactive** sur `/docs`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "pip install \"fastapi[standard]\"\nfastapi dev main.py\n",
+          "executable": false
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI(title=\"API du Renard\")\n\n\n@app.get(\"/sante\")\nasync def sante():\n    return {\"etat\": \"ok\"}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    schema = (await client.get(\"/openapi.json\")).json()\n\nprint(schema[\"info\"][\"title\"])\nprint(list(schema[\"paths\"]))\n",
+          "executable": true,
+          "sortie_attendue": "API du Renard\n['/sante']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`/openapi.json` décrit toute l'API selon le standard **OpenAPI**. C'est grâce à lui que `/docs` affiche une documentation à jour, et que d'autres outils génèrent des clients automatiquement."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Dans le navigateur, écris toujours tes routes avec `async def`. FastAPI accepte aussi `def`, qu'il exécute dans un fil d'exécution séparé (un *thread*), mais l'environnement de la plateforme n'a pas de threads. Sur un vrai serveur, les deux marchent."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une route `GET /version` qui renvoie `{\"version\": \"1.0\"}`, puis appelle-la et affiche le code et le contenu de la réponse : `200 {'version': '1.0'}`.",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n# Écris la route /version ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    pass  # Appelle /version ici\n",
+          "solution": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.get(\"/version\")\nasync def version():\n    return {\"version\": \"1.0\"}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/version\")\n    print(reponse.status_code, reponse.json())\n",
+          "sortie_attendue": "200 {'version': '1.0'}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une API web échange des requêtes et des réponses HTTP, souvent en JSON.\n- `@app.get(\"/adresse\")` relie une adresse à une fonction ; son résultat devient du JSON.\n- On essaie une API en mémoire avec httpx, et on la sert avec uvicorn dans un vrai projet."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : premiers pas",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/first-steps/"
+        }
+      ]
+    },
+    {
+      "id": "1c66ff05-18bb-4d1f-b389-004a443944f8",
+      "slug": "fastapi-parametres-de-chemin",
+      "titre": "Les paramètres de chemin",
+      "resume": "Récupérer une valeur dans l'adresse, comme l'identifiant d'une commande, la convertir et la valider grâce à son type.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "fastapi-premiere-api"
+      ],
+      "objectifs": [
+        "Déclarer un paramètre de chemin",
+        "Typer un paramètre pour le convertir et le valider",
+        "Lire une erreur de validation 422",
+        "Limiter les valeurs possibles avec une Enum"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour lire une commande précise, on met son identifiant dans l'adresse : `/commandes/42`. Dans la route, la partie variable s'écrit entre accolades, et devient un paramètre de la fonction."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nCOMMANDES = {42: \"Clavier\", 43: \"Écran\"}\n\n\n@app.get(\"/commandes/{commande_id}\")\nasync def lire_commande(commande_id: int):\n    return {\"id\": commande_id, \"produit\": COMMANDES.get(commande_id)}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/commandes/43\")\n\nprint(reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "{'id': 43, 'produit': 'Écran'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Dans l'adresse, tout est du texte. L'annotation `commande_id: int` dit à FastAPI de **convertir** `\"43\"` en nombre. Si la conversion est impossible, FastAPI refuse la requête avec le code **422** (*Unprocessable Content*) et explique pourquoi, sans même appeler ta fonction."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.get(\"/commandes/{commande_id}\")\nasync def lire_commande(commande_id: int):\n    return {\"id\": commande_id}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.get(\"/commandes/quarante-deux\")\n\nprint(reponse.status_code)\nerreur = reponse.json()[\"detail\"][0]\nprint(erreur[\"type\"], erreur[\"loc\"])\n",
+          "executable": true,
+          "sortie_attendue": "422\nint_parsing ['path', 'commande_id']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`loc` indique où se trouve l'erreur : dans le chemin (`path`), sur le paramètre `commande_id`. Le client sait exactement quoi corriger.\n\n## Des valeurs imposées\n\nQuand un paramètre n'accepte que quelques valeurs, une **Enum** les liste. FastAPI refuse les autres, et la documentation les affiche."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from enum import Enum\n\nfrom fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\nclass Format(str, Enum):\n    pdf = \"pdf\"\n    csv = \"csv\"\n\n\n@app.get(\"/rapports/{annee}/{format}\")\nasync def rapport(annee: int, format: Format):\n    return {\"fichier\": f\"rapport-{annee}.{format.value}\"}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/rapports/2026/csv\")).json())\n    print((await client.get(\"/rapports/2026/docx\")).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'fichier': 'rapport-2026.csv'}\n422\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "L'ordre des routes compte : FastAPI prend la **première** qui correspond. Déclare `/commandes/recentes` avant `/commandes/{commande_id}`, sinon « recentes » serait pris pour un identifiant."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une route `GET /clients/{client_id}/factures/{annee}` où les deux paramètres sont des entiers. Elle renvoie `{\"client\": client_id, \"annee\": annee}`.\n\nLe code affiche `{'client': 7, 'annee': 2025}`, puis `422` pour une année écrite en lettres.",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n# Écris la route ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/clients/7/factures/2025\")).json())\n    print((await client.get(\"/clients/7/factures/deux-mille\")).status_code)\n",
+          "solution": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.get(\"/clients/{client_id}/factures/{annee}\")\nasync def factures(client_id: int, annee: int):\n    return {\"client\": client_id, \"annee\": annee}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/clients/7/factures/2025\")).json())\n    print((await client.get(\"/clients/7/factures/deux-mille\")).status_code)\n",
+          "sortie_attendue": "{'client': 7, 'annee': 2025}\n422\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `/commandes/{commande_id}` : la partie entre accolades devient un paramètre de la fonction.\n- Le type annoté convertit et valide la valeur ; sinon, réponse 422 détaillée.\n- Une `Enum` limite les valeurs acceptées."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : paramètres de chemin",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/path-params/"
+        }
+      ]
+    },
+    {
+      "id": "4910b5cb-e6b9-40f9-bebe-7e8e1da13d18",
+      "slug": "fastapi-parametres-de-requete",
+      "titre": "Les paramètres de requête",
+      "resume": "Filtrer, trier et paginer avec les paramètres placés après le point d'interrogation de l'adresse : valeurs par défaut, paramètres facultatifs et listes.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "fastapi-parametres-de-chemin"
+      ],
+      "objectifs": [
+        "Déclarer un paramètre de requête",
+        "Donner une valeur par défaut",
+        "Rendre un paramètre facultatif",
+        "Recevoir une liste de valeurs"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Les **paramètres de requête** (*query parameters*) suivent le `?` de l'adresse : `/produits?categorie=papeterie&limite=2`. Ils servent à filtrer, trier ou paginer.\n\nPour FastAPI, tout paramètre de la fonction qui n'est pas dans le chemin est un paramètre de requête. Une valeur par défaut le rend **facultatif**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nPRODUITS = [\n    {\"nom\": \"Stylo\", \"categorie\": \"papeterie\", \"prix\": 1.5},\n    {\"nom\": \"Cahier\", \"categorie\": \"papeterie\", \"prix\": 3.2},\n    {\"nom\": \"Clavier\", \"categorie\": \"informatique\", \"prix\": 45},\n    {\"nom\": \"Agenda\", \"categorie\": \"papeterie\", \"prix\": 12},\n]\n\n\n@app.get(\"/produits\")\nasync def lister(categorie: str | None = None, limite: int = 10):\n    resultats = [p for p in PRODUITS if categorie is None or p[\"categorie\"] == categorie]\n    return [p[\"nom\"] for p in resultats[:limite]]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/produits\")).json())\n    print((await client.get(\"/produits?categorie=papeterie&limite=2\")).json())\n    print((await client.get(\"/produits\", params={\"categorie\": \"informatique\"})).json())\n",
+          "executable": true,
+          "sortie_attendue": "['Stylo', 'Cahier', 'Clavier', 'Agenda']\n['Stylo', 'Cahier']\n['Clavier']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "- `categorie: str | None = None` : facultatif, vaut `None` s'il est absent ;\n- `limite: int = 10` : facultatif, vaut 10 par défaut, et doit être un entier ;\n- un paramètre **sans** valeur par défaut est **obligatoire** : son absence donne une erreur 422.\n\nCôté client, `params={...}` construit l'adresse proprement, en échappant les caractères spéciaux."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, Query\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.get(\"/recherche\")\nasync def rechercher(q: str, tri: str = \"pertinence\", etiquettes: list[str] = Query(default=[])):\n    return {\"q\": q, \"tri\": tri, \"etiquettes\": etiquettes}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/recherche?q=velo&etiquettes=occasion&etiquettes=ville\")).json())\n    print((await client.get(\"/recherche\")).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'q': 'velo', 'tri': 'pertinence', 'etiquettes': ['occasion', 'ville']}\n422\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Pour recevoir **plusieurs** valeurs d'un même paramètre (`?etiquettes=a&etiquettes=b`), on l'annote `list[str]` et on utilise `Query` : sans lui, FastAPI chercherait la liste dans le corps de la requête."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Un booléen accepte `true`, `1`, `yes` ou `on` : `/produits?en_stock=true` donne `en_stock=True` pour un paramètre `en_stock: bool = False`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris `GET /produits` avec deux paramètres facultatifs, `prix_max` (nombre décimal) et `tri` (`\"nom\"` par défaut), qui renvoie les noms des produits dont le prix ne dépasse pas `prix_max`, triés par nom.\n\nLe code affiche `['Agenda', 'Cahier', 'Stylo']`.",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nPRODUITS = {\"Stylo\": 1.5, \"Cahier\": 3.2, \"Clavier\": 45, \"Agenda\": 12}\n\n# Écris la route ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/produits?prix_max=20\")).json())\n",
+          "solution": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nPRODUITS = {\"Stylo\": 1.5, \"Cahier\": 3.2, \"Clavier\": 45, \"Agenda\": 12}\n\n\n@app.get(\"/produits\")\nasync def lister(prix_max: float | None = None, tri: str = \"nom\"):\n    noms = [nom for nom, prix in PRODUITS.items() if prix_max is None or prix <= prix_max]\n    return sorted(noms)\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/produits?prix_max=20\")).json())\n",
+          "sortie_attendue": "['Agenda', 'Cahier', 'Stylo']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un paramètre de la fonction qui n'est pas dans le chemin est un paramètre de requête.\n- Une valeur par défaut le rend facultatif ; sans valeur par défaut, il est obligatoire.\n- `list[str] = Query(default=[])` reçoit plusieurs valeurs."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : paramètres de requête",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/query-params/"
+        }
+      ]
+    },
+    {
+      "id": "0cc599e9-a665-438e-a847-9a8c887ae8b5",
+      "slug": "fastapi-corps-de-requete",
+      "titre": "Recevoir des données avec Pydantic",
+      "resume": "Recevoir un objet JSON dans le corps d'une requête POST, le décrire avec un modèle Pydantic, et laisser FastAPI le valider.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "fastapi-parametres-de-requete"
+      ],
+      "objectifs": [
+        "Décrire un corps de requête avec un modèle Pydantic",
+        "Écrire une route POST",
+        "Comprendre la validation automatique",
+        "Imbriquer des modèles"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour **créer** une ressource, le client envoie ses données dans le **corps** de la requête, en JSON, avec la méthode `POST`.\n\nOn décrit la forme attendue avec un **modèle Pydantic** : une classe qui hérite de `BaseModel`, avec des attributs typés. FastAPI lit le JSON, le **valide**, et passe un objet du modèle à la fonction."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass NouveauClient(BaseModel):\n    nom: str\n    email: str\n    newsletter: bool = False\n\n\n@app.post(\"/clients\")\nasync def creer_client(client: NouveauClient):\n    return {\"message\": f\"Client {client.nom} créé\", \"newsletter\": client.newsletter}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/clients\", json={\"nom\": \"Camille\", \"email\": \"camille@exemple.fr\"})\n\nprint(reponse.status_code, reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "200 {'message': 'Client Camille créé', 'newsletter': False}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "FastAPI sait que `client` vient du corps de la requête parce que son type est un modèle Pydantic. Côté client, `json={...}` envoie un dictionnaire en JSON.\n\n## La validation automatique\n\nUn champ manquant ou du mauvais type est refusé avec une erreur 422 qui liste **toutes** les erreurs. Ta fonction ne reçoit que des données valides."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass NouveauClient(BaseModel):\n    nom: str\n    age: int\n\n\n@app.post(\"/clients\")\nasync def creer_client(client: NouveauClient):\n    return client\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/clients\", json={\"age\": \"trente\"})\n\nprint(reponse.status_code)\nfor erreur in reponse.json()[\"detail\"]:\n    print(erreur[\"loc\"], erreur[\"type\"])\n",
+          "executable": true,
+          "sortie_attendue": "422\n['body', 'nom'] missing\n['body', 'age'] int_parsing\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des modèles imbriqués\n\nUn modèle peut contenir d'autres modèles, ou des listes de modèles. La validation descend dans toute la structure."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass Ligne(BaseModel):\n    produit: str\n    quantite: int\n    prix: float\n\n\nclass Commande(BaseModel):\n    client: str\n    lignes: list[Ligne]\n\n\n@app.post(\"/commandes\")\nasync def passer_commande(commande: Commande):\n    total = sum(l.quantite * l.prix for l in commande.lignes)\n    return {\"client\": commande.client, \"total\": total}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/commandes\", json={\n        \"client\": \"Camille\",\n        \"lignes\": [{\"produit\": \"Stylo\", \"quantite\": 4, \"prix\": 1.5}, {\"produit\": \"Cahier\", \"quantite\": 2, \"prix\": 3.0}],\n    })\n\nprint(reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "{'client': 'Camille', 'total': 12.0}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une fonction peut recevoir à la fois un paramètre de chemin, des paramètres de requête et un corps : FastAPI distingue tout seul d'où vient chaque valeur, grâce aux types."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris un modèle `Reservation` (`salle` en texte, `participants` en entier, `projecteur` booléen à `False` par défaut) et une route `POST /reservations` qui renvoie `{\"salle\": ..., \"places_restantes\": 20 - participants}`.\n\nLe code affiche `{'salle': 'Iroise', 'places_restantes': 12}`.",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n# Écris le modèle et la route ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/reservations\", json={\"salle\": \"Iroise\", \"participants\": 8})\n    print(reponse.json())\n",
+          "solution": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass Reservation(BaseModel):\n    salle: str\n    participants: int\n    projecteur: bool = False\n\n\n@app.post(\"/reservations\")\nasync def reserver(reservation: Reservation):\n    return {\"salle\": reservation.salle, \"places_restantes\": 20 - reservation.participants}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/reservations\", json={\"salle\": \"Iroise\", \"participants\": 8})\n    print(reponse.json())\n",
+          "sortie_attendue": "{'salle': 'Iroise', 'places_restantes': 12}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un modèle Pydantic (`BaseModel`) décrit le JSON attendu dans le corps.\n- Les données invalides sont refusées avec une erreur 422 détaillée.\n- Les modèles s'imbriquent : listes et objets dans des objets."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : corps de la requête",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/body/"
+        }
+      ]
+    },
+    {
+      "id": "bc5bb427-2d85-458b-99e8-0590b8b16737",
+      "slug": "fastapi-modeles-de-reponse",
+      "titre": "Les modèles de réponse et les codes d'état",
+      "resume": "Contrôler ce que l'API renvoie avec response_model, ne jamais exposer un mot de passe, et choisir le bon code d'état HTTP.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "fastapi-corps-de-requete"
+      ],
+      "objectifs": [
+        "Déclarer un modèle de réponse",
+        "Filtrer les champs renvoyés",
+        "Choisir le code d'état d'une réponse",
+        "Distinguer modèle d'entrée et modèle de sortie"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une API ne doit renvoyer **que** ce que le client a le droit de voir. Le paramètre `response_model` décrit la réponse : FastAPI ne garde que les champs du modèle, et vérifie leur type.\n\nLe cas classique : l'utilisateur envoie un mot de passe à l'inscription, mais la réponse ne doit jamais le contenir."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass Inscription(BaseModel):  # ce que le client envoie\n    email: str\n    mot_de_passe: str\n\n\nclass Utilisateur(BaseModel):  # ce que l'API renvoie\n    id: int\n    email: str\n\n\n@app.post(\"/utilisateurs\", response_model=Utilisateur, status_code=201)\nasync def inscrire(inscription: Inscription):\n    enregistre = {\"id\": 1, **inscription.model_dump()}  # le mot de passe est dedans…\n    return enregistre\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/utilisateurs\", json={\"email\": \"camille@exemple.fr\", \"mot_de_passe\": \"s3cret\"})\n\nprint(reponse.status_code)\nprint(reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "201\n{'id': 1, 'email': 'camille@exemple.fr'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le dictionnaire renvoyé contenait le mot de passe, mais `response_model=Utilisateur` l'a retiré. Séparer un modèle d'**entrée** et un modèle de **sortie** est la bonne pratique : ils évoluent indépendamment.\n\n## Les codes d'état\n\nLe code d'état dit au client ce qui s'est passé. Les plus courants :\n\n- `200` : OK, la réponse par défaut ;\n- `201` : créé, après un `POST` qui crée une ressource ;\n- `204` : réussi, sans contenu à renvoyer, par exemple après une suppression ;\n- `400`, `404`, `409`, `422` : erreurs du client ; `500` : erreur du serveur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, Response, status\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nNOTES = {1: \"Rappeler le client\", 2: \"Préparer le devis\"}\n\n\n@app.delete(\"/notes/{note_id}\", status_code=status.HTTP_204_NO_CONTENT)\nasync def supprimer(note_id: int):\n    NOTES.pop(note_id, None)\n    return Response(status_code=status.HTTP_204_NO_CONTENT)\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.delete(\"/notes/1\")\n\nprint(reponse.status_code, repr(reponse.text))\nprint(NOTES)\n",
+          "executable": true,
+          "sortie_attendue": "204 ''\n{2: 'Préparer le devis'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`status` regroupe des constantes aux noms explicites : `status.HTTP_201_CREATED` se lit mieux que `201`.\n\n## Une liste en réponse\n\n`response_model=list[Utilisateur]` décrit une liste. Avec l'option `from_attributes`, Pydantic lit aussi les attributs d'objets ordinaires, comme ceux renvoyés par SQLAlchemy."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\n\nfrom fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, ConfigDict\n\napp = FastAPI()\n\n\n@dataclass\nclass Employe:  # un objet métier, avec un champ à ne pas exposer\n    id: int\n    nom: str\n    salaire: float\n\n\nclass EmployePublic(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n    id: int\n    nom: str\n\n\n@app.get(\"/employes\", response_model=list[EmployePublic])\nasync def lister():\n    return [Employe(1, \"Camille\", 3200), Employe(2, \"Karim\", 2900)]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/employes\")).json())\n",
+          "executable": true,
+          "sortie_attendue": "[{'id': 1, 'nom': 'Camille'}, {'id': 2, 'nom': 'Karim'}]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Sans `response_model`, FastAPI renvoie tout ce que retourne la fonction. Renvoyer directement un objet de la base, c'est risquer d'exposer un champ ajouté plus tard, comme un jeton ou une note interne."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "La route renvoie un produit avec son prix d'achat, confidentiel. Ajoute un modèle de réponse `ProduitPublic` (`reference` et `prix_vente`) pour ne renvoyer que ces deux champs.\n\nLe code affiche `{'reference': 'STY-01', 'prix_vente': 1.5}`.",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n# Écris le modèle ProduitPublic ici\n\n\n@app.get(\"/produits/{reference}\")\nasync def lire(reference: str):\n    return {\"reference\": reference, \"prix_vente\": 1.5, \"prix_achat\": 0.4}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/produits/STY-01\")).json())\n",
+          "solution": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass ProduitPublic(BaseModel):\n    reference: str\n    prix_vente: float\n\n\n@app.get(\"/produits/{reference}\", response_model=ProduitPublic)\nasync def lire(reference: str):\n    return {\"reference\": reference, \"prix_vente\": 1.5, \"prix_achat\": 0.4}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/produits/STY-01\")).json())\n",
+          "sortie_attendue": "{'reference': 'STY-01', 'prix_vente': 1.5}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `response_model` filtre et valide la réponse : un modèle d'entrée, un modèle de sortie.\n- `status_code` choisit le code d'état : 201 pour une création, 204 sans contenu.\n- `from_attributes=True` permet de renvoyer des objets ordinaires."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : modèle de réponse",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/response-model/"
+        },
+        {
+          "titre": "Tutoriel FastAPI : codes d'état",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/response-status-code/"
+        }
+      ]
+    },
+    {
+      "id": "c663653e-d221-426d-8cd2-9ab9ce53bbce",
+      "slug": "fastapi-erreurs-http",
+      "titre": "Signaler les erreurs avec HTTPException",
+      "resume": "Répondre proprement quand une ressource n'existe pas ou qu'une opération est impossible, avec HTTPException et les bons codes d'erreur.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "fastapi-modeles-de-reponse"
+      ],
+      "objectifs": [
+        "Lever une HTTPException avec un code et un message",
+        "Choisir entre 400, 404 et 409",
+        "Ajouter des en-têtes à une réponse d'erreur"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Quand la commande demandée n'existe pas, l'API ne doit pas renvoyer `null` avec un code 200 : elle répond **404**, avec un message clair. On **lève** pour cela une `HTTPException` : FastAPI arrête la fonction et construit la réponse d'erreur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nCOMMANDES = {42: {\"produit\": \"Clavier\", \"statut\": \"expédiée\"}}\n\n\n@app.get(\"/commandes/{commande_id}\")\nasync def lire_commande(commande_id: int):\n    if commande_id not in COMMANDES:\n        raise HTTPException(status_code=404, detail=f\"Commande {commande_id} introuvable\")\n    return COMMANDES[commande_id]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for numero in (42, 99):\n        reponse = await client.get(f\"/commandes/{numero}\")\n        print(reponse.status_code, reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "200 {'produit': 'Clavier', 'statut': 'expédiée'}\n404 {'detail': 'Commande 99 introuvable'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`raise` (et non `return`) : l'exception sort de la fonction, même depuis une fonction appelée plus profondément. Le corps de la réponse a la forme `{\"detail\": ...}`, la même que pour les erreurs de validation.\n\n## Le bon code d'erreur\n\n- **400** (*Bad Request*) : la demande n'a pas de sens, par exemple une date de fin avant la date de début ;\n- **404** (*Not Found*) : la ressource n'existe pas ;\n- **409** (*Conflict*) : impossible dans l'état actuel, par exemple un email déjà utilisé ;\n- **422** : réservé, en pratique, aux erreurs de validation que FastAPI produit tout seul."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, HTTPException, status\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\nEMAILS = {\"karim@exemple.fr\"}\n\n\nclass Inscription(BaseModel):\n    email: str\n\n\n@app.post(\"/inscriptions\", status_code=status.HTTP_201_CREATED)\nasync def inscrire(inscription: Inscription):\n    if inscription.email in EMAILS:\n        raise HTTPException(status.HTTP_409_CONFLICT, detail=\"Cet email est déjà inscrit\")\n    EMAILS.add(inscription.email)\n    return {\"email\": inscription.email}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for email in (\"camille@exemple.fr\", \"camille@exemple.fr\"):\n        reponse = await client.post(\"/inscriptions\", json={\"email\": email})\n        print(reponse.status_code, reponse.json())\n",
+          "executable": true,
+          "sortie_attendue": "201 {'email': 'camille@exemple.fr'}\n409 {'detail': 'Cet email est déjà inscrit'}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`detail` peut aussi être un dictionnaire, pour donner au client un code d'erreur exploitable par programme, en plus du message. Et `headers=` ajoute des en-têtes à la réponse."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from fastapi import FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.post(\"/exports\")\nasync def exporter():\n    raise HTTPException(\n        status_code=429,\n        detail={\"code\": \"trop_de_requetes\", \"message\": \"Réessaie dans une minute\"},\n        headers={\"Retry-After\": \"60\"},\n    )\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    reponse = await client.post(\"/exports\")\n\nprint(reponse.status_code, reponse.json()[\"detail\"][\"code\"], reponse.headers[\"retry-after\"])\n",
+          "executable": true,
+          "sortie_attendue": "429 trop_de_requetes 60\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ne mets jamais de détail technique dans une erreur renvoyée au client : ni requête SQL, ni chemin de fichier, ni trace de pile. Garde-les pour les journaux du serveur."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris `GET /salles/{nom}` : elle renvoie la capacité de la salle, ou une erreur 404 avec le message `Salle inconnue`.\n\nLe code affiche `200 {'capacite': 20}`, puis `404 {'detail': 'Salle inconnue'}`.",
+          "code": "from fastapi import FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nSALLES = {\"iroise\": 20, \"ouessant\": 8}\n\n# Écris la route ici\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for nom in (\"iroise\", \"sein\"):\n        reponse = await client.get(f\"/salles/{nom}\")\n        print(reponse.status_code, reponse.json())\n",
+          "solution": "from fastapi import FastAPI, HTTPException\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\nSALLES = {\"iroise\": 20, \"ouessant\": 8}\n\n\n@app.get(\"/salles/{nom}\")\nasync def lire_salle(nom: str):\n    if nom not in SALLES:\n        raise HTTPException(status_code=404, detail=\"Salle inconnue\")\n    return {\"capacite\": SALLES[nom]}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    for nom in (\"iroise\", \"sein\"):\n        reponse = await client.get(f\"/salles/{nom}\")\n        print(reponse.status_code, reponse.json())\n",
+          "sortie_attendue": "200 {'capacite': 20}\n404 {'detail': 'Salle inconnue'}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `raise HTTPException(status_code, detail)` interrompt la route et renvoie l'erreur.\n- 400 : demande incohérente ; 404 : introuvable ; 409 : conflit avec l'état actuel.\n- Jamais de détail technique dans un message d'erreur."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : gérer les erreurs",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/handling-errors/"
+        }
+      ]
+    },
+    {
+      "id": "6fd85a57-77f4-4a8a-84bd-1dbcb965e18c",
+      "slug": "fastapi-validation-des-donnees",
+      "titre": "Valider finement les données",
+      "resume": "Imposer des règles précises aux paramètres et aux champs : bornes, longueurs, motifs, emails et validateurs personnalisés avec Pydantic.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "fastapi-erreurs-http"
+      ],
+      "objectifs": [
+        "Contraindre un paramètre avec Query et Path",
+        "Contraindre un champ avec Field",
+        "Écrire un validateur personnalisé avec field_validator",
+        "Utiliser Annotated pour des règles réutilisables"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un type ne suffit pas toujours : une quantité doit être positive, un code postal faire 5 chiffres, une page de résultats rester raisonnable. FastAPI et Pydantic expriment ces règles **dans les annotations**, avec `Annotated` :\n\n- `Query(...)` et `Path(...)` pour les paramètres ;\n- `Field(...)` pour les champs d'un modèle."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import FastAPI, Path, Query\nfrom httpx import ASGITransport, AsyncClient\n\napp = FastAPI()\n\n\n@app.get(\"/clients/{client_id}/commandes\")\nasync def commandes(\n    client_id: Annotated[int, Path(gt=0)],\n    page: Annotated[int, Query(ge=1)] = 1,\n    taille: Annotated[int, Query(ge=1, le=100)] = 20,\n):\n    return {\"client\": client_id, \"page\": page, \"taille\": taille}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/clients/3/commandes?page=2\")).json())\n    erreur = (await client.get(\"/clients/3/commandes?taille=500\")).json()[\"detail\"][0]\n    print(erreur[\"type\"], erreur[\"loc\"], erreur[\"ctx\"])\n",
+          "executable": true,
+          "sortie_attendue": "{'client': 3, 'page': 2, 'taille': 20}\nless_than_equal ['query', 'taille'] {'le': 100}\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Les contraintes courantes : `gt`, `ge`, `lt`, `le` pour les nombres (plus grand, plus grand ou égal…), `min_length`, `max_length` et `pattern` (une expression régulière) pour les textes.\n\n## Dans un modèle : Field\n\nLes mêmes contraintes s'appliquent aux champs d'un modèle avec `Field`. Elles apparaissent aussi dans la documentation `/docs`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, Field\n\napp = FastAPI()\n\n\nclass Adresse(BaseModel):\n    rue: Annotated[str, Field(min_length=3, max_length=200)]\n    code_postal: Annotated[str, Field(pattern=r\"^\\d{5}$\")]\n    ville: str\n\n\n@app.post(\"/adresses\")\nasync def ajouter(adresse: Adresse):\n    return adresse\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    bonne = await client.post(\"/adresses\", json={\"rue\": \"12 rue de Brest\", \"code_postal\": \"29200\", \"ville\": \"Brest\"})\n    mauvaise = await client.post(\"/adresses\", json={\"rue\": \"12\", \"code_postal\": \"2920\", \"ville\": \"Brest\"})\n\nprint(bonne.status_code)\nprint([(e[\"loc\"][-1], e[\"type\"]) for e in mauvaise.json()[\"detail\"]])\n",
+          "executable": true,
+          "sortie_attendue": "200\n[('rue', 'string_too_short'), ('code_postal', 'string_pattern_mismatch')]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des règles sur mesure\n\nPour une règle qu'aucune contrainte ne couvre, `@field_validator` appelle une méthode sur la valeur. Elle renvoie la valeur, éventuellement nettoyée, ou lève une `ValueError`. Et `@model_validator` vérifie plusieurs champs ensemble."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from datetime import date\n\nfrom fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, field_validator, model_validator\n\napp = FastAPI()\n\n\nclass Conges(BaseModel):\n    salarie: str\n    debut: date\n    fin: date\n\n    @field_validator(\"salarie\")\n    @classmethod\n    def nettoyer(cls, valeur: str) -> str:\n        return valeur.strip().title()\n\n    @model_validator(mode=\"after\")\n    def dates_coherentes(self):\n        if self.fin < self.debut:\n            raise ValueError(\"La fin doit suivre le début\")\n        return self\n\n\n@app.post(\"/conges\")\nasync def demander(conges: Conges):\n    return {\"salarie\": conges.salarie, \"jours\": (conges.fin - conges.debut).days + 1}\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/conges\", json={\"salarie\": \" camille martin \", \"debut\": \"2026-08-03\", \"fin\": \"2026-08-14\"})).json())\n    erreur = (await client.post(\"/conges\", json={\"salarie\": \"Karim\", \"debut\": \"2026-08-14\", \"fin\": \"2026-08-03\"})).json()\n    print(erreur[\"detail\"][0][\"msg\"])\n",
+          "executable": true,
+          "sortie_attendue": "{'salarie': 'Camille Martin', 'jours': 12}\nValue error, La fin doit suivre le début\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Un type annoté se réutilise : `Quantite = Annotated[int, Field(ge=1, le=999)]`, puis `quantite: Quantite` dans tous les modèles. La règle est écrite une seule fois."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris le modèle `Ligne` : `produit` (texte de 2 à 50 caractères) et `quantite` (entier de 1 à 99, défini avec un type `Quantite` réutilisable). La route `POST /lignes` le renvoie.\n\nLe code affiche `200`, puis `['greater_than_equal']` pour une quantité de 0.",
+          "code": "from typing import Annotated\n\nfrom fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, Field\n\napp = FastAPI()\n\n# Écris le type Quantite, le modèle Ligne et la route\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/lignes\", json={\"produit\": \"Stylo\", \"quantite\": 3})).status_code)\n    erreurs = (await client.post(\"/lignes\", json={\"produit\": \"Stylo\", \"quantite\": 0})).json()[\"detail\"]\n    print([e[\"type\"] for e in erreurs])\n",
+          "solution": "from typing import Annotated\n\nfrom fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, Field\n\napp = FastAPI()\nQuantite = Annotated[int, Field(ge=1, le=99)]\n\n\nclass Ligne(BaseModel):\n    produit: Annotated[str, Field(min_length=2, max_length=50)]\n    quantite: Quantite\n\n\n@app.post(\"/lignes\")\nasync def ajouter(ligne: Ligne):\n    return ligne\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/lignes\", json={\"produit\": \"Stylo\", \"quantite\": 3})).status_code)\n    erreurs = (await client.post(\"/lignes\", json={\"produit\": \"Stylo\", \"quantite\": 0})).json()[\"detail\"]\n    print([e[\"type\"] for e in erreurs])\n",
+          "sortie_attendue": "200\n['greater_than_equal']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `Annotated[int, Query(ge=1, le=100)]` contraint un paramètre ; `Field(...)` un champ.\n- `min_length`, `max_length`, `pattern` pour les textes ; `gt`, `ge`, `lt`, `le` pour les nombres.\n- `@field_validator` et `@model_validator` pour les règles sur mesure."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI : validations des paramètres de requête",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/query-params-str-validations/"
+        },
+        {
+          "titre": "Pydantic : validateurs",
+          "url": "https://docs.pydantic.dev/latest/concepts/validators/"
+        }
+      ]
+    },
+    {
+      "id": "c6241bde-13e3-42c0-80cd-7578a3cc2210",
+      "slug": "fastapi-projet-api-de-taches",
+      "titre": "Projet : une API de gestion de tâches",
+      "resume": "Assembler tout le parcours dans une API complète : créer, lister, lire, modifier et supprimer des tâches, avec validation et erreurs propres.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 18,
+      "prerequis": [
+        "fastapi-validation-des-donnees"
+      ],
+      "objectifs": [
+        "Concevoir les routes d'une ressource selon les conventions REST",
+        "Écrire les cinq opérations de base (CRUD)",
+        "Modifier partiellement une ressource avec PATCH"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Pour finir, une API de gestion de tâches, organisée selon les conventions **REST** : une ressource (`/taches`) et des méthodes HTTP qui disent quoi faire.\n\n- `POST /taches` : créer une tâche, réponse 201 ;\n- `GET /taches` : lister, avec un filtre facultatif ;\n- `GET /taches/{id}` : lire une tâche, ou 404 ;\n- `PATCH /taches/{id}` : modifier **une partie** d'une tâche ;\n- `DELETE /taches/{id}` : supprimer, réponse 204.\n\nLes tâches sont gardées en mémoire dans un dictionnaire : le parcours intermédiaire branche une vraie base de données."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import FastAPI, HTTPException, Response, status\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, Field\n\napp = FastAPI(title=\"Tâches\")\n\n\nclass NouvelleTache(BaseModel):\n    titre: Annotated[str, Field(min_length=1, max_length=100)]\n    priorite: Annotated[int, Field(ge=1, le=3)] = 2\n\n\nclass Tache(NouvelleTache):\n    id: int\n    faite: bool = False\n\n\nclass ModificationTache(BaseModel):\n    titre: Annotated[str | None, Field(min_length=1, max_length=100)] = None\n    faite: bool | None = None\n\n\nTACHES: dict[int, Tache] = {}\n\n\ndef trouver(tache_id: int) -> Tache:\n    if tache_id not in TACHES:\n        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=\"Tâche introuvable\")\n    return TACHES[tache_id]\n\n\n@app.post(\"/taches\", response_model=Tache, status_code=status.HTTP_201_CREATED)\nasync def creer(nouvelle: NouvelleTache):\n    tache = Tache(id=len(TACHES) + 1, **nouvelle.model_dump())\n    TACHES[tache.id] = tache\n    return tache\n\n\n@app.get(\"/taches\", response_model=list[Tache])\nasync def lister(faite: bool | None = None):\n    return [t for t in TACHES.values() if faite is None or t.faite == faite]\n\n\n@app.get(\"/taches/{tache_id}\", response_model=Tache)\nasync def lire(tache_id: int):\n    return trouver(tache_id)\n\n\n@app.patch(\"/taches/{tache_id}\", response_model=Tache)\nasync def modifier(tache_id: int, modification: ModificationTache):\n    tache = trouver(tache_id)\n    mise_a_jour = tache.model_copy(update=modification.model_dump(exclude_unset=True))\n    TACHES[tache_id] = mise_a_jour\n    return mise_a_jour\n\n\n@app.delete(\"/taches/{tache_id}\", status_code=status.HTTP_204_NO_CONTENT)\nasync def supprimer(tache_id: int):\n    trouver(tache_id)\n    del TACHES[tache_id]\n    return Response(status_code=status.HTTP_204_NO_CONTENT)\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.post(\"/taches\", json={\"titre\": \"Relancer le client Duval\", \"priorite\": 1})).json())\n    await client.post(\"/taches\", json={\"titre\": \"Préparer la réunion\"})\n    print([t[\"titre\"] for t in (await client.get(\"/taches\")).json()])\n    print((await client.get(\"/taches/9\")).status_code)\n",
+          "executable": true,
+          "sortie_attendue": "{'titre': 'Relancer le client Duval', 'priorite': 1, 'id': 1, 'faite': False}\n['Relancer le client Duval', 'Préparer la réunion']\n404\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Quelques choix de conception à remarquer :\n\n- `Tache` hérite de `NouvelleTache` : les règles de validation ne sont écrites qu'une fois ;\n- `trouver` centralise le 404 : chaque route l'appelle au lieu de répéter le test ;\n- `response_model` garantit la forme de chaque réponse.\n\n## PATCH : modifier seulement ce qui est envoyé\n\nDans `ModificationTache`, tous les champs sont facultatifs. `model_dump(exclude_unset=True)` ne garde que les champs **réellement envoyés** par le client : une tâche marquée faite garde son titre."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Annotated\n\nfrom fastapi import FastAPI, HTTPException, Response, status\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel, Field\n\napp = FastAPI(title=\"Tâches\")\n\n\nclass NouvelleTache(BaseModel):\n    titre: Annotated[str, Field(min_length=1, max_length=100)]\n    priorite: Annotated[int, Field(ge=1, le=3)] = 2\n\n\nclass Tache(NouvelleTache):\n    id: int\n    faite: bool = False\n\n\nclass ModificationTache(BaseModel):\n    titre: Annotated[str | None, Field(min_length=1, max_length=100)] = None\n    faite: bool | None = None\n\n\nTACHES: dict[int, Tache] = {}\n\n\ndef trouver(tache_id: int) -> Tache:\n    if tache_id not in TACHES:\n        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=\"Tâche introuvable\")\n    return TACHES[tache_id]\n\n\n@app.post(\"/taches\", response_model=Tache, status_code=status.HTTP_201_CREATED)\nasync def creer(nouvelle: NouvelleTache):\n    tache = Tache(id=len(TACHES) + 1, **nouvelle.model_dump())\n    TACHES[tache.id] = tache\n    return tache\n\n\n@app.get(\"/taches\", response_model=list[Tache])\nasync def lister(faite: bool | None = None):\n    return [t for t in TACHES.values() if faite is None or t.faite == faite]\n\n\n@app.get(\"/taches/{tache_id}\", response_model=Tache)\nasync def lire(tache_id: int):\n    return trouver(tache_id)\n\n\n@app.patch(\"/taches/{tache_id}\", response_model=Tache)\nasync def modifier(tache_id: int, modification: ModificationTache):\n    tache = trouver(tache_id)\n    mise_a_jour = tache.model_copy(update=modification.model_dump(exclude_unset=True))\n    TACHES[tache_id] = mise_a_jour\n    return mise_a_jour\n\n\n@app.delete(\"/taches/{tache_id}\", status_code=status.HTTP_204_NO_CONTENT)\nasync def supprimer(tache_id: int):\n    trouver(tache_id)\n    del TACHES[tache_id]\n    return Response(status_code=status.HTTP_204_NO_CONTENT)\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    await client.post(\"/taches\", json={\"titre\": \"Relancer le client Duval\", \"priorite\": 1})\n    await client.post(\"/taches\", json={\"titre\": \"Préparer la réunion\"})\n    print((await client.patch(\"/taches/1\", json={\"faite\": True})).json())\n    print([t[\"id\"] for t in (await client.get(\"/taches?faite=false\")).json()])\n    print((await client.delete(\"/taches/2\")).status_code)\n    print(len((await client.get(\"/taches\")).json()), \"tâche restante\")\n",
+          "executable": true,
+          "sortie_attendue": "{'titre': 'Relancer le client Duval', 'priorite': 1, 'id': 1, 'faite': True}\n[2]\n204\n1 tâche restante\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Dans un vrai projet, ouvre `/docs` : chaque route y apparaît avec ses paramètres, ses modèles et ses codes de réponse, et peut être essayée depuis le navigateur."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une route `GET /taches/statistiques` qui renvoie `{\"total\": ..., \"faites\": ..., \"urgentes\": ...}` (urgentes : priorité 1 et pas encore faites). Attention à l'ordre des routes : déclare-la **avant** `/taches/{tache_id}`.\n\nLe code affiche `{'total': 3, 'faites': 2, 'urgentes': 1}`.",
+          "code": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass Tache(BaseModel):\n    id: int\n    titre: str\n    priorite: int = 2\n    faite: bool = False\n\n\nTACHES = {\n    1: Tache(id=1, titre=\"Relancer Duval\", priorite=1),\n    2: Tache(id=2, titre=\"Réunion\", faite=True),\n    3: Tache(id=3, titre=\"Facture\", priorite=1, faite=True),\n}\n\n# Écris /taches/statistiques ici\n\n\n@app.get(\"/taches/{tache_id}\")\nasync def lire(tache_id: int):\n    return TACHES[tache_id]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/taches/statistiques\")).json())\n",
+          "solution": "from fastapi import FastAPI\nfrom httpx import ASGITransport, AsyncClient\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass Tache(BaseModel):\n    id: int\n    titre: str\n    priorite: int = 2\n    faite: bool = False\n\n\nTACHES = {\n    1: Tache(id=1, titre=\"Relancer Duval\", priorite=1),\n    2: Tache(id=2, titre=\"Réunion\", faite=True),\n    3: Tache(id=3, titre=\"Facture\", priorite=1, faite=True),\n}\n\n\n@app.get(\"/taches/statistiques\")\nasync def statistiques():\n    taches = list(TACHES.values())\n    return {\n        \"total\": len(taches),\n        \"faites\": sum(t.faite for t in taches),\n        \"urgentes\": sum(t.priorite == 1 and not t.faite for t in taches),\n    }\n\n\n@app.get(\"/taches/{tache_id}\")\nasync def lire(tache_id: int):\n    return TACHES[tache_id]\n\n\nasync with AsyncClient(transport=ASGITransport(app=app), base_url=\"http://test\") as client:\n    print((await client.get(\"/taches/statistiques\")).json())\n",
+          "sortie_attendue": "{'total': 3, 'faites': 2, 'urgentes': 1}\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- REST : une ressource, et des méthodes HTTP pour créer, lire, modifier et supprimer.\n- `PATCH` modifie partiellement : `model_dump(exclude_unset=True)`.\n- Un modèle d'entrée, un modèle de sortie, et une fonction commune pour le 404."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel FastAPI",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/"
+        },
+        {
+          "titre": "Tutoriel FastAPI : mise à jour du corps",
+          "url": "https://fastapi.tiangolo.com/fr/tutorial/body-updates/"
+        }
+      ]
+    }
+  ]
+}

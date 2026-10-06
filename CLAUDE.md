@@ -49,7 +49,8 @@ Après un changement d'API, régénérer les types du front (la CI vérifie qu'i
 cd api && uv run python -m app.openapi && cd ../front && npm run api:types
 ```
 
-Exécuter un code VBA comme la plateforme, pour écrire la `sortie_attendue` d'une leçon : `cd front && npm run vba -- mon-code.bas` (ADR 0026).
+Exécuter un code comme la plateforme, pour écrire la `sortie_attendue` d'une leçon : `cd front && npm run python -- mon-code.py` (Pyodide dans Node, ADR 0028) ou `npm run vba -- mon-code.bas` (ADR 0026).
+Vérifier un paquet de leçons comme l'import : `cd front && npm run verifier -- ../api/validated_courses/mon-parcours.json`.
 
 Charger les leçons de `docs/format-lecon/exemple.json` en base de dev : `cd api && uv run python -m app.lecons.commandes charger-exemple`.
 

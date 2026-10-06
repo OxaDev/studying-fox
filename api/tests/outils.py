@@ -82,12 +82,13 @@ async def creer_lecon(
     contenu: str = "Une **variable** est une boîte.\n\n```python run\nprint(1)\n```\n",
     niveau: Niveau = Niveau.DEBUTANT,
     identifiant: uuid.UUID | None = None,
+    theme_slug: str = "python",
 ) -> None:
-    """Crée une leçon de thème Python avec une révision au statut demandé."""
+    """Crée une leçon (de thème Python par défaut) avec une révision au statut demandé."""
     async with SessionLocale() as db:
-        theme = await db.scalar(select(Theme).where(Theme.slug == "python"))
+        theme = await db.scalar(select(Theme).where(Theme.slug == theme_slug))
         if theme is None:
-            theme = Theme(slug="python", nom="Python")
+            theme = Theme(slug=theme_slug, nom=theme_slug.capitalize())
             db.add(theme)
             await db.flush()
         auteur_id = (
@@ -151,9 +152,17 @@ async def creer_parcours(
 
 
 async def creer_themes() -> None:
-    """Thèmes de départ (créés par la migration 0004, mais vidés entre deux tests)."""
+    """Thèmes de départ (créés par les migrations, mais vidés entre deux tests).
+
+    « python » sert aux données des tests ; « python-bases » est celui de l'exemple officiel.
+    """
     async with SessionLocale() as db:
-        for slug, nom in [("python", "Python"), ("javascript", "JavaScript")]:
+        themes = [
+            ("python", "Python"),
+            ("javascript", "JavaScript"),
+            ("python-bases", "Python - Bases"),
+        ]
+        for slug, nom in themes:
             if await db.scalar(select(Theme.id).where(Theme.slug == slug)) is None:
                 db.add(Theme(slug=slug, nom=nom))
         await db.commit()

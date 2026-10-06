@@ -12,7 +12,7 @@
     "titre": "Automatiser Excel avec VBA",
     "description": "Découvrir le VBA sans prérequis : écrire des macros, lire et remplir les cellules, décider, répéter, découper son code, mettre en forme, gérer les erreurs et écrire des formules. Des exemples tirés du bureau, et un rapport des ventes automatique pour finir.",
     "niveau": "debutant",
-    "theme": "vba",
+    "theme": "vba-bases",
     "lecons": [
       "vba-premiere-macro",
       "vba-lire-et-ecrire-des-cellules",
@@ -33,7 +33,7 @@
       "slug": "vba-premiere-macro",
       "titre": "Ta première macro",
       "resume": "Découvrir le VBA, écrire une première macro et afficher des messages avec Debug.Print et MsgBox.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 10,
       "prerequis": [],
@@ -116,7 +116,7 @@
       "slug": "vba-lire-et-ecrire-des-cellules",
       "titre": "Lire et écrire dans les cellules",
       "resume": "Remplir et relire les cellules d'une feuille avec Range et Cells, une cellule ou une plage entière.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 12,
       "prerequis": [
@@ -200,7 +200,7 @@
       "slug": "vba-variables",
       "titre": "Les variables et leurs types",
       "resume": "Ranger des valeurs dans des variables typées avec Dim, faire des calculs et éviter les fautes de frappe avec Option Explicit.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -284,7 +284,7 @@
       "slug": "vba-conditions",
       "titre": "Prendre des décisions : If et Select Case",
       "resume": "Faire réagir une macro selon les valeurs : If, ElseIf, Else, les opérateurs de comparaison et Select Case.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -376,7 +376,7 @@
       "slug": "vba-boucle-for",
       "titre": "Répéter avec For … Next",
       "resume": "Répéter des instructions avec For … Next, parcourir les lignes d'un tableau et trouver sa dernière ligne.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 14,
       "prerequis": [
@@ -468,7 +468,7 @@
       "slug": "vba-for-each-et-do-while",
       "titre": "Parcourir les données : For Each et Do While",
       "resume": "Parcourir chaque cellule d'une plage avec For Each, et répéter tant qu'une condition est vraie avec Do While.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -548,7 +548,7 @@
       "slug": "vba-procedures-et-fonctions",
       "titre": "Découper son code : Sub et Function",
       "resume": "Organiser une macro en procédures qui reçoivent des arguments, et créer ses propres fonctions qui renvoient une valeur.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 13,
       "prerequis": [
@@ -626,7 +626,7 @@
       "slug": "vba-mise-en-forme",
       "titre": "Mettre en forme un tableau",
       "resume": "Mettre en forme les cellules par macro : gras, couleur de fond, format des nombres et des dates, avec le bloc With.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 11,
       "prerequis": [
@@ -702,7 +702,7 @@
       "slug": "vba-gerer-les-erreurs",
       "titre": "Gérer les erreurs",
       "resume": "Comprendre les erreurs d'exécution et les intercepter avec On Error, pour qu'une macro s'arrête proprement avec un message clair.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 12,
       "prerequis": [
@@ -786,7 +786,7 @@
       "slug": "vba-ecrire-des-formules",
       "titre": "Écrire des formules par macro",
       "resume": "Faire écrire des formules Excel par une macro : Formula en anglais, FormulaLocal en français, recopie relative et erreurs de cellule.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 14,
       "prerequis": [
@@ -894,7 +894,7 @@
       "slug": "vba-projet-rapport-des-ventes",
       "titre": "Projet : un rapport des ventes automatique",
       "resume": "Mettre bout à bout tout le parcours : lire un tableau de ventes, calculer des indicateurs et écrire un rapport mis en forme.",
-      "theme": "vba",
+      "theme": "vba-bases",
       "niveau": "debutant",
       "duree_minutes": 15,
       "prerequis": [

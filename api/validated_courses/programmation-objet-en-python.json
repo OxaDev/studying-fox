@@ -1,0 +1,790 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "ebade91d-a79f-4e5a-95dd-0fd34c25df4e",
+    "slug": "programmation-objet-en-python",
+    "titre": "La programmation objet en Python",
+    "description": "Les fondamentaux de la programmation orientée objet : classes et instances, attributs, méthodes spéciales, propriétés, héritage, polymorphisme, classes abstraites, dataclasses et composition. Des exemples tirés de la gestion commerciale, et un panier de commande pour finir. Prérequis : les fondamentaux de Python.",
+    "niveau": "debutant",
+    "theme": "python-poo",
+    "lecons": [
+      "poo-classes-et-instances",
+      "poo-attributs-de-classe",
+      "poo-methodes-speciales",
+      "poo-encapsulation-et-proprietes",
+      "poo-heritage",
+      "poo-polymorphisme",
+      "poo-classes-abstraites",
+      "poo-methodes-de-classe-et-statiques",
+      "poo-dataclasses",
+      "poo-projet-panier-de-commande"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "4471ae93-695d-4a76-b012-8b3ae22bb738",
+      "slug": "poo-classes-et-instances",
+      "titre": "Classes et instances",
+      "resume": "Comprendre ce qu'est un objet, définir une classe avec son constructeur, et créer plusieurs instances indépendantes.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "python-classes-et-objets"
+      ],
+      "objectifs": [
+        "Expliquer la différence entre une classe et une instance",
+        "Écrire un constructeur __init__",
+        "Lire et modifier les attributs d'un objet",
+        "Écrire une méthode qui utilise self"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "La **programmation orientée objet** (POO) regroupe des données et les opérations qui les concernent dans un même ensemble : un **objet**.\n\nUne **classe** est le plan de construction ; une **instance** est un objet construit d'après ce plan. La classe `Client` décrit ce qu'est un client ; `Client(\"Camille\")` est un client précis."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Client:\n    def __init__(self, nom, ville):\n        self.nom = nom\n        self.ville = ville\n\n\ncamille = Client(\"Camille\", \"Nantes\")\nkarim = Client(\"Karim\", \"Lyon\")\nprint(camille.nom, \"habite à\", camille.ville)\nprint(karim.nom, \"habite à\", karim.ville)\n",
+          "executable": true,
+          "sortie_attendue": "Camille habite à Nantes\nKarim habite à Lyon\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`__init__` est le **constructeur** : Python l'appelle à la création de l'objet. Son premier paramètre, `self`, désigne l'objet en cours de construction. `self.nom = nom` crée un **attribut** : une variable rangée dans l'objet.\n\nChaque instance a ses propres attributs. Modifier l'un ne change pas l'autre."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Client:\n    def __init__(self, nom, ville):\n        self.nom = nom\n        self.ville = ville\n\n\ncamille = Client(\"Camille\", \"Nantes\")\nkarim = Client(\"Karim\", \"Lyon\")\ncamille.ville = \"Rennes\"\nprint(camille.ville, karim.ville)\nprint(type(camille).__name__)\n",
+          "executable": true,
+          "sortie_attendue": "Rennes Lyon\nClient\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les méthodes\n\nUne **méthode** est une fonction définie dans la classe. Elle reçoit l'objet dans `self`, et peut donc lire ou modifier ses attributs."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Compte:\n    def __init__(self, titulaire, solde=0):\n        self.titulaire = titulaire\n        self.solde = solde\n\n    def deposer(self, montant):\n        self.solde += montant\n\n    def decrire(self):\n        return f\"{self.titulaire} : {self.solde} €\"\n\n\ncompte = Compte(\"Camille\")\ncompte.deposer(150)\ncompte.deposer(50)\nprint(compte.decrire())\n",
+          "executable": true,
+          "sortie_attendue": "Camille : 200 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Oublier `self` dans la définition d'une méthode provoque une `TypeError` à l'appel : Python passe toujours l'objet en premier argument. `compte.deposer(150)` revient à `Compte.deposer(compte, 150)`."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une classe `Produit` avec un nom, un prix unitaire et une quantité en stock, et une méthode `valeur_stock()` qui renvoie le prix multiplié par la quantité.\n\nAffiche ensuite : `Stylos : 37.5 €` pour 25 stylos à 1,5 €.",
+          "code": "class Produit:\n    # Écris le constructeur et la méthode valeur_stock\n    pass\n\n\nstylos = Produit(\"Stylos\", 1.5, 25)\nprint(f\"{stylos.nom} : {stylos.valeur_stock()} €\")\n",
+          "solution": "class Produit:\n    def __init__(self, nom, prix, quantite):\n        self.nom = nom\n        self.prix = prix\n        self.quantite = quantite\n\n    def valeur_stock(self):\n        return self.prix * self.quantite\n\n\nstylos = Produit(\"Stylos\", 1.5, 25)\nprint(f\"{stylos.nom} : {stylos.valeur_stock()} €\")\n",
+          "sortie_attendue": "Stylos : 37.5 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une classe est un plan, une instance un objet construit d'après ce plan.\n- `__init__` initialise les attributs, rangés dans `self`.\n- Une méthode reçoit l'objet dans `self`."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les classes",
+          "url": "https://docs.python.org/fr/3/tutorial/classes.html"
+        }
+      ]
+    },
+    {
+      "id": "8b502281-331b-4ac4-9653-0470d4957e47",
+      "slug": "poo-attributs-de-classe",
+      "titre": "Attributs de classe et attributs d'instance",
+      "resume": "Distinguer ce qui appartient à chaque objet de ce qui est partagé par toute la classe, et éviter le piège des valeurs modifiables partagées.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "poo-classes-et-instances"
+      ],
+      "objectifs": [
+        "Définir un attribut de classe",
+        "Distinguer attribut de classe et attribut d'instance",
+        "Éviter de partager une liste entre toutes les instances"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Un **attribut de classe** est défini directement dans le corps de la classe, hors de toute méthode. Il est **partagé** par toutes les instances : c'est l'endroit pour une constante commune, comme un taux de TVA."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Facture:\n    taux_tva = 0.2\n\n    def __init__(self, montant_ht):\n        self.montant_ht = montant_ht\n\n    def montant_ttc(self):\n        return self.montant_ht * (1 + self.taux_tva)\n\n\nprint(Facture(100).montant_ttc())\nprint(Facture(250).montant_ttc())\nprint(Facture.taux_tva)\n",
+          "executable": true,
+          "sortie_attendue": "120.0\n300.0\n0.2\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Quand on lit `self.taux_tva`, Python cherche d'abord dans l'instance, puis dans la classe. Un compteur d'instances se range donc dans la classe : on l'incrémente par `Facture.compteur`, pas par `self.compteur`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Facture:\n    compteur = 0\n\n    def __init__(self, montant):\n        Facture.compteur += 1\n        self.numero = Facture.compteur\n        self.montant = montant\n\n\na = Facture(100)\nb = Facture(80)\nprint(a.numero, b.numero, Facture.compteur)\n",
+          "executable": true,
+          "sortie_attendue": "1 2 2\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le piège des listes partagées\n\nUne liste définie comme attribut de classe est **la même** pour toutes les instances. Ajouter un élément pour un panier l'ajoute pour tous !"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class PanierPiege:\n    articles = []  # partagée par tous les paniers\n\n    def ajouter(self, article):\n        self.articles.append(article)\n\n\nclass Panier:\n    def __init__(self):\n        self.articles = []  # propre à chaque panier\n\n    def ajouter(self, article):\n        self.articles.append(article)\n\n\na, b = PanierPiege(), PanierPiege()\na.ajouter(\"stylo\")\nprint(\"Piège :\", b.articles)\n\nc, d = Panier(), Panier()\nc.ajouter(\"stylo\")\nprint(\"Correct :\", d.articles)\n",
+          "executable": true,
+          "sortie_attendue": "Piège : ['stylo']\nCorrect : []\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Toute donnée propre à un objet (une liste, un dictionnaire) se crée dans `__init__`, avec `self.`. Les attributs de classe sont réservés aux valeurs partagées et, de préférence, non modifiées."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une classe `Ticket` dont chaque instance reçoit un numéro unique, à partir de 100 : le premier ticket a le numéro 100, le suivant 101…\n\nCrée trois tickets et affiche : `100 101 102`.",
+          "code": "class Ticket:\n    # Un attribut de classe pour le prochain numéro\n    pass\n\n\nt1, t2, t3 = Ticket(), Ticket(), Ticket()\nprint(t1.numero, t2.numero, t3.numero)\n",
+          "solution": "class Ticket:\n    prochain = 100\n\n    def __init__(self):\n        self.numero = Ticket.prochain\n        Ticket.prochain += 1\n\n\nt1, t2, t3 = Ticket(), Ticket(), Ticket()\nprint(t1.numero, t2.numero, t3.numero)\n",
+          "sortie_attendue": "100 101 102\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Un attribut de classe est partagé ; un attribut d'instance est propre à chaque objet.\n- Python cherche un attribut dans l'instance, puis dans la classe.\n- Les listes et dictionnaires propres à un objet se créent dans `__init__`."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Variables de classe et d'instance",
+          "url": "https://docs.python.org/fr/3/tutorial/classes.html#class-and-instance-variables"
+        }
+      ]
+    },
+    {
+      "id": "132e4558-2db6-469e-a848-688f05d2cf8e",
+      "slug": "poo-methodes-speciales",
+      "titre": "Les méthodes spéciales : __str__, __repr__, __eq__",
+      "resume": "Rendre ses objets lisibles à l'affichage, comparables entre eux et utilisables avec les opérateurs de Python.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "poo-attributs-de-classe"
+      ],
+      "objectifs": [
+        "Définir l'affichage d'un objet avec __str__ et __repr__",
+        "Comparer deux objets avec __eq__",
+        "Rendre un objet compatible avec len et +"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Par défaut, afficher un objet donne un texte peu utile, avec son adresse en mémoire. Les **méthodes spéciales**, entourées de doubles tirets bas, disent à Python comment l'objet se comporte avec les fonctions et opérateurs du langage.\n\n- `__str__` : le texte pour l'utilisateur, utilisé par `print` et `str()` ;\n- `__repr__` : le texte pour le développeur, utilisé dans une liste ou la console."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Montant:\n    def __init__(self, valeur, devise=\"EUR\"):\n        self.valeur = valeur\n        self.devise = devise\n\n    def __str__(self):\n        return f\"{self.valeur:.2f} {self.devise}\"\n\n    def __repr__(self):\n        return f\"Montant({self.valeur!r}, {self.devise!r})\"\n\n\nm = Montant(12.5)\nprint(m)\nprint([m, Montant(3, \"USD\")])\n",
+          "executable": true,
+          "sortie_attendue": "12.50 EUR\n[Montant(12.5, 'EUR'), Montant(3, 'USD')]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Comparer avec __eq__\n\nSans `__eq__`, deux objets ne sont égaux que s'il s'agit du **même** objet. Avec `__eq__`, on définit l'égalité selon leur contenu."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Montant:\n    def __init__(self, valeur, devise=\"EUR\"):\n        self.valeur = valeur\n        self.devise = devise\n\n    def __eq__(self, autre):\n        if not isinstance(autre, Montant):\n            return NotImplemented\n        return (self.valeur, self.devise) == (autre.valeur, autre.devise)\n\n\nprint(Montant(10) == Montant(10))\nprint(Montant(10) == Montant(10, \"USD\"))\nprint(Montant(10) == 10)\n",
+          "executable": true,
+          "sortie_attendue": "True\nFalse\nFalse\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Renvoyer `NotImplemented` (et non `False`) quand l'autre objet est d'un type inconnu laisse Python essayer la comparaison dans l'autre sens. C'est la convention."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les opérateurs\n\n`__add__` définit `+`, `__len__` définit `len()`, `__lt__` définit `<`… Un objet peut ainsi s'utiliser aussi naturellement qu'un nombre ou une liste."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Montant:\n    def __init__(self, valeur):\n        self.valeur = valeur\n\n    def __add__(self, autre):\n        return Montant(self.valeur + autre.valeur)\n\n    def __str__(self):\n        return f\"{self.valeur:.2f} €\"\n\n\nclass Panier:\n    def __init__(self):\n        self.lignes = []\n\n    def __len__(self):\n        return len(self.lignes)\n\n\nprint(Montant(10) + Montant(2.5))\npanier = Panier()\npanier.lignes += [\"stylo\", \"cahier\"]\nprint(len(panier))\n",
+          "executable": true,
+          "sortie_attendue": "12.50 €\n2\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète la classe `Duree` (en minutes) :\n\n- `__str__` affiche `1 h 30` pour 90 minutes ;\n- `__add__` additionne deux durées.\n\nLe code affiche alors : `2 h 15`.",
+          "code": "class Duree:\n    def __init__(self, minutes):\n        self.minutes = minutes\n\n    # Écris __str__ et __add__\n\n\nprint(Duree(90) + Duree(45))\n",
+          "solution": "class Duree:\n    def __init__(self, minutes):\n        self.minutes = minutes\n\n    def __str__(self):\n        return f\"{self.minutes // 60} h {self.minutes % 60:02d}\"\n\n    def __add__(self, autre):\n        return Duree(self.minutes + autre.minutes)\n\n\nprint(Duree(90) + Duree(45))\n",
+          "sortie_attendue": "2 h 15\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `__str__` pour l'utilisateur, `__repr__` pour le développeur.\n- `__eq__` définit l'égalité selon le contenu.\n- `__add__`, `__len__`, `__lt__`… branchent l'objet sur les opérateurs de Python."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Modèle de données : méthodes spéciales",
+          "url": "https://docs.python.org/fr/3/reference/datamodel.html#special-method-names"
+        }
+      ]
+    },
+    {
+      "id": "8be0cf2e-95e0-435d-9bdd-ca639e22ac4d",
+      "slug": "poo-encapsulation-et-proprietes",
+      "titre": "Encapsulation et propriétés",
+      "resume": "Protéger l'état d'un objet : conventions de nommage, propriétés en lecture seule et validation des valeurs avec @property.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "poo-methodes-speciales"
+      ],
+      "objectifs": [
+        "Signaler un attribut interne avec un tiret bas",
+        "Créer une propriété en lecture seule avec @property",
+        "Valider une valeur avec un setter",
+        "Calculer un attribut à la volée"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "L'**encapsulation** consiste à protéger l'état d'un objet : on ne le modifie qu'à travers ses méthodes, qui garantissent qu'il reste cohérent. Un solde de compte ne devrait pas devenir négatif parce qu'un code extérieur a écrit `compte.solde = -500`.\n\nPython n'a pas de mot-clé « privé ». La convention : un nom qui commence par un **tiret bas**, comme `_solde`, est interne à la classe. Le reste du code ne doit pas y toucher."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Compte:\n    def __init__(self, solde):\n        self._solde = solde\n\n    def retirer(self, montant):\n        if montant > self._solde:\n            raise ValueError(\"Solde insuffisant\")\n        self._solde -= montant\n\n    def solde(self):\n        return self._solde\n\n\ncompte = Compte(100)\ncompte.retirer(30)\nprint(compte.solde())\ntry:\n    compte.retirer(500)\nexcept ValueError as erreur:\n    print(\"Refusé :\", erreur)\n",
+          "executable": true,
+          "sortie_attendue": "70\nRefusé : Solde insuffisant\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## @property : un attribut calculé ou protégé\n\nLe décorateur `@property` transforme une méthode en attribut : on écrit `compte.solde`, sans parenthèses. Sans setter, l'attribut est en **lecture seule**."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Compte:\n    def __init__(self, solde):\n        self._solde = solde\n\n    @property\n    def solde(self):\n        return self._solde\n\n\ncompte = Compte(100)\nprint(compte.solde)\ntry:\n    compte.solde = -500\nexcept AttributeError:\n    print(\"Le solde ne se modifie pas directement\")\n",
+          "executable": true,
+          "sortie_attendue": "100\nLe solde ne se modifie pas directement\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Valider avec un setter\n\n`@nom.setter` définit ce qui se passe quand on affecte l'attribut. C'est l'endroit idéal pour **valider** la valeur, y compris dans le constructeur."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Employe:\n    def __init__(self, nom, salaire):\n        self.nom = nom\n        self.salaire = salaire  # passe par le setter\n\n    @property\n    def salaire(self):\n        return self._salaire\n\n    @salaire.setter\n    def salaire(self, valeur):\n        if valeur < 1800:\n            raise ValueError(f\"Salaire inférieur au minimum : {valeur}\")\n        self._salaire = valeur\n\n\ne = Employe(\"Inès\", 2400)\ne.salaire = 2600\nprint(e.salaire)\ntry:\n    Employe(\"Karim\", 900)\nexcept ValueError as erreur:\n    print(erreur)\n",
+          "executable": true,
+          "sortie_attendue": "2600\nSalaire inférieur au minimum : 900\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une propriété peut aussi être **calculée** : `@property def nom_complet(self): return f\"{self.prenom} {self.nom}\"`. Elle reste toujours à jour, sans valeur à synchroniser."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute à `Produit` une propriété `prix` qui refuse un prix négatif (`ValueError(\"Prix négatif\")`), et une propriété calculée `prix_ttc` (TVA de 20 %).\n\nLe code affiche alors `12.0`, puis `Prix négatif`.",
+          "code": "class Produit:\n    def __init__(self, nom, prix):\n        self.nom = nom\n        self.prix = prix\n\n    # Écris les propriétés prix (avec son setter) et prix_ttc\n\n\np = Produit(\"Agenda\", 10)\nprint(p.prix_ttc)\ntry:\n    p.prix = -1\nexcept ValueError as erreur:\n    print(erreur)\n",
+          "solution": "class Produit:\n    def __init__(self, nom, prix):\n        self.nom = nom\n        self.prix = prix\n\n    @property\n    def prix(self):\n        return self._prix\n\n    @prix.setter\n    def prix(self, valeur):\n        if valeur < 0:\n            raise ValueError(\"Prix négatif\")\n        self._prix = valeur\n\n    @property\n    def prix_ttc(self):\n        return self._prix * 1.2\n\n\np = Produit(\"Agenda\", 10)\nprint(p.prix_ttc)\ntry:\n    p.prix = -1\nexcept ValueError as erreur:\n    print(erreur)\n",
+          "sortie_attendue": "12.0\nPrix négatif\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `_nom` signale un attribut interne : le reste du code passe par les méthodes.\n- `@property` donne un attribut en lecture seule ou calculé.\n- `@nom.setter` valide chaque nouvelle valeur, y compris dans `__init__`."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Fonction property",
+          "url": "https://docs.python.org/fr/3/library/functions.html#property"
+        }
+      ]
+    },
+    {
+      "id": "e086c878-6c92-495e-b30e-4e5a21faa86b",
+      "slug": "poo-heritage",
+      "titre": "L'héritage",
+      "resume": "Créer des classes spécialisées à partir d'une classe générale, réutiliser son code avec super() et redéfinir ses méthodes.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "poo-encapsulation-et-proprietes"
+      ],
+      "objectifs": [
+        "Créer une classe fille qui hérite d'une classe mère",
+        "Appeler le constructeur parent avec super()",
+        "Redéfinir une méthode",
+        "Vérifier une filiation avec isinstance"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "L'**héritage** crée une classe à partir d'une autre. La **classe fille** reçoit tous les attributs et méthodes de la **classe mère**, et peut en ajouter ou en modifier. On l'écrit entre parenthèses : `class Salarie(Personne)`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Personne:\n    def __init__(self, nom):\n        self.nom = nom\n\n    def se_presenter(self):\n        return f\"Je m'appelle {self.nom}.\"\n\n\nclass Salarie(Personne):\n    pass\n\n\ns = Salarie(\"Camille\")\nprint(s.se_presenter())\nprint(isinstance(s, Personne))\n",
+          "executable": true,
+          "sortie_attendue": "Je m'appelle Camille.\nTrue\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## super() : réutiliser le parent\n\nQuand la classe fille a son propre constructeur, elle appelle celui de la mère avec `super().__init__(...)`, puis ajoute ses attributs. Sans cela, les attributs du parent ne sont pas créés."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Personne:\n    def __init__(self, nom):\n        self.nom = nom\n\n    def se_presenter(self):\n        return f\"Je m'appelle {self.nom}.\"\n\n\nclass Salarie(Personne):\n    def __init__(self, nom, poste):\n        super().__init__(nom)\n        self.poste = poste\n\n    def se_presenter(self):\n        return super().se_presenter() + f\" Je suis {self.poste}.\"\n\n\nprint(Salarie(\"Karim\", \"comptable\").se_presenter())\n",
+          "executable": true,
+          "sortie_attendue": "Je m'appelle Karim. Je suis comptable.\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Redéfinir une méthode s'appelle la **surcharge** (en anglais, *override*). `super().se_presenter()` réutilise la version du parent au lieu de la recopier."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Compte:\n    frais_retrait = 0\n\n    def __init__(self, solde):\n        self.solde = solde\n\n    def retirer(self, montant):\n        self.solde -= montant + self.frais_retrait\n\n\nclass CompteProfessionnel(Compte):\n    frais_retrait = 1.5\n\n\nperso, pro = Compte(100), CompteProfessionnel(100)\nperso.retirer(20)\npro.retirer(20)\nprint(perso.solde, pro.solde)\nprint(CompteProfessionnel.__mro__[1].__name__)\n",
+          "executable": true,
+          "sortie_attendue": "80 78.5\nCompte\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`Classe.__mro__` donne l'ordre dans lequel Python cherche une méthode : la classe elle-même, puis ses parents, jusqu'à `object`, l'ancêtre de toutes les classes."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "L'héritage exprime une relation « **est un** » : un salarié *est une* personne. Hériter seulement pour récupérer du code est une source de problèmes ; la leçon sur la composition montre une meilleure solution."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Crée une classe `ProduitSolde` qui hérite de `Produit` et ajoute une remise en pourcentage. Sa méthode `prix_final()` applique la remise au prix du parent.\n\nLe code affiche : `80.0`.",
+          "code": "class Produit:\n    def __init__(self, nom, prix):\n        self.nom = nom\n        self.prix = prix\n\n    def prix_final(self):\n        return self.prix\n\n\n# Écris ProduitSolde ici\n\n\nprint(ProduitSolde(\"Chaise\", 100, 20).prix_final())\n",
+          "solution": "class Produit:\n    def __init__(self, nom, prix):\n        self.nom = nom\n        self.prix = prix\n\n    def prix_final(self):\n        return self.prix\n\n\nclass ProduitSolde(Produit):\n    def __init__(self, nom, prix, remise):\n        super().__init__(nom, prix)\n        self.remise = remise\n\n    def prix_final(self):\n        return super().prix_final() * (1 - self.remise / 100)\n\n\nprint(ProduitSolde(\"Chaise\", 100, 20).prix_final())\n",
+          "sortie_attendue": "80.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `class Fille(Mere)` hérite de tout ce que définit la classe mère.\n- `super()` appelle la version du parent, en particulier dans `__init__`.\n- L'héritage exprime une relation « est un »."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : l'héritage",
+          "url": "https://docs.python.org/fr/3/tutorial/classes.html#inheritance"
+        }
+      ]
+    },
+    {
+      "id": "7c438a9f-30ad-43a2-b1ac-2d5188282360",
+      "slug": "poo-polymorphisme",
+      "titre": "Le polymorphisme",
+      "resume": "Traiter des objets différents de la même façon, parce qu'ils offrent les mêmes méthodes : héritage, duck typing et Protocol.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "poo-heritage"
+      ],
+      "objectifs": [
+        "Expliquer le polymorphisme",
+        "Appeler la même méthode sur des objets de classes différentes",
+        "Comprendre le duck typing",
+        "Décrire un contrat avec typing.Protocol"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Le **polymorphisme** permet d'utiliser des objets de classes différentes **de la même manière**, parce qu'ils offrent les mêmes méthodes. Le code appelant ne se demande pas quel objet il manipule : il appelle la méthode, et chaque objet répond à sa façon."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Virement:\n    def __init__(self, montant):\n        self.montant = montant\n\n    def frais(self):\n        return 0\n\n\nclass PaiementCarte:\n    def __init__(self, montant):\n        self.montant = montant\n\n    def frais(self):\n        return round(self.montant * 0.015, 2)\n\n\nclass Cheque:\n    def __init__(self, montant):\n        self.montant = montant\n\n    def frais(self):\n        return 1.2\n\n\npaiements = [Virement(200), PaiementCarte(80), Cheque(45)]\nfor paiement in paiements:\n    print(f\"{type(paiement).__name__} : {paiement.frais()} €\")\nprint(\"Total des frais :\", sum(p.frais() for p in paiements))\n",
+          "executable": true,
+          "sortie_attendue": "Virement : 0 €\nPaiementCarte : 1.2 €\nCheque : 1.2 €\nTotal des frais : 2.4\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le duck typing\n\nLes trois classes ci-dessus n'ont aucun parent commun : il suffit qu'elles aient une méthode `frais()`. C'est le **duck typing** : « si ça marche comme un canard et cancane comme un canard, c'est un canard ». Python juge un objet à ce qu'il sait faire, pas à son type."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Rapport:\n    def __init__(self, lignes):\n        self.lignes = lignes\n\n    def __iter__(self):\n        return iter(self.lignes)\n\n\n# Tout objet itérable convient à une boucle for, une liste comme notre Rapport\nfor source in ([\"a\", \"b\"], Rapport([\"x\", \"y\", \"z\"])):\n    print(len(list(source)), \"éléments\")\n",
+          "executable": true,
+          "sortie_attendue": "2 éléments\n3 éléments\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Décrire le contrat avec Protocol\n\n`typing.Protocol` écrit noir sur blanc ce qu'un objet doit savoir faire. Les outils de vérification de types, comme mypy, contrôlent alors le contrat, sans imposer d'héritage."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from typing import Protocol\n\n\nclass AvecFrais(Protocol):\n    def frais(self) -> float: ...\n\n\nclass Prelevement:\n    def frais(self) -> float:\n        return 0.5\n\n\ndef total_frais(paiements: list[AvecFrais]) -> float:\n    return sum(p.frais() for p in paiements)\n\n\nprint(total_frais([Prelevement(), Prelevement()]))\n",
+          "executable": true,
+          "sortie_attendue": "1.0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Évite les cascades de `if isinstance(objet, A) … elif isinstance(objet, B)` : ajoute plutôt une méthode à chaque classe. Ajouter un moyen de paiement ne demande alors aucune modification du code appelant."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris deux classes, `Rectangle(largeur, hauteur)` et `Cercle(rayon)`, avec chacune une méthode `surface()`. Pour le cercle, utilise `3.14` comme valeur de pi.\n\nLa boucle fournie affiche alors `12`, puis `12.56`.",
+          "code": "# Écris Rectangle et Cercle ici\n\n\nfor forme in [Rectangle(3, 4), Cercle(2)]:\n    print(round(forme.surface(), 2))\n",
+          "solution": "class Rectangle:\n    def __init__(self, largeur, hauteur):\n        self.largeur = largeur\n        self.hauteur = hauteur\n\n    def surface(self):\n        return self.largeur * self.hauteur\n\n\nclass Cercle:\n    def __init__(self, rayon):\n        self.rayon = rayon\n\n    def surface(self):\n        return 3.14 * self.rayon**2\n\n\nfor forme in [Rectangle(3, 4), Cercle(2)]:\n    print(round(forme.surface(), 2))\n",
+          "sortie_attendue": "12\n12.56\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Polymorphisme : la même méthode, des comportements différents selon l'objet.\n- En Python, un objet convient s'il offre les méthodes attendues (duck typing).\n- `Protocol` décrit ce contrat pour les outils de vérification de types."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "typing.Protocol",
+          "url": "https://docs.python.org/fr/3/library/typing.html#typing.Protocol"
+        }
+      ]
+    },
+    {
+      "id": "bb354727-4e1c-4954-8d06-b89c584694bd",
+      "slug": "poo-classes-abstraites",
+      "titre": "Les classes abstraites",
+      "resume": "Définir un modèle commun que les classes filles doivent compléter, avec le module abc et le décorateur abstractmethod.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "poo-polymorphisme"
+      ],
+      "objectifs": [
+        "Créer une classe abstraite avec ABC",
+        "Imposer une méthode avec @abstractmethod",
+        "Partager du code concret dans une classe abstraite"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **classe abstraite** est une classe incomplète, qu'on ne peut pas instancier. Elle sert de modèle : elle déclare les méthodes que chaque classe fille **doit** écrire, et peut fournir du code commun.\n\nOn l'écrit en héritant de `ABC`, et on marque les méthodes à compléter avec `@abstractmethod`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from abc import ABC, abstractmethod\n\n\nclass Notification(ABC):\n    def __init__(self, destinataire):\n        self.destinataire = destinataire\n\n    @abstractmethod\n    def envoyer(self, message): ...\n\n    def envoyer_rappel(self, rendez_vous):\n        return self.envoyer(f\"Rappel : {rendez_vous}\")\n\n\nclass Email(Notification):\n    def envoyer(self, message):\n        return f\"Email à {self.destinataire} : {message}\"\n\n\nclass Sms(Notification):\n    def envoyer(self, message):\n        return f\"SMS au {self.destinataire} : {message[:20]}\"\n\n\nprint(Email(\"camille@exemple.fr\").envoyer_rappel(\"lundi 9 h\"))\nprint(Sms(\"0600000000\").envoyer_rappel(\"lundi 9 h\"))\n",
+          "executable": true,
+          "sortie_attendue": "Email à camille@exemple.fr : Rappel : lundi 9 h\nSMS au 0600000000 : Rappel : lundi 9 h\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`envoyer_rappel` est du code **concret**, partagé par toutes les notifications ; `envoyer` est **abstraite**, chaque canal l'écrit à sa façon. C'est le patron « méthode modèle ».\n\nPython refuse d'instancier une classe à laquelle il manque une méthode abstraite : l'oubli est détecté dès la création de l'objet."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from abc import ABC, abstractmethod\n\n\nclass Notification(ABC):\n    @abstractmethod\n    def envoyer(self, message): ...\n\n\nclass Courrier(Notification):\n    pass  # envoyer() a été oubliée\n\n\nfor classe in (Notification, Courrier):\n    try:\n        classe()\n    except TypeError:\n        print(f\"{classe.__name__} ne peut pas être instanciée\")\n",
+          "executable": true,
+          "sortie_attendue": "Notification ne peut pas être instanciée\nCourrier ne peut pas être instanciée\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Classe abstraite ou `Protocol` ? La classe abstraite impose l'héritage et peut partager du code. Le `Protocol` décrit seulement un contrat, sans lien de parenté. Choisis la classe abstraite quand les classes filles ont vraiment du code en commun."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète la classe abstraite `Export` : elle déclare une méthode abstraite `formater(ligne)`, et sa méthode concrète `exporter(lignes)` renvoie les lignes formatées, jointes par des retours à la ligne.\n\nÉcris ensuite `ExportCsv`, qui formate une ligne en joignant ses valeurs par des points-virgules. Le code affiche `nom;ville`, puis `Camille;Nantes`.",
+          "code": "from abc import ABC, abstractmethod\n\n\nclass Export(ABC):\n    # Déclare formater et écris exporter\n    pass\n\n\n# Écris ExportCsv ici\n\n\nprint(ExportCsv().exporter([[\"nom\", \"ville\"], [\"Camille\", \"Nantes\"]]))\n",
+          "solution": "from abc import ABC, abstractmethod\n\n\nclass Export(ABC):\n    @abstractmethod\n    def formater(self, ligne): ...\n\n    def exporter(self, lignes):\n        return \"\\n\".join(self.formater(ligne) for ligne in lignes)\n\n\nclass ExportCsv(Export):\n    def formater(self, ligne):\n        return \";\".join(ligne)\n\n\nprint(ExportCsv().exporter([[\"nom\", \"ville\"], [\"Camille\", \"Nantes\"]]))\n",
+          "sortie_attendue": "nom;ville\nCamille;Nantes\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une classe abstraite hérite de `ABC` et ne s'instancie pas.\n- `@abstractmethod` oblige chaque classe fille à écrire la méthode.\n- Elle peut aussi partager du code concret."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Module abc",
+          "url": "https://docs.python.org/fr/3/library/abc.html"
+        }
+      ]
+    },
+    {
+      "id": "8f175a07-5f12-454a-b912-1eb06fa149ce",
+      "slug": "poo-methodes-de-classe-et-statiques",
+      "titre": "Méthodes de classe et méthodes statiques",
+      "resume": "Écrire des constructeurs alternatifs avec @classmethod et des fonctions utilitaires rangées dans la classe avec @staticmethod.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "poo-classes-abstraites"
+      ],
+      "objectifs": [
+        "Écrire un constructeur alternatif avec @classmethod",
+        "Utiliser cls pour respecter l'héritage",
+        "Ranger une fonction utilitaire avec @staticmethod"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une **méthode de classe**, marquée `@classmethod`, reçoit la classe elle-même dans son premier paramètre, nommé `cls` par convention, au lieu d'une instance.\n\nSon usage principal : des **constructeurs alternatifs**, qui créent un objet à partir d'un autre format de données."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Client:\n    def __init__(self, nom, email):\n        self.nom = nom\n        self.email = email\n\n    @classmethod\n    def depuis_csv(cls, ligne):\n        nom, email = ligne.split(\";\")\n        return cls(nom.strip(), email.strip())\n\n    @classmethod\n    def depuis_dict(cls, donnees):\n        return cls(donnees[\"nom\"], donnees[\"email\"])\n\n\na = Client.depuis_csv(\"Camille ; camille@exemple.fr\")\nb = Client.depuis_dict({\"nom\": \"Karim\", \"email\": \"karim@exemple.fr\"})\nprint(a.nom, a.email)\nprint(b.nom, b.email)\n",
+          "executable": true,
+          "sortie_attendue": "Camille camille@exemple.fr\nKarim karim@exemple.fr\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Écrire `cls(...)` plutôt que `Client(...)` respecte l'héritage : appelé sur une classe fille, le constructeur alternatif crée bien une instance de la classe fille."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Client:\n    def __init__(self, nom):\n        self.nom = nom\n\n    @classmethod\n    def anonyme(cls):\n        return cls(\"Anonyme\")\n\n\nclass ClientPro(Client):\n    pass\n\n\nprint(type(ClientPro.anonyme()).__name__)\n",
+          "executable": true,
+          "sortie_attendue": "ClientPro\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## @staticmethod\n\nUne **méthode statique** ne reçoit ni l'instance ni la classe : c'est une simple fonction, rangée dans la classe parce qu'elle s'y rapporte. Elle s'appelle sur la classe ou sur une instance."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class Iban:\n    def __init__(self, valeur):\n        if not Iban.est_valide(valeur):\n            raise ValueError(f\"IBAN invalide : {valeur}\")\n        self.valeur = valeur\n\n    @staticmethod\n    def est_valide(valeur):\n        propre = valeur.replace(\" \", \"\")\n        return propre[:2].isalpha() and 15 <= len(propre) <= 34\n\n\nprint(Iban.est_valide(\"FR76 3000 6000 0112 3456 7890 189\"))\nprint(Iban.est_valide(\"123\"))\n",
+          "executable": true,
+          "sortie_attendue": "True\nFalse\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Pour choisir : la méthode a besoin de l'objet ? Méthode normale. De la classe (pour créer un objet) ? `@classmethod`. D'aucun des deux ? `@staticmethod`, ou une simple fonction du module."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute à `Date` un constructeur alternatif `depuis_texte(texte)` qui lit une date au format `jj/mm/aaaa`.\n\nLe code affiche : `2026-03-15`.",
+          "code": "class Date:\n    def __init__(self, annee, mois, jour):\n        self.annee, self.mois, self.jour = annee, mois, jour\n\n    def __str__(self):\n        return f\"{self.annee}-{self.mois:02d}-{self.jour:02d}\"\n\n    # Écris depuis_texte ici\n\n\nprint(Date.depuis_texte(\"15/03/2026\"))\n",
+          "solution": "class Date:\n    def __init__(self, annee, mois, jour):\n        self.annee, self.mois, self.jour = annee, mois, jour\n\n    def __str__(self):\n        return f\"{self.annee}-{self.mois:02d}-{self.jour:02d}\"\n\n    @classmethod\n    def depuis_texte(cls, texte):\n        jour, mois, annee = (int(partie) for partie in texte.split(\"/\"))\n        return cls(annee, mois, jour)\n\n\nprint(Date.depuis_texte(\"15/03/2026\"))\n",
+          "sortie_attendue": "2026-03-15\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `@classmethod` reçoit la classe (`cls`) : idéal pour les constructeurs alternatifs.\n- `cls(...)` crée un objet de la bonne classe, même dans une classe fille.\n- `@staticmethod` range une fonction utilitaire dans la classe."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Fonction classmethod",
+          "url": "https://docs.python.org/fr/3/library/functions.html#classmethod"
+        }
+      ]
+    },
+    {
+      "id": "00bc709d-c2be-4000-bc8c-75d09b54639e",
+      "slug": "poo-dataclasses",
+      "titre": "Les dataclasses",
+      "resume": "Écrire en quelques lignes des classes de données complètes, avec le décorateur dataclass : constructeur, affichage, comparaison et objets immuables.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "poo-methodes-de-classe-et-statiques"
+      ],
+      "objectifs": [
+        "Créer une classe de données avec @dataclass",
+        "Donner des valeurs par défaut avec field",
+        "Rendre un objet immuable avec frozen=True",
+        "Trier des objets avec order=True"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Beaucoup de classes servent surtout à **regrouper des données**. Le décorateur `@dataclass` écrit pour toi le constructeur, `__repr__` et `__eq__`, à partir des attributs annotés."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Commande:\n    numero: int\n    client: str\n    montant: float = 0.0\n\n\nc = Commande(1042, \"Camille\", 89.9)\nprint(c)\nprint(c == Commande(1042, \"Camille\", 89.9))\nprint(Commande(1043, \"Karim\"))\n",
+          "executable": true,
+          "sortie_attendue": "Commande(numero=1042, client='Camille', montant=89.9)\nTrue\nCommande(numero=1043, client='Karim', montant=0.0)\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Une dataclass reste une classe ordinaire : on peut lui ajouter des méthodes et des propriétés.\n\nPour une valeur par défaut **modifiable**, comme une liste, utilise `field(default_factory=list)` : chaque objet reçoit alors sa propre liste. Python refuse d'ailleurs `lignes: list = []`, pour éviter le piège des listes partagées."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass, field\n\n\n@dataclass\nclass Panier:\n    client: str\n    articles: list[str] = field(default_factory=list)\n\n    def ajouter(self, article):\n        self.articles.append(article)\n\n    @property\n    def taille(self):\n        return len(self.articles)\n\n\na, b = Panier(\"Camille\"), Panier(\"Karim\")\na.ajouter(\"stylo\")\nprint(a.taille, b.taille)\n",
+          "executable": true,
+          "sortie_attendue": "1 0\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Immuables et triables\n\n`frozen=True` interdit toute modification après la création : l'objet devient une **valeur** fiable, utilisable comme clé de dictionnaire. `order=True` ajoute `<`, `>`… qui comparent les attributs dans l'ordre de leur déclaration : les objets deviennent triables."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import FrozenInstanceError, dataclass\n\n\n@dataclass(frozen=True, order=True)\nclass Version:\n    majeure: int\n    mineure: int\n\n\nversions = [Version(2, 1), Version(1, 9), Version(2, 0)]\nprint(sorted(versions)[0])\nprint(max(versions))\ntry:\n    versions[0].majeure = 3\nexcept FrozenInstanceError:\n    print(\"Une Version ne se modifie pas\")\n",
+          "executable": true,
+          "sortie_attendue": "Version(majeure=1, mineure=9)\nVersion(majeure=2, mineure=1)\nUne Version ne se modifie pas\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "`__post_init__` s'exécute juste après le constructeur généré : c'est l'endroit pour valider les données, par exemple refuser un montant négatif."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris une dataclass `Ligne` avec un produit, un prix unitaire et une quantité (1 par défaut), et une propriété `total`.\n\nTrie ensuite les lignes fournies par total décroissant et affiche le produit de la première : `Écran`.",
+          "code": "from dataclasses import dataclass\n\n\n# Écris la dataclass Ligne ici\n\n\nlignes = [Ligne(\"Clavier\", 45, 2), Ligne(\"Écran\", 180), Ligne(\"Souris\", 15, 3)]\n# Trie et affiche le produit de la ligne la plus chère\n",
+          "solution": "from dataclasses import dataclass\n\n\n@dataclass\nclass Ligne:\n    produit: str\n    prix: float\n    quantite: int = 1\n\n    @property\n    def total(self):\n        return self.prix * self.quantite\n\n\nlignes = [Ligne(\"Clavier\", 45, 2), Ligne(\"Écran\", 180), Ligne(\"Souris\", 15, 3)]\nlignes.sort(key=lambda ligne: ligne.total, reverse=True)\nprint(lignes[0].produit)\n",
+          "sortie_attendue": "Écran\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `@dataclass` écrit `__init__`, `__repr__` et `__eq__` à partir des attributs annotés.\n- `field(default_factory=list)` pour une valeur par défaut modifiable.\n- `frozen=True` rend l'objet immuable, `order=True` le rend triable."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Module dataclasses",
+          "url": "https://docs.python.org/fr/3/library/dataclasses.html"
+        }
+      ]
+    },
+    {
+      "id": "e61b4538-17a4-4feb-9a48-06956da61443",
+      "slug": "poo-projet-panier-de-commande",
+      "titre": "Projet : un panier de commande",
+      "resume": "Assembler tout le parcours en préférant la composition à l'héritage : produits, lignes, remises interchangeables et panier.",
+      "theme": "python-poo",
+      "niveau": "debutant",
+      "duree_minutes": 18,
+      "prerequis": [
+        "poo-dataclasses"
+      ],
+      "objectifs": [
+        "Préférer la composition à l'héritage",
+        "Assembler des objets qui collaborent",
+        "Rendre un comportement interchangeable par composition"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Composition plutôt qu'héritage\n\nLa **composition** consiste à construire un objet à partir d'autres objets : un panier **a des** lignes, une ligne **a un** produit. C'est souvent plus souple que l'héritage, qui fige une relation « est un ».\n\nOn construit un panier de commande en quatre pièces : le produit, la ligne, la remise et le panier."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Produit:\n    reference: str\n    nom: str\n    prix: float\n\n\n@dataclass\nclass Ligne:\n    produit: Produit\n    quantite: int\n\n    @property\n    def total(self):\n        return self.produit.prix * self.quantite\n\n\nstylo = Produit(\"STY-01\", \"Stylo\", 1.5)\nprint(Ligne(stylo, 10).total)\n",
+          "executable": true,
+          "sortie_attendue": "15.0\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des remises interchangeables\n\nLes remises varient : aucune, un pourcentage, un montant à partir d'un seuil. Plutôt qu'une classe `PanierAvecRemise` qui hériterait de `Panier`, le panier **reçoit** un objet remise. Chaque remise a la même méthode `appliquer(total)` : c'est le polymorphisme."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "class SansRemise:\n    def appliquer(self, total):\n        return total\n\n\nclass RemisePourcentage:\n    def __init__(self, taux):\n        self.taux = taux\n\n    def appliquer(self, total):\n        return total * (1 - self.taux / 100)\n\n\nclass RemiseAPartirDe:\n    def __init__(self, seuil, montant):\n        self.seuil, self.montant = seuil, montant\n\n    def appliquer(self, total):\n        return total - self.montant if total >= self.seuil else total\n\n\nfor remise in (SansRemise(), RemisePourcentage(10), RemiseAPartirDe(100, 15)):\n    print(type(remise).__name__, remise.appliquer(120))\n",
+          "executable": true,
+          "sortie_attendue": "SansRemise 120\nRemisePourcentage 108.0\nRemiseAPartirDe 105\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le panier\n\nLe panier assemble le tout. Il encapsule ses lignes : on n'y touche qu'avec `ajouter`, qui regroupe les quantités d'un même produit."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "from dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Produit:\n    reference: str\n    nom: str\n    prix: float\n\n\n@dataclass\nclass Ligne:\n    produit: Produit\n    quantite: int\n\n    @property\n    def total(self):\n        return self.produit.prix * self.quantite\n\n\nclass SansRemise:\n    def appliquer(self, total):\n        return total\n\n\nclass RemisePourcentage:\n    def __init__(self, taux):\n        self.taux = taux\n\n    def appliquer(self, total):\n        return total * (1 - self.taux / 100)\n\n\nclass Panier:\n    def __init__(self, remise=None):\n        self._lignes = {}\n        self.remise = remise or SansRemise()\n\n    def ajouter(self, produit, quantite=1):\n        ligne = self._lignes.get(produit.reference)\n        if ligne:\n            ligne.quantite += quantite\n        else:\n            self._lignes[produit.reference] = Ligne(produit, quantite)\n\n    def __len__(self):\n        return sum(ligne.quantite for ligne in self._lignes.values())\n\n    @property\n    def total(self):\n        brut = sum(ligne.total for ligne in self._lignes.values())\n        return round(self.remise.appliquer(brut), 2)\n\n\nstylo = Produit(\"STY-01\", \"Stylo\", 1.5)\ncahier = Produit(\"CAH-02\", \"Cahier\", 3.2)\n\npanier = Panier(RemisePourcentage(10))\npanier.ajouter(stylo, 4)\npanier.ajouter(cahier, 2)\npanier.ajouter(stylo)\nprint(len(panier), \"articles\")\nprint(\"Total :\", panier.total, \"€\")\n",
+          "executable": true,
+          "sortie_attendue": "7 articles\nTotal : 12.51 €\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Changer de remise ne demande aucune nouvelle classe de panier : `panier.remise = RemisePourcentage(20)`. Avec l'héritage, chaque combinaison (panier pro, panier soldé, panier pro soldé…) aurait demandé sa propre classe."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une remise `RemiseFidelite` : 5 € de remise par tranche complète de 50 € d'achat (100 € donnent 10 € de remise, 149 € aussi).\n\nLe code affiche : `135`.",
+          "code": "# Écris RemiseFidelite ici, avec une méthode appliquer(total)\n\n\nprint(RemiseFidelite().appliquer(150))\n",
+          "solution": "class RemiseFidelite:\n    def appliquer(self, total):\n        return total - 5 * (total // 50)\n\n\nprint(RemiseFidelite().appliquer(150))\n",
+          "sortie_attendue": "135\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Composition : un objet **a** d'autres objets ; héritage : un objet **est** une sorte d'autre objet.\n- Un comportement passé en paramètre (la remise) se change sans nouvelle classe.\n- Encapsulation, dataclasses et polymorphisme se combinent pour un code simple à faire évoluer."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Python : les classes",
+          "url": "https://docs.python.org/fr/3/tutorial/classes.html"
+        }
+      ]
+    }
+  ]
+}

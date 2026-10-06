@@ -20,6 +20,8 @@
     "test:e2e": "playwright test",
     "api:types": "openapi-typescript src/api/openapi.json -o src/api/schema.d.ts",
     "vba": "vite-node scripts/executer-vba.ts",
+    "python": "vite-node scripts/executer-python.ts",
+    "verifier": "vite-node scripts/verifier-paquet.ts",
     "postinstall": "node scripts/copier-pyodide.mjs"
   },
   "dependencies": {

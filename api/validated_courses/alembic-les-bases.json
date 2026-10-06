@@ -1,0 +1,639 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 3,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-06"
+  },
+  "parcours": {
+    "id": "12b70847-7e08-463a-8748-7122c83dba7e",
+    "slug": "alembic-les-bases",
+    "titre": "Alembic : les bases",
+    "description": "Faire évoluer le schéma d'une base de données sans la recréer, avec Alembic : créer un projet, écrire et appliquer des migrations, revenir en arrière, générer les migrations à partir des modèles SQLAlchemy et migrer les données. Les exemples tournent sur SQLite, dans le navigateur. Prérequis : SQLAlchemy, les bases.",
+    "niveau": "debutant",
+    "theme": "python-fastapi",
+    "lecons": [
+      "alembic-pourquoi-les-migrations",
+      "alembic-creer-un-projet",
+      "alembic-premiere-migration",
+      "alembic-operations-courantes",
+      "alembic-revenir-en-arriere",
+      "alembic-autogeneration",
+      "alembic-migrations-de-donnees",
+      "alembic-projet-schema-qui-evolue"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "b1e191f1-bbb7-448b-ad48-8a940a976559",
+      "slug": "alembic-pourquoi-les-migrations",
+      "titre": "Pourquoi des migrations ?",
+      "resume": "Comprendre pourquoi une base de données en service ne se recrée pas, et comment Alembic fait évoluer son schéma par petites étapes versionnées.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "sqla-modeles-declaratifs"
+      ],
+      "objectifs": [
+        "Expliquer ce qu'est une migration de schéma",
+        "Comprendre pourquoi create_all ne suffit pas",
+        "Exécuter une première opération Alembic"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une application vit : on ajoute une colonne, une table, un index. En développement, on peut supprimer la base et la recréer avec `create_all`. En production, impossible : elle contient les données des clients.\n\nUne **migration** est un script qui fait passer le schéma d'une version à la suivante : « ajouter la colonne `email` à la table `client` ». Les migrations s'appliquent **dans l'ordre**, et chacune sait aussi s'annuler.\n\n**Alembic**, écrit par l'auteur de SQLAlchemy, est l'outil de migration de référence en Python. Ses opérations s'écrivent avec l'objet `op`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import sqlalchemy as sa\nfrom alembic.migration import MigrationContext\nfrom alembic.operations import Operations\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:\n    op = Operations(MigrationContext.configure(connexion))\n\n    op.create_table(\"client\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"nom\", sa.String(100)))\n    op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))\n\n    print([c[\"name\"] for c in sa.inspect(connexion).get_columns(\"client\")])\n",
+          "executable": true,
+          "sortie_attendue": "['id', 'nom', 'email']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Ici, on exécute les opérations directement pour les découvrir. Dans un vrai projet, elles sont rangées dans des **fichiers de migration**, et c'est Alembic qui les applique.\n\n## Pourquoi pas create_all ?\n\n`create_all` crée les tables qui manquent, mais ne modifie jamais une table existante. Ajouter une colonne au modèle ne l'ajoute pas à la base."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import sqlalchemy as sa\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\nmoteur = sa.create_engine(\"sqlite://\")\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str]\n\n\nBase.metadata.create_all(moteur)\n\n# Plus tard, le modèle gagne une colonne...\nClient.__table__.append_column(sa.Column(\"email\", sa.String(200)))\nBase.metadata.create_all(moteur)\n\n# ... mais la table existante n'a pas bougé\nprint([c[\"name\"] for c in sa.inspect(moteur).get_columns(\"client\")])\n",
+          "executable": true,
+          "sortie_attendue": "['id', 'nom']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les migrations sont du code, versionné avec Git comme le reste. Chaque développeur, chaque serveur de test et la production appliquent les mêmes étapes : leurs bases restent identiques."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Avec l'objet `op`, crée une table `produit` (un `id` et un `nom`), puis ajoute-lui une colonne `prix` de type `sa.Numeric(10, 2)`. Affiche ensuite ses colonnes : `['id', 'nom', 'prix']`.",
+          "code": "import sqlalchemy as sa\nfrom alembic.migration import MigrationContext\nfrom alembic.operations import Operations\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:\n    op = Operations(MigrationContext.configure(connexion))\n    # Crée la table, ajoute la colonne prix, puis affiche les colonnes\n",
+          "solution": "import sqlalchemy as sa\nfrom alembic.migration import MigrationContext\nfrom alembic.operations import Operations\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:\n    op = Operations(MigrationContext.configure(connexion))\n    op.create_table(\"produit\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"nom\", sa.String(100)))\n    op.add_column(\"produit\", sa.Column(\"prix\", sa.Numeric(10, 2)))\n    print([c[\"name\"] for c in sa.inspect(connexion).get_columns(\"produit\")])\n",
+          "sortie_attendue": "['id', 'nom', 'prix']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Une migration fait passer le schéma d'une version à la suivante, et sait s'annuler.\n- `create_all` ne modifie jamais une table existante : en production, on migre.\n- Les opérations d'Alembic s'écrivent avec l'objet `op`."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Alembic",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html"
+        }
+      ]
+    },
+    {
+      "id": "abe42bb3-77ed-4297-8c24-be61883511fc",
+      "slug": "alembic-creer-un-projet",
+      "titre": "Créer un projet Alembic",
+      "resume": "Initialiser Alembic dans un projet, comprendre le rôle de alembic.ini, env.py et du dossier versions, et configurer l'adresse de la base.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "alembic-pourquoi-les-migrations"
+      ],
+      "objectifs": [
+        "Initialiser un projet avec alembic init",
+        "Décrire le rôle de alembic.ini, env.py et versions",
+        "Configurer l'adresse de la base"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Dans un vrai projet, Alembic s'installe avec pip, puis on crée son dossier de travail avec la commande `alembic init` :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "pip install alembic\nalembic init migrations\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "Ici, on fait la même chose depuis Python, avec `command.init`, dans un dossier temporaire. Regardons ce qui a été créé."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nprint(sorted(os.listdir(dossier)))\nprint(sorted(os.listdir(os.path.join(dossier, \"migrations\"))))\nprint(os.listdir(os.path.join(dossier, \"migrations\", \"versions\")))\n",
+          "executable": true,
+          "sortie_attendue": "['alembic.ini', 'migrations']\n['README', 'env.py', 'script.py.mako', 'versions']\n[]\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le rôle de chaque fichier :\n\n- `alembic.ini` : la configuration, dont l'adresse de la base (`sqlalchemy.url`) ;\n- `migrations/env.py` : le script qu'Alembic lance à chaque commande. Il ouvre la connexion et indique les modèles de l'application ;\n- `migrations/script.py.mako` : le modèle des nouveaux fichiers de migration ;\n- `migrations/versions/` : les migrations elles-mêmes, une par fichier. Le dossier est vide au départ."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Configurer la base\n\nDans `alembic.ini`, on renseigne l'adresse de la base. Dans le code de cette leçon, on la règle avec `config.set_main_option`. On peut la relire de la même façon."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nprint(config.get_main_option(\"sqlalchemy.url\").startswith(\"sqlite:///\"))\nwith open(os.path.join(dossier, \"alembic.ini\")) as fichier:\n    lignes = [l.strip() for l in fichier if l.startswith(\"sqlalchemy.url\")]\nprint(lignes)\n",
+          "executable": true,
+          "sortie_attendue": "True\n['sqlalchemy.url = driver://user:pass@localhost/dbname']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Ne laisse pas un mot de passe de production dans `alembic.ini`, qui est versionné. Lis plutôt l'adresse dans une variable d'environnement, depuis `env.py` : `config.set_main_option(\"sqlalchemy.url\", os.environ[\"DATABASE_URL\"])`."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Brancher les modèles dans env.py\n\nPour qu'Alembic compare la base aux modèles SQLAlchemy (on le verra avec l'autogénération), on lui indique leurs métadonnées dans `env.py` :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "# migrations/env.py\nfrom monapp.modeles import Base\n\ntarget_metadata = Base.metadata\n",
+          "executable": false
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Initialise un projet Alembic dans le dossier temporaire, puis vérifie que `env.py` contient la ligne `target_metadata = None`, à remplacer dans un vrai projet. Affiche : `True`.",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\n# Lis migrations/env.py et vérifie la présence de « target_metadata = None »\n",
+          "solution": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nwith open(os.path.join(dossier, \"migrations\", \"env.py\")) as fichier:\n    print(\"target_metadata = None\" in fichier.read())\n",
+          "sortie_attendue": "True\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `alembic init migrations` crée `alembic.ini` et le dossier `migrations/`.\n- `env.py` ouvre la connexion et déclare les modèles (`target_metadata`).\n- `versions/` contient une migration par fichier."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Créer un environnement",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html#creating-an-environment"
+        }
+      ]
+    },
+    {
+      "id": "59ab9efc-b68e-4e40-9c6e-bd6c7ce2e4e9",
+      "slug": "alembic-premiere-migration",
+      "titre": "Écrire et appliquer une migration",
+      "resume": "Créer un fichier de migration avec ses fonctions upgrade et downgrade, l'appliquer avec alembic upgrade head, et suivre la version de la base.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "alembic-creer-un-projet"
+      ],
+      "objectifs": [
+        "Créer une migration avec alembic revision",
+        "Écrire les fonctions upgrade et downgrade",
+        "Appliquer les migrations avec upgrade head",
+        "Lire la version courante de la base"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une migration se crée avec `alembic revision`. Alembic génère un fichier dans `versions/`, avec un identifiant unique et deux fonctions vides à compléter :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "alembic revision -m \"créer la table client\"\n",
+          "executable": false
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "\"\"\"créer la table client\"\"\"\nfrom alembic import op\nimport sqlalchemy as sa\n\nrevision = \"0001\"\ndown_revision = None\n\n\ndef upgrade():\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\n\ndef downgrade():\n    op.drop_table(\"client\")\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "- `revision` est l'identifiant de la migration, `down_revision` celui de la précédente (`None` pour la première) : ensemble, ils forment une chaîne ;\n- `upgrade()` applique le changement, `downgrade()` l'annule.\n\nAlembic génère des identifiants aléatoires, comme `3f1a9c2b7d4e`. Dans ces leçons, on choisit `0001`, `0002`… pour la lisibilité. Dans le code ci-dessous, `ecrire_migration` écrit ce fichier pour nous."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\n\n\ndef colonnes(table):\n    moteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\n    return [c[\"name\"] for c in sa.inspect(moteur).get_columns(table)]\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\ncommand.upgrade(config, \"head\")\nprint(colonnes(\"client\"))\ncommand.current(config)\n",
+          "executable": true,
+          "sortie_attendue": "['id', 'nom']\n0001 (head)\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`command.upgrade(config, \"head\")` correspond à la commande `alembic upgrade head` : appliquer toutes les migrations jusqu'à la dernière, la **tête** (*head*). `alembic current` affiche la version de la base.\n\n## La table alembic_version\n\nComment Alembic sait-il quelles migrations sont déjà appliquées ? Il range la version courante dans une petite table de la base, `alembic_version`. Relancer `upgrade head` ne refait donc rien."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\n\n\ndef colonnes(table):\n    moteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\n    return [c[\"name\"] for c in sa.inspect(moteur).get_columns(table)]\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\ncommand.upgrade(config, \"head\")\ncommand.upgrade(config, \"head\")  # déjà à jour : rien à faire\n\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT version_num FROM alembic_version\")).scalar())\n",
+          "executable": true,
+          "sortie_attendue": "0001\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une migration appliquée en production ne se modifie plus : d'autres bases l'ont déjà exécutée. Pour corriger, on écrit une nouvelle migration."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Ajoute une deuxième migration, `0002`, qui suit `0001` et ajoute à `client` une colonne `email` (`sa.String(200)`) ; son `downgrade` la supprime avec `op.drop_column`. Applique les migrations, puis affiche les colonnes et la version : `['id', 'nom', 'email']` puis `0002 (head)`.",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\n\n\ndef colonnes(table):\n    moteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\n    return [c[\"name\"] for c in sa.inspect(moteur).get_columns(table)]\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\n# Écris la migration 0002, puis applique tout\n",
+          "solution": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\n\n\ndef colonnes(table):\n    moteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\n    return [c[\"name\"] for c in sa.inspect(moteur).get_columns(table)]\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\necrire_migration(\"0002\", \"0001\", \"ajouter l'email\",\n    'op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))',\n    downgrade='op.drop_column(\"client\", \"email\")')\ncommand.upgrade(config, \"head\")\nprint(colonnes(\"client\"))\ncommand.current(config)\n",
+          "sortie_attendue": "['id', 'nom', 'email']\n0002 (head)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `alembic revision -m \"...\"` crée une migration ; on complète `upgrade()` et `downgrade()`.\n- `revision` et `down_revision` chaînent les migrations.\n- `alembic upgrade head` applique tout ; `alembic_version` garde la version de la base."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Créer une migration",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script"
+        },
+        {
+          "titre": "Lancer la première migration",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html#running-our-first-migration"
+        }
+      ]
+    },
+    {
+      "id": "204b00a3-fe07-4fb6-b73c-8e04a8e044e4",
+      "slug": "alembic-operations-courantes",
+      "titre": "Les opérations courantes",
+      "resume": "Écrire les migrations du quotidien : ajouter une table liée, des colonnes, des index, renommer une table et exécuter du SQL.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "alembic-premiere-migration"
+      ],
+      "objectifs": [
+        "Créer une table avec une clé étrangère",
+        "Ajouter une colonne avec une valeur par défaut",
+        "Créer et supprimer un index",
+        "Renommer une table"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Voici les opérations qu'on écrit le plus souvent dans `upgrade()` :\n\n- `op.create_table` et `op.drop_table` : créer ou supprimer une table ;\n- `op.add_column` et `op.drop_column` : ajouter ou retirer une colonne ;\n- `op.create_index` et `op.drop_index` : gérer les index ;\n- `op.rename_table` : renommer une table ;\n- `op.execute` : lancer du SQL quand aucune opération ne convient."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\necrire_migration(\"0002\", \"0001\", \"créer les commandes\", \"\"\"\n    op.create_table(\n        \"commande\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"client_id\", sa.Integer, sa.ForeignKey(\"client.id\"), nullable=False),\n        sa.Column(\"montant\", sa.Numeric(10, 2), nullable=False),\n    )\n    op.create_index(\"ix_commande_client_id\", \"commande\", [\"client_id\"])\n\"\"\", downgrade=\"\"\"\n    op.drop_index(\"ix_commande_client_id\", table_name=\"commande\")\n    op.drop_table(\"commande\")\n\"\"\")\ncommand.upgrade(config, \"head\")\n\nimport sqlalchemy as sa\ninspecteur = sa.inspect(sa.create_engine(config.get_main_option(\"sqlalchemy.url\")))\nprint(sorted(inspecteur.get_table_names()))\nprint(inspecteur.get_foreign_keys(\"commande\")[0][\"referred_table\"])\nprint([i[\"name\"] for i in inspecteur.get_indexes(\"commande\")])\n",
+          "executable": true,
+          "sortie_attendue": "['alembic_version', 'client', 'commande']\nclient\n['ix_commande_client_id']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le `downgrade` défait les opérations **dans l'ordre inverse** : on supprime l'index avant la table qui le porte.\n\n## Une colonne obligatoire sur une table remplie\n\nAjouter une colonne `NOT NULL` à une table qui contient déjà des lignes échoue : quelle valeur donner aux lignes existantes ? On fournit une valeur par défaut côté base avec `server_default`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\ncommand.upgrade(config, \"head\")\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"INSERT INTO client (nom) VALUES ('Camille'), ('Karim')\"))\n\necrire_migration(\"0002\", \"0001\", \"ajouter le statut\",\n    'op.add_column(\"client\", sa.Column(\"statut\", sa.String(20), nullable=False, server_default=\"actif\"))',\n    downgrade='op.drop_column(\"client\", \"statut\")')\necrire_migration(\"0003\", \"0002\", \"renommer client en contact\", 'op.rename_table(\"client\", \"contact\")',\n    downgrade='op.rename_table(\"contact\", \"client\")')\ncommand.upgrade(config, \"head\")\n\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT nom, statut FROM contact ORDER BY id\")).all())\n",
+          "executable": true,
+          "sortie_attendue": "[('Camille', 'actif'), ('Karim', 'actif')]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "SQLite ne sait pas modifier ou supprimer une colonne qui porte une contrainte, ni changer son type. Alembic contourne cette limite avec `batch_alter_table`, vu dans le parcours intermédiaire. PostgreSQL et MySQL n'ont pas cette limite."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Écris la migration `0002` : elle ajoute à `client` une colonne `ville` (`sa.String(100)`), et un index `ix_client_ville` sur cette colonne. Le `downgrade` supprime l'index, puis la colonne.\n\nApplique tout, puis affiche les index de `client` : `['ix_client_ville']`.",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\n# Écris la migration 0002, puis applique tout\n",
+          "solution": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\n\necrire_migration(\"0002\", \"0001\", \"ajouter la ville\", \"\"\"\n    op.add_column(\"client\", sa.Column(\"ville\", sa.String(100)))\n    op.create_index(\"ix_client_ville\", \"client\", [\"ville\"])\n\"\"\", downgrade=\"\"\"\n    op.drop_index(\"ix_client_ville\", table_name=\"client\")\n    op.drop_column(\"client\", \"ville\")\n\"\"\")\ncommand.upgrade(config, \"head\")\n\nimport sqlalchemy as sa\ninspecteur = sa.inspect(sa.create_engine(config.get_main_option(\"sqlalchemy.url\")))\nprint([i[\"name\"] for i in inspecteur.get_indexes(\"client\")])\n",
+          "sortie_attendue": "['ix_client_ville']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `op.create_table`, `op.add_column`, `op.create_index`, `op.rename_table`, `op.execute`…\n- Le `downgrade` défait les opérations dans l'ordre inverse.\n- Une colonne obligatoire ajoutée à une table remplie a besoin d'un `server_default`."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Référence des opérations",
+          "url": "https://alembic.sqlalchemy.org/en/latest/ops.html"
+        }
+      ]
+    },
+    {
+      "id": "bd1f36cd-c67c-49bd-943d-f70cd8a806c9",
+      "slug": "alembic-revenir-en-arriere",
+      "titre": "Revenir en arrière et suivre l'historique",
+      "resume": "Annuler des migrations avec downgrade, viser une version précise, et lire l'historique et la version courante de la base.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "alembic-operations-courantes"
+      ],
+      "objectifs": [
+        "Annuler la dernière migration avec downgrade -1",
+        "Viser une version précise ou revenir à base",
+        "Lire l'historique avec alembic history",
+        "Vérifier la version courante avec alembic current"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Chaque migration sait s'annuler grâce à sa fonction `downgrade()`. `alembic downgrade -1` annule la dernière migration appliquée ; `alembic downgrade 0001` revient à une version précise ; `alembic downgrade base` annule tout."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\n\n\ndef colonnes(table):\n    moteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\n    return [c[\"name\"] for c in sa.inspect(moteur).get_columns(table)]\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\necrire_migration(\"0002\", \"0001\", \"ajouter l'email\",\n    'op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))',\n    downgrade='op.drop_column(\"client\", \"email\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la ville\",\n    'op.add_column(\"client\", sa.Column(\"ville\", sa.String(100)))',\n    downgrade='op.drop_column(\"client\", \"ville\")')\n\n\ncommand.upgrade(config, \"head\")\nprint(colonnes(\"client\"))\n\ncommand.downgrade(config, \"-1\")\nprint(colonnes(\"client\"))\n\ncommand.downgrade(config, \"0001\")\nprint(colonnes(\"client\"))\ncommand.current(config)\n",
+          "executable": true,
+          "sortie_attendue": "['id', 'nom', 'email', 'ville']\n['id', 'nom', 'email']\n['id', 'nom']\n0001\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "De la même façon, `upgrade` accepte une cible : `alembic upgrade 0002`, ou `alembic upgrade +1` pour une seule étape.\n\n## L'historique\n\n`alembic history` liste les migrations, de la plus récente à la plus ancienne, avec leur message. `(head)` marque la dernière."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\necrire_migration(\"0002\", \"0001\", \"ajouter l'email\",\n    'op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))',\n    downgrade='op.drop_column(\"client\", \"email\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la ville\",\n    'op.add_column(\"client\", sa.Column(\"ville\", sa.String(100)))',\n    downgrade='op.drop_column(\"client\", \"ville\")')\n\n\ncommand.history(config)\n",
+          "executable": true,
+          "sortie_attendue": "0002 -> 0003 (head), ajouter la ville\n0001 -> 0002, ajouter l'email\n<base> -> 0001, créer la table client\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`<base>` désigne l'état de départ, avant toute migration. Après un `upgrade +1`, `alembic current` montre où en est la base : ce n'est pas forcément la tête."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\necrire_migration(\"0002\", \"0001\", \"ajouter l'email\",\n    'op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))',\n    downgrade='op.drop_column(\"client\", \"email\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la ville\",\n    'op.add_column(\"client\", sa.Column(\"ville\", sa.String(100)))',\n    downgrade='op.drop_column(\"client\", \"ville\")')\n\n\ncommand.upgrade(config, \"+1\")\ncommand.current(config)\ncommand.upgrade(config, \"head\")\ncommand.current(config)\n",
+          "executable": true,
+          "sortie_attendue": "0001\n0003 (head)\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un `downgrade` qui supprime une colonne **efface ses données**. En production, on revient rarement en arrière : on corrige plutôt par une nouvelle migration. Le `downgrade` sert surtout en développement et en cas d'incident juste après un déploiement."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Applique toutes les migrations, puis reviens à l'état de départ avec `base`. Affiche ensuite les tables restantes : seule `alembic_version` demeure, `['alembic_version']`.",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\necrire_migration(\"0002\", \"0001\", \"ajouter l'email\",\n    'op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))',\n    downgrade='op.drop_column(\"client\", \"email\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la ville\",\n    'op.add_column(\"client\", sa.Column(\"ville\", sa.String(100)))',\n    downgrade='op.drop_column(\"client\", \"ville\")')\n\n\n# Applique tout, reviens à base, puis affiche les tables\n",
+          "solution": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\necrire_migration(\"0001\", None, \"créer la table client\", \"\"\"\n    op.create_table(\n        \"client\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"nom\", sa.String(100), nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"client\")')\n\necrire_migration(\"0002\", \"0001\", \"ajouter l'email\",\n    'op.add_column(\"client\", sa.Column(\"email\", sa.String(200)))',\n    downgrade='op.drop_column(\"client\", \"email\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la ville\",\n    'op.add_column(\"client\", sa.Column(\"ville\", sa.String(100)))',\n    downgrade='op.drop_column(\"client\", \"ville\")')\n\n\ncommand.upgrade(config, \"head\")\ncommand.downgrade(config, \"base\")\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nprint(sa.inspect(moteur).get_table_names())\n",
+          "sortie_attendue": "['alembic_version']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `alembic downgrade -1`, `downgrade 0001`, `downgrade base` : annuler une, plusieurs ou toutes les migrations.\n- `alembic upgrade +1` avance d'une étape, `upgrade head` jusqu'au bout.\n- `alembic history` et `alembic current` montrent la chaîne et la position de la base."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Revenir en arrière",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html#downgrading"
+        },
+        {
+          "titre": "Voir l'historique",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html#viewing-history-ranges"
+        }
+      ]
+    },
+    {
+      "id": "bf29ef91-ce41-4554-b9f5-921c8811346e",
+      "slug": "alembic-autogeneration",
+      "titre": "Générer les migrations à partir des modèles",
+      "resume": "Laisser Alembic comparer la base aux modèles SQLAlchemy et proposer les opérations de migration, puis relire ce qu'il génère.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 15,
+      "prerequis": [
+        "alembic-revenir-en-arriere"
+      ],
+      "objectifs": [
+        "Comprendre le principe de l'autogénération",
+        "Comparer la base aux modèles avec compare_metadata",
+        "Lire le code de migration proposé",
+        "Savoir ce que l'autogénération détecte mal"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Écrire chaque migration à la main est fastidieux. Avec l'**autogénération**, Alembic compare la base aux modèles SQLAlchemy (déclarés dans `target_metadata`) et écrit les opérations qui manquent :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "alembic revision --autogenerate -m \"ajouter le téléphone\"\n",
+          "executable": false
+        },
+        {
+          "type": "texte",
+          "markdown": "Derrière cette commande, Alembic utilise `compare_metadata` : la liste des différences entre la base et les modèles. On peut l'appeler directement pour voir ce qu'il détecte."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import sqlalchemy as sa\nfrom alembic.autogenerate import compare_metadata\nfrom alembic.migration import MigrationContext\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Client(Base):  # le modèle, tel qu'il est dans le code\n    __tablename__ = \"client\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    nom: Mapped[str] = mapped_column(sa.String(100))\n    telephone: Mapped[str | None] = mapped_column(sa.String(20))\n\n\nclass Facture(Base):\n    __tablename__ = \"facture\"\n    id: Mapped[int] = mapped_column(primary_key=True)\n\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:  # la base, telle qu'elle est en service\n    connexion.execute(sa.text(\"CREATE TABLE client (id INTEGER NOT NULL PRIMARY KEY, nom VARCHAR(100) NOT NULL, fax VARCHAR(20))\"))\n    differences = compare_metadata(MigrationContext.configure(connexion), Base.metadata)\n\nfor difference in differences:\n    operation, *details = difference\n    print(operation, getattr(details[-1], \"name\", details[-1]))\n",
+          "executable": true,
+          "sortie_attendue": "add_table facture\nadd_column telephone\nremove_column fax\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Alembic a vu une table à créer, une colonne à ajouter et une colonne à supprimer. Avec `produce_migrations` et `render_python_code`, on obtient le code qu'il écrirait dans la fonction `upgrade()` :"
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import sqlalchemy as sa\nfrom alembic.autogenerate import produce_migrations, render_python_code\nfrom alembic.migration import MigrationContext\n\nmodeles = sa.MetaData()\nsa.Table(\n    \"client\", modeles,\n    sa.Column(\"id\", sa.Integer, primary_key=True),\n    sa.Column(\"nom\", sa.String(100), nullable=False),\n    sa.Column(\"telephone\", sa.String(20)),\n)\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"CREATE TABLE client (id INTEGER NOT NULL PRIMARY KEY, nom VARCHAR(100) NOT NULL)\"))\n    migration = produce_migrations(MigrationContext.configure(connexion), modeles)\n\nprint(render_python_code(migration.upgrade_ops))\n",
+          "executable": true,
+          "sortie_attendue": "# ### commands auto generated by Alembic - please adjust! ###\n    op.add_column('client', sa.Column('telephone', sa.String(length=20), nullable=True))\n    # ### end Alembic commands ###\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "Le commentaire le dit : « please adjust! ». L'autogénération propose, **tu relis**. Elle ne voit pas tout :\n\n- un **renommage** de colonne ou de table apparaît comme une suppression suivie d'un ajout, ce qui effacerait les données ;\n- certains changements de type ou de valeur par défaut ne sont pas détectés selon la configuration ;\n- les migrations de **données** ne sont jamais générées."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Relis toujours une migration autogénérée avant de la valider. Une colonne renommée dans le modèle devient `drop_column` puis `add_column` : appliquée telle quelle en production, elle supprime toutes les valeurs de la colonne."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Le modèle `Produit` a gagné une colonne `stock` (entier) et perdu la colonne `ancien_code`. Utilise `compare_metadata` et affiche les opérations détectées, triées : `['add_column', 'remove_column']`.",
+          "code": "import sqlalchemy as sa\nfrom alembic.autogenerate import compare_metadata\nfrom alembic.migration import MigrationContext\n\nmodeles = sa.MetaData()\nsa.Table(\"produit\", modeles, sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"stock\", sa.Integer))\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"CREATE TABLE produit (id INTEGER NOT NULL PRIMARY KEY, ancien_code VARCHAR(10))\"))\n    # Compare la base aux modèles, puis affiche les opérations triées\n",
+          "solution": "import sqlalchemy as sa\nfrom alembic.autogenerate import compare_metadata\nfrom alembic.migration import MigrationContext\n\nmodeles = sa.MetaData()\nsa.Table(\"produit\", modeles, sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"stock\", sa.Integer))\n\nmoteur = sa.create_engine(\"sqlite://\")\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"CREATE TABLE produit (id INTEGER NOT NULL PRIMARY KEY, ancien_code VARCHAR(10))\"))\n    differences = compare_metadata(MigrationContext.configure(connexion), modeles)\n    print(sorted(d[0] for d in differences))\n",
+          "sortie_attendue": "['add_column', 'remove_column']\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `alembic revision --autogenerate` compare la base aux modèles de `target_metadata`.\n- Le code proposé se relit et s'ajuste toujours.\n- Les renommages et les migrations de données ne sont pas détectés."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Autogénération des migrations",
+          "url": "https://alembic.sqlalchemy.org/en/latest/autogenerate.html"
+        }
+      ]
+    },
+    {
+      "id": "a47b2fdd-430e-410c-80bb-1e7ea54efeed",
+      "slug": "alembic-migrations-de-donnees",
+      "titre": "Migrer les données",
+      "resume": "Remplir ou transformer des données dans une migration : insertion de données de référence avec bulk_insert, et mises à jour avec execute.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "alembic-autogeneration"
+      ],
+      "objectifs": [
+        "Insérer des données de référence avec op.bulk_insert",
+        "Transformer des données existantes avec op.execute",
+        "Écrire le downgrade d'une migration de données"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une migration ne change pas seulement la structure. Il faut parfois **remplir** une nouvelle table de référence (des pays, des statuts) ou **transformer** des données existantes. L'autogénération ne le fait jamais : on l'écrit à la main.\n\n`op.bulk_insert` insère des lignes dans une table. Il lui faut une description légère de la table, faite avec `sa.table` et `sa.column`."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\necrire_migration(\"0001\", None, \"créer les statuts\", \"\"\"\n    statut = op.create_table(\n        \"statut\",\n        sa.Column(\"code\", sa.String(20), primary_key=True),\n        sa.Column(\"libelle\", sa.String(100), nullable=False),\n    )\n    op.bulk_insert(statut, [\n        {\"code\": \"brouillon\", \"libelle\": \"Brouillon\"},\n        {\"code\": \"envoyee\", \"libelle\": \"Envoyée au client\"},\n        {\"code\": \"payee\", \"libelle\": \"Payée\"},\n    ])\n\"\"\", downgrade='op.drop_table(\"statut\")')\ncommand.upgrade(config, \"head\")\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT code FROM statut ORDER BY code\")).scalars().all())\n",
+          "executable": true,
+          "sortie_attendue": "['brouillon', 'envoyee', 'payee']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "`op.create_table` renvoie la table créée : on la passe directement à `bulk_insert`.\n\n## Transformer des données existantes\n\nOn découpe ici une colonne `nom_complet` en `prenom` et `nom` : ajouter les colonnes, les remplir avec `op.execute`, puis supprimer l'ancienne. `op.execute` accepte du SQL écrit à la main ou une requête SQLAlchemy."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"CREATE TABLE client (id INTEGER PRIMARY KEY, nom_complet VARCHAR(200))\"))\n    connexion.execute(sa.text(\"INSERT INTO client (nom_complet) VALUES ('Camille Martin'), ('Karim Benali')\"))\n\necrire_migration(\"0001\", None, \"séparer prénom et nom\", \"\"\"\n    op.add_column(\"client\", sa.Column(\"prenom\", sa.String(100)))\n    op.add_column(\"client\", sa.Column(\"nom\", sa.String(100)))\n    op.execute(\n        \"UPDATE client SET \"\n        \"prenom = substr(nom_complet, 1, instr(nom_complet, ' ') - 1), \"\n        \"nom = substr(nom_complet, instr(nom_complet, ' ') + 1)\"\n    )\n\"\"\", downgrade=\"\"\"\n    op.drop_column(\"client\", \"nom\")\n    op.drop_column(\"client\", \"prenom\")\n\"\"\")\ncommand.upgrade(config, \"head\")\n\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT prenom, nom FROM client ORDER BY id\")).all())\n",
+          "executable": true,
+          "sortie_attendue": "[('Camille', 'Martin'), ('Karim', 'Benali')]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "N'importe pas les modèles de l'application dans une migration de données : ils évolueront, et la vieille migration cassera. Décris les colonnes dont tu as besoin avec `sa.table(\"client\", sa.column(\"nom\"))`, ou écris du SQL : la migration reste figée dans le temps."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une migration de données sur une très grande table peut bloquer la base longtemps. On la fait alors par lots, ou dans un script à part ; le parcours intermédiaire montre comment migrer sans interruption de service."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "La table `produit` existe avec des prix en euros (colonne `prix`). Écris une migration qui ajoute une colonne `prix_centimes` (entier) et la remplit avec le prix multiplié par 100.\n\nLe code affiche : `[(150,), (320,)]`.",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"CREATE TABLE produit (id INTEGER PRIMARY KEY, prix REAL)\"))\n    connexion.execute(sa.text(\"INSERT INTO produit (prix) VALUES (1.5), (3.2)\"))\n\n# Écris la migration 0001, puis applique-la\n\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT prix_centimes FROM produit ORDER BY id\")).all())\n",
+          "solution": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"CREATE TABLE produit (id INTEGER PRIMARY KEY, prix REAL)\"))\n    connexion.execute(sa.text(\"INSERT INTO produit (prix) VALUES (1.5), (3.2)\"))\n\necrire_migration(\"0001\", None, \"prix en centimes\", \"\"\"\n    op.add_column(\"produit\", sa.Column(\"prix_centimes\", sa.Integer))\n    op.execute(\"UPDATE produit SET prix_centimes = CAST(ROUND(prix * 100) AS INTEGER)\")\n\"\"\", downgrade='op.drop_column(\"produit\", \"prix_centimes\")')\ncommand.upgrade(config, \"head\")\n\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT prix_centimes FROM produit ORDER BY id\")).all())\n",
+          "sortie_attendue": "[(150,), (320,)]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- `op.bulk_insert` insère des données de référence, `op.execute` transforme les données existantes.\n- Une migration de données ne dépend pas des modèles de l'application.\n- Ces migrations s'écrivent toujours à la main."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "op.bulk_insert",
+          "url": "https://alembic.sqlalchemy.org/en/latest/ops.html#alembic.operations.Operations.bulk_insert"
+        },
+        {
+          "titre": "op.execute",
+          "url": "https://alembic.sqlalchemy.org/en/latest/ops.html#alembic.operations.Operations.execute"
+        }
+      ]
+    },
+    {
+      "id": "c7b08041-3d90-4913-801c-12126ee15cd8",
+      "slug": "alembic-projet-schema-qui-evolue",
+      "titre": "Projet : un schéma qui évolue",
+      "resume": "Suivre la vie d'une base sur plusieurs versions : créer, enrichir, migrer les données, revenir en arrière et reprendre, comme lors d'un vrai déploiement.",
+      "theme": "python-fastapi",
+      "niveau": "debutant",
+      "duree_minutes": 17,
+      "prerequis": [
+        "alembic-migrations-de-donnees"
+      ],
+      "objectifs": [
+        "Enchaîner plusieurs migrations de structure et de données",
+        "Vérifier l'état de la base à chaque étape",
+        "Annuler puis réappliquer une migration sans perte"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "Une application de réservation de salles évolue sur trois versions :\n\n1. une table `salle` ;\n2. une table `reservation`, liée aux salles ;\n3. une capacité par salle, remplie pour les salles existantes.\n\nOn écrit les trois migrations, puis on les applique sur une base qui contient déjà des données."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\necrire_migration(\"0001\", None, \"créer les salles\", \"\"\"\n    op.create_table(\"salle\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"nom\", sa.String(50), nullable=False, unique=True))\n\"\"\", downgrade='op.drop_table(\"salle\")')\n\necrire_migration(\"0002\", \"0001\", \"créer les réservations\", \"\"\"\n    op.create_table(\n        \"reservation\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"salle_id\", sa.Integer, sa.ForeignKey(\"salle.id\"), nullable=False),\n        sa.Column(\"jour\", sa.Date, nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"reservation\")')\n\necrire_migration(\"0003\", \"0002\", \"ajouter la capacité\", \"\"\"\n    op.add_column(\"salle\", sa.Column(\"capacite\", sa.Integer, nullable=False, server_default=\"8\"))\n    op.execute(\"UPDATE salle SET capacite = 20 WHERE nom = 'Iroise'\")\n\"\"\", downgrade='op.drop_column(\"salle\", \"capacite\")')\n\ncommand.history(config)\n",
+          "executable": true,
+          "sortie_attendue": "0002 -> 0003 (head), ajouter la capacité\n0001 -> 0002, créer les réservations\n<base> -> 0001, créer les salles\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le déploiement\n\nLa production était restée à la version 1, avec deux salles. On applique les migrations, puis on vérifie le résultat."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\necrire_migration(\"0001\", None, \"créer les salles\", \"\"\"\n    op.create_table(\"salle\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"nom\", sa.String(50), nullable=False, unique=True))\n\"\"\", downgrade='op.drop_table(\"salle\")')\necrire_migration(\"0002\", \"0001\", \"créer les réservations\", \"\"\"\n    op.create_table(\n        \"reservation\",\n        sa.Column(\"id\", sa.Integer, primary_key=True),\n        sa.Column(\"salle_id\", sa.Integer, sa.ForeignKey(\"salle.id\"), nullable=False),\n        sa.Column(\"jour\", sa.Date, nullable=False),\n    )\n\"\"\", downgrade='op.drop_table(\"reservation\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la capacité\", \"\"\"\n    op.add_column(\"salle\", sa.Column(\"capacite\", sa.Integer, nullable=False, server_default=\"8\"))\n    op.execute(\"UPDATE salle SET capacite = 20 WHERE nom = 'Iroise'\")\n\"\"\", downgrade='op.drop_column(\"salle\", \"capacite\")')\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\ncommand.upgrade(config, \"0001\")\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"INSERT INTO salle (nom) VALUES ('Iroise'), ('Ouessant')\"))\n\ncommand.upgrade(config, \"head\")\ncommand.current(config)\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT nom, capacite FROM salle ORDER BY nom\")).all())\n    print(sorted(sa.inspect(connexion).get_table_names()))\n",
+          "executable": true,
+          "sortie_attendue": "0003 (head)\n[('Iroise', 20), ('Ouessant', 8)]\n['alembic_version', 'reservation', 'salle']\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Un incident juste après le déploiement\n\nUn bug apparaît sur la capacité : on revient d'une version le temps de corriger, puis on réapplique. Les salles et les réservations, créées par les migrations 1 et 2, ne sont pas touchées."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Avant un déploiement, teste l'aller-retour sur une copie de la base de production : `upgrade head`, `downgrade -1`, `upgrade head`. Le parcours intermédiaire montre comment l'automatiser dans les tests."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Reprends les trois migrations. Applique-les toutes, ajoute une salle « Molène » directement en SQL, reviens à la version `0002`, puis réapplique tout.\n\nAffiche les salles et leur capacité, triées par nom : `[('Iroise', 20), ('Molène', 8)]`. Molène a été gardée, et sa capacité a été remise à la valeur par défaut.",
+          "code": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\necrire_migration(\"0001\", None, \"créer les salles\", \"\"\"\n    op.create_table(\"salle\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"nom\", sa.String(50), nullable=False, unique=True))\n    op.execute(\"INSERT INTO salle (nom) VALUES ('Iroise')\")\n\"\"\", downgrade='op.drop_table(\"salle\")')\necrire_migration(\"0002\", \"0001\", \"créer les réservations\", \"\"\"\n    op.create_table(\"reservation\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"salle_id\", sa.Integer, sa.ForeignKey(\"salle.id\")))\n\"\"\", downgrade='op.drop_table(\"reservation\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la capacité\", \"\"\"\n    op.add_column(\"salle\", sa.Column(\"capacite\", sa.Integer, nullable=False, server_default=\"8\"))\n    op.execute(\"UPDATE salle SET capacite = 20 WHERE nom = 'Iroise'\")\n\"\"\", downgrade='op.drop_column(\"salle\", \"capacite\")')\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\n# Applique tout, ajoute Molène, reviens à 0002, réapplique, puis affiche les salles\n",
+          "solution": "import contextlib, io, os, tempfile, textwrap\nfrom alembic import command\nfrom alembic.config import Config\n\n# Un projet Alembic tout neuf, dans un dossier temporaire (comme « alembic init migrations »)\ndossier = tempfile.mkdtemp()\nwith contextlib.redirect_stdout(io.StringIO()):\n    command.init(Config(os.path.join(dossier, \"alembic.ini\")), os.path.join(dossier, \"migrations\"))\nconfig = Config()\nconfig.set_main_option(\"script_location\", os.path.join(dossier, \"migrations\"))\nconfig.set_main_option(\"sqlalchemy.url\", f\"sqlite:///{dossier}/app.db\")\n\n\ndef ecrire_migration(revision, parent, message, upgrade, downgrade=\"pass\"):\n    \"\"\"Écrit le fichier de migration, comme on le ferait dans l'éditeur.\"\"\"\n    contenu = (\n        f'\"\"\"{message}\"\"\"\\nfrom alembic import op\\nimport sqlalchemy as sa\\n\\n'\n        f\"revision = {revision!r}\\ndown_revision = {parent!r}\\n\\n\\n\"\n        f\"def upgrade():\\n{textwrap.indent(textwrap.dedent(upgrade).strip(), '    ')}\\n\\n\\n\"\n        f\"def downgrade():\\n{textwrap.indent(textwrap.dedent(downgrade).strip(), '    ')}\\n\"\n    )\n    with open(os.path.join(dossier, \"migrations\", \"versions\", f\"{revision}.py\"), \"w\") as fichier:\n        fichier.write(contenu)\n\n\necrire_migration(\"0001\", None, \"créer les salles\", \"\"\"\n    op.create_table(\"salle\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"nom\", sa.String(50), nullable=False, unique=True))\n    op.execute(\"INSERT INTO salle (nom) VALUES ('Iroise')\")\n\"\"\", downgrade='op.drop_table(\"salle\")')\necrire_migration(\"0002\", \"0001\", \"créer les réservations\", \"\"\"\n    op.create_table(\"reservation\", sa.Column(\"id\", sa.Integer, primary_key=True), sa.Column(\"salle_id\", sa.Integer, sa.ForeignKey(\"salle.id\")))\n\"\"\", downgrade='op.drop_table(\"reservation\")')\necrire_migration(\"0003\", \"0002\", \"ajouter la capacité\", \"\"\"\n    op.add_column(\"salle\", sa.Column(\"capacite\", sa.Integer, nullable=False, server_default=\"8\"))\n    op.execute(\"UPDATE salle SET capacite = 20 WHERE nom = 'Iroise'\")\n\"\"\", downgrade='op.drop_column(\"salle\", \"capacite\")')\n\nimport sqlalchemy as sa\nmoteur = sa.create_engine(config.get_main_option(\"sqlalchemy.url\"))\ncommand.upgrade(config, \"head\")\nwith moteur.begin() as connexion:\n    connexion.execute(sa.text(\"INSERT INTO salle (nom, capacite) VALUES ('Molène', 12)\"))\ncommand.downgrade(config, \"0002\")\ncommand.upgrade(config, \"head\")\nwith moteur.connect() as connexion:\n    print(connexion.execute(sa.text(\"SELECT nom, capacite FROM salle ORDER BY nom\")).all())\n",
+          "sortie_attendue": "[('Iroise', 20), ('Molène', 8)]\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- Les migrations racontent l'histoire du schéma, une étape à la fois.\n- On vérifie l'état de la base après chaque `upgrade`.\n- Un aller-retour `downgrade` puis `upgrade` peut perdre des données : la capacité de Molène est repartie à 8."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Tutoriel Alembic",
+          "url": "https://alembic.sqlalchemy.org/en/latest/tutorial.html"
+        }
+      ]
+    }
+  ]
+}
