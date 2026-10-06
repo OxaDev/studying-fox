@@ -1,0 +1,30 @@
+.choix {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.option::before {
+  content: "";
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--bordure);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.option[data-selected]::before {
+  border: 6px solid var(--primaire);
+}
+
+.option[data-focus-visible]::before {
+  box-shadow: var(--focus);
+}

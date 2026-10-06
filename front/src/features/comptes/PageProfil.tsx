@@ -7,6 +7,7 @@ import { Alerte } from "../../composants/Alerte";
 import { Bouton } from "../../composants/Bouton";
 import boutons from "../../composants/Bouton.module.css";
 import { ChampTexte } from "../../composants/ChampTexte";
+import { ChoixTheme } from "../../composants/ChoixTheme";
 import { classes } from "../../composants/classes";
 import dialogue from "../../composants/Confirmation.module.css";
 import { Fenetre } from "../../composants/Fenetre";
@@ -22,6 +23,7 @@ export function PageProfil() {
       <title>Mon profil — Le Renard Étudiant</title>
       <h1>Mon profil</h1>
       <div className={styles.sections}>
+        <SectionAffichage />
         <SectionPseudo />
         <SectionEmail />
         <SectionMotDePasse />
@@ -29,6 +31,15 @@ export function PageProfil() {
         <SectionSuppression />
       </div>
     </>
+  );
+}
+
+function SectionAffichage() {
+  return (
+    <section aria-labelledby="titre-affichage" className={styles.section}>
+      <h2 id="titre-affichage">Affichage</h2>
+      <ChoixTheme />
+    </section>
   );
 }
 

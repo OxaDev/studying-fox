@@ -12,4 +12,6 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
   definirJetonCsrf(null);
+  localStorage.clear();
+  delete document.documentElement.dataset.theme;
 });

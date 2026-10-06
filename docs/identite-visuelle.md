@@ -39,6 +39,8 @@ C'est **lui, l'étudiant** : il apprend aux côtés de l'utilisateur, qui est un
 
 Le **bleu** domine. Le turquoise et les pastels servent d'accents.
 
+Le site suit le thème de l'appareil. Dans son profil, chacun peut choisir Clair ou Sombre à la place ([ADR 0024](adr/0024-choix-du-theme.md)).
+
 ### Thème clair (par défaut)
 
 | Rôle | Nom | Couleur | Contraste |

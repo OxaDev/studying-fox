@@ -145,3 +145,24 @@ for (const theme of ["light", "dark"] as const) {
     await verifierAccessibilite(page);
   });
 }
+
+for (const [appareil, choix, attendu] of [
+  ["light", "Sombre", "dark"],
+  ["dark", "Clair", "light"],
+] as const) {
+  test(`le thème ${choix} choisi dans le profil remplace celui de l'appareil (${appareil})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: appareil });
+    await simulerLecons(page);
+    await page.goto("./profil");
+    await page.getByText(choix, { exact: true }).click();
+    await expect(page.getByRole("radio", { name: choix })).toBeChecked();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", attendu);
+
+    // Le choix est retenu d'une visite à l'autre.
+    await page.goto(`./parcours/${PARCOURS.slug}/${LECON.slug}`);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", attendu);
+    await verifierAccessibilite(page);
+  });
+}

@@ -3,7 +3,7 @@ import { createReadStream, statSync } from "node:fs";
 import { extname, join, resolve, sep } from "node:path";
 
 import react from "@vitejs/plugin-react";
-import { defineConfig, type Plugin } from "vite";
+import { type Connect, defineConfig, type Plugin } from "vite";
 
 import { cspPour } from "./csp";
 
@@ -18,6 +18,32 @@ function cspEnPrevisualisation(): Plugin {
         reponse.setHeader("Content-Security-Policy", cspPour(chemin, origine));
         suite();
       });
+    },
+  };
+}
+
+/**
+ * `/app` sans barre finale renvoie vers `/app/`, comme Caddy. Sinon Vite refuse l'adresse
+ * (« did you mean to visit /app/ ») : le routeur y mène pourtant, avec `basename: "/app"`.
+ */
+function barreFinaleApp(): Plugin {
+  const rediriger: Connect.NextHandleFunction = (requete, reponse, suite) => {
+    const adresse = requete.url ?? "/";
+    if (adresse !== "/app" && !adresse.startsWith("/app?")) {
+      suite();
+      return;
+    }
+    reponse.statusCode = 308;
+    reponse.setHeader("Location", `/app/${adresse.slice("/app".length)}`);
+    reponse.end();
+  };
+  return {
+    name: "barre-finale-app",
+    configureServer(serveur) {
+      serveur.middlewares.use(rediriger);
+    },
+    configurePreviewServer(serveur) {
+      serveur.middlewares.use(rediriger);
     },
   };
 }
@@ -77,7 +103,7 @@ const API = process.env.RENARD_API_URL ?? "http://localhost:8010";
 // `vite preview` reprend ce proxy (preview.proxy vaut server.proxy par défaut).
 export default defineConfig({
   base: "/app/",
-  plugins: [react(), cspEnPrevisualisation(), pyodideEnDev()],
+  plugins: [react(), barreFinaleApp(), cspEnPrevisualisation(), pyodideEnDev()],
   server: {
     proxy: {
       "^/(?!app(/|$))": API,

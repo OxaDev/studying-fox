@@ -36,6 +36,7 @@ Un ADR, c'est une fiche courte qui répond à trois questions :
 | [0021](0021-isolation-du-code-des-lecons.md) | Isoler le code des leçons avec une CSP par worker | Accepté |
 | [0022](0022-brouillon-modifiable.md) | Un brouillon reste modifiable jusqu'à sa soumission | Accepté |
 | [0023](0023-inscription-sans-verification-email.md) | Inscription sans vérification de l'email, en attendant un service d'envoi | Accepté |
+| [0024](0024-choix-du-theme.md) | Choix du thème, retenu dans le navigateur | Proposé |
 
 ## Écrire un nouvel ADR
 

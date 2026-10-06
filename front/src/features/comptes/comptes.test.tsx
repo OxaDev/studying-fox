@@ -245,6 +245,43 @@ describe("Profil", () => {
   });
 });
 
+describe("Thème", () => {
+  it("suit l'appareil par défaut", async () => {
+    simulerApi(CONNECTE);
+    afficherA("/profil");
+
+    const groupe = await screen.findByRole("radiogroup", { name: "Thème" });
+    expect(within(groupe).getByRole("radio", { name: "Comme mon appareil" })).toBeChecked();
+    expect(groupe).toHaveAccessibleDescription("Ce choix est retenu par ce navigateur seulement.");
+    expect(document.documentElement).not.toHaveAttribute("data-theme");
+  });
+
+  it("applique et retient le thème choisi", async () => {
+    simulerApi(CONNECTE);
+    const utilisateur = userEvent.setup();
+    afficherA("/profil");
+
+    await utilisateur.click(await screen.findByRole("radio", { name: "Sombre" }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(localStorage.getItem("renard-theme")).toBe("sombre");
+
+    await utilisateur.click(screen.getByRole("radio", { name: "Clair" }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+
+    await utilisateur.click(screen.getByRole("radio", { name: "Comme mon appareil" }));
+    expect(document.documentElement).not.toHaveAttribute("data-theme");
+    expect(localStorage.getItem("renard-theme")).toBeNull();
+  });
+
+  it("affiche le thème retenu lors d'une visite précédente", async () => {
+    localStorage.setItem("renard-theme", "clair");
+    simulerApi(CONNECTE);
+    afficherA("/profil");
+
+    expect(await screen.findByRole("radio", { name: "Clair" })).toBeChecked();
+  });
+});
+
 describe("Mes données", () => {
   it("propose de télécharger ses données", async () => {
     simulerApi(CONNECTE);

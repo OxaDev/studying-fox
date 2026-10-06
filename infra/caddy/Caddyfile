@@ -32,7 +32,8 @@
 		file_server
 	}
 
-	# Application React (connexion requise)
+	# Application React (connexion requise). Le routeur mène à « /app » pour « Mon espace ».
+	redir /app /app/ 308
 	handle /app* {
 		root * /srv
 		try_files {path} /app/index.html
