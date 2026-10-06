@@ -45,6 +45,16 @@
   background: var(--survol-secondaire);
 }
 
+.danger {
+  border-color: var(--erreur);
+  background: var(--surface);
+  color: var(--erreur);
+}
+
+.danger[data-hovered] {
+  background: var(--survol-secondaire);
+}
+
 /* LienBouton : mêmes styles, déclenchés par :hover et :focus-visible. */
 .lien {
   text-decoration: none;

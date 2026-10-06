@@ -144,3 +144,12 @@
 .suite {
   margin-block: var(--esp-6);
 }
+
+/* Fin de leçon : « Leçon terminée » et la suite du parcours, côte à côte. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--esp-4);
+  margin-block: var(--esp-8) var(--esp-6);
+}

@@ -390,6 +390,7 @@ function Editeur({ contribution }: { contribution: Contribution }) {
             </Bouton>
             <Confirmation
               declencheur="Supprimer le brouillon"
+              destructive
               titre="Supprimer ce brouillon ?"
               message="Le brouillon sera supprimé définitivement."
               confirmer="Supprimer"

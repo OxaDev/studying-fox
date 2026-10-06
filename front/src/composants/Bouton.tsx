@@ -4,7 +4,8 @@ import styles from "./Bouton.module.css";
 import { classes } from "./classes";
 
 interface Props extends Omit<ButtonProps, "className"> {
-  variante?: "primaire" | "secondaire";
+  /** « danger » : action destructive (suppression). */
+  variante?: "primaire" | "secondaire" | "danger";
 }
 
 /** Bouton en forme de pilule (identité visuelle). Accessible au clavier grâce à React Aria. */

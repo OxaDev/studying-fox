@@ -1,15 +1,40 @@
+/*
+ * Logo, menu, compte. Avec beaucoup d'entrées (admin), le menu passe à la ligne dans
+ * sa colonne ; sur petit écran, il prend une ligne à lui sous le logo et le compte.
+ */
 .entete {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "logo menu compte";
   align-items: center;
-  justify-content: space-between;
-  gap: var(--esp-4);
+  gap: var(--esp-3) var(--esp-6);
   padding: var(--esp-4) var(--esp-6);
   background: var(--surface);
   box-shadow: var(--ombre);
 }
 
+.entete > nav {
+  grid-area: menu;
+}
+
+/* Petit écran : logo et compte sur une ligne (ou deux s'ils ne tiennent pas), puis le menu. */
+@media (max-width: 56rem) {
+  .entete {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-inline: var(--esp-4);
+  }
+
+  .entete > nav {
+    order: 1;
+    flex-basis: 100%;
+  }
+}
+
 .logo {
+  grid-area: logo;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--texte);
   text-decoration: none;
@@ -17,7 +42,9 @@
 
 .menu {
   display: flex;
-  gap: var(--esp-6);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--esp-2) var(--esp-6);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -36,6 +63,7 @@
 }
 
 .compte {
+  grid-area: compte;
   display: flex;
   align-items: center;
   gap: var(--esp-3);

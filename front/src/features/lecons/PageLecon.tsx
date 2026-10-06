@@ -104,11 +104,10 @@ function Lecon({ lecon, parcours }: { lecon: LeconPubliee; parcours?: ParcoursDe
 
           <Markdown contenu={lecon.contenu} />
 
-          <BoutonTerminee slug={lecon.slug} terminee={lecon.terminee} />
-
-          {parcours && (
-            <div className={styles.suite}>
-              {suivante ? (
+          <div className={styles.actions}>
+            <BoutonTerminee slug={lecon.slug} terminee={lecon.terminee} />
+            {parcours &&
+              (suivante ? (
                 <LienBouton to={`/parcours/${parcours.slug}/${suivante.slug}`}>
                   Leçon suivante : {suivante.titre} <span aria-hidden="true">→</span>
                 </LienBouton>
@@ -116,9 +115,8 @@ function Lecon({ lecon, parcours }: { lecon: LeconPubliee; parcours?: ParcoursDe
                 <LienBouton to={`/parcours/${parcours.slug}`} variante="secondaire">
                   Retour au parcours
                 </LienBouton>
-              )}
-            </div>
-          )}
+              ))}
+          </div>
 
           <PropositionModification slug={lecon.slug} />
 

@@ -14,6 +14,8 @@ interface Props {
   varianteDeclencheur?: "primaire" | "secondaire";
   declencheurDesactive?: boolean;
   declencheurEnCours?: boolean;
+  /** Action destructive : boutons en rouge (déclencheur et confirmation). */
+  destructive?: boolean;
 }
 
 /** Demande de confirmation avant une action irréversible. Le focus reste piégé dans la fenêtre. */
@@ -27,11 +29,12 @@ export function Confirmation({
   varianteDeclencheur = "secondaire",
   declencheurDesactive = false,
   declencheurEnCours = false,
+  destructive = false,
 }: Props) {
   return (
     <DialogTrigger>
       <Bouton
-        variante={varianteDeclencheur}
+        variante={destructive ? "danger" : varianteDeclencheur}
         aria-label={labelDeclencheur}
         isDisabled={declencheurDesactive}
         isPending={declencheurEnCours}
@@ -52,6 +55,7 @@ export function Confirmation({
                     Annuler
                   </Bouton>
                   <Bouton
+                    variante={destructive ? "danger" : "primaire"}
                     onPress={() => {
                       close();
                       onConfirmer();

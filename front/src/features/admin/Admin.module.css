@@ -28,15 +28,7 @@
 }
 
 .recherche {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--esp-3);
   margin-bottom: var(--esp-6);
-}
-
-.recherche > :first-child {
-  flex: 1 1 16rem;
 }
 
 .pagination {

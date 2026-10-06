@@ -234,7 +234,7 @@ function SectionSuppression() {
         La suppression est définitive. Ta progression et tes brouillons sont effacés. Les leçons
         déjà publiées restent en ligne, signées « Contributeur anonyme ».
       </p>
-      <Fenetre declencheur="Supprimer mon compte" titre="Supprimer ton compte ?">
+      <Fenetre declencheur="Supprimer mon compte" titre="Supprimer ton compte ?" variante="danger">
         {(fermer) => (
           <Form
             className={formulaire.formulaire}
@@ -257,7 +257,7 @@ function SectionSuppression() {
               <Bouton variante="secondaire" onPress={fermer}>
                 Annuler
               </Bouton>
-              <Bouton type="submit" isPending={suppression.isPending}>
+              <Bouton type="submit" variante="danger" isPending={suppression.isPending}>
                 Supprimer définitivement
               </Bouton>
             </div>

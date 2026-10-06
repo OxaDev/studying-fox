@@ -8,11 +8,12 @@ import { Bouton } from "../../composants/Bouton";
 import { CaseACocher } from "../../composants/CaseACocher";
 import { ChampChoix } from "../../composants/ChampChoix";
 import { ChampTexte } from "../../composants/ChampTexte";
+import { classes } from "../../composants/classes";
 import dialogue from "../../composants/Confirmation.module.css";
 import { Fenetre } from "../../composants/Fenetre";
 import formulaire from "../../composants/Formulaire.module.css";
 import { useMoiConnecte } from "../comptes/session";
-import tableau from "../relecture/Relecture.module.css";
+import tableau from "../../composants/Tableau.module.css";
 import styles from "./Admin.module.css";
 import { adminApi, lirePage, type Role, ROLES, type UtilisateurAdmin } from "./api";
 import { NavAdmin } from "./NavAdmin";
@@ -49,7 +50,7 @@ export function PageUtilisateurs() {
       <Form
         role="search"
         aria-label="Utilisateurs"
-        className={styles.recherche}
+        className={classes(formulaire.ligne, styles.recherche)}
         onSubmit={(evenement) => {
           evenement.preventDefault();
           setParametres(saisie.trim() ? { q: saisie.trim() } : {});
@@ -72,7 +73,7 @@ export function PageUtilisateurs() {
       {data && data.total === 0 && <p>Aucun compte ne correspond.</p>}
       {data && data.total > 0 && (
         <>
-          <div className={tableau.defilement}>
+          <div className={tableau.cadre}>
             <table className={tableau.tableau}>
               <caption>
                 {data.total} compte{data.total > 1 ? "s" : ""}, du plus récent au plus ancien

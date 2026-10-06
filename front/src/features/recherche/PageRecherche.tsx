@@ -7,6 +7,7 @@ import { Alerte } from "../../composants/Alerte";
 import { Bouton } from "../../composants/Bouton";
 import { ChampChoix } from "../../composants/ChampChoix";
 import { ChampTexte } from "../../composants/ChampTexte";
+import formulaire from "../../composants/Formulaire.module.css";
 import { contributionApi } from "../contribution/api";
 import { NIVEAUX } from "../lecons/api";
 import { CarteParcours } from "../parcours/CarteParcours";
@@ -84,7 +85,7 @@ export function PageRecherche() {
           chercher({});
         }}
       >
-        <div className={styles.saisie}>
+        <div className={formulaire.ligne}>
           <ChampTexte
             label="Mots-clés"
             name="q"

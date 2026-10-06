@@ -20,20 +20,33 @@
 }
 
 .encadre {
+  --couleur-encadre: var(--primaire);
+
+  position: relative;
   margin-block: var(--esp-6);
-  padding: var(--esp-4) var(--esp-6);
-  border-left: 6px solid var(--primaire);
+  padding: var(--esp-4) var(--esp-6) var(--esp-4) var(--esp-8);
   border-radius: 12px;
   background: var(--surface);
   box-shadow: var(--ombre);
 }
 
+/* Barre de couleur droite, à l'intérieur de la carte : une bordure gauche suivrait les coins arrondis. */
+.encadre::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--esp-4);
+  left: var(--esp-4);
+  width: 4px;
+  border-radius: var(--rayon-bouton);
+  background: var(--couleur-encadre);
+}
+
 .encadre[data-variante="attention"] {
-  border-left-color: var(--erreur);
+  --couleur-encadre: var(--erreur);
 }
 
 .encadre[data-variante="a_retenir"] {
-  border-left-color: var(--succes-icone);
+  --couleur-encadre: var(--succes-icone);
 }
 
 .encadre > :last-child {

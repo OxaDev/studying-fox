@@ -103,6 +103,8 @@ Le thème suit le réglage du système, et un bouton permet de le changer.
 | Élément | Règle |
 |---|---|
 | Boutons principaux | En forme de pilule, fond `primaire`, texte blanc, flèche → à droite |
+| Boutons secondaires | Pilule à contour `primaire`, fond `surface` |
+| Boutons de suppression | Variante `danger` : pilule à contour et texte `erreur`. Jamais l'apparence d'une action anodine |
 | Filtres (Tous, Python…) | Pilules à contour. L'actif est rempli en `primaire` |
 | Cartes de parcours | Coins de 20 px, en-tête pastel avec une icône, titre, mots-clés, barre de progression, « 3/12 leçons », chevron |
 | Badge « Leçon 3 » | Petite pilule `primaire` |
@@ -111,6 +113,10 @@ Le thème suit le réglage du système, et un bouton permet de le changer.
 | Ombres | Légères, teintées de bleu : `0 4px 16px rgb(20 37 79 / 0.08)` |
 | Espacements | Multiples de 4 px |
 | Focus clavier | Anneau `primaire` de 3 px, toujours visible |
+| Messages (`Alerte`) | Contour de 2 px `erreur` ou `succes-icone` **et une icône** : la couleur seule ne suffit pas |
+| Encadrés de leçon (Astuce, Attention, À retenir) | Barre de couleur droite, **à l'intérieur** de la carte. Pas de bordure gauche sur une carte arrondie : elle se courbe dans les coins |
+| Tableaux | Dans une carte (`Tableau.module.css`) qui porte les coins et l'ombre. Cellules centrées verticalement |
+| Champ + bouton sur une ligne | Classe `ligne` de `Formulaire.module.css` : le bouton s'aligne sur la saisie, pas sur l'aide en dessous |
 | Animations | Douces (200 ms), désactivées si l'utilisateur a choisi « réduire les animations » |
 
 ## Écrans de référence

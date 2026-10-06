@@ -34,7 +34,11 @@ export function BoutonTerminee({ slug, terminee }: Props) {
         }}
       >
         <span className={styles.case} aria-hidden="true">
-          {terminee ? "✓" : ""}
+          {terminee && (
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path d="m5 12.5 4.5 4.5L19 7.5" />
+            </svg>
+          )}
         </span>
         Leçon terminée
       </ToggleButton>

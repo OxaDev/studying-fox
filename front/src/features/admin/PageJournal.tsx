@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router";
 
 import { Alerte } from "../../composants/Alerte";
 import { ChampChoix } from "../../composants/ChampChoix";
-import tableau from "../relecture/Relecture.module.css";
+import tableau from "../../composants/Tableau.module.css";
 import styles from "./Admin.module.css";
 import { ACTIONS, adminApi, lirePage } from "./api";
 import { NavAdmin } from "./NavAdmin";
@@ -61,7 +61,7 @@ export function PageJournal() {
       {data?.total === 0 && <p>Aucune action enregistrée.</p>}
       {data && data.total > 0 && (
         <>
-          <div className={tableau.defilement}>
+          <div className={tableau.cadre}>
             <table className={tableau.tableau}>
               <caption>
                 {data.total} action{data.total > 1 ? "s" : ""}

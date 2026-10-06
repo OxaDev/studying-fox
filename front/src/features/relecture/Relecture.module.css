@@ -6,43 +6,6 @@
   gap: var(--esp-4);
 }
 
-.defilement {
-  overflow-x: auto;
-}
-
-.tableau {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: var(--rayon-carte);
-  background: var(--surface);
-  box-shadow: var(--ombre);
-  font-size: 1rem;
-}
-
-.tableau caption {
-  padding: var(--esp-3) 0;
-  color: var(--texte-doux);
-  text-align: left;
-  caption-side: top;
-}
-
-.tableau th,
-.tableau td {
-  padding: var(--esp-3) var(--esp-4);
-  border-bottom: 1px solid color-mix(in srgb, var(--bordure) 40%, transparent);
-  text-align: left;
-  vertical-align: top;
-}
-
-.tableau thead th {
-  color: var(--texte-doux);
-  font-size: 0.9375rem;
-}
-
-.tableau tbody th {
-  font-weight: 700;
-}
-
 .carte {
   margin-block: var(--esp-6);
   padding: var(--esp-6);

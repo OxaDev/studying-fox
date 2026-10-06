@@ -8,22 +8,6 @@
   box-shadow: var(--ombre);
 }
 
-.saisie {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--esp-3);
-}
-
-.saisie > :first-child {
-  flex: 1 1 18rem;
-}
-
-/* Aligne le bouton sur le champ, sous son libellé. */
-.saisie > button {
-  margin-top: calc(1lh + var(--esp-1));
-}
-
 .filtres {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));

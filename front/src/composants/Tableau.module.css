@@ -1,0 +1,45 @@
+/*
+ * Tableau de données. La carte (coins arrondis, ombre) est portée par le cadre :
+ * un <table> ne rogne pas ses bordures sur ses coins arrondis.
+ */
+.cadre {
+  overflow-x: auto;
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.tableau caption {
+  padding: var(--esp-3) var(--esp-4) 0;
+  color: var(--texte-doux);
+  text-align: left;
+  caption-side: top;
+}
+
+.tableau th,
+.tableau td {
+  padding: var(--esp-3) var(--esp-4);
+  border-bottom: 1px solid color-mix(in srgb, var(--bordure) 40%, transparent);
+  text-align: left;
+  /* Le texte reste aligné avec les boutons d'une même ligne. */
+  vertical-align: middle;
+}
+
+.tableau tbody tr:last-child > * {
+  border-bottom: none;
+}
+
+.tableau thead th {
+  color: var(--texte-doux);
+  font-size: 0.9375rem;
+}
+
+.tableau tbody th {
+  font-weight: 700;
+}

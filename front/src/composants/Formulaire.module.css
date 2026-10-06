@@ -16,6 +16,29 @@
   gap: var(--esp-1);
 }
 
+/* Un champ et son bouton sur une ligne (recherche) : le bouton s'aligne sur la saisie, sous le libellé. */
+.ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--esp-3);
+}
+
+.ligne > :first-child {
+  flex: 1 1 16rem;
+}
+
+.ligne > button {
+  margin-top: calc(1lh + var(--esp-1));
+}
+
+/* Le bouton passe sous le champ : plus besoin de le décaler. */
+@media (max-width: 36rem) {
+  .ligne > button {
+    margin-top: 0;
+  }
+}
+
 .label {
   font-weight: 700;
 }

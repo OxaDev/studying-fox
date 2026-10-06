@@ -10,7 +10,7 @@ import { Confirmation } from "../../composants/Confirmation";
 import { Fenetre } from "../../composants/Fenetre";
 import formulaire from "../../composants/Formulaire.module.css";
 import { MOTIF_SLUG, versSlug } from "../contribution/slug";
-import tableau from "../relecture/Relecture.module.css";
+import tableau from "../../composants/Tableau.module.css";
 import styles from "./Admin.module.css";
 import { adminApi, type ThemeAdmin } from "./api";
 import { NavAdmin } from "./NavAdmin";
@@ -47,7 +47,7 @@ export function PageThemes() {
       {suppression.error && <Alerte>{suppression.error.message}</Alerte>}
       {!themes && !error && <p>Chargement…</p>}
       {themes && (
-        <div className={tableau.defilement}>
+        <div className={tableau.cadre}>
           <table className={tableau.tableau}>
             <caption>Thèmes des leçons et des parcours</caption>
             <thead>
@@ -72,6 +72,7 @@ export function PageThemes() {
                       {theme.nb_lecons + theme.nb_parcours === 0 && (
                         <Confirmation
                           declencheur="Supprimer"
+                          destructive
                           labelDeclencheur={`Supprimer ${theme.nom}`}
                           titre={`Supprimer le thème « ${theme.nom} » ?`}
                           message="Il n'est utilisé par aucune leçon ni aucun parcours."

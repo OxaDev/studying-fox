@@ -10,7 +10,7 @@ interface Props {
   /** Nom accessible du bouton, s'il doit être plus précis que son texte (dans un tableau). */
   labelDeclencheur?: string;
   titre: string;
-  variante?: "primaire" | "secondaire";
+  variante?: "primaire" | "secondaire" | "danger";
   children: (fermer: () => void) => ReactNode;
 }
 

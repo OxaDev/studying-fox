@@ -6,6 +6,7 @@ import { LienBouton } from "../../composants/LienBouton";
 import { STATUTS } from "../relecture/api";
 import styles from "../relecture/Relecture.module.css";
 import { contributionApi } from "./api";
+import tableau from "../../composants/Tableau.module.css";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short" });
 
@@ -29,8 +30,8 @@ export function PageContributions() {
       {!contributions && !error && <p role="status">Chargement…</p>}
       {contributions?.length === 0 && <p>Tu n&apos;as encore rien proposé. Lance-toi !</p>}
       {contributions && contributions.length > 0 && (
-        <div className={styles.defilement}>
-          <table className={styles.tableau}>
+        <div className={tableau.cadre}>
+          <table className={tableau.tableau}>
             <caption>Tes contributions, de la plus récente à la plus ancienne</caption>
             <thead>
               <tr>

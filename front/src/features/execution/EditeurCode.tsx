@@ -58,14 +58,20 @@ const coloration = HighlightStyle.define([
 const theme = EditorView.theme({
   "&": { backgroundColor: "var(--surface)", color: "var(--texte)", fontSize: "1rem" },
   "&.cm-focused": { outline: "3px solid var(--primaire)", outlineOffset: "2px" },
-  ".cm-content": { fontFamily: "var(--police-code)", caretColor: "var(--texte)" },
+  // Sur le défileur, et pas seulement le contenu : les numéros de ligne gardent la même hauteur.
+  ".cm-scroller": { fontFamily: "var(--police-code)", lineHeight: "1.5" },
+  ".cm-content": { caretColor: "var(--texte)" },
   ".cm-cursor, .cm-dropCursor": { borderLeftColor: "var(--texte)" },
   ".cm-gutters": {
     backgroundColor: "var(--surface)",
     color: "var(--texte-doux)",
     borderRight: "1px solid var(--bordure)",
   },
-  ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "var(--code-ligne-active)" },
+  // Ligne active seulement quand on écrit : sinon chaque bloc de la page en montrerait une.
+  "&.cm-focused .cm-activeLine, &.cm-focused .cm-activeLineGutter": {
+    backgroundColor: "var(--code-ligne-active)",
+  },
+  ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "transparent" },
   // La ligne active est opaque : elle masquerait la sélection, dessinée dessous.
   "&:has(.cm-selectionBackground) .cm-activeLine": { backgroundColor: "transparent" },
   ".cm-selectionBackground, &.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground":

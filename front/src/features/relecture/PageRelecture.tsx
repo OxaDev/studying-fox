@@ -7,6 +7,7 @@ import { LienBouton } from "../../composants/LienBouton";
 import { relectureApi, STATUTS } from "./api";
 import { CaseToutSelectionner, PublierLaSelection, useSelection } from "./PublicationGroupee";
 import styles from "./Relecture.module.css";
+import tableau from "../../composants/Tableau.module.css";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium" });
 
@@ -37,8 +38,8 @@ export function PageRelecture() {
               }}
             />
           </div>
-          <div className={styles.defilement}>
-            <table className={styles.tableau}>
+          <div className={tableau.cadre}>
+            <table className={tableau.tableau}>
               <caption>
                 {file.length} version{file.length > 1 ? "s" : ""} à relire, de la plus ancienne à la
                 plus récente
