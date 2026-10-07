@@ -7,6 +7,7 @@ from app.comptes.dependances import Db, Lecture
 from app.comptes.modeles import Utilisateur
 from app.lecons.modeles import Lecon, Revision, StatutRevision, Theme
 from app.lecons.schemas import LeconPubliee, ResumeLecon, ThemeLecture
+from app.lecons.themes import rang_du_theme
 from app.progression.modeles import LeconTerminee
 
 router = APIRouter(prefix="/lecons", tags=["leçons"])
@@ -27,18 +28,18 @@ def _resume(lecon: Lecon, revision: Revision) -> ResumeLecon:
 
 @router.get("")
 async def lister_lecons(_: Lecture, db: Db) -> list[ResumeLecon]:
-    lecons = await db.scalars(
-        select(Lecon)
-        .join(Lecon.revision_publiee)
-        .join(Lecon.theme)
-        .order_by(Theme.nom, Revision.titre)
-    )
-    return [_resume(lecon, lecon.revision_publiee) for lecon in lecons if lecon.revision_publiee]
+    publiees = [
+        (lecon, lecon.revision_publiee)
+        for lecon in await db.scalars(select(Lecon).join(Lecon.revision_publiee))
+        if lecon.revision_publiee
+    ]
+    publiees.sort(key=lambda paire: (rang_du_theme(paire[0].theme), paire[1].titre))
+    return [_resume(lecon, revision) for lecon, revision in publiees]
 
 
 @router.get("/themes")
 async def lister_themes(_: Lecture, db: Db) -> list[ThemeLecture]:
-    themes = await db.scalars(select(Theme).order_by(Theme.nom))
+    themes = sorted(await db.scalars(select(Theme)), key=rang_du_theme)
     return [ThemeLecture(slug=theme.slug, nom=theme.nom) for theme in themes]
 
 

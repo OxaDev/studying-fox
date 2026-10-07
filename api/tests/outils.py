@@ -126,10 +126,12 @@ async def creer_parcours(
     publie: bool = True,
     titre: str | None = None,
     description: str = "Un parcours pour apprendre pas à pas.",
+    theme_slug: str = "python",
+    ordre: int | None = None,
 ) -> None:
-    """Crée un parcours de thème Python avec les leçons indiquées, dans l'ordre."""
+    """Crée un parcours (de thème Python par défaut) avec les leçons indiquées, dans l'ordre."""
     async with SessionLocale() as db:
-        theme = await db.scalar(select(Theme).where(Theme.slug == "python"))
+        theme = await db.scalar(select(Theme).where(Theme.slug == theme_slug))
         assert theme, "Créer au moins une leçon avant le parcours"
         ids = {
             lecon.slug: lecon.id
@@ -142,6 +144,7 @@ async def creer_parcours(
                 description=description,
                 niveau=Niveau.DEBUTANT,
                 theme_id=theme.id,
+                ordre=ordre,
                 publie=publie,
                 etapes=[
                     EtapeParcours(lecon_id=ids[s], position=i) for i, s in enumerate(lecons, 1)

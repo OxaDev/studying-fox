@@ -20,7 +20,7 @@ On produit un fichier, un utilisateur l'importe dans la plateforme, puis il reli
 paquet
 ├── format, version      → "renard-etudiant/lecons", et 4 (la version actuelle)
 ├── generation           → assisté par IA ? quel outil ? quelle date ?
-├── parcours (facultatif)→ id, slug… : regroupe les leçons dans un ordre
+├── parcours (facultatif)→ id, slug, ordre… : regroupe les leçons dans un ordre
 └── lecons[]             → 1 à 50 leçons
     ├── id, slug, titre, resume, theme, niveau, duree_minutes
     ├── prerequis, objectifs
@@ -54,6 +54,22 @@ Chaque leçon et le parcours ont un `id` : un **UUID**, qui devient leur identif
 - **Une nouvelle leçon, un nouvel `id`.** Pour en générer un : `python3 -c "import uuid; print(uuid.uuid4())"`. N'invente pas l'UUID à la main, et ne copie pas celui de l'exemple.
 - **L'`id` ne change jamais.** Pour une nouvelle version d'une leçon existante, garde son `id` : l'import crée une nouvelle version de cette leçon, jamais un doublon.
 - **Le slug d'une leçon existante ne change pas non plus.** L'import refuse un `id` connu avec un autre slug, et un slug déjà pris par une leçon d'un autre `id`.
+
+## L'ordre des parcours
+
+Dans le catalogue, les thèmes et les parcours suivent l'**ordre d'apprentissage** (voir [ADR 0030](../adr/0030-ordre-d-apprentissage.md)).
+
+- Le champ `ordre` du parcours donne sa place **dans son thème** : 1 pour le premier à suivre, puis 2, 3… Un parcours qui dépend d'un autre vient après lui.
+- Il est facultatif : un parcours sans `ordre` vient après les autres, par titre.
+- L'ordre des thèmes est celui des thèmes par défaut, dans `api/app/lecons/themes.py`. Les autres thèmes viennent ensuite, par nom.
+
+```json
+"parcours": {
+  "slug": "daggerheart-creer-son-personnage",
+  "theme": "daggerheart",
+  "ordre": 2
+}
+```
 
 ## Les 6 types de blocs
 
@@ -204,5 +220,6 @@ Au démarrage, l'API crée et **publie** ce qui manque en base. Une base vidée 
 - La relecture se fait **dans la pull request** : le fichier est publié tel quel.
 - Ce qui existe déjà en base (même `id`) **n'est pas modifié** : le fichier sert à reconstruire une base vide, pas à corriger une leçon en ligne. Pour une correction, passe par l'éditeur ou l'import.
 - Un test vérifie chaque fichier du dossier. Au démarrage, un fichier invalide est signalé dans les logs et ignoré.
+- Chaque parcours validé a un `ordre` dans son thème. Comme le reste, il n'est lu qu'à la création : pour changer l'ordre d'un parcours déjà en base, il faut une migration (voir la migration 0008).
 
 À la main : `cd api && uv run python -m app.imports.parcours_valides`.

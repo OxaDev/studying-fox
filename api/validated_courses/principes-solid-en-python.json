@@ -13,6 +13,7 @@
     "description": "Les cinq principes SOLID de la conception objet, appliqués en Python : responsabilité unique, ouvert-fermé, substitution de Liskov, ségrégation des interfaces et inversion des dépendances. Chaque principe part d'un code réel qui pose problème, puis le corrige. Prérequis : le parcours sur la programmation objet.",
     "niveau": "intermediaire",
     "theme": "python-poo",
+    "ordre": 2,
     "lecons": [
       "solid-introduction",
       "solid-responsabilite-unique",

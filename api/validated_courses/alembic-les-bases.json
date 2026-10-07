@@ -13,6 +13,7 @@
     "description": "Faire évoluer le schéma d'une base de données sans la recréer, avec Alembic : créer un projet, écrire et appliquer des migrations, revenir en arrière, générer les migrations à partir des modèles SQLAlchemy et migrer les données. Les exemples tournent sur SQLite, dans le navigateur. Prérequis : SQLAlchemy, les bases.",
     "niveau": "debutant",
     "theme": "python-fastapi",
+    "ordre": 3,
     "lecons": [
       "alembic-pourquoi-les-migrations",
       "alembic-creer-un-projet",

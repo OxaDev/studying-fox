@@ -13,6 +13,7 @@
     "description": "Pour les MJ : lire une fiche d'adversaire, connaître les dix types, mener un tour de combat, équilibrer une rencontre, utiliser les environnements, les comptes à rebours et les règles ponctuelles.",
     "niveau": "intermediaire",
     "theme": "daggerheart",
+    "ordre": 6,
     "lecons": [
       "dh-mj-lire-une-fiche-d-adversaire",
       "dh-mj-types-d-adversaires",

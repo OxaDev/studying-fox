@@ -13,6 +13,7 @@
     "description": "Rendre une API Django REST Framework prête pour la production : authentification par jeton, permissions sur mesure, pagination, recherche et tri, sérialiseurs imbriqués, actions personnalisées, limitation de débit, gestion des erreurs et tests. Prérequis : Django REST Framework, les bases.",
     "niveau": "intermediaire",
     "theme": "python-django",
+    "ordre": 4,
     "lecons": [
       "drf-inter-authentification",
       "drf-inter-permissions",

@@ -13,6 +13,7 @@
     "description": "Apprendre Python pas à pas, sans prérequis : variables, calculs, texte, conditions, listes, boucles, dictionnaires, fonctions, erreurs, modules et classes. Des exemples tirés de la vie professionnelle, et un mini-projet pour finir.",
     "niveau": "debutant",
     "theme": "python-bases",
+    "ordre": 1,
     "lecons": [
       "python-premier-programme",
       "python-variables-et-types",

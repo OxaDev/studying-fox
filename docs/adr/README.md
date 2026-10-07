@@ -42,6 +42,7 @@ Un ADR, c'est une fiche courte qui répond à trois questions :
 | [0027](0027-formules-excel.md) | Formules Excel : un mini-moteur de calcul maison | Accepté |
 | [0028](0028-bibliotheques-python.md) | Bibliothèques Python hébergées et chargées à la demande | Accepté |
 | [0029](0029-illustrations-vectorielles.md) | Illustrations vectorielles écrites dans la leçon | Accepté |
+| [0030](0030-ordre-d-apprentissage.md) | Thèmes et parcours dans l'ordre d'apprentissage | Accepté |
 
 ## Écrire un nouvel ADR
 

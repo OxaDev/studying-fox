@@ -13,6 +13,7 @@
     "description": "Devenir MJ de Daggerheart : les principes et les pièges, la séance zéro, quand demander un jet, les actes de MJ, la gestion de la Peur, la distribution de la parole et les PNJ.",
     "niveau": "debutant",
     "theme": "daggerheart",
+    "ordre": 5,
     "lecons": [
       "dh-mj-le-role-du-mj",
       "dh-mj-pratiques-et-pieges",

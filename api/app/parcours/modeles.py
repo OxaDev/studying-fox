@@ -30,6 +30,8 @@ class Parcours(Base):
     description: Mapped[str] = mapped_column(String(500))
     niveau: Mapped[Niveau] = mapped_column(enum_pg(Niveau, "niveau"))
     theme_id: Mapped[int] = mapped_column(ForeignKey("theme.id"), index=True)
+    # Place du parcours dans son thème, dans l'ordre d'apprentissage (ADR 0030).
+    ordre: Mapped[int | None]
     publie: Mapped[bool] = mapped_column(default=False, server_default=text("false"))
     cree_le: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     # Index plein texte, tenu à jour par PostgreSQL (ADR 0007).

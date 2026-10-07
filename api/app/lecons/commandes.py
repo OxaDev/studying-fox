@@ -18,8 +18,8 @@ from app.config import get_config
 from app.db import SessionLocale
 from app.imports.conversion import lecon_en_markdown
 from app.imports.format import Paquet
-from app.imports.parcours_valides import NOMS_THEMES
 from app.lecons.modeles import Lecon, Revision, StatutRevision, Theme
+from app.lecons.themes import NOMS_THEMES
 from app.modeles import __all__ as _tous_les_modeles  # noqa: F401  (enregistre les tables)
 from app.parcours.modeles import EtapeParcours, Parcours
 from app.temps import maintenant

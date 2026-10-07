@@ -125,6 +125,8 @@ class ParcoursImporte(Strict):
     description: str = Field(min_length=20, max_length=500)
     niveau: Niveau
     theme: Slug
+    # Place dans le thème : 1 pour le premier parcours à suivre (ADR 0030).
+    ordre: int | None = Field(default=None, ge=1, le=999)
     lecons: list[Slug] = Field(min_length=1)
 
 

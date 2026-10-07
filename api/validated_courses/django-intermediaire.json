@@ -13,6 +13,7 @@
     "description": "Les outils de Django pour une application de production : vues génériques, ORM avancé avec F, Q et les agrégats, performance des requêtes, transactions et contraintes, authentification et permissions, middlewares et signaux, tests et administration. Prérequis : Django, les bases.",
     "niveau": "intermediaire",
     "theme": "python-django",
+    "ordre": 3,
     "lecons": [
       "django-inter-vues-generiques",
       "django-inter-orm-avance",

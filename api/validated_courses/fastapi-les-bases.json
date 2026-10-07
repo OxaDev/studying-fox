@@ -13,6 +13,7 @@
     "description": "Construire une API web en Python avec FastAPI : routes, paramètres de chemin et de requête, corps de requête validé par Pydantic, modèles de réponse, erreurs HTTP et validation. Chaque exemple appelle l'API directement dans le navigateur, et le parcours se termine par une API de gestion de tâches. Prérequis : la programmation objet en Python.",
     "niveau": "debutant",
     "theme": "python-fastapi",
+    "ordre": 1,
     "lecons": [
       "fastapi-premiere-api",
       "fastapi-parametres-de-chemin",

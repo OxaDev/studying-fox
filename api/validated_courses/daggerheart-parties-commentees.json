@@ -13,6 +13,7 @@
     "description": "Une séance complète de Daggerheart racontée et commentée scène par scène : ouverture, exploration, négociation, combat, acte de mort et repos, avec l'Espoir et la Peur comptés à chaque étape.",
     "niveau": "debutant",
     "theme": "daggerheart",
+    "ordre": 4,
     "lecons": [
       "dh-partie-ouverture",
       "dh-partie-exploration",

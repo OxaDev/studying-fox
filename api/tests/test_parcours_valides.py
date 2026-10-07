@@ -131,6 +131,30 @@ async def test_seul_ce_qui_manque_est_cree(tmp_path: Path) -> None:
     assert (revision.titre, revision.statut) == ("Déjà là", StatutRevision.BROUILLON)
 
 
+async def test_l_ordre_du_parcours_est_charge(tmp_path: Path) -> None:
+    paquet = exemple()
+    parcours(paquet)["ordre"] = 4
+    ecrire(tmp_path, "python.json", paquet)
+
+    await charger(tmp_path)
+
+    async with SessionLocale() as db:
+        charge = await db.scalar(select(Parcours))
+    assert charge is not None
+    assert charge.ordre == 4
+
+
+def test_chaque_parcours_valide_a_une_place_unique_dans_son_theme() -> None:
+    places: set[tuple[str, int | None]] = set()
+    for _, lu in lire_dossier(get_config().dossier_parcours_valides):
+        assert not isinstance(lu, Exception)
+        assert lu.parcours is not None
+        place = (lu.parcours.theme, lu.parcours.ordre)
+        assert lu.parcours.ordre is not None, f"{lu.parcours.slug} : ordre manquant"
+        assert place not in places, f"{lu.parcours.slug} : ordre déjà pris dans le thème"
+        places.add(place)
+
+
 async def test_un_theme_absent_est_cree(tmp_path: Path) -> None:
     paquet = exemple()
     parcours(paquet)["theme"] = "algorithmique"

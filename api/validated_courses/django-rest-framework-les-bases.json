@@ -13,6 +13,7 @@
     "description": "Construire une API REST avec Django REST Framework : vues d'API, sérialiseurs, ModelSerializer, vues génériques, ViewSets et routeurs, validation des données. Chaque exemple appelle l'API dans le navigateur, et le parcours se termine par l'API d'une bibliothèque. Prérequis : Django, les bases.",
     "niveau": "debutant",
     "theme": "python-django",
+    "ordre": 2,
     "lecons": [
       "drf-premiere-api",
       "drf-serialiseurs",

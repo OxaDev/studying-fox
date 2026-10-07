@@ -13,6 +13,7 @@
     "description": "Travailler avec une base de données relationnelle depuis Python avec SQLAlchemy 2 : moteur et connexion, modèles déclaratifs, session, requêtes select, modifications, relations un-à-plusieurs et filtres. Les exemples tournent sur SQLite, directement dans le navigateur. Prérequis : la programmation objet en Python.",
     "niveau": "debutant",
     "theme": "python-fastapi",
+    "ordre": 2,
     "lecons": [
       "sqla-moteur-et-connexion",
       "sqla-modeles-declaratifs",

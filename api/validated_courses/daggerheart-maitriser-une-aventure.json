@@ -13,6 +13,7 @@
     "description": "Pour les MJ : préparer une séance, structurer une aventure en actes, improviser, gérer l'or et le butin, mener une campagne, et un scénario complet prêt à jouer, le Moulin aux Corbeaux.",
     "niveau": "intermediaire",
     "theme": "daggerheart",
+    "ordre": 7,
     "lecons": [
       "dh-mj-preparer-une-seance",
       "dh-mj-structurer-une-aventure",

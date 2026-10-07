@@ -24,6 +24,7 @@ from app.imports.format import BlocImage, Paquet
 from app.imports.identite import erreurs_d_identite, erreurs_de_format
 from app.imports.lecture import Erreur, lire_fichier
 from app.lecons.modeles import Lecon, Revision, StatutRevision, Theme
+from app.lecons.themes import NOMS_THEMES
 from app.modeles import __all__ as _tous_les_modeles  # noqa: F401  (enregistre les tables)
 from app.parcours.modeles import EtapeParcours, Parcours
 from app.temps import maintenant
@@ -32,17 +33,6 @@ journal_technique = logging.getLogger(__name__)
 
 # Plusieurs processus de l'API peuvent démarrer ensemble : un seul charge à la fois.
 VERROU = 0x52454E41  # « RENA »
-
-# Les thèmes de la plateforme : ils sont créés au démarrage, s'ils manquent.
-NOMS_THEMES = {
-    "python-bases": "Python - Bases",
-    "python-poo": "Python - Programmation Orientée Objet",
-    "python-django": "Python - Django",
-    "python-fastapi": "Python - Suite FastAPI",
-    "javascript": "JavaScript",
-    "vba-bases": "VBA - Bases",
-    "daggerheart": "JDR - DaggerHeart",
-}
 
 
 class FichierInvalide(Exception):
@@ -166,6 +156,7 @@ async def charger_paquet(db: AsyncSession, paquet: Paquet) -> Bilan:
                 description=importe.description,
                 niveau=importe.niveau,
                 theme_id=theme.id,
+                ordre=importe.ordre,
                 publie=True,
                 etapes=[
                     EtapeParcours(lecon_id=ids[slug], position=position)

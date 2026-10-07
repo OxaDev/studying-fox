@@ -13,6 +13,7 @@
     "description": "Découvrir le VBA sans prérequis : écrire des macros, lire et remplir les cellules, décider, répéter, découper son code, mettre en forme, gérer les erreurs et écrire des formules. Des exemples tirés du bureau, et un rapport des ventes automatique pour finir.",
     "niveau": "debutant",
     "theme": "vba-bases",
+    "ordre": 1,
     "lecons": [
       "vba-premiere-macro",
       "vba-lire-et-ecrire-des-cellules",

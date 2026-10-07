@@ -13,6 +13,7 @@
     "description": "Les patrons de conception qu'utilisent les équipes des banques et des plateformes de données : Stratégie, Fabrique, Adaptateur, Décorateur, Observateur, Dépôt, Unité de travail, réessai, disjoncteur, limiteur de débit, idempotence, cache, saga et event sourcing. Prérequis : savoir écrire des fonctions et des classes en Python.",
     "niveau": "intermediaire",
     "theme": "python-poo",
+    "ordre": 3,
     "lecons": [
       "design-patterns-introduction",
       "patron-strategie",

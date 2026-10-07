@@ -42,6 +42,32 @@ async def test_liste_des_parcours_publies(
     assert parcours["duree_minutes"] == 24
 
 
+async def test_parcours_dans_l_ordre_d_apprentissage(
+    client: AsyncClient, boite_mail: ExpediteurMemoire
+) -> None:
+    """Les thèmes par défaut dans leur ordre, puis les parcours selon leur place (ADR 0030)."""
+    await creer_lecon("variables")
+    await creer_lecon("dom", theme_slug="javascript")
+    await creer_lecon("listes", theme_slug="python-bases")
+    await creer_parcours("python-sans-ordre", ["variables"], titre="A sans ordre")
+    await creer_parcours("python-deuxieme", ["variables"], titre="Z deuxième", ordre=2)
+    await creer_parcours("python-premier", ["variables"], titre="M premier", ordre=1)
+    await creer_parcours("javascript", ["dom"], theme_slug="javascript", ordre=1)
+    await creer_parcours("bases", ["listes"], theme_slug="python-bases", ordre=1)
+    await connecter(client, await creer_compte(client, boite_mail))
+
+    reponse = await client.get("/api/parcours")
+
+    # « python » n'est pas un thème par défaut : il vient après. Sans ordre, en dernier.
+    assert [p["slug"] for p in reponse.json()] == [
+        "bases",
+        "javascript",
+        "python-premier",
+        "python-deuxieme",
+        "python-sans-ordre",
+    ]
+
+
 async def test_detail_d_un_parcours(client: AsyncClient, boite_mail: ExpediteurMemoire) -> None:
     csrf = await _preparer(client, boite_mail)
     await client.put("/api/progression/lecons/variables", headers=csrf)

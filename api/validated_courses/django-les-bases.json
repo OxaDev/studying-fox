@@ -13,6 +13,7 @@
     "description": "Construire une application web avec Django : projet et applications, modèles et migrations, requêtes avec l'ORM, relations, vues et adresses, gabarits et formulaires. Chaque exemple fait tourner un vrai mini-projet Django dans le navigateur, et le parcours se termine par un annuaire d'entreprise. Prérequis : la programmation objet en Python.",
     "niveau": "debutant",
     "theme": "python-django",
+    "ordre": 1,
     "lecons": [
       "django-premier-projet",
       "django-modeles-et-migrations",

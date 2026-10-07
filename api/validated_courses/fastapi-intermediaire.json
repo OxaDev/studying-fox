@@ -13,6 +13,7 @@
     "description": "Structurer une API FastAPI de production : injection de dépendances, ressources ouvertes et fermées avec yield, routeurs, authentification par jeton, gestion centralisée des erreurs, middlewares et CORS, tâches de fond et cycle de vie, tests avec dependency_overrides, et une API branchée sur SQLAlchemy. Prérequis : FastAPI, les bases.",
     "niveau": "intermediaire",
     "theme": "python-fastapi",
+    "ordre": 4,
     "lecons": [
       "fastapi-inter-dependances",
       "fastapi-inter-dependances-yield",

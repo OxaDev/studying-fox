@@ -13,6 +13,7 @@
     "description": "Attaquer, encaisser et survivre : jets d'attaque et dégâts, Esquive, seuils et Points de vie, armure, Stress, portées, états, actes de mort, repos et montée de niveau.",
     "niveau": "debutant",
     "theme": "daggerheart",
+    "ordre": 3,
     "lecons": [
       "dh-attaquer",
       "dh-esquive-et-attaques-adverses",

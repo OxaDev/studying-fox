@@ -13,6 +13,7 @@
     "description": "Les règles essentielles pour jouer ta première partie de Daggerheart : la boucle de jeu, les Dés de dualité, les résultats d'un jet, les traits, l'Espoir, la Peur et les jets spéciaux.",
     "niveau": "debutant",
     "theme": "daggerheart",
+    "ordre": 1,
     "lecons": [
       "dh-qu-est-ce-que-daggerheart",
       "dh-la-boucle-de-jeu",

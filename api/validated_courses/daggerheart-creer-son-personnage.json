@@ -13,6 +13,7 @@
     "description": "Les neuf étapes pour créer un héros de Daggerheart : classe, héritage, traits, équipement, Expériences, cartes de domaine et liens, avec un exemple complet.",
     "niveau": "debutant",
     "theme": "daggerheart",
+    "ordre": 2,
     "lecons": [
       "dh-creation-vue-d-ensemble",
       "dh-classe-et-sous-classe",

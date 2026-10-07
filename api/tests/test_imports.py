@@ -391,6 +391,29 @@ async def test_reimporter_le_meme_fichier_ne_cree_pas_de_doublon(
     assert sorted(r.numero for r in revisions) == [1, 2]
 
 
+async def test_l_ordre_du_parcours_est_importe(client: AsyncClient, csrf: dict[str, str]) -> None:
+    paquet = exemple()
+    parcours(paquet)["ordre"] = 2
+
+    assert (await importer(client, csrf, en_json(paquet))).status_code == 201
+    parcours(paquet)["ordre"] = 3
+    assert (await importer(client, csrf, en_json(paquet))).status_code == 201
+
+    async with SessionLocale() as db:
+        importe = await db.scalar(select(Parcours))
+    assert importe is not None
+    assert importe.ordre == 3
+
+
+async def test_l_ordre_du_parcours_commence_a_1(client: AsyncClient, csrf: dict[str, str]) -> None:
+    paquet = exemple()
+    parcours(paquet)["ordre"] = 0
+
+    analyse = (await analyser(client, csrf, en_json(paquet))).json()
+
+    assert [e["emplacement"] for e in analyse["erreurs"]] == ["parcours › ordre"]
+
+
 async def test_mauvaise_extension(client: AsyncClient, csrf: dict[str, str]) -> None:
     analyse = (await analyser(client, csrf, ("paquet.txt", b"{}", "text/plain"))).json()
 

@@ -35,6 +35,19 @@ async def test_liste_des_lecons_publiees(
     assert reponse.json()[0]["theme"] == {"slug": "python", "nom": "Python"}
 
 
+async def test_les_lecons_suivent_l_ordre_des_themes(
+    client: AsyncClient, boite_mail: ExpediteurMemoire
+) -> None:
+    await creer_lecon("les-variables", titre="Les variables")
+    await creer_lecon("le-dom", titre="Le DOM", theme_slug="javascript")
+    await creer_lecon("afficher", titre="Afficher du texte", theme_slug="python-bases")
+    await connecter(client, await creer_compte(client, boite_mail))
+
+    reponse = await client.get("/api/lecons")
+
+    assert [lecon["slug"] for lecon in reponse.json()] == ["afficher", "le-dom", "les-variables"]
+
+
 async def test_lire_une_lecon(client: AsyncClient, boite_mail: ExpediteurMemoire) -> None:
     compte = await creer_compte(client, boite_mail, pseudo="aiko")
     await creer_lecon("les-variables", auteur_email=compte.email, assiste_par_ia=True)

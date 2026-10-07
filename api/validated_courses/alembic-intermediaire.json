@@ -13,6 +13,7 @@
     "description": "Les migrations des projets en production avec Alembic : modifications de tables sur SQLite avec batch, migrations sans interruption de service, conventions de nommage, limites de l'autogénération, branches et fusions, SQL hors ligne, tests des migrations et reprise d'une base existante. Prérequis : Alembic, les bases.",
     "niveau": "intermediaire",
     "theme": "python-fastapi",
+    "ordre": 6,
     "lecons": [
       "alembic-inter-batch-sqlite",
       "alembic-inter-sans-interruption",

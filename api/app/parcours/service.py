@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.lecons.modeles import Lecon, Revision
 from app.lecons.schemas import ThemeLecture
+from app.lecons.themes import rang_du_theme
 from app.parcours.modeles import Parcours
 from app.parcours.schemas import EtapeLecture, ParcoursDetail, ResumeParcours
 from app.progression.modeles import LeconTerminee
@@ -24,11 +25,23 @@ def est_visible(parcours: Parcours) -> bool:
     return parcours.publie and bool(_lecons_publiees(parcours))
 
 
-async def parcours_publies(db: AsyncSession) -> list[Parcours]:
-    resultat = await db.scalars(
-        select(Parcours).where(Parcours.publie.is_(True)).order_by(Parcours.titre)
+def ordre_d_apprentissage(parcours: Parcours) -> tuple[tuple[int, str], bool, int, str]:
+    """Les thèmes dans leur ordre, puis les parcours selon leur place dans le thème (ADR 0030).
+
+    Un parcours sans place vient après les autres, par titre.
+    """
+    return (
+        rang_du_theme(parcours.theme),
+        parcours.ordre is None,
+        parcours.ordre or 0,
+        parcours.titre,
     )
-    return [parcours for parcours in resultat if est_visible(parcours)]
+
+
+async def parcours_publies(db: AsyncSession) -> list[Parcours]:
+    resultat = await db.scalars(select(Parcours).where(Parcours.publie.is_(True)))
+    visibles = [parcours for parcours in resultat if est_visible(parcours)]
+    return sorted(visibles, key=ordre_d_apprentissage)
 
 
 def _lecons_publiees(parcours: Parcours) -> list[tuple[Lecon, Revision]]:

@@ -13,6 +13,7 @@
     "description": "Aller plus loin avec l'ORM de SQLAlchemy 2 : relations plusieurs-à-plusieurs, stratégies de chargement et problème N+1, sous-requêtes, transactions et points de sauvegarde, contraintes, propriétés hybrides, héritage de modèles, événements et types personnalisés. Prérequis : le parcours SQLAlchemy, les bases.",
     "niveau": "intermediaire",
     "theme": "python-fastapi",
+    "ordre": 5,
     "lecons": [
       "sqla-inter-plusieurs-a-plusieurs",
       "sqla-inter-chargement-et-n-plus-1",

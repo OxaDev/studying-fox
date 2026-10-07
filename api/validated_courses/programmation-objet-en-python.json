@@ -13,6 +13,7 @@
     "description": "Les fondamentaux de la programmation orientée objet : classes et instances, attributs, méthodes spéciales, propriétés, héritage, polymorphisme, classes abstraites, dataclasses et composition. Des exemples tirés de la gestion commerciale, et un panier de commande pour finir. Prérequis : les fondamentaux de Python.",
     "niveau": "debutant",
     "theme": "python-poo",
+    "ordre": 1,
     "lecons": [
       "poo-classes-et-instances",
       "poo-attributs-de-classe",

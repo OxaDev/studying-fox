@@ -266,6 +266,7 @@ async def _importer_parcours(db: AsyncSession, paquet: Paquet, themes: dict[str,
     parcours.description = importe.description
     parcours.niveau = importe.niveau
     parcours.theme_id = themes[importe.theme].id
+    parcours.ordre = importe.ordre
     # On vide d'abord les étapes : les positions doivent rester uniques à chaque instant.
     parcours.etapes = []
     await db.flush()
