@@ -1,0 +1,469 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 4,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-07"
+  },
+  "parcours": {
+    "id": "9f093763-3743-4240-9c93-855f811b95bc",
+    "slug": "daggerheart-maitriser-les-bases",
+    "titre": "Maîtriser Daggerheart : les fondamentaux",
+    "description": "Devenir MJ de Daggerheart : les principes et les pièges, la séance zéro, quand demander un jet, les actes de MJ, la gestion de la Peur, la distribution de la parole et les PNJ.",
+    "niveau": "debutant",
+    "theme": "daggerheart",
+    "lecons": [
+      "dh-mj-le-role-du-mj",
+      "dh-mj-pratiques-et-pieges",
+      "dh-mj-seance-zero-et-securite",
+      "dh-mj-quand-demander-un-jet",
+      "dh-mj-repondre-aux-jets",
+      "dh-mj-gerer-la-peur",
+      "dh-mj-distribuer-la-lumiere",
+      "dh-mj-animer-les-pnj"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "13ef01de-fb5c-4482-8753-7ce34a8b2e97",
+      "slug": "dh-mj-le-role-du-mj",
+      "titre": "Le rôle du MJ et ses sept principes",
+      "resume": "Comprendre ce que fait le MJ à Daggerheart, et les sept principes qui guident chacune de ses décisions.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-partie-bilan"
+      ],
+      "objectifs": [
+        "Décrire les responsabilités du MJ",
+        "Citer les sept principes du MJ",
+        "Appliquer un principe à une situation de jeu"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Ce que fait le MJ\n\nLe **MJ** (maître ou maîtresse du jeu) a plusieurs casquettes :\n\n- il **décrit** le monde : les lieux, l'ambiance, ce que voient les personnages ;\n- il **joue** tous les personnages non joueurs, alliés comme ennemis ;\n- il **arbitre** : il dit quand lancer les dés, quel trait utiliser, quelle Difficulté viser ;\n- il **anime** : il distribue la parole et règle le rythme.\n\nMais il ne raconte pas **son** histoire. Les héros sont ceux des joueurs : le MJ construit le monde **autour** d'eux, et les met face à des choix intéressants."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les sept principes\n\nLe livre donne au MJ sept principes. En cas de doute, reviens à eux."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 345\"><rect x=\"15\" y=\"15\" width=\"275\" height=\"70\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"45\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Partir de l'histoire</text><text x=\"152\" y=\"71\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">et y revenir</text><rect x=\"305\" y=\"15\" width=\"275\" height=\"70\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"442\" y=\"45\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Collaborer,</text><text x=\"442\" y=\"71\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">surtout en conflit</text><rect x=\"15\" y=\"97\" width=\"275\" height=\"70\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"127\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Un monde vivant,</text><text x=\"152\" y=\"153\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">merveilleux, dangereux</text><rect x=\"305\" y=\"97\" width=\"275\" height=\"70\" rx=\"12\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"442\" y=\"127\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Poser des questions</text><text x=\"442\" y=\"153\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">et utiliser les réponses</text><rect x=\"15\" y=\"179\" width=\"275\" height=\"70\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"209\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Chaque jet</text><text x=\"152\" y=\"235\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">compte</text><rect x=\"305\" y=\"179\" width=\"275\" height=\"70\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"442\" y=\"209\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Jouer pour découvrir</text><text x=\"442\" y=\"235\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">ce qui arrive</text><rect x=\"160\" y=\"261\" width=\"275\" height=\"70\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"297\" y=\"291\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Tenir ses idées</text><text x=\"297\" y=\"317\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">sans les serrer</text></svg>",
+          "alt": "Les sept principes du MJ",
+          "description": "Sept cartes : partir de l'histoire et y revenir ; collaborer, surtout en conflit ; un monde vivant, merveilleux, dangereux ; poser des questions et utiliser les réponses ; chaque jet compte ; jouer pour découvrir ce qui arrive ; tenir ses idées sans les serrer.",
+          "legende": "Sept principes pour guider le MJ"
+        },
+        {
+          "type": "texte",
+          "markdown": "1. **Partir de l'histoire, et y revenir.** Une règle s'applique à cause de ce qui se passe dans la fiction, et son résultat se traduit en fiction. Jamais « tu perds 2 PV » tout court : « la lame t'entaille l'épaule, coche 2 PV ».\n2. **Collaborer, surtout pendant les conflits.** Les PJ sont les héros. L'opposition entre MJ et joueurs n'existe que dans l'histoire : autour de la table, tout le monde est dans la même équipe.\n3. **Remplir le monde de vie, d'émerveillement et de danger.** Des cultures riches, des lieux étonnants, des créatures redoutables.\n4. **Poser des questions et utiliser les réponses.** « Qui t'a appris à te battre ? » La réponse devient un PNJ, un lieu, un secret.\n5. **Que chaque jet compte.** Ne demande un jet que dans les moments importants.\n6. **Jouer pour découvrir ce qui arrive.** Laisse les joueurs te surprendre. Ne prévois pas la fin.\n7. **Tenir ses idées sans les serrer.** Si une idée préparée ne colle plus, abandonne-la ou change-la sans regret."
+        },
+        {
+          "type": "texte",
+          "markdown": "## En situation\n\nLes joueurs ignorent la piste que tu avais préparée et décident d'enquêter sur l'aubergiste, un simple figurant.\n\n- Principe 6 : joue pour découvrir. L'aubergiste a peut-être un secret, après tout.\n- Principe 7 : ta piste préparée peut attendre, ou rejoindre l'auberge d'une autre façon.\n- Principe 4 : demande aux joueurs : « Qu'est-ce qui vous rend méfiants chez lui ? » Leur réponse te dira quoi inventer."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Le MJ n'est pas l'adversaire des joueurs : c'est **le premier fan de leurs personnages**. Son travail est de rendre leur histoire passionnante, pas de les faire perdre."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "da52d81d-785b-4c86-8005-181a8a8c4886",
+      "slug": "dh-mj-pratiques-et-pieges",
+      "titre": "Les bonnes pratiques et les pièges du MJ",
+      "resume": "Découvrir les habitudes qui rendent une table agréable, et les pièges classiques que le livre conseille d'éviter.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-mj-le-role-du-mj"
+      ],
+      "objectifs": [
+        "Appliquer les bonnes pratiques du MJ",
+        "Reconnaître les pièges courants",
+        "Présenter un échec sans humilier le personnage"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Les bonnes pratiques\n\nLe livre les liste, en plus des principes. Les voici, regroupées.\n\n**Avec les joueurs**\n\n- **Cultiver la curiosité** : suis ce qui intéresse les joueurs.\n- **Gagner leur confiance** : sois de bonne foi, tiens tes promesses, reconnais tes erreurs.\n- **Les aider à utiliser le jeu** : rappelle-leur leurs Expériences, leurs capacités, l'aide entre alliés.\n- **Ouvrir une conversation hors jeu** : on a le droit de sortir de la fiction pour poser une question, demander une précision, ou utiliser un outil de sécurité.\n- **Leur dire ce qu'ils sauraient** : ne cache pas les détails évidents.\n- **Reformuler plutôt que refuser** : si une idée de joueur contredit l'histoire, cherche avec lui comment l'adapter.\n\n**Avec l'histoire**\n\n- **Faire avancer l'histoire** après chaque jet, réussi ou raté.\n- **Couper vers l'action** : saute les passages ennuyeux, termine une scène qui s'enlise.\n- **Ancrer le monde dans les motivations** : chaque PNJ agit selon ses buts.\n- **Faire vivre les règles** : montre comment les mécaniques et la fiction se répondent.\n- **Alterner moments et montages** : savoure les scènes importantes, résume le reste en quelques phrases."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les pièges à éviter\n\n- **Rabaisser les héros.** Quand un jet échoue, montre la force de l'adversaire, un imprévu, un terrain traître. Pas l'incompétence du personnage. Une épée qui glisse sur une écaille plutôt qu'« il rate comme un débutant ».\n- **Toujours dire quoi lancer.** Ne propose pas « fais un jet de Force » avant que le joueur ait décrit ce qu'il tente. Laisse-le choisir sa façon d'agir.\n- **Laisser traîner les scènes.** Quand la discussion tourne en rond ou que l'énergie baisse, change quelque chose ou coupe.\n- **La solution unique.** S'il y a une idée astucieuse que tu n'avais pas prévue, fais-la fonctionner.\n- **Trop préparer.** Prépare des situations, pas des scènes écrites d'avance. Si les joueurs te surprennent, prends une pause pour réfléchir.\n- **Thésauriser la Peur.** Dépense-la : les joueurs en génèrent toujours plus."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple : raconter un échec\n\nYsolde rate un jet pour enfoncer une porte.\n\n- À éviter : « Tu n'es pas assez forte. La porte ne bouge pas. »\n- Mieux : « La porte tremble sous le choc, mais de l'autre côté, quelqu'un a poussé une armoire contre elle. Et tu l'entends crier : il appelle à l'aide. »\n\nLa deuxième version respecte le personnage, donne une information, et fait avancer la scène."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Après une séance, demande-toi : **ai-je fait avancer l'histoire à chaque jet ?** Si un jet n'a rien changé, tu tiens une piste d'amélioration."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "531e2aed-daba-4c4a-883b-c3196bfd1e15",
+      "slug": "dh-mj-seance-zero-et-securite",
+      "titre": "La séance zéro et les outils de sécurité",
+      "resume": "Préparer une campagne avec les joueurs : s'accorder sur le ton et les limites, utiliser des outils de sécurité, et créer les personnages ensemble.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-mj-le-role-du-mj"
+      ],
+      "objectifs": [
+        "Animer une séance zéro",
+        "Utiliser les lignes et les voiles",
+        "Mettre en place une carte X"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Avant la première aventure\n\nLa **séance zéro** est une séance de préparation, avant de jouer. Le MJ et les joueurs s'y mettent d'accord sur ce qu'ils veulent vivre ensemble, puis créent leurs personnages.\n\nC'est le meilleur moyen d'éviter les malentendus : un joueur qui attendait de l'horreur face à un MJ qui prépare une comédie, par exemple."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 290\"><rect x=\"15\" y=\"15\" width=\"275\" height=\"76\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"47\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Le ton</text><text x=\"152\" y=\"75\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">épique, sombre, léger ?</text><rect x=\"305\" y=\"15\" width=\"275\" height=\"76\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"442\" y=\"47\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Le cadre</text><text x=\"442\" y=\"75\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">monde et point de départ</text><rect x=\"15\" y=\"105\" width=\"275\" height=\"76\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"137\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Les limites</text><text x=\"152\" y=\"165\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">lignes et voiles</text><rect x=\"305\" y=\"105\" width=\"275\" height=\"76\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"442\" y=\"137\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">La carte X</text><text x=\"442\" y=\"165\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">pour arrêter une scène</text><rect x=\"15\" y=\"195\" width=\"275\" height=\"76\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"227\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Les personnages</text><text x=\"152\" y=\"255\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">créés ensemble</text><rect x=\"305\" y=\"195\" width=\"275\" height=\"76\" rx=\"12\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"442\" y=\"227\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Le rythme</text><text x=\"442\" y=\"255\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">quand, combien de temps</text></svg>",
+          "alt": "Les six sujets d'une séance zéro",
+          "description": "Six cartes : le ton (épique, sombre, léger ?), le cadre (un monde, un point de départ), les limites (lignes et voiles), la carte X (pour arrêter une scène), les personnages (créés ensemble), le rythme (quand, combien de temps).",
+          "legende": "De quoi parler pendant la séance zéro"
+        },
+        {
+          "type": "texte",
+          "markdown": "## De quoi parler\n\n- **Le ton** : héroïque, sombre, drôle, mélancolique ? Daggerheart convient à tous, mais la table doit s'accorder.\n- **Le cadre** : le monde du jeu, un monde maison, ou un **cadre de campagne** prêt à l'emploi (le livre en propose plusieurs, avec leurs thèmes et leurs règles propres).\n- **Le point de départ** : où commence l'histoire, et pourquoi les héros sont ensemble.\n- **Le rythme** : la fréquence des séances, leur durée, ce qu'on fait si quelqu'un est absent.\n- **Les personnages** : créés ensemble, avec leurs liens (voir le parcours sur la création)."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les outils de sécurité\n\nLe jeu de rôle peut aborder des sujets durs. Les **outils de sécurité** permettent à chacun de profiter de la partie sans se sentir mal. Ils ne sont pas propres à Daggerheart, mais le livre encourage à les utiliser.\n\n- **Les lignes et les voiles.** Une **ligne** est un sujet qu'on ne veut **pas du tout** dans le jeu (la torture, la maltraitance d'animaux…). Un **voile** est un sujet qui peut exister, mais **hors champ** : on coupe la scène, on n'en décrit pas les détails. On les liste ensemble, en séance zéro, et chacun peut en ajouter à tout moment.\n- **La carte X.** Une carte posée sur la table (ou un emoji en visio). N'importe qui peut la toucher, **sans se justifier** : on retire ou on change ce qui vient d'être décrit, et on continue.\n- **Le point d'étape.** À la fin de la séance, chacun dit ce qu'il a aimé et ce qu'il voudrait voir plus ou moins."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Un outil de sécurité ne sert que si on le respecte **sans discuter**. Quand quelqu'un touche la carte X, on ne demande pas pourquoi : on change la scène, et on reprend."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Une heure de séance zéro évite des heures de malaise. Elle fait aussi naître l'envie de jouer : à la fin, tout le monde a hâte de commencer."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "b4299476-ae15-48cf-891b-1ea8b87ae7b0",
+      "slug": "dh-mj-quand-demander-un-jet",
+      "titre": "Quand demander un jet, et quelle Difficulté",
+      "resume": "Décider si un jet est nécessaire, annoncer les enjeux, choisir une Difficulté juste, et connaître les chances de réussite des joueurs.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "dh-mj-pratiques-et-pieges"
+      ],
+      "objectifs": [
+        "Décider si une action mérite un jet",
+        "Annoncer les enjeux et les conséquences avant le jet",
+        "Choisir une Difficulté avec les repères du livre",
+        "Estimer les chances de réussite d'un jet"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Faut-il un jet ?\n\nAvant de demander un jet, pose-toi trois questions :\n\n1. **L'issue est-elle incertaine ?** Un ancien soldat qui monte la garde n'a pas besoin de jet pour rester éveillé.\n2. **L'échec serait-il intéressant ?** Si rater ne mène à rien, dis simplement oui.\n3. **La pression est-elle là ?** Crocheter une serrure tranquillement, c'est automatique. Avec des gardes qui approchent, c'est un jet.\n\nTu peux aussi **proposer un marché** : « Tu peux l'escalader sans jet, mais ça te prendra une heure, et la nuit sera tombée. » Le joueur choisit."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Annoncer les enjeux\n\nAvant que le joueur lance, dis-lui :\n\n- le **trait** qui s'applique ;\n- ce qu'il **risque** en cas d'échec (« Si tu rates, tu tombes dans le torrent ») ;\n- les **conséquences inévitables**, s'il y en a (« Même si tu réussis, le bruit va réveiller le camp »).\n\nTu peux garder la Difficulté secrète. Mais le joueur doit savoir **ce qu'il joue** : c'est lui qui décide s'il prend le risque, et s'il dépense de l'Espoir."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Choisir la Difficulté\n\nLe livre donne des exemples pour chaque trait. Quelques-uns, en résumé :\n\n- **5** : sauter la moitié de sa taille, soulever une chaise, se cacher sans lumière derrière un abri complet.\n- **10** : sauter sa propre taille, soulever une table, suivre un chemin ordinaire par beau temps.\n- **15** : défoncer une porte en bois, désamorcer un piège ordinaire, voir clair dans les mensonges d'un marchand.\n- **20** : traverser une mêlée de plusieurs ennemis en courant, désamorcer un piège complexe, déceler l'hostilité voilée d'un politicien.\n- **25** : soulever un cheval, se cacher avec peu d'abri en pleine lumière.\n- **30** : courir sur la tête des ennemis en pleine bataille, briser l'étreinte d'un dieu.\n\nFace à un adversaire, la Difficulté est celle de sa fiche (plus une de ses Expériences, si elle s'applique). Pour rendre une action plus facile ou plus dure selon la situation, préfère l'**avantage** ou le **désavantage**."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les chances de réussite\n\nCombien de chances a un joueur avec +1 de réussir ? Ce programme compte les 144 combinaisons des Dés de dualité. Un double réussit toujours."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def chance(difficulte, bonus):\n    reussites = 0\n    for de_espoir in range(1, 13):\n        for de_peur in range(1, 13):\n            critique = de_espoir == de_peur\n            if critique or de_espoir + de_peur + bonus >= difficulte:\n                reussites += 1\n    return round(100 * reussites / 144)\n\n\nfor difficulte in [10, 12, 15, 18, 20]:\n    print(\"Difficulté\", difficulte, \":\", chance(difficulte, 1), \"%\")\n",
+          "executable": true,
+          "sortie_attendue": "Difficulté 10 : 83 %\nDifficulté 12 : 72 %\nDifficulté 15 : 50 %\nDifficulté 18 : 31 %\nDifficulté 20 : 21 %\n"
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 290\"><text x=\"150\" y=\"48\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Difficulté 10</text><rect x=\"165\" y=\"20\" width=\"400\" height=\"38\" rx=\"6\" fill=\"surface\" stroke=\"bordure\" stroke-width=\"1\"/><rect x=\"165\" y=\"20\" width=\"332\" height=\"38\" rx=\"6\" fill=\"illu-bleu\" stroke=\"none\" stroke-width=\"0\"/><text x=\"487\" y=\"47\" font-size=\"20\" text-anchor=\"end\" fill=\"illu-blanc\" font-weight=\"bold\">83 %</text><text x=\"150\" y=\"100\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Difficulté 12</text><rect x=\"165\" y=\"72\" width=\"400\" height=\"38\" rx=\"6\" fill=\"surface\" stroke=\"bordure\" stroke-width=\"1\"/><rect x=\"165\" y=\"72\" width=\"288\" height=\"38\" rx=\"6\" fill=\"illu-bleu\" stroke=\"none\" stroke-width=\"0\"/><text x=\"443\" y=\"99\" font-size=\"20\" text-anchor=\"end\" fill=\"illu-blanc\" font-weight=\"bold\">72 %</text><text x=\"150\" y=\"152\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Difficulté 15</text><rect x=\"165\" y=\"124\" width=\"400\" height=\"38\" rx=\"6\" fill=\"surface\" stroke=\"bordure\" stroke-width=\"1\"/><rect x=\"165\" y=\"124\" width=\"200\" height=\"38\" rx=\"6\" fill=\"illu-bleu\" stroke=\"none\" stroke-width=\"0\"/><text x=\"355\" y=\"151\" font-size=\"20\" text-anchor=\"end\" fill=\"illu-blanc\" font-weight=\"bold\">50 %</text><text x=\"150\" y=\"204\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Difficulté 18</text><rect x=\"165\" y=\"176\" width=\"400\" height=\"38\" rx=\"6\" fill=\"surface\" stroke=\"bordure\" stroke-width=\"1\"/><rect x=\"165\" y=\"176\" width=\"124\" height=\"38\" rx=\"6\" fill=\"illu-bleu\" stroke=\"none\" stroke-width=\"0\"/><text x=\"279\" y=\"203\" font-size=\"20\" text-anchor=\"end\" fill=\"illu-blanc\" font-weight=\"bold\">31 %</text><text x=\"150\" y=\"256\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Difficulté 20</text><rect x=\"165\" y=\"228\" width=\"400\" height=\"38\" rx=\"6\" fill=\"surface\" stroke=\"bordure\" stroke-width=\"1\"/><rect x=\"165\" y=\"228\" width=\"84\" height=\"38\" rx=\"6\" fill=\"illu-bleu\" stroke=\"none\" stroke-width=\"0\"/><text x=\"239\" y=\"255\" font-size=\"20\" text-anchor=\"end\" fill=\"illu-blanc\" font-weight=\"bold\">21 %</text></svg>",
+          "alt": "Les chances de réussite d'un personnage avec +1, selon la Difficulté",
+          "description": "Cinq barres horizontales. Difficulté 10 : 83 %. Difficulté 12 : 72 %. Difficulté 15 : 50 %. Difficulté 18 : 31 %. Difficulté 20 : 21 %.",
+          "legende": "Avec +1 au jet, une Difficulté de 15 se réussit une fois sur deux"
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Un joueur a **+2** et vise une Difficulté de **15**. Combien de combinaisons donnent un **succès avec Espoir** (total suffisant **et** dé d'Espoir strictement plus haut, sans compter les doubles) ?\n\nComplète la condition, puis lance le programme. Il doit afficher `36 sur 144, soit 25 %`.",
+          "code": "compte = 0\nfor de_espoir in range(1, 13):\n    for de_peur in range(1, 13):\n        # Complète la condition\n        if de_espoir + de_peur + 2 >= 15:\n            compte += 1\n\nprint(compte, \"sur 144, soit\", round(100 * compte / 144), \"%\")\n",
+          "solution": "compte = 0\nfor de_espoir in range(1, 13):\n    for de_peur in range(1, 13):\n        if de_espoir > de_peur and de_espoir + de_peur + 2 >= 15:\n            compte += 1\n\nprint(compte, \"sur 144, soit\", round(100 * compte / 144), \"%\")\n",
+          "sortie_attendue": "36 sur 144, soit 25 %\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Pas de jet sans enjeu.** Annonce le risque avant de lancer. Et retiens un repère : avec un bonus de +1, **15 est une Difficulté moyenne** (une chance sur deux), **20 est vraiment dure**."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "cedcfa35-1937-4f0c-ae15-ccc5e7cb594b",
+      "slug": "dh-mj-repondre-aux-jets",
+      "titre": "Répondre aux jets : les actes de MJ",
+      "resume": "Choisir la bonne réponse à chaque résultat de jet, de « Oui, et » à « Non, et », avec une liste d'actes de MJ et la différence entre actes doux et actes durs.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 13,
+      "prerequis": [
+        "dh-mj-quand-demander-un-jet"
+      ],
+      "objectifs": [
+        "Répondre à chacun des cinq résultats d'un jet",
+        "Choisir un acte de MJ dans la liste",
+        "Doser entre acte doux et acte dur"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Quand faire un acte\n\nTu fais un **acte de MJ** quand un joueur :\n\n- **rate** un jet d'action ;\n- fait un jet **avec Peur** ;\n- fait quelque chose qui a des **conséquences inévitables** ;\n- t'offre une **occasion en or** (il tourne le dos à l'ennemi, il ouvre le coffre piégé) ;\n- se tourne vers toi pour savoir **ce qui se passe**.\n\nUn acte n'est pas lié à une règle précise : tu le décris comme l'histoire le demande."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Répondre à chaque résultat\n\n- **Succès critique** : le joueur décrit sa réussite, puis tu lui offres **un bonus** : une occasion, un avantage, une information de plus.\n- **Succès avec Espoir** (« Oui, et… ») : le joueur décrit sa réussite, puis tu montres **comment le monde réagit**.\n- **Succès avec Peur** (« Oui, mais… ») : vous décrivez la réussite ensemble, puis tu prends la Peur et tu fais un acte : **une conséquence ou un coût mineur**. Un adversaire attaque, le PJ coche un Stress, une nouvelle menace apparaît, l'enjeu monte.\n- **Échec avec Espoir** (« Non, mais… ») : décris comment le personnage n'obtient pas ce qu'il voulait, puis fais un acte pour une **conséquence mineure**.\n- **Échec avec Peur** (« Non, et… ») : décris comment tout tourne mal, puis fais un acte pour une **conséquence majeure** : le personnage est en danger immédiat, il devient la cible de plusieurs ennemis, il est séparé du groupe, une belle occasion disparaît."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Une liste d'actes\n\nQuand rien ne s'impose, pioche une idée :\n\n- montrer comment le monde réagit ;\n- poser une question, et construire sur la réponse ;\n- faire agir un PNJ selon sa motivation ;\n- tenter un personnage en lui montrant ce qu'il désire ;\n- annoncer une menace qui arrive hors champ ;\n- révéler une vérité dérangeante ou un danger inattendu ;\n- séparer le groupe ;\n- faire cocher un Stress à un personnage ;\n- agir dans le dos des personnages ;\n- montrer les dégâts collatéraux ;\n- libérer un adversaire d'un état ;\n- changer l'environnement ;\n- mettre un adversaire en avant ;\n- capturer quelqu'un ou quelque chose d'important ;\n- retourner le passé d'un personnage contre lui ;\n- supprimer définitivement une occasion."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 230\"><defs><linearGradient id=\"dd\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0\" stop-color=\"illu-vert\"/><stop offset=\"1\" stop-color=\"illu-rouge\"/></linearGradient></defs><rect x=\"20\" y=\"40\" width=\"560\" height=\"30\" rx=\"15\" fill=\"url(#dd)\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"20\" y=\"28\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Acte doux</text><text x=\"580\" y=\"28\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\" font-weight=\"bold\">Acte dur</text><line x1=\"60\" y1=\"72\" x2=\"60\" y2=\"100\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"60\" y=\"125\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Montrer</text><text x=\"60\" y=\"150\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">la réaction</text><text x=\"60\" y=\"175\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">du monde</text><line x1=\"205\" y1=\"72\" x2=\"205\" y2=\"100\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"205\" y=\"125\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Annoncer</text><text x=\"205\" y=\"150\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">une menace</text><text x=\"205\" y=\"175\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">à venir</text><line x1=\"350\" y1=\"72\" x2=\"350\" y2=\"100\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"350\" y=\"125\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Faire cocher</text><text x=\"350\" y=\"150\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">un Stress</text><line x1=\"500\" y1=\"72\" x2=\"500\" y2=\"100\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"500\" y=\"125\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Séparer</text><text x=\"500\" y=\"150\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">le groupe</text><text x=\"150\" y=\"215\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\" font-style=\"italic\">Jets avec Espoir</text><text x=\"450\" y=\"215\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\" font-style=\"italic\">Jets avec Peur</text></svg>",
+          "alt": "Un dégradé des actes de MJ, du plus doux au plus dur",
+          "description": "Une barre en dégradé, du vert (acte doux) au rouge (acte dur). Exemples, du plus doux au plus dur : montrer la réaction du monde, annoncer une menace à venir, faire cocher un Stress, séparer le groupe. Les actes doux vont plutôt avec les jets avec Espoir, les actes durs avec les jets avec Peur.",
+          "legende": "Des actes doux aux actes durs"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Doux ou dur\n\n- Un **acte doux** prévient : il donne une information et laisse aux joueurs **le temps de réagir**. « Le plafond craque au-dessus de vous. »\n- Un **acte dur** frappe : les joueurs ne peuvent ni l'empêcher ni l'anticiper. « Le plafond s'effondre. Faites un jet de réaction d'Agilité. »\n\nRègle simple : **plutôt doux sur un jet avec Espoir, plutôt dur sur un jet avec Peur**."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Dans le doute, pense aux quatre formules : **Oui, et… / Oui, mais… / Non, mais… / Non, et…** Elles suffisent à trouver une réponse à presque tous les jets."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "280f8329-8272-4b25-920f-f3c81c5d7aec",
+      "slug": "dh-mj-gerer-la-peur",
+      "titre": "Gérer la Peur",
+      "resume": "Savoir combien de Peur dépenser selon l'importance d'une scène, à quoi la dépenser, et pourquoi il ne faut pas la garder.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-mj-repondre-aux-jets"
+      ],
+      "objectifs": [
+        "Doser la Peur selon la tension d'une scène",
+        "Choisir comment dépenser la Peur",
+        "Éviter de thésauriser la Peur"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Rappel\n\n- Tu commences la campagne avec **1 Peur par PJ**, et tu en as **12 au maximum**. Elle se garde d'une séance à l'autre.\n- Tu en gagnes : **1** par jet avec Peur, **1d4** par repos court, **1d4 + le nombre de PJ** par repos long, et parfois par des capacités.\n- Tu la dépenses (1 Peur à chaque fois) pour : **interrompre** les joueurs et faire un acte, faire **un acte de plus**, activer une **capacité de Peur** d'un adversaire ou d'un environnement, ajouter une **Expérience** d'adversaire à un jet."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Combien par scène ?\n\nLa tension d'une scène se mesure à la Peur que tu y dépenses. Le livre propose ces repères :"
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 325\"><text x=\"155\" y=\"66\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Anodine</text><rect x=\"170\" y=\"40\" width=\"30\" height=\"36\" rx=\"8\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"210\" y=\"66\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">0 à 1</text><text x=\"155\" y=\"116\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Mineure</text><rect x=\"200\" y=\"90\" width=\"60\" height=\"36\" rx=\"8\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"270\" y=\"116\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">1 à 3</text><text x=\"155\" y=\"166\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Ordinaire</text><rect x=\"230\" y=\"140\" width=\"60\" height=\"36\" rx=\"8\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"166\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">2 à 4</text><text x=\"155\" y=\"216\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Majeure</text><rect x=\"290\" y=\"190\" width=\"120\" height=\"36\" rx=\"8\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"420\" y=\"216\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">4 à 8</text><text x=\"155\" y=\"266\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Paroxysme</text><rect x=\"350\" y=\"240\" width=\"180\" height=\"36\" rx=\"8\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"540\" y=\"266\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">6 à 12</text><text x=\"170\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">0</text><text x=\"230\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">2</text><text x=\"290\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">4</text><text x=\"350\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">6</text><text x=\"410\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">8</text><text x=\"470\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">10</text><text x=\"530\" y=\"310\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">12</text><text x=\"350\" y=\"24\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Peur dépensée dans la scène</text></svg>",
+          "alt": "La Peur à dépenser selon le type de scène",
+          "description": "Cinq barres sur une échelle de 0 à 12. Scène anodine : 0 à 1 Peur. Mineure : 1 à 3. Ordinaire : 2 à 4. Majeure : 4 à 8. Paroxysme : 6 à 12.",
+          "legende": "Plus la scène compte, plus on dépense"
+        },
+        {
+          "type": "texte",
+          "markdown": "- **Anodine** (0 à 1) : des retrouvailles entre PJ, une course au marché, un repos.\n- **Mineure** (1 à 3) : un voyage, une escarmouche qui annonce des ennuis.\n- **Ordinaire** (2 à 4) : un vrai combat avec un objectif, un voyage périlleux, une négociation tendue.\n- **Majeure** (4 à 8) : une grande bataille contre un adversaire Solo ou Meneur, une scène qui change l'histoire d'un personnage (révélation, trahison).\n- **Paroxysme** (6 à 12) : l'affrontement final d'un arc, une bataille épique, un duel judiciaire qui décide du sort d'un PNJ."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Trop de Peur ?\n\nSi ta réserve déborde, change de style :\n\n- **dépense souvent** : 1 Peur à chaque fois que tu prends la main ;\n- **dépense vite** : interromps les joueurs avant qu'ils puissent réagir ;\n- **dépense gros** : enchaîne plusieurs actes d'affilée.\n\nUne dépense de Peur doit **se sentir** : un renfort inattendu, un sort dévastateur, un environnement qui se déchaîne. Décris-la avec emphase : les joueurs voient les jetons partir, et ils savent que ça va faire mal."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "**Ne thésaurise pas.** Un MJ qui garde 12 Peur ne gagne plus rien sur les jets avec Peur. Et les joueurs le sentent : la menace reste théorique. Ils génèrent de la Peur en permanence : dépense-la."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Tu peux aussi dépenser 1 Peur pour dire « tout va bien… pour l'instant » : rien ne se passe, mais tout le monde a vu le jeton partir. Effet garanti."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "4cbd2a3a-62de-48ca-b2f1-71ac356f91d4",
+      "slug": "dh-mj-distribuer-la-lumiere",
+      "titre": "Distribuer la lumière et régler le rythme",
+      "resume": "Gérer qui a la main sans tour de jeu : mettre en avant les joueurs discrets, mener le tour du MJ, et alterner moments et montages.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-mj-gerer-la-peur"
+      ],
+      "objectifs": [
+        "Répartir l'attention entre les joueurs",
+        "Mener un tour de MJ",
+        "Alterner moments détaillés et montages",
+        "Terminer une scène au bon moment"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Sans tour, la responsabilité du MJ\n\nÀ Daggerheart, il n'y a pas d'initiative : c'est toi qui veilles à ce que **chacun ait sa place**. Les joueurs à l'aise prennent naturellement la parole ; les plus discrets peuvent disparaître d'une scène entière sans que personne ne le remarque."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 240\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><circle cx=\"40\" cy=\"40\" r=\"24\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"40\" y=\"48.4\" font-size=\"23\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Y</text><rect x=\"80\" y=\"24\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"130\" y=\"24\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"180\" y=\"24\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"230\" y=\"24\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"110\" r=\"24\" fill=\"peche\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"40\" y=\"118.4\" font-size=\"23\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">P</text><rect x=\"80\" y=\"94\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"130\" y=\"94\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"180\" y=\"94\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"230\" y=\"94\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"280\" y=\"94\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"180\" r=\"24\" fill=\"menthe\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"40\" y=\"188.4\" font-size=\"23\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">M</text><rect x=\"80\" y=\"164\" width=\"40\" height=\"32\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"420\" y=\"160\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Maëlis a peu agi :</text><text x=\"420\" y=\"186\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">tourne-toi vers elle</text><line x1=\"315\" y1=\"175\" x2=\"140\" y2=\"178\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/></svg>",
+          "alt": "Le nombre d'actions de chaque joueur pendant une scène",
+          "description": "Trois pions, chacun suivi d'une rangée de cases : Ysolde a eu 4 actions, Pell 5, Maëlis 1. Une flèche montre Maëlis : elle n'a presque pas eu la main, tourne-toi vers elle.",
+          "legende": "Repère qui n'a pas eu la main"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Mettre en avant\n\n- **Pose des questions directes** : « Maëlis, pendant qu'Ysolde se bat, qu'est-ce que tu vois depuis la charrette ? »\n- **Donne une prise à chaque personnage** : un PNJ qui connaît l'un, un indice qui parle à l'autre, un danger qui vise un troisième.\n- **Utilise les Expériences et les histoires** des PJ pour les impliquer.\n- Si la table le veut, utilise les **jetons d'action** (règle optionnelle) : 3 jetons chacun, un par action."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le tour du MJ\n\nQuand un joueur rate ou fait un jet avec Peur, la main passe à toi.\n\n1. Fais **un acte**, gratuit : souvent, mettre un adversaire en avant.\n2. Si la scène le mérite, **dépense de la Peur** pour d'autres actes ou d'autres adversaires.\n3. Rends la main : « Que faites-vous ? ». Et regarde vers le joueur qui n'a pas agi depuis longtemps.\n\nUn adversaire mis en avant peut se déplacer à portée Courte et attaquer, utiliser une capacité, se libérer d'un état temporaire, ou courir jusqu'à portée Très longue.\n\nEn général, mets **chaque adversaire en avant une seule fois** par tour, sauf capacité contraire."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Moments et montages\n\n- Un **moment** se joue en détail : chaque réplique, chaque jet. Réserve-le à ce qui compte : une rencontre, un dilemme, un combat.\n- Un **montage** résume en quelques phrases : trois jours de voyage, une nuit de recherche à la bibliothèque. Tu peux demander un ou deux jets, ou une phrase par joueur (« Que fait ton personnage pendant ce voyage ? »)."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Terminer une scène\n\nCoupe quand l'objectif est atteint, quand la discussion tourne en rond, ou quand l'énergie baisse. Un MJ qui coupe au bon moment donne une impression de rythme ; un MJ qui laisse traîner épuise sa table.\n\n« La porte se referme sur l'aubergiste. Le lendemain matin, sur la route du col… »"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Regarde qui n'a pas parlé.** C'est le geste le plus simple et le plus utile d'un MJ de Daggerheart."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "e9809ae4-66e0-4a4f-a957-270d059ce9a8",
+      "slug": "dh-mj-animer-les-pnj",
+      "titre": "Animer les personnages non joueurs",
+      "resume": "Créer des PNJ vivants en quelques lignes, leur donner une motivation, une Difficulté si besoin, et des capacités simples quand ils combattent aux côtés des héros.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-mj-distribuer-la-lumiere"
+      ],
+      "objectifs": [
+        "Créer un PNJ avec un nom, une description et une motivation",
+        "Faire agir un PNJ selon sa motivation",
+        "Donner à un PNJ une capacité avec déclencheur et effet"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Trois éléments suffisent\n\nUn PNJ n'a besoin que de trois choses :\n\n- un **nom** ;\n- une **description** (une ou deux caractéristiques marquantes) ;\n- une **motivation** : ce qu'il veut.\n\nSi les joueurs risquent de faire des jets contre lui (le convaincre, le tromper), donne-lui une **Difficulté**. Pour le distinguer, ajoute une **manière** : une façon de parler, un tic, un geste."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 270\"><rect x=\"10\" y=\"10\" width=\"580\" height=\"250\" rx=\"14\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"300\" y=\"48\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Aubin, le meunier</text><text x=\"40\" y=\"92\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Description :</text><text x=\"180\" y=\"92\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">voûté, farine sur les manches</text><text x=\"40\" y=\"130\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Motivation :</text><text x=\"180\" y=\"130\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">retrouver sa fille, sans perdre</text><text x=\"180\" y=\"156\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">son moulin</text><text x=\"40\" y=\"196\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Difficulté :</text><text x=\"180\" y=\"196\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">10 (il cache mal ses émotions)</text><text x=\"40\" y=\"234\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Manière :</text><text x=\"180\" y=\"234\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">répète « je vous en prie »</text></svg>",
+          "alt": "La fiche d'un PNJ : Aubin, le meunier",
+          "description": "Une fiche : Aubin, le meunier. Description : voûté, farine sur les manches. Motivation : retrouver sa fille, sans perdre son moulin. Difficulté : 10, il cache mal ses émotions. Manière : répète « je vous en prie ».",
+          "legende": "Une fiche de PNJ tient en cinq lignes"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Faire agir par la motivation\n\nUn PNJ n'attend pas les héros : il **agit** pour obtenir ce qu'il veut. Quand tu ne sais pas ce qu'il fait, demande-toi ce que sa motivation lui dicte.\n\nAubin veut retrouver sa fille, mais aussi garder son moulin. Que fait-il si les héros tardent ? Il va peut-être négocier seul avec Corneille… et lui céder le moulin. Une excellente complication."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les PNJ alliés\n\nUn PNJ qui combat aux côtés des héros n'a **pas besoin de fiche**. Mets-le en avant, décris ce qu'il fait, et montre comment il change la scène. Si un PJ profite de son aide, donne-lui l'**avantage**.\n\nUn PNJ sans PV ni Stress peut quand même être blessé ou tué, si l'histoire le demande."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Donner une capacité\n\nPour qu'un PNJ important interagisse avec les règles, donne-lui une capacité, sur ce modèle :\n\n- **Choix** (facultatif) : un paramètre fixé au début de la scène ;\n- **Déclencheur** : quand la capacité s'active ;\n- **Effet** : ce qui se passe.\n\nExemples inventés :\n\n- *La vieille garde* — Déclencheur : un PJ à portée Courte de Brune, la capitaine, coche son dernier emplacement d'armure. Effet : Brune s'interpose ; le PJ efface un emplacement d'armure.\n- *Pique-assiette* — Déclencheur : le groupe commence un repos long avec Fil, le colporteur. Effet : lance 1d4 ; sur 1, Fil disparaît dans la nuit avec une poignée d'or du groupe.\n- *Leçon de maître* — Choix : au début du combat, choisis un PJ élève. Déclencheur : l'élève rate une attaque à portée Courte du maître. Effet : le maître le rejoint et le conseille ; sa prochaine attaque a l'avantage."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Garde une **liste de noms** sous la main. Rien ne casse plus le rythme qu'un MJ qui cherche un nom pour l'aubergiste pendant une minute."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    }
+  ]
+}

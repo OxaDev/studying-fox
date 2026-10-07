@@ -33,7 +33,7 @@ journal_technique = logging.getLogger(__name__)
 # Plusieurs processus de l'API peuvent démarrer ensemble : un seul charge à la fois.
 VERROU = 0x52454E41  # « RENA »
 
-# Les thèmes de la plateforme (migration 0007) : ils sont créés au démarrage, s'ils manquent.
+# Les thèmes de la plateforme : ils sont créés au démarrage, s'ils manquent.
 NOMS_THEMES = {
     "python-bases": "Python - Bases",
     "python-poo": "Python - Programmation Orientée Objet",
@@ -41,6 +41,7 @@ NOMS_THEMES = {
     "python-fastapi": "Python - Suite FastAPI",
     "javascript": "JavaScript",
     "vba-bases": "VBA - Bases",
+    "daggerheart": "JDR - DaggerHeart",
 }
 
 
@@ -114,7 +115,7 @@ async def _theme(db: AsyncSession, slug: str) -> Theme:
 
 
 async def creer_themes_par_defaut(db: AsyncSession) -> None:
-    """Les thèmes des langages existent toujours : on importe sans passer par l'admin."""
+    """Les thèmes par défaut existent toujours : on importe sans passer par l'admin."""
     for slug in NOMS_THEMES:
         await _theme(db, slug)
 

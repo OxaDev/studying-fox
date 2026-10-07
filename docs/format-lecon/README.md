@@ -185,7 +185,7 @@ Elle accepte aussi un fichier `.svg` seul, qui contient alors son `<title>` et s
 2. Chaque exemple de code, et chaque solution d'exercice, a été exécuté, et sa sortie correspond à `sortie_attendue`. L'outil de la plateforme vérifie tout le paquet d'un coup, dans les mêmes conditions que le navigateur, illustrations comprises : `cd front && npm run verifier -- mon-paquet.json`.
 3. Tu as **regardé** chaque illustration, en thème clair, en thème sombre et sur téléphone : `cd front && npm run illustration -- mon-paquet.json`.
 4. Chaque leçon et le parcours ont un `id` (UUID) : nouveau pour une nouvelle leçon, repris tel quel pour une leçon existante. Les `slug` sont uniques et parlants.
-5. Les thèmes utilisés existent déjà sur la plateforme : `python-bases`, `python-poo`, `python-django`, `python-fastapi`, `javascript`, `vba-bases`.
+5. Les thèmes utilisés existent déjà sur la plateforme : `python-bases`, `python-poo`, `python-django`, `python-fastapi`, `javascript`, `vba-bases`, `daggerheart`.
 
 ## Après l'import
 

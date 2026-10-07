@@ -1,0 +1,554 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 4,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-07"
+  },
+  "parcours": {
+    "id": "fa73d6d4-69c4-4b6f-bb60-f5e48a7839aa",
+    "slug": "daggerheart-creer-son-personnage",
+    "titre": "Daggerheart : créer son personnage",
+    "description": "Les neuf étapes pour créer un héros de Daggerheart : classe, héritage, traits, équipement, Expériences, cartes de domaine et liens, avec un exemple complet.",
+    "niveau": "debutant",
+    "theme": "daggerheart",
+    "lecons": [
+      "dh-creation-vue-d-ensemble",
+      "dh-classe-et-sous-classe",
+      "dh-domaines-et-cartes",
+      "dh-ascendance-et-communaute",
+      "dh-repartir-les-traits",
+      "dh-esquive-pv-stress",
+      "dh-armes-et-armure",
+      "dh-les-experiences",
+      "dh-histoire-et-liens",
+      "dh-exemple-creer-ysolde"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "3de70b81-6d0c-43a0-9d21-1afa5cafa207",
+      "slug": "dh-creation-vue-d-ensemble",
+      "titre": "Créer un personnage : les neuf étapes",
+      "resume": "Avoir une vue d'ensemble de la création d'un personnage de Daggerheart, en neuf étapes guidées, avant de les voir une à une.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 7,
+      "prerequis": [
+        "dh-les-six-traits"
+      ],
+      "objectifs": [
+        "Citer les neuf étapes de la création d'un personnage",
+        "Préparer la création avec le reste de la table"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Un personnage en neuf étapes\n\nChaque joueur crée son héros en faisant une série de choix guidés. Certains sont **mécaniques** : ils changent ce que le personnage sait faire. D'autres sont **narratifs** : ils changent qui il est.\n\nIl faut compter une heure environ, souvent pendant une première séance consacrée à la préparation (la **séance zéro**). La table peut aussi jouer avec des personnages prêts à l'emploi, comme ceux du kit de démarrage."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 330\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"15\" y=\"15\" width=\"175\" height=\"80\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"39\" cy=\"39\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"39\" y=\"46\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1</text><text x=\"115\" y=\"49\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Classe</text><text x=\"115\" y=\"74\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">et sous-classe</text><line x1=\"193\" y1=\"55\" x2=\"207\" y2=\"55\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"210\" y=\"15\" width=\"175\" height=\"80\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"234\" cy=\"39\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"234\" y=\"46\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2</text><text x=\"310\" y=\"63\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Héritage</text><line x1=\"388\" y1=\"55\" x2=\"402\" y2=\"55\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"405\" y=\"15\" width=\"175\" height=\"80\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"429\" cy=\"39\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"429\" y=\"46\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">3</text><text x=\"505\" y=\"63\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Traits</text><rect x=\"15\" y=\"120\" width=\"175\" height=\"80\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"39\" cy=\"144\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"39\" y=\"151\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4</text><text x=\"115\" y=\"154\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Esquive,</text><text x=\"115\" y=\"179\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">PV, Stress</text><line x1=\"193\" y1=\"160\" x2=\"207\" y2=\"160\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"210\" y=\"120\" width=\"175\" height=\"80\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"234\" cy=\"144\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"234\" y=\"151\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">5</text><text x=\"310\" y=\"168\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Équipement</text><line x1=\"388\" y1=\"160\" x2=\"402\" y2=\"160\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"405\" y=\"120\" width=\"175\" height=\"80\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"429\" cy=\"144\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"429\" y=\"151\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">6</text><text x=\"505\" y=\"168\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Histoire</text><rect x=\"15\" y=\"225\" width=\"175\" height=\"80\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"39\" cy=\"249\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"39\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">7</text><text x=\"115\" y=\"273\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Expériences</text><line x1=\"193\" y1=\"265\" x2=\"207\" y2=\"265\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"210\" y=\"225\" width=\"175\" height=\"80\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"234\" cy=\"249\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"234\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">8</text><text x=\"310\" y=\"259\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Cartes</text><text x=\"310\" y=\"284\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">de domaine</text><line x1=\"388\" y1=\"265\" x2=\"402\" y2=\"265\" stroke=\"texte\" stroke-width=\"2\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"405\" y=\"225\" width=\"175\" height=\"80\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"429\" cy=\"249\" r=\"16\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"429\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">9</text><text x=\"505\" y=\"273\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Liens</text></svg>",
+          "alt": "Les neuf étapes de la création d'un personnage",
+          "description": "Neuf cases numérotées, en trois rangées. Première rangée : 1. Classe et sous-classe, 2. Héritage, 3. Traits. Deuxième rangée : 4. Esquive, PV, Stress, 5. Équipement, 6. Histoire. Troisième rangée : 7. Expériences, 8. Cartes de domaine, 9. Liens.",
+          "legende": "Les neuf étapes, dans l'ordre du livre"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les étapes\n\n1. **Classe et sous-classe** : le rôle du héros (gardien, barde, magicien…) et sa spécialité.\n2. **Héritage** : son **ascendance** (elfe, nain, humain…) et sa **communauté** (le milieu où il a grandi).\n3. **Traits** : répartir six valeurs entre Agilité, Force, Finesse, Instinct, Présence et Savoir.\n4. **Esquive, Points de vie, Stress et Espoir** : des valeurs de départ, données par la classe.\n5. **Équipement** : armes, armure et paquetage.\n6. **Histoire** : répondre à quelques questions sur le passé du personnage.\n7. **Expériences** : deux savoir-faire qui donnent un bonus.\n8. **Cartes de domaine** : deux capacités de départ.\n9. **Liens** : ce qui unit le personnage aux autres héros.\n\nLe nom, les pronoms et la description peuvent se remplir à n'importe quel moment."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "**Créez vos personnages ensemble**, à la même table. Le groupe évite d'avoir trois personnages au rôle identique, et les liens entre héros naissent tout seuls."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Rien n'est figé : pendant la création, tu peux revenir sur un choix précédent quand ton personnage prend forme."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "3b05120f-e219-46a7-a886-eff883e292b7",
+      "slug": "dh-classe-et-sous-classe",
+      "titre": "Choisir sa classe et sa sous-classe",
+      "resume": "Découvrir les neuf classes du jeu de base, leurs domaines et leurs valeurs de départ, puis le rôle de la sous-classe.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 12,
+      "prerequis": [
+        "dh-creation-vue-d-ensemble"
+      ],
+      "objectifs": [
+        "Décrire le rôle des neuf classes",
+        "Associer chaque classe à ses deux domaines",
+        "Expliquer ce qu'apporte une sous-classe"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## La classe : le rôle du héros\n\nLa **classe** décide du rôle de ton personnage et de ses pouvoirs. Elle donne :\n\n- l'accès à **deux domaines** : les familles de cartes où tu choisiras tes capacités ;\n- l'**Esquive** et les **Points de vie** de départ ;\n- une **spécificité de classe** : un pouvoir propre, toujours disponible ;\n- une **caractéristique d'Espoir**, qui coûte 3 Espoir ;\n- des objets de départ et des questions pour construire l'histoire du personnage."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 290\"><rect x=\"10\" y=\"10\" width=\"187\" height=\"80\" rx=\"12\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"103\" y=\"42\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Barde</text><text x=\"103\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Codex · Grâce</text><rect x=\"207\" y=\"10\" width=\"187\" height=\"80\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"42\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Druide</text><text x=\"300\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Arcane · Sagesse</text><rect x=\"404\" y=\"10\" width=\"187\" height=\"80\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"497\" y=\"42\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Gardien</text><text x=\"497\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Lame · Valeur</text><rect x=\"10\" y=\"102\" width=\"187\" height=\"80\" rx=\"12\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"103\" y=\"134\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Rôdeur</text><text x=\"103\" y=\"164\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Os · Sagesse</text><rect x=\"207\" y=\"102\" width=\"187\" height=\"80\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"134\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Roublard</text><text x=\"300\" y=\"164\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Grâce · Minuit</text><rect x=\"404\" y=\"102\" width=\"187\" height=\"80\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"497\" y=\"134\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Séraphin</text><text x=\"497\" y=\"164\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Splendeur · Valeur</text><rect x=\"10\" y=\"194\" width=\"187\" height=\"80\" rx=\"12\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"103\" y=\"226\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Ensorceleur</text><text x=\"103\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Arcane · Minuit</text><rect x=\"207\" y=\"194\" width=\"187\" height=\"80\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"226\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Guerrier</text><text x=\"300\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Lame · Os</text><rect x=\"404\" y=\"194\" width=\"187\" height=\"80\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"497\" y=\"226\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Magicien</text><text x=\"497\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Codex · Splendeur</text></svg>",
+          "alt": "Les neuf classes du jeu de base et leurs deux domaines",
+          "description": "Neuf cases. Barde : Codex et Grâce. Druide : Arcane et Sagesse. Gardien : Lame et Valeur. Rôdeur : Os et Sagesse. Roublard : Grâce et Minuit. Séraphin : Splendeur et Valeur. Ensorceleur : Arcane et Minuit. Guerrier : Lame et Os. Magicien : Codex et Splendeur.",
+          "legende": "Chaque classe ouvre deux domaines"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les neuf classes du jeu de base\n\nEntre parenthèses : Esquive et Points de vie de départ.\n\n- **Barde** (10, 5 PV) : artiste et orateur, il inspire ses alliés et charme ses adversaires.\n- **Druide** (10, 6 PV) : gardien de la nature, il se transforme en bête et commande aux éléments.\n- **Gardien** (9, 7 PV) : protecteur en armure, il encaisse les coups à la place des autres.\n- **Rôdeur** (12, 6 PV) : traqueur et tireur, il chasse sa proie, parfois avec un compagnon animal.\n- **Roublard** (12, 6 PV) : discret et rusé, il frappe dans l'ombre et se sort des pires situations.\n- **Séraphin** (9, 7 PV) : guerrier sacré, il soigne et combat au nom de sa divinité.\n- **Ensorceleur** (10, 6 PV) : sa magie est innée, puissante et instable.\n- **Guerrier** (11, 6 PV) : maître des armes, il domine le corps à corps.\n- **Magicien** (11, 5 PV) : érudit de la magie, il apprend ses sorts dans les livres.\n\nUne Esquive haute évite les coups ; beaucoup de Points de vie permettent d'en encaisser. Les classes fragiles se rattrapent par leur magie ou leur mobilité."
+        },
+        {
+          "type": "texte",
+          "markdown": "## La sous-classe : la spécialité\n\nChaque classe a **deux sous-classes**. Le gardien peut être *robuste* (il encaisse les dégâts physiques) ou *vengeur* (il riposte quand on le blesse). Le rôdeur peut être *explorateur* ou accompagné d'une bête.\n\nUne sous-classe se compose de trois cartes, qui se débloquent au fil des niveaux :\n\n- **Fondation**, prise à la création ;\n- **Spécialisation**, puis **Maîtrise**, choisies en montant de niveau.\n\nSi ta sous-classe lance des sorts, sa carte indique ton **trait d'incantation** : le trait que tu utiliseras pour tes **Jets d'incantation**. Par exemple l'Instinct pour l'ensorceleur d'origine primordiale."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Choisis d'abord **ce que tu as envie de faire** autour de la table : protéger, soigner, négocier, explorer, faire exploser des choses. La classe découle de cette envie, pas l'inverse."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "La version 2 du SRD (en anglais) ajoute quatre classes (*Assassin*, *Brawler*, *Warlock*, *Witch*) et un dixième domaine (*Dread*). Elles s'utilisent de la même façon. Ces leçons s'en tiennent au jeu de base."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "84576f61-85d6-469f-bbe1-07d9a2f7fbb2",
+      "slug": "dh-domaines-et-cartes",
+      "titre": "Les domaines et les cartes de domaine",
+      "resume": "Comprendre les neuf domaines, lire une carte de domaine, et gérer sa main de cinq cartes et son caveau.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-classe-et-sous-classe"
+      ],
+      "objectifs": [
+        "Décrire le thème des neuf domaines",
+        "Lire les éléments d'une carte de domaine",
+        "Gérer sa main et son caveau",
+        "Payer le prix de rappel d'une carte"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Neuf domaines\n\nLes capacités et les sorts des personnages sont imprimés sur des **cartes de domaine**. Chaque carte appartient à un **domaine**, une grande famille de pouvoirs. Ta classe t'en ouvre deux.\n\n- **Arcane** (*Arcana*) : la magie innée et brute, les éléments.\n- **Lame** (*Blade*) : la maîtrise des armes.\n- **Os** (*Bone*) : le corps, la tactique, l'art de lire le combat.\n- **Codex** : la magie étudiée dans les livres et les formules.\n- **Grâce** (*Grace*) : le charisme, les mots, les illusions.\n- **Minuit** (*Midnight*) : l'ombre, le secret, la ruse.\n- **Sagesse** (*Sage*) : la nature, les plantes, les bêtes.\n- **Splendeur** (*Splendor*) : la vie, les soins, et un peu la mort.\n- **Valeur** (*Valor*) : la protection des alliés."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 400\"><rect x=\"30\" y=\"60\" width=\"230\" height=\"320\" rx=\"14\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><circle cx=\"62\" cy=\"92\" r=\"20\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"62\" y=\"99\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1</text><polygon points=\"228,74 214,96 226,96 218,116 240,88 228,88 236,74\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"206\" y=\"100\" font-size=\"20\" text-anchor=\"end\" fill=\"illu-noir\" font-weight=\"bold\">1</text><rect x=\"50\" y=\"130\" width=\"190\" height=\"34\" rx=\"6\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"1\"/><text x=\"145\" y=\"154\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Domaine</text><text x=\"145\" y=\"200\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Titre</text><text x=\"145\" y=\"228\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Sort</text><rect x=\"55\" y=\"250\" width=\"180\" height=\"10\" rx=\"5\" fill=\"illu-gris\" stroke=\"none\" stroke-width=\"0\"/><rect x=\"55\" y=\"276\" width=\"180\" height=\"10\" rx=\"5\" fill=\"illu-gris\" stroke=\"none\" stroke-width=\"0\"/><rect x=\"55\" y=\"302\" width=\"180\" height=\"10\" rx=\"5\" fill=\"illu-gris\" stroke=\"none\" stroke-width=\"0\"/><rect x=\"55\" y=\"328\" width=\"120\" height=\"10\" rx=\"5\" fill=\"illu-gris\" stroke=\"none\" stroke-width=\"0\"/><line x1=\"62\" y1=\"70\" x2=\"62\" y2=\"30\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"72\" y=\"26\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Niveau</text><line x1=\"244\" y1=\"95\" x2=\"330\" y2=\"74\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"340\" y=\"80\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Prix de rappel</text><line x1=\"240\" y1=\"147\" x2=\"330\" y2=\"134\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"340\" y=\"140\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Domaine</text><line x1=\"190\" y1=\"195\" x2=\"330\" y2=\"194\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"340\" y=\"200\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Nom de la carte</text><line x1=\"180\" y1=\"223\" x2=\"330\" y2=\"254\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"340\" y=\"260\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Type</text><line x1=\"235\" y1=\"290\" x2=\"330\" y2=\"314\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"340\" y=\"320\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Effet</text></svg>",
+          "alt": "Les éléments d'une carte de domaine",
+          "description": "Une carte vue de face, avec des légendes. En haut à gauche, un cercle avec un chiffre : le niveau de la carte. En haut à droite, un éclair avec un chiffre : le prix de rappel. Dessous, un bandeau : le domaine. Puis le nom de la carte en gras, son type (capacité, sort ou grimoire) en italique, et le texte de l'effet.",
+          "legende": "Ce qu'on lit sur une carte de domaine"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Lire une carte\n\n- **Le niveau**, en haut à gauche : tu ne peux pas prendre une carte d'un niveau supérieur au tien.\n- **Le domaine** : il doit être l'un des deux de ta classe.\n- **Le prix de rappel**, à côté de l'éclair : le Stress à payer pour sortir la carte du caveau (voir plus bas).\n- **Le type** : *capacité* (un savoir-faire), *sort* (de la magie), ou *grimoire* (plusieurs petits sorts).\n- **L'effet** : ce que fait la carte, et ses limites (« une fois par repos »…).\n\nÀ la création, tu prends **deux cartes de niveau 1** dans tes domaines : une dans chacun, ou deux dans le même. Tu en gagneras une à chaque niveau."
+        },
+        {
+          "type": "texte",
+          "markdown": "## La main et le caveau\n\nTu ne peux utiliser que les cartes de ta **main** (*loadout*) : **cinq au plus**. Les autres sont rangées dans ton **caveau** (*vault*) : elles ne servent à rien tant qu'elles y restent.\n\n- **Pendant un repos**, au début, tu échanges librement les cartes entre main et caveau.\n- **À tout autre moment**, pour sortir une carte du caveau, coche autant de **Stress** que son **prix de rappel**. Si ta main est pleine, range une autre carte au caveau, gratuitement.\n\nLes cartes de sous-classe, d'ascendance et de communauté ne comptent pas dans la main : elles sont toujours actives."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 240\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><text x=\"170\" y=\"30\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Main : 5 cartes au plus</text><rect x=\"20\" y=\"50\" width=\"54\" height=\"76\" rx=\"6\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"82\" y=\"50\" width=\"54\" height=\"76\" rx=\"6\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"144\" y=\"50\" width=\"54\" height=\"76\" rx=\"6\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"206\" y=\"50\" width=\"54\" height=\"76\" rx=\"6\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"268\" y=\"50\" width=\"54\" height=\"76\" rx=\"6\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"470\" y=\"30\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Caveau</text><rect x=\"420\" y=\"50\" width=\"46\" height=\"66\" rx=\"6\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\" fill-opacity=\"0.6\"/><rect x=\"472\" y=\"50\" width=\"46\" height=\"66\" rx=\"6\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\" fill-opacity=\"0.6\"/><path d=\"M 440 130 Q 400 190 300 140\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><text x=\"420\" y=\"200\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Hors repos : cocher</text><text x=\"420\" y=\"224\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">du Stress = prix de rappel</text><text x=\"150\" y=\"175\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Pendant un repos :</text><text x=\"150\" y=\"199\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">échange gratuit</text></svg>",
+          "alt": "Cinq cartes en main, deux au caveau, et les règles d'échange",
+          "description": "À gauche, cinq cartes jaunes : la main, cinq cartes au plus. À droite, deux cartes grises : le caveau. Une flèche va du caveau vers la main. Texte : pendant un repos, échange gratuit ; hors repos, cocher du Stress égal au prix de rappel.",
+          "legende": "La main contient les cartes actives, le caveau les cartes rangées"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Au niveau 1, avec deux cartes, la question du caveau ne se pose pas. Elle devient intéressante à partir du niveau 5 : il faut alors **choisir ses cinq cartes** avant chaque journée d'aventure."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "ec7c0bd4-a906-4ee3-beee-b2e056cbb88f",
+      "slug": "dh-ascendance-et-communaute",
+      "titre": "L'héritage : ascendance et communauté",
+      "resume": "Choisir l'ascendance et la communauté de son personnage, et comprendre ce que chacune apporte, y compris l'ascendance mixte.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 9,
+      "prerequis": [
+        "dh-classe-et-sous-classe"
+      ],
+      "objectifs": [
+        "Distinguer ascendance et communauté",
+        "Lire les capacités d'une ascendance",
+        "Créer une ascendance mixte"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Deux cartes, un héritage\n\nL'**héritage** d'un personnage combine deux choix, chacun sur sa carte :\n\n- son **ascendance** : sa lignée, son corps. Elle donne **deux capacités** ;\n- sa **communauté** : la culture où il a grandi. Elle donne **une capacité**, et des adjectifs pour inspirer le jeu.\n\nOn les écrit ensemble, par exemple « elfe originaire du savoir » ou « humain originaire de la haute »."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 300\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"20\" y=\"20\" width=\"200\" height=\"150\" rx=\"10\" fill=\"sakura\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"120\" y=\"54\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Ascendance</text><text x=\"120\" y=\"84\" font-size=\"18\" text-anchor=\"middle\" fill=\"illu-noir\">Le corps, la lignée</text><text x=\"120\" y=\"108\" font-size=\"18\" text-anchor=\"middle\" fill=\"illu-noir\">2 capacités</text><text x=\"250\" y=\"105\" font-size=\"40\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">+</text><rect x=\"280\" y=\"20\" width=\"200\" height=\"150\" rx=\"10\" fill=\"menthe\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"380\" y=\"54\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Communauté</text><text x=\"380\" y=\"84\" font-size=\"18\" text-anchor=\"middle\" fill=\"illu-noir\">La culture, le milieu</text><text x=\"380\" y=\"108\" font-size=\"18\" text-anchor=\"middle\" fill=\"illu-noir\">1 capacité</text><line x1=\"250\" y1=\"180\" x2=\"250\" y2=\"215\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"40\" y=\"222\" width=\"420\" height=\"64\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"250\" y=\"250\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Héritage</text><text x=\"250\" y=\"276\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Naine originaire des souterrains</text></svg>",
+          "alt": "L'ascendance et la communauté forment l'héritage",
+          "description": "Une carte Ascendance (le corps, la lignée, deux capacités) plus une carte Communauté (la culture, le milieu, une capacité) donnent l'Héritage, par exemple : naine originaire des souterrains.",
+          "legende": "Ascendance plus communauté égale héritage"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les ascendances\n\nLe jeu de base en propose dix-huit, de l'humain aux plus étranges. Quelques exemples :\n\n- les **elfes**, aux sens aiguisés ;\n- les **nains**, robustes, à la peau épaisse ;\n- les **géants**, immenses et endurants ;\n- les **katari**, félins agiles ;\n- les **côas** (*Ribbet*), amphibiens sauteurs ;\n- les *clanks*, êtres mécaniques construits ;\n- les *drakonas*, descendants des dragons ;\n- les *fungrils*, peuple-champignon relié par ses racines.\n\nLes capacités d'ascendance sont souvent simples et utiles : voler, respirer sous l'eau, obtenir l'avantage sur certains jets.\n\n**Ascendance mixte** : pour un personnage de deux lignées, prends la **première** capacité d'une ascendance et la **seconde** capacité d'une autre."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les communautés\n\nLe jeu de base en propose neuf. En français, elles s'écrivent « originaire de… » :\n\n- **originaire de la haute** (*Highborne*) : l'aristocratie, l'argent, les salons ;\n- **originaire du savoir** (*Loreborne*) : les écoles, les bibliothèques, la politique ;\n- **originaire de la nature** (*Wildborne*) : les forêts profondes, loin des villes ;\n- **originaire des souterrains** (*Underborne*) : les cités sous la terre ;\n- **originaire des falaises** (*Ridgeborne*) : les montagnes et les à-pics ;\n- et les communautés de la mer (*Seaborne*), de l'ordre (*Orderborne*), des bas-fonds (*Slyborne*) et des nomades (*Wanderborne*).\n\nLa communauté dit d'où vient ton personnage, pas ce qu'il est devenu. Une naine peut avoir grandi chez les marins."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Lis les **adjectifs** de ta carte de communauté (« loyal », « méfiant », « curieux »…) : ce sont des idées de personnalité, pas des obligations."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "026a15d9-2bf7-4aee-af73-9d2b427b900d",
+      "slug": "dh-repartir-les-traits",
+      "titre": "Répartir les traits",
+      "resume": "Attribuer les six valeurs de départ aux traits du personnage, en tenant compte de sa classe, de ses armes et de sa magie.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 9,
+      "prerequis": [
+        "dh-classe-et-sous-classe"
+      ],
+      "objectifs": [
+        "Répartir les valeurs +2, +1, +1, +0, +0 et −1",
+        "Choisir les traits importants pour sa classe",
+        "Vérifier qu'une répartition est valide"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Six valeurs à placer\n\nÀ la création, tu places ces six valeurs, dans l'ordre que tu veux, sur les six traits :\n\n**+2, +1, +1, +0, +0, −1**\n\nChaque valeur est utilisée **une seule fois**. Tu as donc un point fort, deux traits solides, deux traits moyens et une faiblesse."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 190\"><text x=\"300\" y=\"30\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">À répartir : +2, +1, +1, +0, +0, −1</text><rect x=\"10\" y=\"60\" width=\"90\" height=\"110\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"55\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Agilité</text><circle cx=\"55\" cy=\"132\" r=\"26\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"55\" y=\"140\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><rect x=\"108\" y=\"60\" width=\"90\" height=\"110\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"153\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Force</text><circle cx=\"153\" cy=\"132\" r=\"26\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"153\" y=\"140\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+2</text><rect x=\"206\" y=\"60\" width=\"90\" height=\"110\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"251\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Finesse</text><circle cx=\"251\" cy=\"132\" r=\"26\" fill=\"sakura\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"251\" y=\"140\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−1</text><rect x=\"304\" y=\"60\" width=\"90\" height=\"110\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"349\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Instinct</text><circle cx=\"349\" cy=\"132\" r=\"26\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"349\" y=\"140\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+1</text><rect x=\"402\" y=\"60\" width=\"90\" height=\"110\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"447\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Présence</text><circle cx=\"447\" cy=\"132\" r=\"26\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"447\" y=\"140\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+1</text><rect x=\"500\" y=\"60\" width=\"90\" height=\"110\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"545\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Savoir</text><circle cx=\"545\" cy=\"132\" r=\"26\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"545\" y=\"140\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text></svg>",
+          "alt": "Une répartition des traits pour une gardienne",
+          "description": "Six cases : Agilité 0, Force +2, Finesse −1, Instinct +1, Présence +1, Savoir 0. En titre : à répartir, +2, +1, +1, +0, +0, −1.",
+          "legende": "Une gardienne qui mise sur la Force"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Comment choisir\n\n1. **Le trait de ton arme** : regarde le trait indiqué sur l'arme que tu comptes prendre (Force pour une hache, Agilité pour un arc, Finesse pour une dague). Tu l'utiliseras à chaque attaque : mets-lui souvent ton +2.\n2. **Ton trait d'incantation**, si ta sous-classe lance des sorts : il compte pour tous tes Jets d'incantation.\n3. **Ta personnalité** : un personnage bavard veut une bonne Présence, un érudit un bon Savoir.\n4. **Ta faiblesse** : le −1 donne du relief. Une gardienne maladroite de ses mains (Finesse −1) est plus mémorable qu'un héros parfait.\n\nExemple : Ysolde est une gardienne armée d'une hache. Force +2 pour frapper, Instinct +1 pour sentir le danger, Présence +1 pour commander, Agilité et Savoir 0, Finesse −1."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Vérifier une répartition\n\nUne répartition est valide si, une fois triées, les six valeurs sont exactement −1, 0, 0, 1, 1, 2. Ce programme vérifie celle d'Ysolde."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "ysolde = {\"Agilité\": 0, \"Force\": 2, \"Finesse\": -1, \"Instinct\": 1, \"Présence\": 1, \"Savoir\": 0}\n\nvalide = sorted(ysolde.values()) == [-1, 0, 0, 1, 1, 2]\nprint(\"Répartition valide :\", valide)\nprint(\"Point fort :\", max(ysolde, key=ysolde.get))\n",
+          "executable": true,
+          "sortie_attendue": "Répartition valide : True\nPoint fort : Force\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Pell, le roublard, veut **+2 en Finesse** (sa dague) et **+1 en Agilité** et en **Présence**. Il accepte **−1 en Force**.\n\nComplète le dictionnaire avec les valeurs qui manquent pour que la répartition soit **valide**, puis lance le programme. Il doit afficher `Répartition valide : True`.",
+          "code": "pell = {\"Agilité\": 1, \"Force\": -1, \"Finesse\": 2, \"Instinct\": 0, \"Présence\": 1, \"Savoir\": 0}\n# Change une valeur pour que la répartition soit valide\npell[\"Savoir\"] = 1\n\nprint(\"Répartition valide :\", sorted(pell.values()) == [-1, 0, 0, 1, 1, 2])\n",
+          "solution": "pell = {\"Agilité\": 1, \"Force\": -1, \"Finesse\": 2, \"Instinct\": 0, \"Présence\": 1, \"Savoir\": 0}\n\nprint(\"Répartition valide :\", sorted(pell.values()) == [-1, 0, 0, 1, 1, 2])\n",
+          "sortie_attendue": "Répartition valide : True\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**+2, +1, +1, +0, +0, −1**, chaque valeur une fois. Mets le +2 sur le trait de ton arme ou de ta magie, et assume ta faiblesse."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "fadb5ff4-8577-46f0-91a0-1c570d494bb1",
+      "slug": "dh-esquive-pv-stress",
+      "titre": "Esquive, Points de vie, Stress et Espoir",
+      "resume": "Noter les valeurs de départ du personnage : son niveau, son Esquive, ses Points de vie, son Stress et son Espoir, et comprendre à quoi elles servent.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 7,
+      "prerequis": [
+        "dh-repartir-les-traits"
+      ],
+      "objectifs": [
+        "Noter les valeurs de départ d'un personnage",
+        "Expliquer le rôle de l'Esquive, des PV et du Stress"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Les valeurs de départ\n\nCette étape est rapide : presque tout vient de la classe.\n\n- **Niveau 1** : tous les personnages commencent au niveau 1.\n- **Esquive** : la capacité à éviter les coups. C'est la Difficulté que les adversaires doivent atteindre pour te toucher. Elle dépend de la classe (de 9 à 12), et ton armure peut la modifier.\n- **Points de vie (PV)** : ta santé physique. Leur nombre dépend de la classe (de 5 à 7).\n- **Stress** : ta résistance à la fatigue, à la peur et à la pression. **Six cases** pour tout le monde.\n- **Espoir** : coche **2 Espoir** sur les 6 cases."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 270\"><rect x=\"10\" y=\"10\" width=\"140\" height=\"110\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"80\" y=\"45\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Esquive</text><text x=\"80\" y=\"95\" font-size=\"40\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">9</text><text x=\"80\" y=\"145\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">selon la classe</text><text x=\"170\" y=\"40\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Points de vie (7)</text><rect x=\"170\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"208\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"246\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"284\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"322\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"360\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"398\" y=\"55\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"170\" y=\"120\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Stress (6)</text><rect x=\"170\" y=\"135\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"208\" y=\"135\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"246\" y=\"135\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"284\" y=\"135\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"322\" y=\"135\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"360\" y=\"135\" width=\"30\" height=\"30\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"170\" y=\"200\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Espoir (2 sur 6)</text><circle cx=\"185\" cy=\"230\" r=\"15\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"223\" cy=\"230\" r=\"15\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"261\" cy=\"230\" r=\"15\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"299\" cy=\"230\" r=\"15\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"337\" cy=\"230\" r=\"15\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"375\" cy=\"230\" r=\"15\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"185\" cy=\"230\" r=\"14\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"185\" cy=\"230\" r=\"5.6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"223\" cy=\"230\" r=\"14\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"223\" cy=\"230\" r=\"5.6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><text x=\"80\" y=\"245\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Niveau 1</text></svg>",
+          "alt": "Les valeurs de départ d'une gardienne : Esquive 9, 7 PV, 6 Stress, 2 Espoir",
+          "description": "À gauche, l'Esquive : 9, selon la classe. Au-dessous : niveau 1. À droite, trois rangées de cases vides : 7 Points de vie, 6 Stress, et 6 cases d'Espoir dont 2 occupées par un jeton.",
+          "legende": "Les valeurs de départ d'une gardienne, avant le choix de l'armure"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des cases à cocher\n\nPoints de vie et Stress sont des **cases vides** au départ. On **coche** une case quand on est blessé ou éprouvé, et on l'**efface** en se reposant ou en se soignant.\n\n- Quand tu coches ton **dernier Point de vie**, ton personnage tombe : tu fais un **acte de mort**.\n- Quand tu coches ton **dernier Stress**, tu deviens **Vulnérable** : tous les jets contre toi ont l'avantage.\n\nLe parcours sur le combat détaille tout cela. Pour l'instant, note simplement les valeurs."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Au niveau 1 : **Esquive et PV selon la classe, 6 Stress, 2 Espoir.** Les cases de PV et de Stress commencent vides."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "b02613d3-dc2b-4bdb-948c-f8c3b9f964dc",
+      "slug": "dh-armes-et-armure",
+      "titre": "L'équipement : armes, armure et paquetage",
+      "resume": "Choisir ses armes et son armure de départ, calculer ses dégâts avec la Compétence et ses seuils de dégâts avec le niveau.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-esquive-pv-stress"
+      ],
+      "objectifs": [
+        "Choisir ses armes de départ",
+        "Calculer un jet de dégâts avec la Compétence",
+        "Calculer ses seuils de dégâts et sa Valeur d'armure",
+        "Lister le paquetage de départ"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Les armes\n\nTu choisis dans la liste des armes de **rang 1** :\n\n- soit **une arme principale à deux mains** (une grande hache, un arc long) ;\n- soit **une arme principale à une main et une arme secondaire** (une épée et un bouclier, une rapière et une dague).\n\nChaque arme indique :\n\n- un **trait** : celui de tes jets d'attaque ;\n- une **portée** : Mêlée, Très courte, Courte, Longue ou Très longue ;\n- des **dégâts**, par exemple **d10+3**, et leur type : **physiques** ou **magiques**. Seuls les personnages qui ont un trait d'incantation peuvent manier une arme magique ;\n- parfois une **particularité** : +1 aux attaques, −1 à l'Esquive…\n\nTa **Compétence** (*Proficiency*) vaut **1** au départ. Elle dit **combien de dés** de dégâts tu lances. Avec une Compétence de 1 et une arme d10+3, tu infliges **1d10+3**. Plus tard, avec une Compétence de 2 : **2d10+3**. Le bonus fixe ne change pas."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 300\"><rect x=\"10\" y=\"10\" width=\"300\" height=\"120\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"160\" y=\"42\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Hache à deux mains</text><text x=\"160\" y=\"74\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Force · Mêlée</text><text x=\"160\" y=\"106\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">d10+3 physiques</text><text x=\"330\" y=\"55\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Compétence 1</text><text x=\"330\" y=\"85\" font-size=\"22\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">→ 1d10+3</text><rect x=\"10\" y=\"160\" width=\"300\" height=\"120\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"160\" y=\"192\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Cotte de mailles</text><text x=\"160\" y=\"224\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Seuils de base 7 / 15</text><text x=\"160\" y=\"256\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Valeur 4 · Esquive −1</text><text x=\"330\" y=\"205\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">+ niveau 1</text><text x=\"330\" y=\"235\" font-size=\"22\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">→ seuils 8 / 16</text><path d=\"M331 251L359 251L359 265Q359 276.2 345 281.8Q331 276.2 331 265Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M371 251L399 251L399 265Q399 276.2 385 281.8Q371 276.2 371 265Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M411 251L439 251L439 265Q439 276.2 425 281.8Q411 276.2 411 265Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M451 251L479 251L479 265Q479 276.2 465 281.8Q451 276.2 451 265Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/></svg>",
+          "alt": "Calcul des dégâts d'une hache et des seuils d'une cotte de mailles",
+          "description": "En haut, une carte d'arme : hache à deux mains, Force, Mêlée, d10+3 physiques. Avec une Compétence de 1, cela donne 1d10+3. En bas, une carte d'armure : cotte de mailles, seuils de base 7 et 15, Valeur 4, Esquive −1. En ajoutant le niveau 1, les seuils deviennent 8 et 16. Quatre petits boucliers représentent les quatre emplacements d'armure.",
+          "legende": "Compétence pour les dégâts, niveau pour les seuils"
+        },
+        {
+          "type": "texte",
+          "markdown": "## L'armure\n\nTu choisis une armure de rang 1. Elle indique :\n\n- ses **seuils de base**, deux nombres comme **7 / 15** : ajoute ton niveau à chacun pour obtenir tes **seuils de dégâts** (Majeur et Grave). Ils servent à mesurer la gravité des blessures ;\n- sa **Valeur d'armure** : le nombre de petits boucliers, les **emplacements d'armure**, que tu pourras cocher pour réduire une blessure ;\n- parfois une contrepartie : une armure lourde réduit l'Esquive.\n\nQuelques armures de rang 1 : la **gambison** (5 / 11, Valeur 3, +1 à l'Esquive), l'**armure de cuir** (6 / 13, Valeur 3), la **cotte de mailles** (7 / 15, Valeur 4, −1 à l'Esquive), le **harnois** (8 / 17, Valeur 4, −2 à l'Esquive et −1 en Agilité)."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le paquetage\n\nAjoute à ton inventaire :\n\n- une torche, une corde d'une quinzaine de mètres, des provisions de base et **une poignée d'or** ;\n- **une potion** au choix : *de soin mineure* (efface 1d4 PV) ou *d'endurance mineure* (efface 1d4 Stress) ;\n- un **objet de classe**, proposé par ta classe ;\n- et ce que le MJ accepte en plus.\n\nL'or se compte en **poignées**, en **sacs** (dix poignées) et en **coffres** (dix sacs). Pas de pièces à compter une à une."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Une armure lourde protège mieux des blessures, mais tu seras touché plus souvent. Une armure légère fait l'inverse. Les deux se valent : choisis selon ton personnage."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "f7ea090f-c102-451e-93e7-f659fb770826",
+      "slug": "dh-les-experiences",
+      "titre": "Créer ses Expériences",
+      "resume": "Inventer les deux Expériences de son personnage : des savoir-faire précis qui donnent +2 aux jets quand on dépense de l'Espoir.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 9,
+      "prerequis": [
+        "dh-repartir-les-traits"
+      ],
+      "objectifs": [
+        "Définir une Expérience",
+        "Écrire une Expérience ni trop large ni trop puissante",
+        "Utiliser une Expérience en jeu"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Des savoir-faire personnels\n\nUne **Expérience** est un mot ou une courte phrase qui résume ce que ton personnage a appris dans sa vie : un métier, un trait de caractère, une spécialité.\n\n- Tu en crées **deux** à la création, à **+2** chacune.\n- En jeu, quand une Expérience colle à l'action, dépense **1 Espoir** pour ajouter son bonus à un jet d'action **ou de réaction**.\n- Tu en gagneras d'autres aux niveaux 2, 5 et 8.\n\nIl n'y a **pas de liste imposée** : c'est toi qui les inventes."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 240\"><rect x=\"10\" y=\"10\" width=\"185\" height=\"220\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"102\" y=\"45\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Trop large</text><text x=\"102\" y=\"75\" font-size=\"26\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">✗</text><text x=\"102\" y=\"120\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Chanceux</text><text x=\"102\" y=\"154\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Doué en tout</text><rect x=\"205\" y=\"10\" width=\"185\" height=\"220\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"297\" y=\"45\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Un pouvoir</text><text x=\"297\" y=\"75\" font-size=\"26\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">✗</text><text x=\"297\" y=\"120\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Invulnérable</text><text x=\"297\" y=\"154\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Vol supersonique</text><rect x=\"400\" y=\"10\" width=\"185\" height=\"220\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"492\" y=\"45\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Juste</text><text x=\"492\" y=\"75\" font-size=\"26\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">✓</text><text x=\"492\" y=\"120\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Forgeronne</text><text x=\"492\" y=\"154\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Œil de tireur</text><text x=\"492\" y=\"188\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Je ne recule jamais</text></svg>",
+          "alt": "Exemples d'Expériences refusées et acceptées",
+          "description": "Trois colonnes. Trop large, refusé : Chanceux, Doué en tout. Un pouvoir, refusé : Invulnérable, Vol supersonique. Juste, accepté : Forgeronne, Œil de tireur, Je ne recule jamais.",
+          "legende": "Une bonne Expérience est précise et ne donne aucun pouvoir"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Deux limites\n\n- **Pas trop large.** « Chanceux » ou « Doué en tout » s'appliqueraient à n'importe quel jet. Une Expérience doit avoir un domaine clair.\n- **Pas de pouvoir.** « Invulnérable » ou « Vol supersonique » donneraient au personnage une capacité qu'il n'a pas. Une Expérience aide à réussir ce qu'il sait déjà faire."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Des idées\n\nLe livre propose cinq familles :\n\n- **un passé** : *Ancienne soldate*, *Garde du corps*, *Cuisinier de la cour royale*, *Contrebandière* ;\n- **un caractère** : *Charmeur*, *Têtu comme une mule*, *Loup solitaire*, *Observatrice* ;\n- **une spécialité** : *Cartographe*, *Guérisseuse*, *Maître du déguisement*, *Navigatrice* ;\n- **un savoir-faire** : *Langue d'argent*, *Mains rapides*, *Pistage*, *Mémoire photographique* ;\n- **une devise** : *Je ne laisse personne derrière*, *Le spectacle doit continuer*, *Attrape-moi si tu peux*.\n\nLes devises sont amusantes : elles disent dans quelles situations le personnage se dépasse."
+        },
+        {
+          "type": "texte",
+          "markdown": "## En jeu\n\nYsolde a *Je ne recule jamais +2*. Un troll charge le groupe ; elle se plante devant lui pour l'arrêter. La joueuse dépense 1 Espoir et ajoute +2 à son jet de Force.\n\nLe MJ peut refuser une Expérience qui ne colle pas vraiment : *Forgeronne* aide à juger une arme, pas à convaincre un juge."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Choisis des Expériences **qui te donnent envie de jouer**. Une devise ou un passé mystérieux raconte quelque chose sur ton personnage, et le MJ pourra s'en servir dans l'histoire."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "ff740060-0de8-47ce-bea3-721f9754b8b3",
+      "slug": "dh-histoire-et-liens",
+      "titre": "L'histoire et les liens entre personnages",
+      "resume": "Donner un passé à son personnage avec les questions de sa classe, puis créer avec les autres joueurs les liens qui soudent le groupe.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 9,
+      "prerequis": [
+        "dh-les-experiences"
+      ],
+      "objectifs": [
+        "Répondre aux questions d'histoire de sa classe",
+        "Proposer et accepter des liens entre personnages",
+        "Laisser une part de mystère dans son passé"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## L'histoire\n\nChaque classe propose des **questions d'histoire** sur le passé du personnage. Par exemple : « Qui t'a appris à te battre, et pourquoi ne te parle-t-il plus ? »\n\n- Réponds à celles qui t'inspirent, modifie ou remplace les autres.\n- Ces réponses n'ont **aucun effet mécanique**, mais elles guident le MJ : il préparera des scènes autour d'elles.\n- Tu peux aussi laisser des zones d'ombre, et découvrir ton passé en jouant."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les liens\n\nLes **liens** décrivent les relations entre les personnages joueurs. On les crée ensemble, en dernière étape :\n\n1. **Faites un tour de table** : chacun présente son personnage (nom, pronoms, apparence, Expériences, réponses aux questions d'histoire).\n2. **Discutez** des relations possibles. Chaque classe propose des questions de liens, comme « Qu'est-ce que je t'ai confié que personne d'autre ne sait ? ».\n3. **Propose au moins un lien** avec chaque autre personnage.\n4. **Accepte** ceux qui te plaisent, **refuse** les autres, sans avoir à te justifier."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 330\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><circle cx=\"100\" cy=\"70\" r=\"40\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"100\" y=\"84\" font-size=\"38\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Y</text><circle cx=\"500\" cy=\"70\" r=\"40\" fill=\"peche\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"500\" y=\"84\" font-size=\"38\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">P</text><circle cx=\"300\" cy=\"270\" r=\"40\" fill=\"menthe\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"300\" y=\"284\" font-size=\"38\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">M</text><line x1=\"150\" y1=\"70\" x2=\"440\" y2=\"70\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"300\" y=\"55\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-style=\"italic\">« Je te dois la vie »</text><line x1=\"470\" y1=\"115\" x2=\"335\" y2=\"225\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"470\" y=\"190\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-style=\"italic\">« Elle connaît</text><text x=\"470\" y=\"214\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-style=\"italic\">mon secret »</text><line x1=\"265\" y1=\"225\" x2=\"130\" y2=\"115\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"115\" y=\"190\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-style=\"italic\">« Mon ancienne</text><text x=\"115\" y=\"214\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-style=\"italic\">élève »</text></svg>",
+          "alt": "Trois personnages reliés par des flèches qui décrivent leurs liens",
+          "description": "Trois pions : Y (Ysolde), P (Pell) et M (Maëlis). De Ysolde vers Pell : « Je te dois la vie ». De Pell vers Maëlis : « Elle connaît mon secret ». De Maëlis vers Ysolde : « Mon ancienne élève ».",
+          "legende": "Un lien par personnage suffit à souder le groupe"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\n- Ysolde propose à Pell : « Tu m'as sortie d'un éboulement, et je te dois la vie. » Le joueur de Pell accepte.\n- Pell propose à Maëlis : « Tu connais mon vrai nom, et tu l'as gardé pour toi. » La joueuse accepte.\n- Maëlis propose à Ysolde : « Je t'ai appris à lire. » La joueuse d'Ysolde préfère autre chose : « Tu m'as appris à chanter, et je chante encore faux. » Maëlis accepte.\n\nLe groupe sait déjà pourquoi ces trois-là voyagent ensemble."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Tous les personnages n'ont pas besoin d'un lien entre eux. Les relations peuvent aussi naître en jouant. Mais un ou deux liens forts rendent les premières séances bien plus vivantes."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "58378149-e073-48be-875f-0fe41b2a8cc1",
+      "slug": "dh-exemple-creer-ysolde",
+      "titre": "Exemple complet : Ysolde, gardienne naine",
+      "resume": "Suivre la création complète d'un personnage, étape par étape, de la classe aux liens, et lire sa fiche terminée.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 14,
+      "prerequis": [
+        "dh-histoire-et-liens",
+        "dh-armes-et-armure"
+      ],
+      "objectifs": [
+        "Enchaîner les neuf étapes de la création",
+        "Calculer l'Esquive et les seuils avec l'armure",
+        "Lire une fiche de personnage complète"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## L'idée de départ\n\nCamille veut jouer une **protectrice**, solide et têtue, qui a grandi sous la montagne et en est sortie pour la première fois. Suivons ses choix."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 1. Classe et sous-classe\n\nElle prend la **classe Gardien** : domaines **Lame** et **Valeur**, **Esquive 9**, **7 Points de vie**. Pour la sous-classe, elle choisit le **gardien robuste**, qui encaisse les coups physiques, et prend sa carte de Fondation.\n\n## 2. Héritage\n\nAscendance : **naine**, pour sa robustesse. Communauté : **originaire des souterrains**. Son héritage : « naine originaire des souterrains ».\n\n## 3. Traits\n\nSa hache utilise la Force : **Force +2**. Puis **Instinct +1** et **Présence +1**, **Agilité 0** et **Savoir 0**, et **Finesse −1** : de gros doigts, peu faits pour les serrures."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 4. Valeurs de départ\n\nNiveau 1, Esquive 9, 7 PV, 6 Stress, 2 Espoir.\n\n## 5. Équipement\n\n- Arme : une **hache à deux mains** (*Battleaxe*) : Force, Mêlée, d10+3 physiques. Avec une Compétence de 1 : **1d10+3**.\n- Armure : une **cotte de mailles** : seuils de base 7 / 15, Valeur 4, −1 à l'Esquive. Ses seuils deviennent **8 / 16** (+1 pour le niveau 1). Son Esquive passe de 9 à **8**. Elle a **4 emplacements d'armure**.\n- Paquetage : torche, corde, provisions, une poignée d'or, une potion de soin mineure, et l'objet de classe proposé par le gardien."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 6. Histoire\n\nElle répond à deux questions de sa classe. Ysolde a quitté sa cité souterraine après l'effondrement d'une galerie, dont elle s'estime responsable. Elle a juré de ne plus jamais laisser mourir quelqu'un qu'elle protège.\n\n## 7. Expériences\n\n- *Forgeronne des profondeurs* +2 : elle a travaillé à la forge de sa cité.\n- *Je ne recule jamais* +2 : sa devise depuis l'accident.\n\n## 8. Cartes de domaine\n\nElle prend une carte de niveau 1 dans le domaine **Lame**, et une dans le domaine **Valeur**.\n\n## 9. Liens\n\nAvec Pell : « Tu m'as sortie d'un éboulement, et je te dois la vie. » Avec Maëlis : « Tu m'as appris à chanter, et je chante encore faux. »"
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 480\"><rect x=\"5\" y=\"5\" width=\"590\" height=\"470\" rx=\"14\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"300\" y=\"45\" font-size=\"26\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Ysolde Pierrefort</text><text x=\"300\" y=\"75\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Gardienne · Naine originaire des souterrains</text><text x=\"300\" y=\"100\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Domaines : Lame et Valeur · Niveau 1</text><rect x=\"30\" y=\"120\" width=\"80\" height=\"70\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"70\" y=\"147\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Agi</text><text x=\"70\" y=\"178\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><rect x=\"122\" y=\"120\" width=\"80\" height=\"70\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"162\" y=\"147\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">For</text><text x=\"162\" y=\"178\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+2</text><rect x=\"214\" y=\"120\" width=\"80\" height=\"70\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"254\" y=\"147\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Fin</text><text x=\"254\" y=\"178\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−1</text><rect x=\"306\" y=\"120\" width=\"80\" height=\"70\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"346\" y=\"147\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Ins</text><text x=\"346\" y=\"178\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+1</text><rect x=\"398\" y=\"120\" width=\"80\" height=\"70\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"438\" y=\"147\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Pré</text><text x=\"438\" y=\"178\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+1</text><rect x=\"490\" y=\"120\" width=\"80\" height=\"70\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"530\" y=\"147\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Sav</text><text x=\"530\" y=\"178\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><text x=\"30\" y=\"230\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Esquive 8</text><text x=\"30\" y=\"262\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Seuils 8 / 16</text><text x=\"30\" y=\"294\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Compétence 1</text><text x=\"250\" y=\"230\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">PV</text><rect x=\"330\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"362\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"394\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"426\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"458\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"490\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"522\" y=\"211\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"250\" y=\"262\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Stress</text><rect x=\"330\" y=\"243\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"362\" y=\"243\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"394\" y=\"243\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"426\" y=\"243\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"458\" y=\"243\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><rect x=\"490\" y=\"243\" width=\"26\" height=\"26\" rx=\"4\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"250\" y=\"294\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Armure</text><path d=\"M331 272L355 272L355 284Q355 293.6 343 298.4Q331 293.6 331 284Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M363 272L387 272L387 284Q387 293.6 375 298.4Q363 293.6 363 284Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M395 272L419 272L419 284Q419 293.6 407 298.4Q395 293.6 395 284Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M427 272L451 272L451 284Q451 293.6 439 298.4Q427 293.6 427 284Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"30\" y=\"340\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Hache à deux mains : Force, Mêlée, 1d10+3 phy</text><text x=\"30\" y=\"375\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Expériences : Forgeronne des profondeurs +2,</text><text x=\"30\" y=\"401\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Je ne recule jamais +2</text><text x=\"30\" y=\"440\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Espoir</text><circle cx=\"123\" cy=\"434\" r=\"13\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"155\" cy=\"434\" r=\"13\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"187\" cy=\"434\" r=\"13\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"219\" cy=\"434\" r=\"13\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"251\" cy=\"434\" r=\"13\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"283\" cy=\"434\" r=\"13\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"123\" cy=\"434\" r=\"12\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"123\" cy=\"434\" r=\"4.8\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"155\" cy=\"434\" r=\"12\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"155\" cy=\"434\" r=\"4.8\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/></svg>",
+          "alt": "La fiche résumée d'Ysolde Pierrefort, gardienne naine de niveau 1",
+          "description": "Ysolde Pierrefort, gardienne, naine originaire des souterrains, domaines Lame et Valeur, niveau 1. Traits : Agilité 0, Force +2, Finesse −1, Instinct +1, Présence +1, Savoir 0. Esquive 8, seuils 8 et 16, Compétence 1. 7 cases de PV et 6 de Stress, vides. 4 emplacements d'armure. Arme : hache à deux mains, Force, Mêlée, 1d10+3 physiques. Expériences : Forgeronne des profondeurs +2 et Je ne recule jamais +2. Espoir : 2 sur 6.",
+          "legende": "La fiche d'Ysolde, prête à jouer"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Deux calculs à ne pas oublier : **l'armure modifie l'Esquive** (ici −1), et **les seuils de l'armure augmentent du niveau** (ici +1)."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    }
+  ]
+}

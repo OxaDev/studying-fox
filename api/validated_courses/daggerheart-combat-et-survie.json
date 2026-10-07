@@ -1,0 +1,576 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 4,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-07"
+  },
+  "parcours": {
+    "id": "ad4178ee-b97e-4021-a15e-d6bdc25331c9",
+    "slug": "daggerheart-combat-et-survie",
+    "titre": "Daggerheart : combat, blessures et repos",
+    "description": "Attaquer, encaisser et survivre : jets d'attaque et dégâts, Esquive, seuils et Points de vie, armure, Stress, portées, états, actes de mort, repos et montée de niveau.",
+    "niveau": "debutant",
+    "theme": "daggerheart",
+    "lecons": [
+      "dh-attaquer",
+      "dh-esquive-et-attaques-adverses",
+      "dh-seuils-et-points-de-vie",
+      "dh-l-armure",
+      "dh-le-stress",
+      "dh-portees-et-deplacements",
+      "dh-les-etats",
+      "dh-les-actes-de-mort",
+      "dh-repos-court-et-long",
+      "dh-monter-de-niveau"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "68621990-e417-4d92-b7bc-b85ddedf1c49",
+      "slug": "dh-attaquer",
+      "titre": "Attaquer et infliger des dégâts",
+      "resume": "Faire un jet d'attaque contre un adversaire, puis lancer les dégâts avec sa Compétence, y compris sur un succès critique.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-armes-et-armure"
+      ],
+      "objectifs": [
+        "Faire un jet d'attaque contre la Difficulté d'un adversaire",
+        "Lancer des dégâts avec sa Compétence",
+        "Calculer des dégâts critiques",
+        "Distinguer dégâts physiques et magiques"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le jet d'attaque\n\nUne attaque est un **jet d'action** qui vise à blesser. Elle suit les mêmes règles que les autres jets, avec trois précisions :\n\n- le **trait** est celui de l'arme ou du sort (Force pour la hache d'Ysolde) ;\n- la **Difficulté** est celle de l'adversaire, écrite sur sa fiche ;\n- un succès donne droit à un **jet de dégâts**.\n\nL'Espoir et la Peur fonctionnent comme d'habitude. Un succès avec Peur touche l'adversaire, mais le MJ gagne 1 Peur et prend la main : l'ennemi va riposter."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 280\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"10\" y=\"20\" width=\"170\" height=\"90\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"95\" y=\"59.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1. Jet d'attaque</text><text x=\"95\" y=\"84.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">trait de l'arme</text><line x1=\"185\" y1=\"65\" x2=\"215\" y2=\"65\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"220\" y=\"20\" width=\"170\" height=\"90\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"305\" y=\"59.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2. Comparer</text><text x=\"305\" y=\"84.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Difficulté</text><line x1=\"395\" y1=\"65\" x2=\"425\" y2=\"65\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"430\" y=\"20\" width=\"160\" height=\"90\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"510\" y=\"59.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">3. Dégâts</text><text x=\"510\" y=\"84.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">si réussi</text><polygon points=\"50,166 70,172.5 82.3,189.5 82.3,210.5 70,227.5 50,234 30,227.5 17.7,210.5 17.7,189.5 30,172.5\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"50\" y1=\"178.9\" x2=\"50\" y2=\"166\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"70\" y1=\"193.5\" x2=\"82.3\" y2=\"189.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"62.4\" y1=\"217.1\" x2=\"70\" y2=\"227.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"37.6\" y1=\"217.1\" x2=\"30\" y2=\"227.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"30\" y1=\"193.5\" x2=\"17.7\" y2=\"189.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"50,178.9 70,193.5 62.4,217.1 37.6,217.1 30,193.5\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"50\" y=\"206.8\" font-size=\"19\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">7</text><polygon points=\"130,166 150,172.5 162.3,189.5 162.3,210.5 150,227.5 130,234 110,227.5 97.7,210.5 97.7,189.5 110,172.5\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"130\" y1=\"178.9\" x2=\"130\" y2=\"166\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"150\" y1=\"193.5\" x2=\"162.3\" y2=\"189.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"142.4\" y1=\"217.1\" x2=\"150\" y2=\"227.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"117.6\" y1=\"217.1\" x2=\"110\" y2=\"227.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"110\" y1=\"193.5\" x2=\"97.7\" y2=\"189.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"130,178.9 150,193.5 142.4,217.1 117.6,217.1 110,193.5\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"130\" y=\"206.8\" font-size=\"19\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">6</text><text x=\"175\" y=\"210\" font-size=\"24\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">+ 2 = 15</text><text x=\"130\" y=\"262\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">≥ 12 : touché</text><rect x=\"390\" y=\"175\" width=\"50\" height=\"50\" rx=\"8\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"415\" y=\"209\" font-size=\"26\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">6</text><text x=\"452\" y=\"210\" font-size=\"24\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">+ 3 = 9</text><text x=\"490\" y=\"262\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">1d10+3</text></svg>",
+          "alt": "Une attaque en trois étapes : jet d'attaque, comparaison, dégâts",
+          "description": "Trois étapes reliées par des flèches : 1. jet d'attaque avec le trait de l'arme, 2. comparaison avec la Difficulté, 3. dégâts si l'attaque réussit. Exemple : dé d'Espoir 7, dé de Peur 6, plus 2 en Force, total 15, supérieur ou égal à 12 : touché. Puis un d10 qui donne 6, plus 3 : 9 dégâts, pour une arme 1d10+3.",
+          "legende": "Toucher, puis lancer les dégâts"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le jet de dégâts\n\nLes dégâts de ton arme s'écrivent comme **d10+3**. Lance autant de dés que ta **Compétence**, puis ajoute le bonus fixe :\n\n- Compétence 1 : **1d10+3** ;\n- Compétence 2 : **2d10+3** ;\n- Compétence 3 : **3d10+3**.\n\nLa Compétence multiplie les dés, jamais le bonus.\n\nLes dégâts sont **physiques** (armes ordinaires, poings) ou **magiques** (sorts, armes enchantées). Certains adversaires résistent à l'un des deux : ils divisent ces dégâts par deux.\n\nSans arme, une attaque utilise la Force ou la Finesse et inflige **[Compétence]d4** dégâts physiques."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nYsolde (Force +2, hache 1d10+3) attaque un brigand de Difficulté 12. Camille lance : 7 sur le dé d'Espoir, 6 sur le dé de Peur. 7 + 6 + 2 = **15 avec Espoir** : touché, et elle gagne 1 Espoir.\n\nElle lance les dégâts : 6 sur le d10, plus 3 = **9 dégâts physiques**. Le MJ les compare aux seuils du brigand (leçon suivante sur les seuils)."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les dégâts critiques\n\nSur un **succès critique** (deux dés de dualité identiques), lance les dégâts normalement, puis **ajoute le maximum possible des dés**.\n\nPour 1d10+3 : lance 1d10+3, puis ajoute 10. Pour 2d8+1 : lance 2d8+1, puis ajoute 16."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Plusieurs cibles, plusieurs sources\n\n- Un sort qui touche **plusieurs cibles** : un seul jet d'attaque et un seul jet de dégâts, appliqués à chaque cible séparément.\n- Des dégâts de **plusieurs sources en même temps** (ton arme plus un bonus de capacité) : additionne tout **avant** de comparer aux seuils."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Attaque** : 2d12 + trait de l'arme contre la Difficulté de l'adversaire. **Dégâts** : autant de dés que ta Compétence, plus le bonus fixe. **Critique** : ajoute le maximum des dés."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "c0b68fb8-8ca0-4d42-b5ee-f00211c7b8c5",
+      "slug": "dh-esquive-et-attaques-adverses",
+      "titre": "L'Esquive et les attaques des adversaires",
+      "resume": "Comprendre comment les adversaires attaquent : le MJ lance un d20 contre l'Esquive du personnage, sans que le joueur lance de dé.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [
+        "dh-attaquer"
+      ],
+      "objectifs": [
+        "Expliquer comment un adversaire attaque",
+        "Comparer une attaque à l'Esquive",
+        "Reconnaître une attaque critique d'adversaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le MJ lance un d20\n\nLe MJ n'utilise pas les Dés de dualité. Pour faire attaquer un adversaire, il lance **un d20** et ajoute le **modificateur d'attaque** de l'adversaire (noté ATT sur sa fiche).\n\nSi le total **atteint ou dépasse l'Esquive** du personnage visé, l'attaque **touche** : le MJ lance les dégâts indiqués sur la fiche. Sinon, elle rate.\n\nLe joueur ne lance aucun dé : son Esquive joue le rôle de la Difficulté."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 260\"><polygon points=\"90,30 142,60 142,120 90,150 38,120 38,60\" fill=\"illu-rouge\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><polygon points=\"90,54 121.2,108 58.8,108\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><line x1=\"90\" y1=\"54\" x2=\"90\" y2=\"30\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"121.2\" y1=\"108\" x2=\"142\" y2=\"120\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"58.8\" y1=\"108\" x2=\"38\" y2=\"120\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"90\" y=\"102\" font-size=\"30\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">11</text><text x=\"175\" y=\"100\" font-size=\"30\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">+ 2</text><text x=\"260\" y=\"100\" font-size=\"30\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">= 13</text><rect x=\"340\" y=\"40\" width=\"240\" height=\"110\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"460\" y=\"80\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Esquive d'Ysolde</text><text x=\"460\" y=\"125\" font-size=\"36\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">8</text><text x=\"300\" y=\"200\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">13 ≥ 8 : l'attaque touche</text><text x=\"300\" y=\"236\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">Un 20 naturel touche toujours, avec dégâts critiques</text></svg>",
+          "alt": "Un brigand attaque Ysolde : 11 au d20, plus 2, donne 13 contre une Esquive de 8",
+          "description": "Un d20 rouge montre 11. Plus 2, le modificateur d'attaque, égale 13. À droite, l'Esquive d'Ysolde : 8. Conclusion : 13 est supérieur ou égal à 8, l'attaque touche. En dessous : un 20 naturel touche toujours, avec dégâts critiques.",
+          "legende": "Le d20 du MJ plus le modificateur d'attaque, contre l'Esquive"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les précisions\n\n- **20 naturel** (le d20 montre 20) : l'attaque touche automatiquement, et le MJ ajoute aux dégâts le **maximum des dés**, comme un critique de joueur.\n- **Avantage** pour un adversaire : le MJ lance deux d20 et garde le meilleur. **Désavantage** : il garde le pire.\n- Le MJ peut dépenser **1 Peur** pour ajouter une **Expérience** de l'adversaire à son attaque, si elle convient (*Embusqueur +3* pour une attaque surprise).\n- Une attaque contre **plusieurs cibles** : un seul jet, comparé à l'Esquive de chacune."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Quand l'adversaire attaque-t-il ?\n\nIl n'y a pas de tour fixe. L'adversaire attaque quand le MJ le **met en avant** pendant son tour : après un jet raté ou avec Peur, ou quand le MJ dépense de la Peur pour interrompre. Une attaque d'adversaire est un acte de MJ."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Joueurs, le MJ vous dira souvent « Ça touche ? » en annonçant son total. Répondez avec votre Esquive. Gardez-la bien visible sur votre feuille, avec ses modifications d'armure."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "505d99ad-85fc-47e8-979f-0e3d1be2bf91",
+      "slug": "dh-seuils-et-points-de-vie",
+      "titre": "Les seuils de dégâts et les Points de vie",
+      "resume": "Transformer des dégâts en Points de vie cochés grâce aux seuils Majeur et Grave, et savoir ce qui arrive quand on coche son dernier PV.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-esquive-et-attaques-adverses"
+      ],
+      "objectifs": [
+        "Comparer des dégâts aux seuils Majeur et Grave",
+        "Cocher le bon nombre de Points de vie",
+        "Appliquer la règle optionnelle des dégâts massifs"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Des dégâts aux Points de vie\n\nÀ Daggerheart, on ne retire pas les dégâts un par un de ses Points de vie. On mesure la **gravité** du coup, grâce à deux **seuils de dégâts** notés sur la feuille : **Majeur** et **Grave**.\n\n- Dégâts **inférieurs au seuil Majeur** : blessure **mineure**, coche **1 PV**.\n- Dégâts **supérieurs ou égaux au seuil Majeur** : blessure **majeure**, coche **2 PV**.\n- Dégâts **supérieurs ou égaux au seuil Grave** : blessure **grave**, coche **3 PV**.\n- Dégâts réduits à **0 ou moins** : rien à cocher.\n\nRappel : tes seuils sont ceux de ton armure, plus ton niveau."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 235\"><rect x=\"20\" y=\"60\" width=\"180\" height=\"60\" rx=\"0\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"200\" y=\"60\" width=\"200\" height=\"60\" rx=\"0\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><rect x=\"400\" y=\"60\" width=\"180\" height=\"60\" rx=\"0\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"110\" y=\"98\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Mineurs : 1 PV</text><text x=\"300\" y=\"98\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Majeurs : 2 PV</text><text x=\"490\" y=\"98\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Graves : 3 PV</text><line x1=\"200\" y1=\"40\" x2=\"200\" y2=\"140\" stroke=\"texte\" stroke-width=\"4\" stroke-linecap=\"round\"/><text x=\"200\" y=\"30\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">8</text><line x1=\"400\" y1=\"40\" x2=\"400\" y2=\"140\" stroke=\"texte\" stroke-width=\"4\" stroke-linecap=\"round\"/><text x=\"400\" y=\"30\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">16</text><text x=\"110\" y=\"170\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">1 à 7</text><text x=\"300\" y=\"170\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">8 à 15</text><text x=\"490\" y=\"170\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">16 et plus</text><text x=\"300\" y=\"215\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">Seuils d'Ysolde : Majeur 8, Grave 16</text></svg>",
+          "alt": "Une règle graduée en trois zones : mineurs, majeurs et graves",
+          "description": "Une barre en trois zones. De 1 à 7 : dégâts mineurs, 1 PV. Le seuil Majeur est à 8 : de 8 à 15, dégâts majeurs, 2 PV. Le seuil Grave est à 16 : 16 et plus, dégâts graves, 3 PV. Ce sont les seuils d'Ysolde.",
+          "legende": "Les seuils découpent les dégâts en trois niveaux de gravité"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nYsolde a des seuils de **8** et **16**, et 7 Points de vie.\n\n- Un rat géant la mord pour **4** dégâts : sous 8, elle coche **1 PV**.\n- Un brigand la frappe pour **11** : entre 8 et 15, elle coche **2 PV**.\n- Un ogre l'écrase pour **19** : 16 ou plus, elle coche **3 PV**.\n\nUn même coup peut donc valoir 1 PV pour un gardien bien protégé et 3 PV pour un magicien en robe."
+        },
+        {
+          "type": "texte",
+          "markdown": "## À toi de calculer\n\nCette fonction applique la règle. Lance-la pour voir combien de PV coche Ysolde selon les dégâts reçus."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "def pv_a_cocher(degats, majeur, grave):\n    if degats <= 0:\n        return 0\n    if degats >= grave:\n        return 3\n    if degats >= majeur:\n        return 2\n    return 1\n\n\nfor degats in [0, 4, 8, 15, 16, 22]:\n    print(degats, \"dégâts :\", pv_a_cocher(degats, 8, 16), \"PV\")\n",
+          "executable": true,
+          "sortie_attendue": "0 dégâts : 0 PV\n4 dégâts : 1 PV\n8 dégâts : 2 PV\n15 dégâts : 2 PV\n16 dégâts : 3 PV\n22 dégâts : 3 PV\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Quand on coche le dernier PV\n\nUn personnage qui coche son **dernier Point de vie tombe**. Pour un personnage joueur, son joueur choisit alors un **acte de mort** (voir la leçon dédiée). Un adversaire qui coche son dernier PV est **vaincu** : mort, assommé, en fuite ou ligoté, selon ce qui a du sens.\n\nLes adversaires utilisent exactement la même règle : leurs seuils et leurs PV sont sur leur fiche."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "**Règle optionnelle, les dégâts massifs** : si un personnage subit des dégâts au moins égaux au **double de son seuil Grave**, il coche **4 PV** au lieu de 3."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Sous Majeur : 1 PV. Majeur : 2 PV. Grave : 3 PV.** On compare toujours le total des dégâts d'une même attaque."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "355a440d-e01e-456f-961c-ee5db5069081",
+      "slug": "dh-l-armure",
+      "titre": "L'armure et ses emplacements",
+      "resume": "Utiliser ses emplacements d'armure pour réduire la gravité d'une blessure, et connaître les dégâts directs et les résistances.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 9,
+      "prerequis": [
+        "dh-seuils-et-points-de-vie"
+      ],
+      "objectifs": [
+        "Cocher un emplacement d'armure pour réduire une blessure",
+        "Reconnaître les dégâts directs",
+        "Appliquer une résistance avant l'armure"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Encaisser grâce à l'armure\n\nTon armure a une **Valeur d'armure** : c'est le nombre de tes **emplacements d'armure**, les petits boucliers de ta feuille.\n\nQuand tu subis des dégâts, tu peux **cocher un emplacement d'armure** pour **réduire la gravité d'un cran** :\n\n- grave → majeure ;\n- majeure → mineure ;\n- mineure → aucune blessure.\n\nUn seul emplacement par attaque, sauf si une capacité dit le contraire."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 240\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"20\" y=\"30\" width=\"160\" height=\"80\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"100\" y=\"64.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">19 dégâts</text><text x=\"100\" y=\"89.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Graves : 3 PV</text><line x1=\"185\" y1=\"70\" x2=\"265\" y2=\"70\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><path d=\"M210 25L240 25L240 40Q240 52 225 58Q210 52 210 40Z\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"216.6\" y1=\"32.5\" x2=\"233.4\" y2=\"49\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"233.4\" y1=\"32.5\" x2=\"216.6\" y2=\"49\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"270\" y=\"30\" width=\"160\" height=\"80\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"350\" y=\"64.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Majeurs</text><text x=\"350\" y=\"89.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">2 PV</text><text x=\"450\" y=\"60\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Un emplacement</text><text x=\"450\" y=\"86\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">d'armure coché</text><text x=\"300\" y=\"160\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Armure : 1 emplacement coché sur 4</text><path d=\"M205 185L235 185L235 200Q235 212 220 218Q205 212 205 200Z\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"211.6\" y1=\"192.5\" x2=\"228.4\" y2=\"209\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"228.4\" y1=\"192.5\" x2=\"211.6\" y2=\"209\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M250 185L280 185L280 200Q280 212 265 218Q250 212 250 200Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M295 185L325 185L325 200Q325 212 310 218Q295 212 295 200Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><path d=\"M340 185L370 185L370 200Q370 212 355 218Q340 212 340 200Z\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/></svg>",
+          "alt": "Un emplacement d'armure transforme une blessure grave en blessure majeure",
+          "description": "19 dégâts, une blessure grave qui coûterait 3 PV. Un bouclier coché la réduit d'un cran : blessure majeure, 2 PV. En dessous, l'armure d'Ysolde : 1 emplacement coché sur 4.",
+          "legende": "Cocher un emplacement réduit la blessure d'un cran"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nL'ogre frappe Ysolde pour **19** : une blessure grave, 3 PV. Camille coche un emplacement d'armure : la blessure devient **majeure**, Ysolde ne coche que **2 PV**. Il lui reste 3 emplacements sur 4.\n\nPlus tard, un rat la mord pour 4 : blessure mineure. Elle coche un emplacement : **aucun PV** perdu."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Quand l'armure ne suffit plus\n\n- Un emplacement coché le **reste** jusqu'à ce que tu le répares, pendant un repos.\n- Quand tous tes emplacements sont cochés, l'armure ne protège plus.\n- Les **dégâts directs** ne peuvent pas être réduits avec l'armure.\n- Une **résistance** à un type de dégâts (physiques ou magiques) **divise les dégâts par deux**, avant de les comparer aux seuils et avant d'utiliser l'armure. Une **immunité** les annule."
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Complète la fonction `avec_armure` : elle reçoit le nombre de PV qu'une blessure ferait cocher (0 à 3), et renvoie ce nombre **après avoir coché un emplacement d'armure** (un cran de moins, jamais sous 0).\n\nLe programme doit afficher `2`, `0` et `0`.",
+          "code": "def avec_armure(pv):\n    # À toi de jouer\n    return pv\n\n\nprint(avec_armure(3))\nprint(avec_armure(1))\nprint(avec_armure(0))\n",
+          "solution": "def avec_armure(pv):\n    return max(pv - 1, 0)\n\n\nprint(avec_armure(3))\nprint(avec_armure(1))\nprint(avec_armure(0))\n",
+          "sortie_attendue": "2\n0\n0\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les emplacements d'armure se réparent pendant les repos. En début d'aventure, n'hésite pas à les utiliser : ils sont faits pour ça."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "d742fdc7-b0db-4f0d-9944-ff4176ecaf69",
+      "slug": "dh-le-stress",
+      "titre": "Le Stress",
+      "resume": "Comprendre le Stress : ce qui en fait cocher, à quoi il sert pour payer des capacités, et ce qui arrive quand toutes les cases sont pleines.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [
+        "dh-l-armure"
+      ],
+      "objectifs": [
+        "Savoir quand cocher du Stress",
+        "Payer une capacité avec du Stress",
+        "Appliquer les effets d'un Stress plein"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## La tension qui monte\n\nLe **Stress** mesure la fatigue, la peur et la pression que ton personnage supporte. Tout le monde commence avec **6 cases**, qu'on peut porter jusqu'à 12 en montant de niveau.\n\nOn coche du Stress :\n\n- pour **payer** certaines capacités (« Coche un Stress pour… ») ;\n- pour **sortir une carte du caveau** hors repos ;\n- quand le MJ l'impose, comme **conséquence** d'un jet (souvent un succès avec Peur : tu réussis, mais ça te coûte) ;\n- à cause d'attaques ou de dangers qui visent l'esprit."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 195\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><text x=\"20\" y=\"35\" font-size=\"22\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Stress : 6 sur 6</text><rect x=\"20\" y=\"50\" width=\"40\" height=\"40\" rx=\"4\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"26\" y1=\"56\" x2=\"54\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"54\" y1=\"56\" x2=\"26\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"70\" y=\"50\" width=\"40\" height=\"40\" rx=\"4\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"76\" y1=\"56\" x2=\"104\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"104\" y1=\"56\" x2=\"76\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"120\" y=\"50\" width=\"40\" height=\"40\" rx=\"4\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"126\" y1=\"56\" x2=\"154\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"154\" y1=\"56\" x2=\"126\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"170\" y=\"50\" width=\"40\" height=\"40\" rx=\"4\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"176\" y1=\"56\" x2=\"204\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"204\" y1=\"56\" x2=\"176\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"220\" y=\"50\" width=\"40\" height=\"40\" rx=\"4\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"226\" y1=\"56\" x2=\"254\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"254\" y1=\"56\" x2=\"226\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"270\" y=\"50\" width=\"40\" height=\"40\" rx=\"4\" fill=\"illu-gris\" stroke=\"illu-noir\" stroke-width=\"2\"/><line x1=\"276\" y1=\"56\" x2=\"304\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"304\" y1=\"56\" x2=\"276\" y2=\"84\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"325\" y1=\"70\" x2=\"385\" y2=\"70\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"395\" y=\"35\" width=\"190\" height=\"70\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"490\" y=\"78\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Vulnérable</text><text x=\"20\" y=\"150\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Encore 1 Stress à cocher ?</text><line x1=\"290\" y1=\"145\" x2=\"385\" y2=\"145\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"395\" y=\"115\" width=\"190\" height=\"60\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"490\" y=\"152\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1 PV à la place</text></svg>",
+          "alt": "Un Stress plein rend Vulnérable, et le Stress en trop se transforme en PV",
+          "description": "Six cases de Stress toutes cochées : le personnage devient Vulnérable. En dessous : s'il doit encore cocher un Stress, il coche 1 PV à la place.",
+          "legende": "Quand le Stress est plein"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Quand tout est coché\n\n- Quand tu coches ta **dernière case** de Stress, tu deviens **Vulnérable** : tous les jets contre toi ont l'avantage. Cela dure jusqu'à ce que tu effaces au moins 1 Stress.\n- Si tu dois cocher du Stress et qu'il ne reste **aucune case**, tu coches **1 PV** à la place.\n- Tu ne peux plus utiliser de capacité qui demande de cocher du Stress."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Effacer du Stress\n\n- Un **repos court** : l'action « Évacuer le stress » efface 1d4 + ton rang.\n- Un **repos long** : l'action correspondante efface tout.\n- Un **succès critique** efface 1 Stress.\n- Une **potion d'endurance mineure** efface 1d4 Stress."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nPell escalade un mur de nuit pendant qu'une patrouille passe : **succès avec Peur**. Le MJ : « Tu es en haut… mais tu as dû rester suspendu par les doigts pendant que les gardes passaient dessous. Coche un Stress. »\n\nPell en est à 6 sur 6 : il devient **Vulnérable**. S'il doit encore cocher un Stress, il cochera un PV."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Le Stress est à la fois **une monnaie** (pour payer des capacités) et **une jauge de danger**. Garde une ou deux cases libres : un personnage Vulnérable devient une cible facile."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "55f37949-19d9-410f-9cb0-6b2a9bebe670",
+      "slug": "dh-portees-et-deplacements",
+      "titre": "Les portées et les déplacements",
+      "resume": "Utiliser les cinq portées du jeu (Mêlée, Très courte, Courte, Longue, Très longue) pour viser, se déplacer et jouer avec ou sans plan.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-attaquer"
+      ],
+      "objectifs": [
+        "Estimer une portée dans la fiction",
+        "Se déplacer pendant une action",
+        "Appliquer la règle du couvert",
+        "Jouer sur un plan avec les portées en cases"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Cinq portées\n\nDaggerheart mesure les distances avec des **portées**, sans compter les mètres :\n\n- **Mêlée** : à portée de main, un mètre ou deux.\n- **Très courte** : assez près pour voir les détails fins, environ 1,5 à 3 mètres.\n- **Courte** : on voit les détails importants, environ 3 à 9 mètres.\n- **Longue** : on distingue peu de détails, environ 9 à 30 mètres.\n- **Très longue** : trop loin pour voir les détails, environ 30 à 90 mètres.\n- Au-delà : **hors de portée**, on ne peut pas viser.\n\nLa portée d'une arme ou d'un sort est un **maximum** : un arc à portée Longue tire aussi à portée Courte."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 620 320\"><circle cx=\"40\" cy=\"165\" r=\"26\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"40\" y=\"174.1\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">P</text><rect x=\"80\" y=\"20\" width=\"95\" height=\"46\" rx=\"8\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"92\" y=\"50\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Mêlée</text><text x=\"185\" y=\"50\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">1 m</text><rect x=\"80\" y=\"80\" width=\"170\" height=\"46\" rx=\"8\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"92\" y=\"110\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Très courte</text><text x=\"260\" y=\"110\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">1,5 à 3 m</text><rect x=\"80\" y=\"140\" width=\"250\" height=\"46\" rx=\"8\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"92\" y=\"170\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Courte</text><text x=\"340\" y=\"170\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">3 à 9 m</text><rect x=\"80\" y=\"200\" width=\"340\" height=\"46\" rx=\"8\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"92\" y=\"230\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Longue</text><text x=\"430\" y=\"230\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">9 à 30 m</text><rect x=\"80\" y=\"260\" width=\"430\" height=\"46\" rx=\"8\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"92\" y=\"290\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Très longue</text><text x=\"520\" y=\"290\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">30 à 90 m</text></svg>",
+          "alt": "Les cinq portées, de la plus courte à la plus longue",
+          "description": "Un pion P à gauche, et cinq barres de plus en plus longues qui partent de lui : Mêlée, environ 1 mètre ; Très courte, 1,5 à 3 mètres ; Courte, 3 à 9 mètres ; Longue, 9 à 30 mètres ; Très longue, 30 à 90 mètres.",
+          "legende": "Les portées, de la Mêlée à la Très longue"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Se déplacer\n\n- **Sous pression**, quand tu fais un jet d'action, tu peux te déplacer **jusqu'à portée Courte** dans le même mouvement : courir vers un ennemi et le frapper, par exemple.\n- Pour aller **plus loin**, ou te déplacer sans faire d'autre jet, réussis un **jet d'Agilité** pour te repositionner sans encombre.\n- Un **adversaire** se déplace jusqu'à portée Courte gratuitement pendant son action, ou jusqu'à portée Très longue s'il ne fait que ça.\n\nHors danger, pas besoin de jet : on va où l'on veut."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Viser\n\n- Pour attaquer à distance, il faut **voir la cible**.\n- Si un obstacle la cache en partie, elle est **à couvert** : l'attaque a un **désavantage**. Si elle est entièrement cachée, on ne peut pas viser.\n- Un effet de **zone** touche les cibles à portée Très courte d'un point, sauf indication contraire."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Avec ou sans plan\n\nOn peut jouer **« dans la tête »**, en décrivant la scène, ou sur un plan avec des figurines. Sur un plan quadrillé (une case pour 1,5 mètre environ), la règle optionnelle des **portées en cases** donne :\n\n- Mêlée : 1 case ;\n- Très courte : 3 cases ;\n- Courte : 6 cases ;\n- Longue : 12 cases ;\n- Très longue : 13 cases et plus.\n\nSans quadrillage, le livre propose des repères simples : la largeur d'une carte à jouer pour Très courte, la longueur d'un crayon pour Courte, la longueur d'une feuille A4 pour Longue."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Dans le doute, le MJ dit à quelle portée se trouve chaque ennemi au début de la scène : « Les deux brigands sont à portée Courte, l'archer sur le toit à portée Longue. »"
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "5d1c716a-f620-493b-9653-cdd397a57662",
+      "slug": "dh-les-etats",
+      "titre": "Les états : Caché, Bloqué, Vulnérable",
+      "resume": "Connaître les trois états standard du jeu, leurs effets, et la façon de se débarrasser d'un état temporaire.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 7,
+      "prerequis": [
+        "dh-le-stress"
+      ],
+      "objectifs": [
+        "Appliquer les effets des états Caché, Bloqué et Vulnérable",
+        "Se libérer d'un état temporaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Trois états standard\n\nUn **état** est un effet qui reste attaché à une créature. Le jeu en a trois de base :\n\n- **Caché** : personne ne te voit et tes ennemis ne savent pas où tu es. Les jets contre toi ont un **désavantage**. Tu n'es plus Caché dès qu'un ennemi arrive là où il peut te voir, que tu entres dans son champ de vision, ou que tu attaques.\n- **Bloqué** : tu ne peux **pas te déplacer**, mais tu peux encore agir depuis ta position : frapper, lancer un sort, parler.\n- **Vulnérable** : tous les jets contre toi ont l'**avantage**. On le devient souvent en cochant son dernier Stress."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 210\"><rect x=\"10\" y=\"10\" width=\"187\" height=\"190\" rx=\"14\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"103\" y=\"50\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Caché</text><ellipse cx=\"103\" cy=\"98\" rx=\"34\" ry=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><circle cx=\"103\" cy=\"98\" r=\"9\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><line x1=\"65\" y1=\"120\" x2=\"141\" y2=\"76\" stroke=\"illu-noir\" stroke-width=\"4\" stroke-linecap=\"round\"/><text x=\"103\" y=\"160\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Les jets contre toi</text><text x=\"103\" y=\"184\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">ont un désavantage</text><rect x=\"207\" y=\"10\" width=\"187\" height=\"190\" rx=\"14\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"50\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Bloqué</text><circle cx=\"300\" cy=\"98\" r=\"22\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"300\" y=\"105.7\" font-size=\"21\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\"></text><path d=\"M 267 98 L 333 98 M 300 65 L 300 131\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"300\" y=\"160\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Immobile,</text><text x=\"300\" y=\"184\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">mais tu peux agir</text><rect x=\"404\" y=\"10\" width=\"187\" height=\"190\" rx=\"14\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"497\" y=\"50\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Vulnérable</text><polygon points=\"497,70 530,128 464,128\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><text x=\"497\" y=\"122\" font-size=\"30\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">!</text><text x=\"497\" y=\"160\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Les jets contre toi</text><text x=\"497\" y=\"184\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">ont l'avantage</text></svg>",
+          "alt": "Les trois états standard et leurs effets",
+          "description": "Trois cartes. Caché, avec un œil barré : les jets contre toi ont un désavantage. Bloqué, avec un pion traversé d'une croix : tu ne peux pas bouger, mais tu peux agir. Vulnérable, avec un triangle d'alerte : les jets contre toi ont l'avantage.",
+          "legende": "Caché, Bloqué et Vulnérable"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Temporaire ou spécial\n\n- Un état **temporaire** peut être retiré par une action. Pour un personnage joueur, c'est en général un jet d'action réussi (un jet de Force pour se dégager d'un filet). Pour un adversaire, le MJ le met en avant et décrit comment il se libère : pas de jet, mais cela lui prend son action.\n- Un état **spécial** ne se retire que d'une façon précise, indiquée par l'effet qui l'a causé.\n\nLe MJ peut aussi dépenser 1 Peur pour mettre fin à un effet temporaire, comme un sort qui retient un adversaire.\n\nUn même état ne s'applique **qu'une fois** à une même cible : être Vulnérable deux fois ne change rien."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nMaëlis lance un sort qui enserre un loup dans des lianes : il est **Bloqué** temporairement. Au tour du MJ, celui-ci met le loup en avant : « Il ronge les lianes et se libère. » Le loup n'attaque pas ce tour-ci."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Caché** : désavantage contre toi. **Bloqué** : immobile, mais actif. **Vulnérable** : avantage contre toi. Certaines capacités créent d'autres états, expliqués dans leur texte."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "cf5d56c1-0e64-4551-8802-24537d4437db",
+      "slug": "dh-les-actes-de-mort",
+      "titre": "Les actes de mort",
+      "resume": "Savoir ce qui arrive quand un personnage coche son dernier Point de vie, et choisir entre les trois actes de mort.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-seuils-et-points-de-vie"
+      ],
+      "objectifs": [
+        "Décrire les trois actes de mort",
+        "Appliquer les cicatrices d'Éviter la mort",
+        "Résoudre un jet de Tout risquer"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le joueur choisit\n\nQuand un personnage joueur coche son **dernier Point de vie**, il tombe, et son joueur doit choisir un **acte de mort** (*death move*). À Daggerheart, un héros ne meurt jamais par hasard : c'est son joueur qui décide de ce qu'il risque."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 320\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"190\" y=\"10\" width=\"220\" height=\"60\" rx=\"12\" fill=\"illu-gris\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"47.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Dernier PV coché</text><line x1=\"300\" y1=\"75\" x2=\"103\" y2=\"105\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"10\" y=\"110\" width=\"187\" height=\"200\" rx=\"14\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"103\" y=\"145\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Baroud</text><text x=\"103\" y=\"172\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">d'honneur</text><text x=\"103\" y=\"220\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Une dernière</text><text x=\"103\" y=\"246\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">action critique,</text><text x=\"103\" y=\"272\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">puis la mort</text><line x1=\"300\" y1=\"75\" x2=\"300\" y2=\"105\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"207\" y=\"110\" width=\"187\" height=\"200\" rx=\"14\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"300\" y=\"145\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Éviter</text><text x=\"300\" y=\"172\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">la mort</text><text x=\"300\" y=\"220\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Inconscient,</text><text x=\"300\" y=\"246\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">risque</text><text x=\"300\" y=\"272\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">de cicatrice</text><line x1=\"300\" y1=\"75\" x2=\"497\" y2=\"105\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"404\" y=\"110\" width=\"187\" height=\"200\" rx=\"14\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"497\" y=\"145\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Tout</text><text x=\"497\" y=\"172\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">risquer</text><text x=\"497\" y=\"220\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Dés de dualité :</text><text x=\"497\" y=\"246\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Espoir : debout</text><text x=\"497\" y=\"272\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Peur : la mort</text></svg>",
+          "alt": "Les trois actes de mort",
+          "description": "Au sommet : dernier PV coché. Trois flèches mènent aux trois choix. Baroud d'honneur : une dernière action critique, puis la mort. Éviter la mort : inconscient, avec un risque de cicatrice. Tout risquer : on lance les Dés de dualité ; avec Espoir le personnage reste debout, avec Peur il meurt.",
+          "legende": "Trois façons d'affronter la mort"
+        },
+        {
+          "type": "texte",
+          "markdown": "## 1. Baroud d'honneur (*Blaze of Glory*)\n\nTon personnage accepte sa mort et part en beauté. Il fait **une dernière action**, qui est un **succès critique automatique** (avec l'accord du MJ). Puis il meurt.\n\nC'est le choix d'un sacrifice héroïque : retenir la porte, frapper le dragon une dernière fois."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 2. Éviter la mort (*Avoid Death*)\n\nTon personnage survit, mais paie le prix.\n\n- Il **tombe inconscient**. Il ne peut ni agir ni bouger, mais il ne peut pas non plus être attaqué.\n- Avec le MJ, tu décris comment la situation **empire** à cause de sa chute.\n- Il reprend conscience quand un allié lui **efface au moins 1 PV**, ou à la fin d'un **repos long**.\n- Lance ton **dé d'Espoir**. Si le résultat est **inférieur ou égal à ton niveau**, il garde une **cicatrice** : raye définitivement une case d'Espoir, et décide avec le MJ de ce qu'elle représente. Si tu rayes ta dernière case d'Espoir, l'histoire de ton personnage s'arrête.\n\nAu niveau 1, seul un 1 donne une cicatrice. Plus le personnage est expérimenté, plus il en garde des traces."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 3. Tout risquer (*Risk It All*)\n\nLance tes **Dés de dualité** :\n\n- **dé d'Espoir plus haut** : ton personnage reste debout et efface autant de PV et de Stress que la valeur du dé d'Espoir, répartis comme tu veux ;\n- **dé de Peur plus haut** : il meurt ;\n- **double** : il reste debout et efface **tous** ses PV et tout son Stress.\n\nUne chance sur deux, environ : c'est le choix du panache."
+        },
+        {
+          "type": "encadre",
+          "variante": "attention",
+          "markdown": "Si un personnage fait quelque chose de manifestement mortel (plonger dans un volcan sans protection), le MJ peut décider qu'il n'y a pas d'acte de mort. Il doit alors le dire **avant** que l'action ne soit faite."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Si un personnage meurt, son joueur crée avec le MJ un nouveau personnage, **du même niveau** que le reste du groupe."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "126f54eb-862b-41e2-8549-3877562fb6af",
+      "slug": "dh-repos-court-et-long",
+      "titre": "Se reposer : repos court et repos long",
+      "resume": "Récupérer Points de vie, Stress, armure et Espoir pendant les repos, et comprendre ce que le MJ gagne pendant ce temps.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-le-stress"
+      ],
+      "objectifs": [
+        "Choisir deux actes de pause pendant un repos",
+        "Distinguer repos court et repos long",
+        "Savoir ce que gagne le MJ quand le groupe se repose"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Deux actes de pause\n\nEntre deux dangers, le groupe peut se reposer. Il choisit un **repos court** ou un **repos long**.\n\nAu début du repos, chacun peut **échanger librement ses cartes** entre sa main et son caveau. Puis chaque joueur choisit **deux actes de pause** (*downtime moves*), éventuellement deux fois le même."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 365\"><rect x=\"10\" y=\"10\" width=\"285\" height=\"300\" rx=\"14\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"152\" y=\"45\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Repos court (≈ 1 h)</text><text x=\"30\" y=\"90\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Soigner : 1d4 + rang PV</text><text x=\"30\" y=\"128\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Évacuer : 1d4 + rang Stress</text><text x=\"30\" y=\"166\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Réparer : 1d4 + rang</text><text x=\"30\" y=\"204\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Se préparer : +1 Espoir</text><text x=\"152\" y=\"260\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">MJ : +1d4 Peur</text><circle cx=\"250\" cy=\"254\" r=\"12\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"250,247.4 256.6,254 250,260.6 243.4,254\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><rect x=\"305\" y=\"10\" width=\"285\" height=\"300\" rx=\"14\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"447\" y=\"45\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Repos long (la nuit)</text><text x=\"325\" y=\"90\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Soigner tous les PV</text><text x=\"325\" y=\"124\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Évacuer tout le Stress</text><text x=\"325\" y=\"158\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Réparer toute l'armure</text><text x=\"325\" y=\"192\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Se préparer : +1 Espoir</text><text x=\"325\" y=\"226\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Travailler sur un projet</text><text x=\"447\" y=\"260\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">MJ : +1d4 + nb de PJ</text><text x=\"447\" y=\"286\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Peur</text><text x=\"300\" y=\"345\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Chaque PJ choisit 2 actes de pause (le même deux fois si besoin)</text></svg>",
+          "alt": "Les actes de pause du repos court et du repos long",
+          "description": "Deux colonnes. Repos court, environ une heure : soigner 1d4 plus le rang en PV, évacuer 1d4 plus le rang en Stress, réparer 1d4 plus le rang en emplacements d'armure, se préparer pour 1 Espoir. Le MJ gagne 1d4 Peur. Repos long, la nuit : soigner tous les PV, évacuer tout le Stress, réparer toute l'armure, se préparer pour 1 Espoir, travailler sur un projet. Le MJ gagne 1d4 plus le nombre de PJ en Peur. Chaque PJ choisit deux actes de pause.",
+          "legende": "Un repos court soigne un peu, un repos long soigne tout"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le repos court\n\nEnviron **une heure** de pause. Les actes possibles (le **rang** vaut 1 au niveau 1) :\n\n- **Soigner ses blessures** : efface 1d4 + rang **PV**, pour toi ou un allié.\n- **Évacuer le stress** : efface 1d4 + rang **Stress**.\n- **Réparer l'armure** : efface 1d4 + rang **emplacements d'armure**, sur ton armure ou celle d'un allié.\n- **Se préparer** : décris comment tu te prépares, et gagne **1 Espoir**. Si tu te prépares **avec d'autres** membres du groupe, vous gagnez **2 Espoir** chacun.\n\nAprès **trois repos courts** d'affilée, le suivant doit être un repos long."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le repos long\n\nPlusieurs heures : on campe, on dort. Les actes possibles :\n\n- **Soigner toutes ses blessures** : efface **tous** les PV, pour toi ou un allié.\n- **Évacuer tout le stress** : efface **tout** le Stress.\n- **Réparer toute l'armure** : efface **tous** les emplacements, pour toi ou un allié.\n- **Se préparer** : comme pendant un repos court.\n- **Travailler sur un projet** : avancer un projet de long terme (déchiffrer un grimoire, forger une arme), avec l'accord du MJ. Le projet a un compte à rebours, qui avance à chaque fois.\n\nÀ la fin d'un repos, les capacités utilisables « une fois par repos » redeviennent disponibles."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le prix du repos\n\nLe monde ne s'arrête pas pendant que les héros dorment :\n\n- après un **repos court**, le MJ gagne **1d4 Peur** ;\n- après un **repos long**, il gagne **1d4 + le nombre de PJ** en Peur, et peut faire avancer un **compte à rebours de long terme** : le rituel du nécromancien progresse, l'armée ennemie approche.\n\nUn repos **interrompu** (par une attaque, par exemple) ne rapporte rien. Un repos long interrompu ne vaut qu'un repos court."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Un gardien blessé peut choisir deux fois « Soigner ses blessures », ou une fois pour lui et une fois pour un allié. Et se préparer ensemble, c'est 2 Espoir chacun : coordonnez-vous !"
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "d8dc278b-c820-447d-b2c9-2ff65b36f9ec",
+      "slug": "dh-monter-de-niveau",
+      "titre": "Monter de niveau",
+      "resume": "Faire progresser son personnage : les quatre rangs, les paliers des niveaux 2, 5 et 8, les deux améliorations à choisir et la nouvelle carte de domaine.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 12,
+      "prerequis": [
+        "dh-repos-court-et-long"
+      ],
+      "objectifs": [
+        "Situer un niveau dans son rang",
+        "Appliquer les paliers des niveaux 2, 5 et 8",
+        "Choisir deux améliorations",
+        "Mettre à jour ses seuils et ses cartes"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Quand monter de niveau ?\n\nLe groupe monte de niveau **ensemble**, quand le MJ estime qu'une **étape importante** de l'histoire est franchie : en général toutes les **trois séances** environ. Il y a **10 niveaux**, répartis en **4 rangs** (*tiers*).\n\nLe rang compte : il donne accès à de meilleures améliorations, à de meilleures armes, et il s'ajoute à certains soins (1d4 + rang)."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 225\"><rect x=\"10\" y=\"40\" width=\"88\" height=\"80\" rx=\"10\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"54\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Rang 1</text><text x=\"54\" y=\"102\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">niv. 1</text><rect x=\"106\" y=\"40\" width=\"160\" height=\"80\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"186\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Rang 2</text><text x=\"186\" y=\"102\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">niv. 2 à 4</text><rect x=\"274\" y=\"40\" width=\"160\" height=\"80\" rx=\"10\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"354\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Rang 3</text><text x=\"354\" y=\"102\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">niv. 5 à 7</text><rect x=\"442\" y=\"40\" width=\"160\" height=\"80\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"522\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Rang 4</text><text x=\"522\" y=\"102\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">niv. 8 à 10</text><polygon points=\"126,130 136,148 116,148\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><polygon points=\"294,130 304,148 284,148\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><polygon points=\"462,130 472,148 452,148\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"300\" y=\"180\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Aux niveaux 2, 5 et 8 : une Expérience</text><text x=\"300\" y=\"206\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">et +1 en Compétence</text></svg>",
+          "alt": "Les quatre rangs et les dix niveaux",
+          "description": "Quatre bandes de longueur croissante : rang 1, niveau 1 ; rang 2, niveaux 2 à 4 ; rang 3, niveaux 5 à 7 ; rang 4, niveaux 8 à 10. Un triangle marque le début des rangs 2, 3 et 4 : aux niveaux 2, 5 et 8, le personnage gagne une Expérience et +1 en Compétence.",
+          "legende": "Dix niveaux en quatre rangs"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les quatre étapes d'une montée de niveau\n\n**1. Les paliers.** En entrant dans un nouveau rang (niveaux **2**, **5** et **8**), tu gagnes une **nouvelle Expérience à +2** et **+1 en Compétence**. Aux niveaux 5 et 8, tu effaces aussi les marques de tes traits (voir plus bas).\n\n**2. Deux améliorations.** Choisis-en deux sur ta feuille, dans ton rang ou un rang inférieur. Par exemple :\n\n- **+1 à deux traits** non marqués, que tu marques : tu ne pourras plus les améliorer avant le prochain rang ;\n- **une case de PV** ou **une case de Stress** de plus (12 au maximum) ;\n- **+1 à deux Expériences** ;\n- **une carte de domaine** supplémentaire ;\n- **+1 en Esquive** ;\n- **la carte suivante de ta sous-classe** (Spécialisation, puis Maîtrise) ;\n- **+1 en Compétence**, qui compte pour deux améliorations ;\n- à partir du niveau 5, **le multiclassage** (aussi pour deux améliorations) : tu gagnes une deuxième classe, l'un de ses domaines et sa spécificité.\n\n**3. Les seuils.** Augmente tes seuils Majeur et Grave de **1**.\n\n**4. Une carte de domaine.** Prends une nouvelle carte d'un niveau inférieur ou égal au tien. Tu peux aussi échanger une carte déjà acquise contre une autre de même niveau ou moins."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple : Ysolde passe au niveau 2\n\n- Palier : nouvelle Expérience, *Connaît les galeries par cœur* +2, et Compétence 2. Sa hache fait maintenant **2d10+3**.\n- Améliorations : une case de PV (8 au total), et +1 en Force et en Instinct (elle marque ces deux traits).\n- Seuils : 9 / 17.\n- Nouvelle carte : une carte de niveau 2 du domaine Valeur."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "À chaque niveau : **paliers** (aux niveaux 2, 5, 8), **deux améliorations**, **seuils +1**, **une carte**. Tout le groupe monte en même temps."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    }
+  ]
+}

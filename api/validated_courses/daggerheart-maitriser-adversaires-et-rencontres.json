@@ -1,0 +1,424 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 4,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-07"
+  },
+  "parcours": {
+    "id": "eebac076-1789-42db-b99f-a10b2d74ddc3",
+    "slug": "daggerheart-maitriser-adversaires-et-rencontres",
+    "titre": "Maîtriser Daggerheart : adversaires et rencontres",
+    "description": "Pour les MJ : lire une fiche d'adversaire, connaître les dix types, mener un tour de combat, équilibrer une rencontre, utiliser les environnements, les comptes à rebours et les règles ponctuelles.",
+    "niveau": "intermediaire",
+    "theme": "daggerheart",
+    "lecons": [
+      "dh-mj-lire-une-fiche-d-adversaire",
+      "dh-mj-types-d-adversaires",
+      "dh-mj-faire-agir-les-adversaires",
+      "dh-mj-construire-une-rencontre",
+      "dh-mj-les-environnements",
+      "dh-mj-les-comptes-a-rebours",
+      "dh-mj-jets-du-destin-et-regles-utiles"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "8f630572-7447-4a6b-bf16-482181ec074e",
+      "slug": "dh-mj-lire-une-fiche-d-adversaire",
+      "titre": "Lire une fiche d'adversaire",
+      "resume": "Comprendre chaque ligne d'une fiche d'adversaire : type, Difficulté, seuils, PV, Stress, attaque, Expérience et capacités.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 12,
+      "prerequis": [
+        "dh-mj-animer-les-pnj"
+      ],
+      "objectifs": [
+        "Lire une fiche d'adversaire",
+        "Distinguer actions, réactions, passives et capacités de Peur",
+        "Utiliser l'Expérience d'un adversaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Tout tient sur une fiche\n\nUn adversaire se résume à une **fiche** (*stat block*). Elle contient tout ce qu'il faut pour le jouer. Voici un adversaire inventé pour cette leçon."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 440\"><rect x=\"10\" y=\"10\" width=\"360\" height=\"420\" rx=\"14\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"190\" y=\"45\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Sanglier-tonnerre</text><text x=\"190\" y=\"72\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Brute de rang 1</text><text x=\"30\" y=\"108\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Charger, défendre la harde</text><text x=\"30\" y=\"150\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Difficulté 13 · Seuils 9 / 16</text><text x=\"30\" y=\"178\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">PV 7 · Stress 3</text><text x=\"30\" y=\"218\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">ATT +2 · Défenses : Mêlée</text><text x=\"30\" y=\"246\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">1d10+4 physiques</text><text x=\"30\" y=\"286\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Expérience : Charge +2</text><text x=\"30\" y=\"330\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Capacités :</text><text x=\"30\" y=\"358\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Cuir épais, Charge,</text><text x=\"30\" y=\"386\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Fureur (Peur)</text><line x1=\"372\" y1=\"102\" x2=\"410\" y2=\"102\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"418\" y=\"108\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Motivations</text><line x1=\"372\" y1=\"158\" x2=\"410\" y2=\"158\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"418\" y=\"164\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Défense</text><line x1=\"372\" y1=\"226\" x2=\"410\" y2=\"226\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"418\" y=\"232\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Attaque</text><line x1=\"372\" y1=\"280\" x2=\"410\" y2=\"280\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"418\" y=\"286\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Expérience</text><line x1=\"372\" y1=\"366\" x2=\"410\" y2=\"366\" stroke=\"texte-doux\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"418\" y=\"372\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">Capacités</text></svg>",
+          "alt": "La fiche du Sanglier-tonnerre, une brute de rang 1, avec ses rubriques",
+          "description": "La fiche du Sanglier-tonnerre, brute de rang 1. Motivations : charger, défendre la harde. Défense : Difficulté 13, seuils 9 et 16, 7 PV, 3 Stress. Attaque : +2, défenses en Mêlée, 1d10+4 physiques. Expérience : Charge +2. Capacités : Cuir épais, Charge, Fureur (capacité de Peur).",
+          "legende": "Une fiche d'adversaire, rubrique par rubrique"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les rubriques\n\n- **Nom, rang et type.** Le rang dit pour quel niveau de personnages l'adversaire est prévu. Le type dit son rôle dans un combat (leçon suivante).\n- **Description et motivations** : comment il se comporte. Le sanglier charge et défend sa harde : il ne poursuit pas un ennemi qui s'éloigne.\n- **Difficulté** : le nombre à atteindre pour l'attaquer ou agir contre lui.\n- **Seuils, PV et Stress** : comme pour les personnages. Chaque adversaire a son propre Stress, qu'il coche pour certaines capacités.\n- **Modificateur d'attaque (ATT)** et **attaque standard** : arme, portée, dégâts. Utiliser l'attaque standard est un acte de MJ.\n- **Expérience** : en dépensant 1 Peur, tu l'ajoutes à une attaque, ou à la Difficulté d'un jet contre l'adversaire."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les capacités\n\nElles sont de quatre sortes :\n\n- **Action** : quelque chose que l'adversaire fait quand il est mis en avant. *Charge — Action : coche un Stress pour charger une cible à portée Courte et l'attaquer. Sur un succès, 1d12+4 dégâts physiques, et la cible est projetée à portée Très courte.*\n- **Réaction** : un effet qui se déclenche tout seul, même si l'adversaire n'est pas mis en avant.\n- **Passive** : un effet toujours actif. *Cuir épais — Passive : réduis de 2 les dégâts physiques que subit le sanglier.*\n- **Capacité de Peur** : un effet puissant, qui coûte 1 Peur **en plus** de celle dépensée pour mettre l'adversaire en avant. *Fureur — Réaction : quand le sanglier coche son cinquième PV, dépense 1 Peur ; il efface 2 PV, et son attaque fait 1d6 dégâts de plus jusqu'à la fin de la scène.*"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Les repères du rang 1, pour inventer ou ajuster un adversaire : modificateur d'attaque **+1**, dégâts de **1d6+2 à 1d12+4**, Difficulté **11**, seuils **7 / 12**. Une brute dépasse un peu ces valeurs, un sbire reste bien en dessous."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Avant la séance, **lis chaque capacité** de tes adversaires et note celles qui coûtent du Stress ou de la Peur. En plein combat, c'est ce qu'on oublie le plus."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "37809348-8293-4db9-bc73-bfb9292e83ee",
+      "slug": "dh-mj-types-d-adversaires",
+      "titre": "Les dix types d'adversaires",
+      "resume": "Connaître les dix types d'adversaires, du sbire au solo, leur rôle dans un combat et les règles propres aux sbires et aux hordes.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-mj-lire-une-fiche-d-adversaire"
+      ],
+      "objectifs": [
+        "Décrire le rôle de chaque type d'adversaire",
+        "Appliquer la règle des sbires",
+        "Appliquer la règle des hordes"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Dix rôles\n\nLe **type** d'un adversaire indique le rôle qu'il joue dans un combat. Le nombre dans le rond est son coût en **points de bataille** (voir la leçon sur les rencontres)."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 345\"><rect x=\"10\" y=\"10\" width=\"285\" height=\"56\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"24\" y=\"35\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Brute</text><text x=\"24\" y=\"58\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">encaisse, frappe fort</text><circle cx=\"265\" cy=\"38\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"265\" y=\"45\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4</text><rect x=\"305\" y=\"10\" width=\"285\" height=\"56\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"319\" y=\"35\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Horde</text><text x=\"319\" y=\"58\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">un groupe = une fiche</text><circle cx=\"560\" cy=\"38\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"560\" y=\"45\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2</text><rect x=\"10\" y=\"76\" width=\"285\" height=\"56\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"24\" y=\"101\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Meneur</text><text x=\"24\" y=\"124\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">commande, appelle</text><circle cx=\"265\" cy=\"104\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"265\" y=\"111\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">3</text><rect x=\"305\" y=\"76\" width=\"285\" height=\"56\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"319\" y=\"101\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Sbire</text><text x=\"319\" y=\"124\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">tombe au 1er coup</text><circle cx=\"560\" cy=\"104\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"560\" y=\"111\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1</text><rect x=\"10\" y=\"142\" width=\"285\" height=\"56\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"24\" y=\"167\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Tireur</text><text x=\"24\" y=\"190\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">fragile, frappe de loin</text><circle cx=\"265\" cy=\"170\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"265\" y=\"177\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2</text><rect x=\"305\" y=\"142\" width=\"285\" height=\"56\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"319\" y=\"167\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Embusqué</text><text x=\"319\" y=\"190\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">surprend, manœuvre</text><circle cx=\"560\" cy=\"170\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"560\" y=\"177\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2</text><rect x=\"10\" y=\"208\" width=\"285\" height=\"56\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"24\" y=\"233\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Social</text><text x=\"24\" y=\"256\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">défi de paroles</text><circle cx=\"265\" cy=\"236\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"265\" y=\"243\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1</text><rect x=\"305\" y=\"208\" width=\"285\" height=\"56\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"319\" y=\"233\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Solo</text><text x=\"319\" y=\"256\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">défie tout le groupe</text><circle cx=\"560\" cy=\"236\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"560\" y=\"243\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">5</text><rect x=\"10\" y=\"274\" width=\"285\" height=\"56\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"24\" y=\"299\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Standard</text><text x=\"24\" y=\"322\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">typique de son camp</text><circle cx=\"265\" cy=\"302\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"265\" y=\"309\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2</text><rect x=\"305\" y=\"274\" width=\"285\" height=\"56\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"319\" y=\"299\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Soutien</text><text x=\"319\" y=\"322\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">aide, gêne</text><circle cx=\"560\" cy=\"302\" r=\"18\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"560\" y=\"309\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1</text></svg>",
+          "alt": "Les dix types d'adversaires, leur rôle et leur coût en points",
+          "description": "Dix cases. Brute : encaisse et frappe fort, 4 points. Horde : un groupe sur une seule fiche, 2 points. Meneur : commande et appelle des renforts, 3 points. Sbire : tombe au premier coup, 1 point par groupe. Tireur : fragile, frappe de loin, 2 points. Embusqué : surprend et manœuvre, 2 points. Social : un défi de paroles, 1 point. Solo : défie tout le groupe, 5 points. Standard : typique de son camp, 2 points. Soutien : aide ses alliés et gêne les héros, 1 point.",
+          "legende": "Le type dit le rôle, et le coût en points de bataille"
+        },
+        {
+          "type": "texte",
+          "markdown": "## En détail\n\nLe livre anglais nomme ces types *Bruiser*, *Horde*, *Leader*, *Minion*, *Ranged*, *Skulk*, *Social*, *Solo*, *Standard* et *Support*.\n\n- **Brute** : costaude, elle encaisse et assène des coups puissants.\n- **Horde** : un groupe de créatures identiques qui agit comme une seule.\n- **Meneur** : il commande les autres adversaires, et en appelle parfois de nouveaux.\n- **Sbire** : facile à abattre, dangereux en nombre.\n- **Tireur** : fragile au corps à corps, redoutable à distance.\n- **Embusqué** (*Skulk*) : il se déplace, se cache et profite des ouvertures.\n- **Social** : un défi de conversation plutôt que de combat (un courtisan, un juge).\n- **Solo** : un adversaire de taille à affronter tout le groupe à lui seul.\n- **Standard** : le membre typique de son groupe (le garde, le bandit).\n- **Soutien** : il renforce ses alliés et gêne les héros."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les sbires\n\nUn sbire a la capacité **Sbire (X)** :\n\n- il est **vaincu au moindre dégât** ;\n- pour **chaque tranche de X dégâts**, un autre sbire à portée tombe aussi (un sbire que l'attaque aurait pu toucher).\n\nExemple : des larbins *Sbire (3)*. Pell inflige 7 dégâts : le larbin visé tombe, et deux autres avec lui (7 contient deux fois 3).\n\nLes fiches de sbires ont souvent une capacité d'**attaque groupée** : pour 1 Peur, tous les sbires proches d'une cible font une seule attaque commune, et leurs dégâts s'additionnent."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les hordes\n\nUne horde est un groupe sur une seule fiche. Sa fiche indique combien de créatures vaut chaque PV : une horde « 2/PV » avec 3 PV représente six créatures.\n\nSa capacité **Horde (X)** : quand elle a coché **la moitié de ses PV** ou plus, son attaque standard ne fait plus que **X** dégâts. Le groupe s'est éclairci."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Un bon combat mélange les types : un **meneur** qui donne les ordres, des **standards** au contact, un **tireur** en retrait, et une poignée de **sbires** pour donner l'impression du nombre."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "caacf500-cc3d-489f-8ab4-45804bd5b019",
+      "slug": "dh-mj-faire-agir-les-adversaires",
+      "titre": "Faire agir les adversaires",
+      "resume": "Mener le tour du MJ en combat : mettre en avant les adversaires, dépenser la Peur pour en faire agir plusieurs, faire leurs jets et décider quand ils sont vaincus.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-mj-types-d-adversaires"
+      ],
+      "objectifs": [
+        "Mettre en avant un ou plusieurs adversaires",
+        "Faire un jet d'action pour un adversaire",
+        "Décider de la défaite d'un adversaire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le tour du MJ en combat\n\nQuand la main passe au MJ (jet raté ou avec Peur), il fait un acte. En combat, c'est souvent **mettre un adversaire en avant**. Pour en faire agir d'autres, il dépense **1 Peur par adversaire supplémentaire**. Puis il rend la main."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 280\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"10\" y=\"20\" width=\"180\" height=\"70\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"100\" y=\"49.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Jet raté</text><text x=\"100\" y=\"74.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">ou avec Peur</text><line x1=\"195\" y1=\"55\" x2=\"225\" y2=\"55\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"230\" y=\"20\" width=\"160\" height=\"70\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"310\" y=\"49.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1 adversaire</text><text x=\"310\" y=\"74.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">gratuit</text><line x1=\"395\" y1=\"55\" x2=\"425\" y2=\"55\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"430\" y=\"20\" width=\"160\" height=\"70\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"510\" y=\"49.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+1 Peur</text><text x=\"510\" y=\"74.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">par adversaire</text><line x1=\"510\" y1=\"95\" x2=\"510\" y2=\"135\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"340\" y=\"140\" width=\"250\" height=\"70\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"465\" y=\"169.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Retour aux joueurs</text><text x=\"465\" y=\"194.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">« Que faites-vous ? »</text><text x=\"20\" y=\"140\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Un adversaire mis en avant :</text><text x=\"20\" y=\"170\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">se déplace (Courte) et attaque,</text><text x=\"20\" y=\"196\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">ou utilise une action,</text><text x=\"20\" y=\"222\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">ou se libère d'un état,</text><text x=\"20\" y=\"248\" font-size=\"20\" text-anchor=\"start\" fill=\"texte\">ou court (Très longue).</text></svg>",
+          "alt": "Le déroulement d'un tour de MJ en combat",
+          "description": "Un jet raté ou avec Peur donne la main au MJ. Il met un adversaire en avant gratuitement, puis peut dépenser 1 Peur par adversaire supplémentaire. Puis il rend la main aux joueurs : « Que faites-vous ? ». Un adversaire mis en avant peut se déplacer à portée Courte et attaquer, utiliser une action, se libérer d'un état, ou courir jusqu'à portée Très longue.",
+          "legende": "Un adversaire gratuit, les suivants pour 1 Peur chacun"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les jets des adversaires\n\n- **Attaque** : d20 + modificateur d'attaque, contre l'Esquive de la cible (voir le parcours sur le combat).\n- **Autres actions** : par défaut, un adversaire **réussit** ce qu'il tente, sans jet. Si tu veux qu'il puisse échouer, demande plutôt aux PJ concernés un **jet de réaction** pour l'en empêcher.\n- **Exception** : pour une action spectaculaire que les PJ ne peuvent pas influencer (un sort lancé au loin), lance un **d20** contre une Difficulté. Tu peux dépenser 1 Peur avant le jet pour ajouter une Expérience de l'adversaire.\n- **Avantage** : lance deux d20 et garde le meilleur. **Désavantage** : garde le pire."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nYsolde rate son attaque contre le Sanglier-tonnerre, avec Peur. Le MJ prend la Peur et la main.\n\n> **MJ** : Le sanglier baisse la tête et utilise sa **Charge** : il coche un Stress et fonce sur Maëlis, à portée Courte. *(d20 : 12, plus 2 = 14 contre une Esquive de 11 : touché. 1d12+4 = 13.)* Il te percute et tu es projetée à portée Très courte. Et je dépense 1 Peur : le marcassin caché dans les ronces mord Pell."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Vaincre un adversaire\n\nUn adversaire qui coche son **dernier PV** est vaincu. À la table de décider ce que ça veut dire : mort, assommé, ligoté, en fuite, rendu. Rien n'oblige à tuer.\n\nPense aussi aux **motivations** : un sanglier blessé s'enfuit, un bandit qui voit tomber son chef se rend. Un combat peut s'arrêter bien avant que tous les PV soient cochés."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "En général, mets **chaque adversaire en avant une seule fois** par tour de MJ. Certaines capacités font exception : *Implacable (X)* permet de le mettre en avant jusqu'à X fois, en payant la Peur à chaque fois."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "f7cada0a-a0e2-45f3-9d8d-0790761ea6df",
+      "slug": "dh-mj-construire-une-rencontre",
+      "titre": "Construire une rencontre équilibrée",
+      "resume": "Utiliser les points de bataille pour composer un combat adapté au groupe, l'ajuster pour le rendre plus facile ou plus dur, et le vérifier avec un petit programme.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 12,
+      "prerequis": [
+        "dh-mj-faire-agir-les-adversaires"
+      ],
+      "objectifs": [
+        "Calculer le budget de points de bataille d'un combat",
+        "Ajuster le budget selon la difficulté voulue",
+        "Composer une rencontre avec plusieurs types d'adversaires"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le budget\n\nPour préparer un combat, commence avec **(3 × le nombre de PJ) + 2 points de bataille**. Puis ajuste :\n\n- **−1** pour un combat plus facile ou plus court ;\n- **−2** si tu utilises 2 adversaires Solo ou plus ;\n- **−2** si tu ajoutes +1d4 (ou +2) aux dégâts de tous les adversaires ;\n- **+1** si tu prends un adversaire d'un rang inférieur ;\n- **+1** s'il n'y a ni brute, ni horde, ni meneur, ni solo ;\n- **+2** pour un combat plus dur ou plus long."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les coûts\n\n- **1 point** : un groupe de sbires (autant que de PJ), un adversaire social ou de soutien ;\n- **2 points** : une horde, un tireur, un embusqué, un standard ;\n- **3 points** : un meneur ;\n- **4 points** : une brute ;\n- **5 points** : un solo."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 190\"><text x=\"300\" y=\"30\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">3 PJ : (3 × 3) + 2 = 11 points</text><rect x=\"20\" y=\"60\" width=\"150\" height=\"70\" rx=\"8\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"95\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Meneur</text><text x=\"95\" y=\"118\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">3</text><rect x=\"170\" y=\"60\" width=\"100\" height=\"70\" rx=\"8\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"220\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Standard</text><text x=\"220\" y=\"118\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">2</text><rect x=\"270\" y=\"60\" width=\"100\" height=\"70\" rx=\"8\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"320\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Standard</text><text x=\"320\" y=\"118\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">2</text><rect x=\"370\" y=\"60\" width=\"50\" height=\"70\" rx=\"8\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"395\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Sb.</text><text x=\"395\" y=\"118\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">1</text><rect x=\"420\" y=\"60\" width=\"150\" height=\"70\" rx=\"8\" fill=\"none\" stroke=\"illu-gris\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/><text x=\"495\" y=\"100\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\">reste 3</text><rect x=\"20\" y=\"60\" width=\"550\" height=\"70\" rx=\"8\" fill=\"none\" stroke=\"texte\" stroke-width=\"2\"/><text x=\"300\" y=\"170\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Le combat du gué : 8 points sur 11</text></svg>",
+          "alt": "Le budget de 11 points d'un combat pour 3 PJ, et la rencontre du gué",
+          "description": "Pour 3 PJ, le budget vaut 3 fois 3 plus 2, soit 11 points. Une barre de 11 points : un meneur (3), deux standards (2 chacun), un groupe de sbires (1). Il reste 3 points. Le combat du gué coûtait 8 points sur 11.",
+          "legende": "Le combat du gué était volontairement un peu facile"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Calculer avec un programme\n\nCe programme calcule le budget et le coût d'une rencontre. Celle-ci est celle du gué, dans les parties commentées."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "COUTS = {\"sbires\": 1, \"social\": 1, \"soutien\": 1, \"horde\": 2, \"tireur\": 2,\n         \"embusque\": 2, \"standard\": 2, \"meneur\": 3, \"brute\": 4, \"solo\": 5}\n\n\ndef budget(nb_pj, ajustement=0):\n    return 3 * nb_pj + 2 + ajustement\n\n\nrencontre = [\"meneur\", \"standard\", \"standard\", \"sbires\"]\ncout = sum(COUTS[adversaire] for adversaire in rencontre)\nprint(\"Budget :\", budget(3))\nprint(\"Coût :\", cout)\nprint(\"Reste :\", budget(3) - cout)\n",
+          "executable": true,
+          "sortie_attendue": "Budget : 11\nCoût : 8\nReste : 3\n"
+        },
+        {
+          "type": "exercice",
+          "langage": "python",
+          "consigne": "Tu prépares le combat final d'un arc pour **4 PJ**. Tu veux un combat **plus dur** (+2). La rencontre : un solo, deux tireurs et deux groupes de sbires.\n\nCorrige l'appel à `budget` pour tenir compte des 4 PJ et de l'ajustement. Le programme doit afficher un budget de **16**, un coût de **11** et un reste de **5**.",
+          "code": "COUTS = {\"sbires\": 1, \"social\": 1, \"soutien\": 1, \"horde\": 2, \"tireur\": 2,\n         \"embusque\": 2, \"standard\": 2, \"meneur\": 3, \"brute\": 4, \"solo\": 5}\n\n\ndef budget(nb_pj, ajustement=0):\n    return 3 * nb_pj + 2 + ajustement\n\n\nrencontre = [\"solo\", \"tireur\", \"tireur\", \"sbires\", \"sbires\"]\ncout = sum(COUTS[adversaire] for adversaire in rencontre)\ntotal = budget(3)  # À corriger\nprint(\"Budget :\", total)\nprint(\"Coût :\", cout)\nprint(\"Reste :\", total - cout)\n",
+          "solution": "COUTS = {\"sbires\": 1, \"social\": 1, \"soutien\": 1, \"horde\": 2, \"tireur\": 2,\n         \"embusque\": 2, \"standard\": 2, \"meneur\": 3, \"brute\": 4, \"solo\": 5}\n\n\ndef budget(nb_pj, ajustement=0):\n    return 3 * nb_pj + 2 + ajustement\n\n\nrencontre = [\"solo\", \"tireur\", \"tireur\", \"sbires\", \"sbires\"]\ncout = sum(COUTS[adversaire] for adversaire in rencontre)\ntotal = budget(4, 2)\nprint(\"Budget :\", total)\nprint(\"Coût :\", cout)\nprint(\"Reste :\", total - cout)\n",
+          "sortie_attendue": "Budget : 16\nCoût : 11\nReste : 5\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Avec 5 points en réserve, ajoute un **meneur** (3) et un **soutien** (1), ou garde de la marge pour des renforts appelés en dépensant de la Peur pendant le combat."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Budget = 3 × PJ + 2**, puis ajustements. Les points sont un repère, pas une loi : tu ajusteras selon les forces de ton groupe."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "1a4afbc2-fbad-4e1f-97ea-0cc3ecc0e060",
+      "slug": "dh-mj-les-environnements",
+      "titre": "Les environnements",
+      "resume": "Utiliser les fiches d'environnement pour faire d'un lieu un vrai acteur de la scène : types, impulsions, capacités et questions.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 11,
+      "prerequis": [
+        "dh-mj-faire-agir-les-adversaires"
+      ],
+      "objectifs": [
+        "Lire une fiche d'environnement",
+        "Utiliser les capacités d'un environnement comme actes de MJ",
+        "Adapter un environnement à un autre rang"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le décor joue aussi\n\nUn **environnement** représente tout ce qui entoure les PJ et les adversaires : le lieu, la foule, les forces de la nature. À Daggerheart, il a sa propre fiche, comme un adversaire.\n\nIl en existe quatre types :\n\n- **Exploration** : un lieu à découvrir, plein de mystères et de merveilles ;\n- **Social** : un lieu où les défis sont surtout des rencontres (une cour, un marché) ;\n- **Traversée** : un lieu où **se déplacer** est le défi (un col, une rivière, un désert) ;\n- **Événement** : une occasion plutôt qu'un lieu (un tournoi, une fête, une tempête)."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 400\"><rect x=\"10\" y=\"10\" width=\"580\" height=\"380\" rx=\"14\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"300\" y=\"46\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Le gué en crue</text><text x=\"300\" y=\"74\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Traversée de rang 1 · Difficulté 11</text><text x=\"30\" y=\"112\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Impulsions : emporter, isoler, user</text><text x=\"30\" y=\"144\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Adversaires possibles : contrebandiers,</text><text x=\"30\" y=\"170\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">anguilles géantes</text><text x=\"30\" y=\"212\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Courant traître — Action</text><text x=\"30\" y=\"240\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Réaction de Force ou être emporté</text><text x=\"30\" y=\"280\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Rives de boue — Passive</text><text x=\"30\" y=\"308\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Désavantage pour sortir de l'eau</text><text x=\"30\" y=\"348\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">La crue monte — Action (Peur)</text><text x=\"30\" y=\"374\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Lance un compte à rebours (3)</text></svg>",
+          "alt": "La fiche d'environnement du Gué en crue, une traversée de rang 1",
+          "description": "La fiche du Gué en crue, traversée de rang 1, Difficulté 11. Impulsions : emporter, isoler, user. Adversaires possibles : contrebandiers, anguilles géantes. Capacités : Courant traître, une action qui demande une réaction de Force pour ne pas être emporté ; Rives de boue, une passive qui donne un désavantage pour sortir de l'eau ; La crue monte, une action de Peur qui lance un compte à rebours de 3.",
+          "legende": "Une fiche d'environnement inventée pour l'exemple"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les rubriques\n\n- **Nom, rang et type.**\n- **Description** : une phrase d'ambiance.\n- **Impulsions** : ce que le lieu « veut » faire aux gens qui s'y trouvent. Le gué en crue veut emporter, isoler, user.\n- **Difficulté** : celle des jets pour surmonter, contrer ou résister au lieu.\n- **Adversaires possibles** : des idées de rencontres sur place.\n- **Capacités** : des idées d'actes de MJ, propres au lieu. Certaines coûtent de la Peur.\n- **Questions** : des pistes pour relier le lieu à l'histoire. « Qui a construit le gué, et pourquoi n'est-il plus entretenu ? »"
+        },
+        {
+          "type": "texte",
+          "markdown": "## En jeu\n\nLes capacités de l'environnement sont des **actes de MJ tout prêts**. Pendant le combat du gué, après un jet avec Peur, le MJ peut choisir :\n\n- de mettre en avant un adversaire ;\n- **ou** d'utiliser le *Courant traître* : « L'eau monte d'un coup autour de toi, Pell. Jet de réaction de Force, 11, ou tu es emporté à portée Longue. »\n\nEt s'il dépense 1 Peur pour *La crue monte*, le combat change de nature : il faut vaincre **ou fuir** avant que le compte à rebours n'arrive à zéro."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Pour utiliser un environnement à un autre rang, remplace sa Difficulté et ses dégâts par les repères du rang voulu. Au rang 1 : Difficulté **11**, dégâts de **1d6+1 à 1d8+3**. Au rang 2 : **14** et 2d6+3 à 2d10+2."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "8fe85f4c-ddb2-4e0a-8df3-0452bc601357",
+      "slug": "dh-mj-les-comptes-a-rebours",
+      "titre": "Les comptes à rebours",
+      "resume": "Créer de la tension avec les comptes à rebours : standards, dynamiques de progrès ou de conséquence, en boucle et de long terme.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 12,
+      "prerequis": [
+        "dh-mj-les-environnements"
+      ],
+      "objectifs": [
+        "Lancer un compte à rebours standard",
+        "Faire avancer un compte à rebours dynamique",
+        "Utiliser un compte à rebours de long terme"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le principe\n\nUn **compte à rebours** représente du temps qui passe, ou une série d'événements avant que quelque chose arrive. Il part d'une valeur, **descend de 1** chaque fois qu'il avance, et **déclenche son effet à 0**.\n\nOn le suit avec un dé posé sur la table (un d6 tourné face 4, puis 3…), ou des cases à cocher. Il peut être visible des joueurs (la tension monte) ou secret."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le compte à rebours standard\n\nIl avance **à chaque jet d'action** des joueurs, quel qu'en soit le résultat. Une capacité qui parle de « compte à rebours (4) » désigne un compte à rebours standard qui part de 4.\n\nExemple : *La crue monte*, compte à rebours (3). Après trois jets d'action, l'eau submerge le gué."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les comptes à rebours dynamiques\n\nIls avancent de **0 à 3** selon le résultat de chaque jet :\n\n- un compte à rebours de **progrès** mène à quelque chose de **bon** (forcer une porte, convaincre un conseil) : il avance surtout sur les succès ;\n- un compte à rebours de **conséquence** mène à quelque chose de **mauvais** (le pont s'effondre, les renforts arrivent) : il avance surtout sur les échecs."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 315\"><text x=\"170\" y=\"30\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Progrès (positif)</text><text x=\"440\" y=\"30\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Conséquence (négatif)</text><rect x=\"10\" y=\"50\" width=\"580\" height=\"40\" rx=\"6\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"1\"/><text x=\"20\" y=\"77\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Échec avec Peur</text><text x=\"300\" y=\"77\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><text x=\"500\" y=\"77\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−3</text><rect x=\"10\" y=\"96\" width=\"580\" height=\"40\" rx=\"6\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"1\"/><text x=\"20\" y=\"123\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Échec avec Espoir</text><text x=\"300\" y=\"123\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><text x=\"500\" y=\"123\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−2</text><rect x=\"10\" y=\"142\" width=\"580\" height=\"40\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"1\"/><text x=\"20\" y=\"169\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Succès avec Peur</text><text x=\"300\" y=\"169\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−1</text><text x=\"500\" y=\"169\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−1</text><rect x=\"10\" y=\"188\" width=\"580\" height=\"40\" rx=\"6\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"1\"/><text x=\"20\" y=\"215\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Succès avec Espoir</text><text x=\"300\" y=\"215\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−2</text><text x=\"500\" y=\"215\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><rect x=\"10\" y=\"234\" width=\"580\" height=\"40\" rx=\"6\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"1\"/><text x=\"20\" y=\"261\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">Succès critique</text><text x=\"300\" y=\"261\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">−3</text><text x=\"500\" y=\"261\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">0</text><text x=\"300\" y=\"300\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\" font-style=\"italic\">De combien le compte à rebours descend</text></svg>",
+          "alt": "De combien avance un compte à rebours dynamique selon le résultat du jet",
+          "description": "Un tableau en cinq lignes. Échec avec Peur : progrès 0, conséquence moins 3. Échec avec Espoir : progrès 0, conséquence moins 2. Succès avec Peur : progrès moins 1, conséquence moins 1. Succès avec Espoir : progrès moins 2, conséquence 0. Succès critique : progrès moins 3, conséquence 0.",
+          "legende": "Le progrès avance sur les succès, la conséquence sur les échecs"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Simuler un compte à rebours\n\nLe groupe traverse un pont de cordes qui se défait : compte à rebours de **conséquence** de 6. Ce programme le fait avancer selon quatre jets."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "AVANCE = {\n    \"échec avec Peur\": 3,\n    \"échec avec Espoir\": 2,\n    \"succès avec Peur\": 1,\n    \"succès avec Espoir\": 0,\n    \"succès critique\": 0,\n}\n\ncompte = 6\nfor resultat in [\"succès avec Espoir\", \"échec avec Espoir\", \"succès avec Peur\", \"échec avec Peur\"]:\n    compte -= AVANCE[resultat]\n    print(resultat, \":\", max(compte, 0))\n    if compte <= 0:\n        print(\"Le pont s'effondre !\")\n        break\n",
+          "executable": true,
+          "sortie_attendue": "succès avec Espoir : 6\néchec avec Espoir : 4\nsuccès avec Peur : 3\néchec avec Peur : 0\nLe pont s'effondre !\n"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les variantes\n\n- **Valeur de départ au hasard** : lance un dé pour fixer le départ (le joueur peut lancer son dé de Peur : jet du destin).\n- **En boucle** : le compte à rebours repart de sa valeur de départ après s'être déclenché. Un tir de baliste toutes les trois actions, par exemple. Il peut aussi repartir d'une valeur plus haute, ou plus basse, à chaque boucle.\n- **Liés** : un progrès et une conséquence qui avancent sur les mêmes jets. Qui arrivera à zéro en premier : la porte forcée, ou les gardes ?\n- **De long terme** : il avance **à chaque repos**, pas à chaque jet. Le complot du méchant, l'armée qui approche. Le MJ peut en faire avancer un à chaque repos long du groupe."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "Un compte à rebours **visible** est un formidable outil de tension : les joueurs voient le dé descendre, et chaque jet devient un choix. Et ceux des **projets** des PJ (pendant les repos longs) fonctionnent de la même façon."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "2b8bfb58-08ac-4439-b3fa-fd9636e65330",
+      "slug": "dh-mj-jets-du-destin-et-regles-utiles",
+      "titre": "Jets du destin et règles utiles",
+      "resume": "Connaître les règles ponctuelles dont un MJ a souvent besoin : jet du destin, chutes et collisions, combat sous l'eau, conflit entre personnages joueurs.",
+      "theme": "daggerheart",
+      "niveau": "intermediaire",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-mj-les-comptes-a-rebours"
+      ],
+      "objectifs": [
+        "Lancer un jet du destin",
+        "Appliquer les dégâts de chute et de collision",
+        "Gérer l'apnée sous l'eau",
+        "Arbitrer un conflit entre deux PJ"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le jet du destin\n\nQuand tu veux laisser une chose **entièrement au hasard**, demande à un joueur de lancer **un seul** de ses Dés de dualité. Annonce d'abord l'enjeu et la lecture du résultat.\n\n- « Lance ton dé de Peur. Sur 4 ou moins, le feu gagne la maison voisine. »\n- « Lance ton dé d'Espoir : plus il est haut, plus il y a de monde à l'auberge ce soir. »\n- « Ton dé de Peur fixe le départ du compte à rebours des renforts. »\n\nUn jet du destin ne donne ni Espoir ni Peur."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les chutes et les collisions\n\nRepères pour les dégâts physiques d'une chute :\n\n- d'une hauteur équivalente à la portée **Très courte** : **1d10+3** ;\n- **Courte** : **1d20+5** ;\n- **Longue ou Très longue** : **1d100+15**, ou la mort si le MJ le décide.\n\nUne **collision** à grande vitesse, contre un objet ou une créature : **1d20+5** dégâts physiques **directs** (l'armure ne les réduit pas)."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 360\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"60\" y=\"240\" width=\"60\" height=\"80\" rx=\"4\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><line x1=\"150\" y1=\"240\" x2=\"150\" y2=\"315\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"90\" y=\"345\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Très courte</text><text x=\"90\" y=\"230\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">1d10+3</text><rect x=\"240\" y=\"160\" width=\"60\" height=\"160\" rx=\"4\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><line x1=\"330\" y1=\"160\" x2=\"330\" y2=\"315\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"270\" y=\"345\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Courte</text><text x=\"270\" y=\"150\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">1d20+5</text><rect x=\"420\" y=\"40\" width=\"60\" height=\"280\" rx=\"4\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><line x1=\"510\" y1=\"40\" x2=\"510\" y2=\"315\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"450\" y=\"345\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Longue ou plus</text><text x=\"450\" y=\"30\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">1d100+15</text><line x1=\"20\" y1=\"320\" x2=\"580\" y2=\"320\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>",
+          "alt": "Les dégâts de chute selon la hauteur",
+          "description": "Trois colonnes de hauteur croissante, chacune avec une flèche vers le sol. Chute de hauteur Très courte : 1d10+3. Courte : 1d20+5. Longue ou plus : 1d100+15.",
+          "legende": "Plus on tombe de haut, plus ça fait mal"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Sous l'eau\n\n- Les attaques faites sous l'eau ont un **désavantage**, par défaut.\n- Une créature qui ne respire pas sous l'eau retient son souffle : **compte à rebours (3)**, qui avance à chaque action. Sur un échec ou un jet avec Peur, ton acte de MJ peut le faire avancer une fois de plus (deux fois sur un échec avec Peur).\n- À zéro, le personnage **coche un Stress** à chaque action."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Conflit entre personnages joueurs\n\nSi un joueur veut agir contre un autre PJ, **parlez-en d'abord** avec les deux joueurs. Un jet n'est pas toujours nécessaire. S'il est amusant pour tout le monde, mettez-vous d'accord sur ce qu'il décide, puis :\n\n- pour une **attaque** : l'attaquant lance contre l'**Esquive** de l'autre, comme un adversaire ;\n- pour **autre chose** (convaincre, voler, devancer) : l'initiateur fait un **jet d'action**, la cible un **jet de réaction**. L'initiateur doit égaler ou dépasser le total de la réaction."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**L'arbitrage avant la règle.** Le SRD ne répond pas à tout. Quand une situation n'est pas prévue, tranche dans le sens de l'histoire, annonce ta décision, et continue. Tu pourras vérifier la règle après la séance."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    }
+  ]
+}

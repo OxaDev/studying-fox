@@ -1,0 +1,584 @@
+{
+  "format": "renard-etudiant/lecons",
+  "version": 4,
+  "generation": {
+    "assiste_par_ia": true,
+    "outil": "Claude Opus 5.5",
+    "date": "2026-10-07"
+  },
+  "parcours": {
+    "id": "c0567eab-fbf2-4e32-a385-48db85b8d7c2",
+    "slug": "daggerheart-decouvrir-le-jeu",
+    "titre": "Daggerheart : découvrir le jeu",
+    "description": "Les règles essentielles pour jouer ta première partie de Daggerheart : la boucle de jeu, les Dés de dualité, les résultats d'un jet, les traits, l'Espoir, la Peur et les jets spéciaux.",
+    "niveau": "debutant",
+    "theme": "daggerheart",
+    "lecons": [
+      "dh-qu-est-ce-que-daggerheart",
+      "dh-la-boucle-de-jeu",
+      "dh-les-des-de-dualite",
+      "dh-les-resultats-d-un-jet",
+      "dh-les-six-traits",
+      "dh-l-espoir",
+      "dh-la-peur",
+      "dh-mettre-en-avant",
+      "dh-avantage-et-desavantage",
+      "dh-jets-de-reaction-groupe-et-equipe"
+    ]
+  },
+  "lecons": [
+    {
+      "id": "6657e8f2-0e53-40e8-976b-295e4d867231",
+      "slug": "dh-qu-est-ce-que-daggerheart",
+      "titre": "Qu'est-ce que Daggerheart ?",
+      "resume": "Découvrir ce jeu de rôle de fantasy : qui joue, combien de temps dure une partie, et le matériel à poser sur la table.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [],
+      "objectifs": [
+        "Expliquer ce qu'est un jeu de rôle sur table",
+        "Distinguer le rôle du MJ et celui des joueurs",
+        "Réunir le matériel d'une partie"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Un jeu de rôle sur table\n\n**Daggerheart** est un jeu de rôle de *fantasy* : magie, créatures, voyages et héros au grand cœur. Il est publié par Darrington Press, l'éditeur de l'équipe de *Critical Role*.\n\nUn **jeu de rôle sur table** (JdR) est une histoire racontée à plusieurs, autour d'une table ou en visio :\n\n- une personne est le **MJ** (maître ou maîtresse du jeu). Elle décrit le monde, joue les personnages secondaires et les dangers ;\n- les autres sont les **joueurs**. Chacun incarne un héros, son **PJ** (personnage joueur), et décide de ce qu'il fait et dit.\n\nIl n'y a ni plateau ni gagnant. Le but est de raconter ensemble une histoire mémorable."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le format d'une partie\n\n- **1 MJ et 2 à 5 joueurs.**\n- Une **séance** dure environ 2 à 4 heures.\n- On peut jouer une histoire complète en une séance (un *one-shot*), ou une **campagne** : une longue histoire, sur des dizaines de séances.\n\nOn appelle **PNJ** (personnage non joueur) tout personnage joué par le MJ : l'aubergiste, le garde, la reine, le dragon."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 340\"><ellipse cx=\"280\" cy=\"170\" rx=\"210\" ry=\"105\" fill=\"illu-bois-clair\" stroke=\"illu-bois-fonce\" stroke-width=\"4\"/><circle cx=\"280\" cy=\"52\" r=\"30\" fill=\"illu-rouge\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"280\" y=\"60.1\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">MJ</text><circle cx=\"80\" cy=\"170\" r=\"26\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"80\" y=\"179.1\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">A</text><circle cx=\"150\" cy=\"278\" r=\"26\" fill=\"menthe\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"150\" y=\"287.1\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">B</text><circle cx=\"280\" cy=\"300\" r=\"26\" fill=\"peche\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"280\" y=\"309.1\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">C</text><circle cx=\"410\" cy=\"278\" r=\"26\" fill=\"sakura\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"410\" y=\"287.1\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">D</text><circle cx=\"480\" cy=\"170\" r=\"26\" fill=\"soleil\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"480\" y=\"179.1\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">E</text><polygon points=\"220,131 240,137.5 252.3,154.5 252.3,175.5 240,192.5 220,199 200,192.5 187.7,175.5 187.7,154.5 200,137.5\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"220\" y1=\"143.9\" x2=\"220\" y2=\"131\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"158.5\" x2=\"252.3\" y2=\"154.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"232.4\" y1=\"182.1\" x2=\"240\" y2=\"192.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"207.6\" y1=\"182.1\" x2=\"200\" y2=\"192.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"200\" y1=\"158.5\" x2=\"187.7\" y2=\"154.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"220,143.9 240,158.5 232.4,182.1 207.6,182.1 200,158.5\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"220\" y=\"171.8\" font-size=\"19\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">7</text><polygon points=\"310,131 330,137.5 342.3,154.5 342.3,175.5 330,192.5 310,199 290,192.5 277.7,175.5 277.7,154.5 290,137.5\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"310\" y1=\"143.9\" x2=\"310\" y2=\"131\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"330\" y1=\"158.5\" x2=\"342.3\" y2=\"154.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"322.4\" y1=\"182.1\" x2=\"330\" y2=\"192.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"297.6\" y1=\"182.1\" x2=\"290\" y2=\"192.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"290\" y1=\"158.5\" x2=\"277.7\" y2=\"154.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"310,143.9 330,158.5 322.4,182.1 297.6,182.1 290,158.5\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"310\" y=\"171.8\" font-size=\"19\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4</text><polygon points=\"370,96 390.8,108 390.8,132 370,144 349.2,132 349.2,108\" fill=\"illu-rouge\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><polygon points=\"370,105.6 382.5,127.2 357.5,127.2\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><line x1=\"370\" y1=\"105.6\" x2=\"370\" y2=\"96\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"382.5\" y1=\"127.2\" x2=\"390.8\" y2=\"132\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"357.5\" y1=\"127.2\" x2=\"349.2\" y2=\"132\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><text x=\"370\" y=\"124.8\" font-size=\"12\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">13</text><circle cx=\"190\" cy=\"225\" r=\"14\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"190\" cy=\"225\" r=\"5.6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"222\" cy=\"225\" r=\"14\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"222\" cy=\"225\" r=\"5.6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"340\" cy=\"225\" r=\"14\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"340,217.3 347.7,225 340,232.7 332.3,225\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"372\" cy=\"225\" r=\"14\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"372,217.3 379.7,225 372,232.7 364.3,225\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"404\" cy=\"225\" r=\"14\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"404,217.3 411.7,225 404,232.7 396.3,225\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg>",
+          "alt": "Une table de jeu vue de dessus : le MJ, cinq joueurs, des dés et des jetons",
+          "description": "Une table ovale en bois vue de dessus. En haut, le pion rouge du MJ. Autour de la table, cinq pions de couleurs pastel, marqués A à E : les joueurs. Au centre, deux dés à 12 faces, un jaune et un violet, un dé à 20 faces rouge, deux jetons jaunes et trois jetons violets.",
+          "legende": "Une table de Daggerheart : un MJ, des joueurs, des dés et des jetons"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le matériel\n\n- **Deux dés à 12 faces (d12) de couleurs différentes** : les **Dés de dualité**. L'un représente l'**Espoir**, l'autre la **Peur**. C'est le cœur du jeu : tu les découvriras dans la leçon suivante.\n- **Un dé à 20 faces (d20)** pour le MJ.\n- Des dés à 4, 6, 8 et 10 faces (d4, d6, d8, d10), pour les dégâts et quelques effets.\n- Des **jetons** : jusqu'à 12 pour la Peur du MJ, et quelques-uns par joueur pour l'Espoir. Des perles ou des pièces font l'affaire.\n- Une **feuille de personnage** par joueur, et des **cartes** de capacités.\n\nDans les règles, « 2d8+3 » veut dire : lance deux dés à 8 faces, additionne-les, puis ajoute 3."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "La **règle d'or** de Daggerheart : le jeu vous appartient. Si une règle gêne l'histoire que la table veut raconter, la table peut la changer, d'un commun accord. Et quand une règle ne dit rien, le MJ **tranche** dans le sens de l'histoire."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Ces parcours suivent le vocabulaire de l'édition française (Black Book Éditions). Le terme anglais est parfois indiqué entre parenthèses, pour retrouver la règle dans le livre ou le SRD anglais. Ils expliquent les règles avec leurs propres mots et ne remplacent pas le livre de base."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "7c0fb431-26f7-4116-b5f3-a74282e4ee3c",
+      "slug": "dh-la-boucle-de-jeu",
+      "titre": "La boucle de jeu : une conversation",
+      "resume": "Comprendre comment se déroule une partie : le MJ décrit, la table pose des questions, les PJ agissent, et l'histoire avance.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [
+        "dh-qu-est-ce-que-daggerheart"
+      ],
+      "objectifs": [
+        "Décrire les quatre étapes de la boucle de jeu",
+        "Savoir quand on lance les dés",
+        "Comprendre pourquoi chaque jet fait avancer l'histoire"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Une conversation structurée\n\nUne partie de Daggerheart est une **conversation**. Le MJ décrit une situation, les joueurs disent ce que font leurs personnages, et chacun construit sur les idées des autres.\n\nCette conversation suit une boucle simple, en quatre étapes. Elle sert partout : en voyage, dans une négociation, en plein combat."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 400\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"185\" y=\"44\" width=\"190\" height=\"72\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"280\" y=\"74.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">1. Le MJ décrit</text><text x=\"280\" y=\"99.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">la scène</text><rect x=\"365\" y=\"164\" width=\"190\" height=\"72\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"460\" y=\"194.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">2. Questions</text><text x=\"460\" y=\"219.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">et réponses</text><rect x=\"185\" y=\"284\" width=\"190\" height=\"72\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"280\" y=\"314.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">3. Les PJ</text><text x=\"280\" y=\"339.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">agissent</text><rect x=\"5\" y=\"164\" width=\"190\" height=\"72\" rx=\"12\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"100\" y=\"194.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4. Le monde</text><text x=\"100\" y=\"219.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">change</text><path d=\"M 380 92 Q 440 110 448 150\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><path d=\"M 448 250 Q 440 290 380 308\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><path d=\"M 180 308 Q 120 290 112 250\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><path d=\"M 112 150 Q 120 110 180 92\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><text x=\"280\" y=\"208\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\" font-style=\"italic\">On recommence</text></svg>",
+          "alt": "Un cycle en quatre étapes reliées par des flèches",
+          "description": "Quatre boîtes disposées en cercle, reliées par des flèches dans le sens des aiguilles d'une montre. En haut : 1. Le MJ décrit la scène. À droite : 2. Questions et réponses. En bas : 3. Les PJ agissent. À gauche : 4. Le monde change. Au centre : On recommence.",
+          "legende": "La boucle de jeu, de la description au changement"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les quatre étapes\n\n1. **Le MJ décrit la scène** : le lieu, les personnes présentes, ce qui saute aux yeux, les dangers visibles.\n2. **Questions et réponses** : les joueurs demandent des précisions (« La porte est-elle fermée à clé ? »). Le MJ répond avec ce que les personnages peuvent savoir facilement. Il pose aussi des questions aux joueurs (« Qu'est-ce qui t'inquiète dans ce village ? ») et intègre leurs réponses.\n3. **Les PJ agissent** : un joueur annonce ce que fait son personnage. Si l'action est sans risque, elle **réussit**, tout simplement. Si l'issue est incertaine et que l'échec serait intéressant, le MJ demande un **jet d'action**.\n4. **Le monde change** : la table raconte le résultat. Puis on revient à l'étape 1, avec une situation nouvelle.\n\nLa scène se termine quand l'histoire arrive à un point naturel, ou quand une règle le déclenche."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\n> **MJ** : Le pont de cordes au-dessus du ravin grince sous le vent. De l'autre côté, une lanterne s'allume dans une cabane.\n>\n> **Léa** (qui joue Pell) : Est-ce que les cordes ont l'air solides ?\n>\n> **MJ** : Elles sont neuves. Mais trois planches manquent au milieu.\n>\n> **Léa** : Pell traverse en courant et saute par-dessus le trou.\n>\n> **MJ** : Sauter au-dessus du vide, avec ce vent : c'est risqué. Fais-moi un jet d'Agilité.\n\nRemarque : si Pell avait simplement traversé lentement, en s'accrochant aux cordes, le MJ aurait pu dire « Tu arrives de l'autre côté » sans aucun jet."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**On ne lance les dés que quand c'est important.** Une action facile, ou dont l'échec serait ennuyeux, réussit automatiquement. Et chaque jet change quelque chose : il n'existe pas de jet où « rien ne se passe »."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "3cfc2c39-a208-465f-aed5-34725e52e4a0",
+      "slug": "dh-les-des-de-dualite",
+      "titre": "Les Dés de dualité et le jet d'action",
+      "resume": "Apprendre à faire un jet d'action : lancer les deux d12, ajouter son trait, comparer à la Difficulté et annoncer le résultat.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-la-boucle-de-jeu"
+      ],
+      "objectifs": [
+        "Faire un jet d'action avec les Dés de dualité",
+        "Calculer le total d'un jet",
+        "Comparer un total à une Difficulté",
+        "Annoncer un résultat « avec Espoir » ou « avec Peur »"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Deux dés, deux forces\n\nLes **Dés de dualité** sont deux dés à 12 faces de couleurs différentes. Avant de jouer, choisis lequel est le **dé d'Espoir** et lequel est le **dé de Peur**.\n\nPresque tous les jets des joueurs sont des **jets d'action** : on les fait quand un personnage tente quelque chose de difficile ou de risqué."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Faire un jet d'action\n\n1. **Le trait** : le MJ dit quel trait du personnage s'applique (Agilité pour sauter, Présence pour convaincre…).\n2. **La Difficulté** : le MJ la fixe. Il peut l'annoncer ou la garder secrète, mais il dit toujours **ce qui risque d'arriver** en cas d'échec.\n3. **Les bonus** : le joueur annonce **avant de lancer** s'il utilise une Expérience ou un autre effet.\n4. **Le jet** : lance les deux d12. **Additionne-les**, puis ajoute le trait et les bonus.\n5. **L'annonce** : dis le total, et quel dé est le plus haut. Par exemple : « 14 avec Espoir ! »\n\nSi le total **atteint ou dépasse** la Difficulté, c'est un **succès**. Sinon, c'est un **échec**."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 260\"><polygon points=\"70,40 99.4,49.5 117.6,74.5 117.6,105.5 99.4,130.5 70,140 40.6,130.5 22.4,105.5 22.4,74.5 40.6,49.5\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"70\" y1=\"59\" x2=\"70\" y2=\"40\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"99.5\" y1=\"80.4\" x2=\"117.6\" y2=\"74.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"88.2\" y1=\"115.1\" x2=\"99.4\" y2=\"130.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"51.8\" y1=\"115.1\" x2=\"40.6\" y2=\"130.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"40.5\" y1=\"80.4\" x2=\"22.4\" y2=\"74.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"70,59 99.5,80.4 88.2,115.1 51.8,115.1 40.5,80.4\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"70\" y=\"100\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">9</text><text x=\"70\" y=\"168\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Espoir</text><text x=\"145\" y=\"105\" font-size=\"36\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">+</text><polygon points=\"220,40 249.4,49.5 267.6,74.5 267.6,105.5 249.4,130.5 220,140 190.6,130.5 172.4,105.5 172.4,74.5 190.6,49.5\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"220\" y1=\"59\" x2=\"220\" y2=\"40\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"249.5\" y1=\"80.4\" x2=\"267.6\" y2=\"74.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"238.2\" y1=\"115.1\" x2=\"249.4\" y2=\"130.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"201.8\" y1=\"115.1\" x2=\"190.6\" y2=\"130.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"190.5\" y1=\"80.4\" x2=\"172.4\" y2=\"74.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"220,59 249.5,80.4 238.2,115.1 201.8,115.1 190.5,80.4\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"220\" y=\"100\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4</text><text x=\"220\" y=\"168\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Peur</text><text x=\"295\" y=\"105\" font-size=\"36\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">+</text><rect x=\"320\" y=\"55\" width=\"110\" height=\"70\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"375\" y=\"84.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">+1</text><text x=\"375\" y=\"109.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Agilité</text><text x=\"455\" y=\"105\" font-size=\"36\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">=</text><rect x=\"475\" y=\"55\" width=\"75\" height=\"70\" rx=\"12\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><text x=\"512.5\" y=\"101.2\" font-size=\"32\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">14</text><rect x=\"110\" y=\"190\" width=\"340\" height=\"52\" rx=\"26\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"280\" y=\"224\" font-size=\"24\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">« 14 avec Espoir ! »</text></svg>",
+          "alt": "Calcul d'un jet : 9 sur le dé d'Espoir, 4 sur le dé de Peur, plus 1 en Agilité, égale 14",
+          "description": "Le dé d'Espoir jaune montre 9, le dé de Peur violet montre 4. On ajoute le trait Agilité, +1. Le total est 14. Comme le dé d'Espoir est le plus haut, le joueur annonce : 14 avec Espoir.",
+          "legende": "Additionne les deux dés et le trait, puis regarde quel dé est le plus haut"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\nPell saute par-dessus le trou du pont. Le MJ demande un **jet d'Agilité**, Difficulté 12. Pell a **+1** en Agilité.\n\nLéa lance : **9** sur le dé d'Espoir et **4** sur le dé de Peur. Total : 9 + 4 + 1 = **14**. C'est plus que 12 : **succès**. Et le dé d'Espoir est le plus haut : **« 14 avec Espoir ! »**\n\nPell atterrit de l'autre côté. Léa gagne un jeton d'Espoir (tu verras pourquoi dans la leçon suivante)."
+        },
+        {
+          "type": "texte",
+          "markdown": "## L'échelle des Difficultés\n\nLe MJ choisit la Difficulté d'après la situation. Voici les repères :"
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 320\"><rect x=\"200\" y=\"18\" width=\"60\" height=\"36\" rx=\"6\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"230\" y=\"44\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">5</text><text x=\"185\" y=\"44\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Très facile</text><rect x=\"200\" y=\"68\" width=\"110\" height=\"36\" rx=\"6\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"230\" y=\"94\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">10</text><text x=\"185\" y=\"94\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Facile</text><rect x=\"200\" y=\"118\" width=\"160\" height=\"36\" rx=\"6\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"230\" y=\"144\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">15</text><text x=\"185\" y=\"144\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Moyenne</text><rect x=\"200\" y=\"168\" width=\"210\" height=\"36\" rx=\"6\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"230\" y=\"194\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">20</text><text x=\"185\" y=\"194\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Difficile</text><rect x=\"200\" y=\"218\" width=\"260\" height=\"36\" rx=\"6\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"230\" y=\"244\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">25</text><text x=\"185\" y=\"244\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Très difficile</text><rect x=\"200\" y=\"268\" width=\"310\" height=\"36\" rx=\"6\" fill=\"illu-rouge\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"230\" y=\"294\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">30</text><text x=\"185\" y=\"294\" font-size=\"20\" text-anchor=\"end\" fill=\"texte\">Quasi impossible</text></svg>",
+          "alt": "Échelle des Difficultés, de 5 (très facile) à 30 (quasi impossible)",
+          "description": "Six barres de plus en plus longues. 5 : très facile. 10 : facile. 15 : moyenne. 20 : difficile. 25 : très difficile. 30 : quasi impossible.",
+          "legende": "Les repères de Difficulté"
+        },
+        {
+          "type": "texte",
+          "markdown": "Avec deux d12, le total des dés va de 2 à 24, et tourne le plus souvent autour de **13**. Une Difficulté de 10 se réussit donc souvent, une Difficulté de 20 rarement, sans bonus.\n\nFace à un adversaire, la Difficulté est indiquée sur sa fiche : c'est le nombre à atteindre pour le toucher."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Total = dé d'Espoir + dé de Peur + trait + bonus.** Un total supérieur ou égal à la Difficulté est un succès. Le dé le plus haut dit si le résultat est « avec Espoir » ou « avec Peur »."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "54a70178-3e23-4703-94c7-fb72c6005e4d",
+      "slug": "dh-les-resultats-d-un-jet",
+      "titre": "Les cinq résultats d'un jet",
+      "resume": "Connaître les cinq issues d'un jet d'action, de l'échec avec Peur au succès critique, et ce que chacune change dans l'histoire.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-les-des-de-dualite"
+      ],
+      "objectifs": [
+        "Nommer les cinq résultats possibles d'un jet d'action",
+        "Savoir qui gagne un jeton d'Espoir ou de Peur",
+        "Reconnaître un succès critique"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Deux questions à chaque jet\n\nUn jet d'action répond à deux questions à la fois :\n\n- **As-tu réussi ?** Le total atteint-il la Difficulté ?\n- **Avec Espoir ou avec Peur ?** Quel dé est le plus haut ?\n\nCela donne quatre résultats, plus un cinquième quand les deux dés sont égaux."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 580 400\"><rect x=\"40\" y=\"60\" width=\"240\" height=\"150\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"160\" y=\"98\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Succès</text><text x=\"160\" y=\"126\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\">avec Espoir</text><text x=\"160\" y=\"158\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Oui, et…</text><text x=\"172\" y=\"192\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">+1 Espoir</text><circle cx=\"70\" cy=\"185\" r=\"11\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"70\" cy=\"185\" r=\"4.4\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><rect x=\"300\" y=\"60\" width=\"240\" height=\"150\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"420\" y=\"98\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Succès</text><text x=\"420\" y=\"126\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\">avec Peur</text><text x=\"420\" y=\"158\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Oui, mais…</text><text x=\"432\" y=\"192\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">+1 Peur au MJ</text><circle cx=\"322\" cy=\"185\" r=\"11\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"322,178.9 328.1,185 322,191.1 315.9,185\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><rect x=\"40\" y=\"230\" width=\"240\" height=\"150\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"160\" y=\"268\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Échec</text><text x=\"160\" y=\"296\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\">avec Espoir</text><text x=\"160\" y=\"328\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Non, mais…</text><text x=\"172\" y=\"362\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">+1 Espoir</text><circle cx=\"70\" cy=\"355\" r=\"11\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"70\" cy=\"355\" r=\"4.4\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><rect x=\"300\" y=\"230\" width=\"240\" height=\"150\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"420\" y=\"268\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Échec</text><text x=\"420\" y=\"296\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\">avec Peur</text><text x=\"420\" y=\"328\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-style=\"italic\">Non, et…</text><text x=\"432\" y=\"362\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">+1 Peur au MJ</text><circle cx=\"322\" cy=\"355\" r=\"11\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"322,348.9 328.1,355 322,361.1 315.9,355\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"160\" y=\"40\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Dé d'Espoir le plus haut</text><text x=\"420\" y=\"40\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Dé de Peur le plus haut</text></svg>",
+          "alt": "Les quatre résultats d'un jet, selon la réussite et le dé le plus haut",
+          "description": "Une grille de quatre cases. Colonne de gauche, dé d'Espoir le plus haut ; colonne de droite, dé de Peur le plus haut. En haut à gauche : succès avec Espoir, « Oui, et… », le joueur gagne 1 Espoir. En haut à droite : succès avec Peur, « Oui, mais… », le MJ gagne 1 Peur. En bas à gauche : échec avec Espoir, « Non, mais… », le joueur gagne 1 Espoir. En bas à droite : échec avec Peur, « Non, et… », le MJ gagne 1 Peur.",
+          "legende": "Réussite et dé le plus haut : quatre combinaisons"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les quatre résultats\n\n- **Succès avec Espoir** — *« Oui, et… »* Tu obtiens ce que tu voulais, et tu gagnes **1 Espoir**. Les joueurs gardent la main.\n- **Succès avec Peur** — *« Oui, mais… »* Tu réussis, mais avec un coût ou une complication. Le MJ gagne **1 Peur**, puis il prend la main.\n- **Échec avec Espoir** — *« Non, mais… »* Tu n'obtiens pas ce que tu voulais, avec une conséquence légère. Tu gagnes quand même **1 Espoir**. Puis le MJ prend la main.\n- **Échec avec Peur** — *« Non, et… »* Ça tourne mal, avec une conséquence sérieuse. Le MJ gagne **1 Peur** et prend la main.\n\n« Prendre la main », c'est faire un **acte de MJ** : une attaque, un nouveau danger, une révélation. Tu le verras dans la leçon sur la Peur."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 200\"><polygon points=\"110,30 139.4,39.5 157.6,64.5 157.6,95.5 139.4,120.5 110,130 80.6,120.5 62.4,95.5 62.4,64.5 80.6,39.5\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"110\" y1=\"49\" x2=\"110\" y2=\"30\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"139.5\" y1=\"70.4\" x2=\"157.6\" y2=\"64.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"128.2\" y1=\"105.1\" x2=\"139.4\" y2=\"120.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"91.8\" y1=\"105.1\" x2=\"80.6\" y2=\"120.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"80.5\" y1=\"70.4\" x2=\"62.4\" y2=\"64.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"110,49 139.5,70.4 128.2,105.1 91.8,105.1 80.5,70.4\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"110\" y=\"90\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">8</text><text x=\"110\" y=\"158\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Espoir</text><polygon points=\"250,30 279.4,39.5 297.6,64.5 297.6,95.5 279.4,120.5 250,130 220.6,120.5 202.4,95.5 202.4,64.5 220.6,39.5\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"250\" y1=\"49\" x2=\"250\" y2=\"30\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"279.5\" y1=\"70.4\" x2=\"297.6\" y2=\"64.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"268.2\" y1=\"105.1\" x2=\"279.4\" y2=\"120.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"231.8\" y1=\"105.1\" x2=\"220.6\" y2=\"120.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"220.5\" y1=\"70.4\" x2=\"202.4\" y2=\"64.5\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"250,49 279.5,70.4 268.2,105.1 231.8,105.1 220.5,70.4\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"250\" y=\"90\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">8</text><text x=\"250\" y=\"158\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Peur</text><text x=\"330\" y=\"70\" font-size=\"26\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">Double !</text><text x=\"330\" y=\"102\" font-size=\"22\" text-anchor=\"start\" fill=\"texte\">Succès</text><text x=\"330\" y=\"130\" font-size=\"22\" text-anchor=\"start\" fill=\"texte\">critique</text></svg>",
+          "alt": "Deux dés qui montrent tous les deux 8 : un succès critique",
+          "description": "Le dé d'Espoir et le dé de Peur montrent tous les deux 8. À côté : Double ! Succès critique.",
+          "legende": "Deux dés identiques : un succès critique, quel que soit le total"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le succès critique\n\nSi les deux dés affichent **le même nombre**, c'est un **succès critique**, même si le total est sous la Difficulté.\n\n- Tu réussis, avec un **bonus** en plus.\n- Tu gagnes **1 Espoir** et tu **effaces 1 Stress** (une case de fatigue ou de tension, vue plus tard).\n- Sur une attaque, tu infliges des **dégâts critiques**.\n\nUn succès critique compte comme un résultat « avec Espoir ». Il arrive une fois sur douze."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple : quatre façons de crocheter une serrure\n\nMaëlis crochète la serrure d'un entrepôt, Difficulté 13.\n\n- **15 avec Espoir** : la porte s'ouvre sans bruit. Maëlis gagne 1 Espoir.\n- **15 avec Peur** : la porte s'ouvre… mais le crochet casse dans la serrure. Le MJ gagne 1 Peur, et un chien aboie au loin.\n- **10 avec Espoir** : la serrure résiste. Maëlis gagne 1 Espoir, mais le MJ annonce qu'une patrouille approche.\n- **10 avec Peur** : la serrure résiste, et la patrouille la surprend, l'outil à la main. Le MJ gagne 1 Peur."
+        },
+        {
+          "type": "texte",
+          "markdown": "## À toi de compter\n\nSur les 144 combinaisons possibles de deux d12, combien donnent l'Espoir, la Peur, ou un double ? Lance ce petit programme pour le vérifier."
+        },
+        {
+          "type": "code",
+          "langage": "python",
+          "code": "espoir = peur = double = 0\nfor de_espoir in range(1, 13):\n    for de_peur in range(1, 13):\n        if de_espoir > de_peur:\n            espoir += 1\n        elif de_peur > de_espoir:\n            peur += 1\n        else:\n            double += 1\n\nprint(\"Avec Espoir :\", espoir, \"sur 144\")\nprint(\"Avec Peur :\", peur, \"sur 144\")\nprint(\"Succès critique :\", double, \"sur 144\")\n",
+          "executable": true,
+          "sortie_attendue": "Avec Espoir : 66 sur 144\nAvec Peur : 66 sur 144\nSuccès critique : 12 sur 144\n"
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "L'Espoir et la Peur sortent aussi souvent l'un que l'autre. **Un succès peut amener des ennuis, et un échec peut rapporter de l'Espoir.** C'est ce qui rend chaque jet intéressant."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "1a2f645d-f8ec-4d92-a2b7-560a9a22c502",
+      "slug": "dh-les-six-traits",
+      "titre": "Les six traits du personnage",
+      "resume": "Découvrir les six traits (Agilité, Force, Finesse, Instinct, Présence, Savoir) et savoir lequel utiliser pour une action.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [
+        "dh-les-des-de-dualite"
+      ],
+      "objectifs": [
+        "Nommer les six traits d'un personnage",
+        "Associer une action au bon trait",
+        "Lire la valeur d'un trait sur la feuille"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Six aptitudes\n\nChaque personnage a six **traits**. Ce sont ses aptitudes physiques, mentales et sociales. Chaque trait a une valeur, de **−1** à **+2** au début du jeu, ajoutée au jet d'action.\n\nSur la feuille de personnage, chaque trait est accompagné de trois **verbes** : ce sont des exemples d'actions qui l'utilisent."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 324\"><rect x=\"10\" y=\"10\" width=\"580\" height=\"44\" rx=\"10\" fill=\"peche\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"30\" y=\"39\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Agilité</text><text x=\"175\" y=\"39\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">sprinter, sauter, manœuvrer</text><rect x=\"10\" y=\"62\" width=\"580\" height=\"44\" rx=\"10\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"30\" y=\"91\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Force</text><text x=\"175\" y=\"91\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">soulever, fracasser, empoigner</text><rect x=\"10\" y=\"114\" width=\"580\" height=\"44\" rx=\"10\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"30\" y=\"143\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Finesse</text><text x=\"175\" y=\"143\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">contrôler, se cacher, bricoler</text><rect x=\"10\" y=\"166\" width=\"580\" height=\"44\" rx=\"10\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"30\" y=\"195\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Instinct</text><text x=\"175\" y=\"195\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">percevoir, sentir, se repérer</text><rect x=\"10\" y=\"218\" width=\"580\" height=\"44\" rx=\"10\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"30\" y=\"247\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Présence</text><text x=\"175\" y=\"247\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">charmer, jouer, duper</text><rect x=\"10\" y=\"270\" width=\"580\" height=\"44\" rx=\"10\" fill=\"illu-bois-clair\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"30\" y=\"299\" font-size=\"22\" text-anchor=\"start\" fill=\"illu-noir\" font-weight=\"bold\">Savoir</text><text x=\"175\" y=\"299\" font-size=\"20\" text-anchor=\"start\" fill=\"illu-noir\">se souvenir, analyser, comprendre</text></svg>",
+          "alt": "Les six traits et leurs verbes",
+          "description": "Six bandeaux. Agilité : sprinter, sauter, manœuvrer. Force : soulever, fracasser, empoigner. Finesse : contrôler, se cacher, bricoler. Instinct : percevoir, sentir, se repérer. Présence : charmer, jouer, duper. Savoir : se souvenir, analyser, comprendre.",
+          "legende": "Les six traits, avec les verbes de la feuille de personnage"
+        },
+        {
+          "type": "texte",
+          "markdown": "## À quoi sert chaque trait\n\n- **Agilité** : être vif et adroit en mouvement. Grimper à une corde, courir se mettre à couvert, sauter de toit en toit.\n- **Force** : la puissance et l'endurance. Enfoncer une porte, soulever une herse, tenir bon face à une charge.\n- **Finesse** : la précision et la discrétion. Manier un outil délicat, passer inaperçu, frapper juste.\n- **Instinct** : les sens et l'intuition. Sentir un danger, remarquer un détail, suivre une piste.\n- **Présence** : la force de caractère. Plaider sa cause, intimider, captiver une foule.\n- **Savoir** : la mémoire et le raisonnement. Interpréter des indices, se rappeler une légende, comprendre un mécanisme.\n\nLes **attaques** utilisent aussi un trait : celui indiqué sur l'arme ou le sort. Une dague utilise la Finesse, une hache la Force, un arc l'Agilité."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Qui choisit le trait ?\n\nLe **joueur décrit** ce que fait son personnage, et le **MJ dit** quel trait s'applique. Si deux traits conviennent, le MJ choisit, ou laisse le joueur décider.\n\nExemple : Ysolde veut faire parler un contrebandier.\n\n- Elle le plaque contre le mur et le menace : **Présence** (intimider) ou **Force** (empoigner). Le MJ laisse choisir la joueuse, qui prend la Force, son meilleur trait.\n- Elle remarque plutôt qu'il ment, à sa façon de détourner les yeux : **Instinct**."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Décris d'abord **ce que fait** ton personnage, pas le trait que tu veux utiliser. « Je bondis sur la table pour attraper le lustre » est plus vivant que « Je fais un jet d'Agilité ». Le MJ en déduira le trait."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "df03e7ac-c208-436c-99bb-d16bed075e1a",
+      "slug": "dh-l-espoir",
+      "titre": "L'Espoir : gagner et dépenser",
+      "resume": "Comprendre l'Espoir, la ressource des héros : comment on le gagne, combien on peut en garder, et les quatre façons de le dépenser.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-les-resultats-d-un-jet"
+      ],
+      "objectifs": [
+        "Savoir quand un personnage gagne de l'Espoir",
+        "Utiliser une Expérience",
+        "Aider un allié",
+        "Connaître le coût d'un Jet d'équipe et d'une caractéristique d'Espoir"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## La ressource des héros\n\nL'**Espoir** représente la confiance et l'élan d'un personnage. On le note avec des jetons ou des cases sur la feuille.\n\n- Chaque personnage **commence avec 2 Espoir**.\n- Il en a **6 au maximum**.\n- L'Espoir **se garde** d'une séance à l'autre.\n\nOn gagne 1 Espoir à chaque jet d'action **avec Espoir** (réussi ou raté) et sur un **succès critique**. Certains repos et certaines capacités en donnent aussi."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 310\"><circle cx=\"60\" cy=\"60\" r=\"20\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"112\" cy=\"60\" r=\"20\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"164\" cy=\"60\" r=\"20\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"216\" cy=\"60\" r=\"20\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"268\" cy=\"60\" r=\"20\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"320\" cy=\"60\" r=\"20\" fill=\"illu-blanc\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"60\" cy=\"60\" r=\"18\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"60\" cy=\"60\" r=\"7.2\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"112\" cy=\"60\" r=\"18\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"112\" cy=\"60\" r=\"7.2\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"164\" cy=\"60\" r=\"18\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"164\" cy=\"60\" r=\"7.2\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><circle cx=\"216\" cy=\"60\" r=\"18\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"216\" cy=\"60\" r=\"7.2\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><rect x=\"20\" y=\"120\" width=\"255\" height=\"78\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"159\" r=\"15\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"159\" r=\"6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><text x=\"92\" y=\"167\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">× 1</text><text x=\"200\" y=\"153\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Utiliser une</text><text x=\"200\" y=\"179\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Expérience</text><rect x=\"290\" y=\"120\" width=\"255\" height=\"78\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"320\" cy=\"159\" r=\"15\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"320\" cy=\"159\" r=\"6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><text x=\"362\" y=\"167\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">× 1</text><text x=\"470\" y=\"153\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Aider</text><text x=\"470\" y=\"179\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">un allié</text><rect x=\"20\" y=\"210\" width=\"255\" height=\"78\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"249\" r=\"15\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"249\" r=\"6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><text x=\"92\" y=\"257\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">× 3</text><text x=\"200\" y=\"243\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Jet</text><text x=\"200\" y=\"269\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">d'équipe</text><rect x=\"290\" y=\"210\" width=\"255\" height=\"78\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><circle cx=\"320\" cy=\"249\" r=\"15\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"2\"/><circle cx=\"320\" cy=\"249\" r=\"6\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\"/><text x=\"362\" y=\"257\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">× 3</text><text x=\"470\" y=\"243\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Caractéristique</text><text x=\"470\" y=\"269\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">d'Espoir</text><text x=\"380\" y=\"68\" font-size=\"22\" text-anchor=\"start\" fill=\"texte\" font-weight=\"bold\">4 Espoir sur 6</text></svg>",
+          "alt": "Une piste d'Espoir à 4 sur 6, et les quatre façons de le dépenser",
+          "description": "En haut, six cases rondes, dont quatre occupées par un jeton d'Espoir : le personnage a 4 Espoir sur 6. En bas, quatre cartes avec leur coût : utiliser une Expérience, 1 Espoir ; aider un allié, 1 Espoir ; jet d'équipe, 3 Espoir ; caractéristique d'Espoir, 3 Espoir.",
+          "legende": "L'Espoir se garde jusqu'à 6, et se dépense de quatre façons"
+        },
+        {
+          "type": "texte",
+          "markdown": "## 1. Utiliser une Expérience (1 Espoir)\n\nUne **Expérience** est un mot ou une courte phrase qui résume un savoir-faire ou un trait de caractère du personnage : *Ancienne contrebandière*, *Œil de tireur*, *Je ne laisse personne derrière*. Elle vaut **+2** au départ.\n\nQuand une Expérience colle à l'action, dépense 1 Espoir pour **ajouter son bonus** au jet. Tu peux en utiliser plusieurs sur un même jet, en payant 1 Espoir pour chacune. Annonce-le **avant** de lancer les dés.\n\nExemple : Pell négocie avec un receleur. Il a l'Expérience *Ancien voleur des docks +2*. Léa dépense 1 Espoir : son jet de Présence gagne +2."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 2. Aider un allié (1 Espoir)\n\nQuand un autre personnage fait un jet d'action, tu peux l'aider. Décris comment tu t'y prends, dépense 1 Espoir, et lance un **d6**. Ton allié l'ajoute à son total : c'est un **dé d'avantage**.\n\nSi plusieurs personnes aident, chacune lance son d6, mais ton allié ne garde que **le plus haut**."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 3. Le Jet d'équipe (3 Espoir)\n\nUne fois **par séance**, chaque joueur peut dépenser 3 Espoir pour lancer un **Jet d'équipe** avec un autre personnage. Les deux joueurs décrivent comment ils combinent leurs actions, puis chacun fait un jet d'action. On choisit **un seul** des deux jets, qui s'applique aux deux personnages. La leçon sur les jets spéciaux détaille la règle."
+        },
+        {
+          "type": "texte",
+          "markdown": "## 4. Les caractéristiques d'Espoir (3 Espoir, en général)\n\nChaque classe a une **caractéristique d'Espoir** : un pouvoir propre, qui coûte 3 Espoir. Le gardien efface des emplacements d'armure, le magicien empêche un adversaire d'agir, etc. D'autres capacités (cartes, ascendance) coûtent aussi de l'Espoir : leur coût est écrit dessus.\n\nSi ton jet vient de te donner de l'Espoir, tu peux le dépenser tout de suite pour l'effet de ce même jet."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "**Dépense ton Espoir.** Un personnage à 6 Espoir ne peut plus en gagner : chaque résultat « avec Espoir » est alors perdu. Les joueurs qui réussissent le mieux sont ceux qui utilisent leurs Expériences souvent."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "da9f6c6d-c533-46bc-8695-76a42f2b672b",
+      "slug": "dh-la-peur",
+      "titre": "La Peur et les actes du MJ",
+      "resume": "Comprendre la Peur, la ressource du MJ : d'où elle vient, à quoi elle sert, et pourquoi elle rend l'histoire plus intense.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 9,
+      "prerequis": [
+        "dh-les-resultats-d-un-jet"
+      ],
+      "objectifs": [
+        "Savoir quand le MJ gagne de la Peur",
+        "Citer ce que le MJ peut faire avec la Peur",
+        "Définir un acte de MJ"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## La ressource du MJ\n\nLa **Peur** est le pendant de l'Espoir, côté MJ. Elle représente les forces qui menacent les héros : le danger, le hasard, les plans des méchants.\n\n- Le MJ gagne **1 Peur** chaque fois qu'un joueur fait un jet **avec Peur**.\n- Il en gagne aussi quand le groupe **se repose**.\n- Il en a **12 au maximum**, et elle **se garde** d'une séance à l'autre.\n- Au début d'une campagne, le MJ a **1 Peur par personnage joueur**."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 300\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"20\" y=\"30\" width=\"200\" height=\"90\" rx=\"12\" fill=\"ciel\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"120\" y=\"69.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Jet d'un joueur</text><text x=\"120\" y=\"94.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">« 12 avec Peur »</text><line x1=\"225\" y1=\"75\" x2=\"300\" y2=\"75\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><rect x=\"305\" y=\"20\" width=\"245\" height=\"110\" rx=\"12\" fill=\"illu-bois-clair\" stroke=\"illu-bois-fonce\" stroke-width=\"3\"/><text x=\"427\" y=\"48\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Réserve du MJ</text><circle cx=\"335\" cy=\"92\" r=\"16\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"335,83.2 343.8,92 335,100.8 326.2,92\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"379\" cy=\"92\" r=\"16\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"379,83.2 387.8,92 379,100.8 370.2,92\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"423\" cy=\"92\" r=\"16\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"423,83.2 431.8,92 423,100.8 414.2,92\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"467\" cy=\"92\" r=\"16\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"467,83.2 475.8,92 467,100.8 458.2,92\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"511\" cy=\"92\" r=\"16\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"2\"/><polygon points=\"511,83.2 519.8,92 511,100.8 502.2,92\" fill=\"illu-noir\" stroke=\"none\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"427\" y=\"165\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">5 Peur sur 12</text><rect x=\"10\" y=\"200\" width=\"175\" height=\"80\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"97.5\" y=\"234.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Prendre la main</text><text x=\"97.5\" y=\"259.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">en interrompant</text><rect x=\"192\" y=\"200\" width=\"175\" height=\"80\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"279.5\" y=\"234.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Un acte de MJ</text><text x=\"279.5\" y=\"259.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">en plus</text><rect x=\"374\" y=\"200\" width=\"175\" height=\"80\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"461.5\" y=\"234.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">Une capacité</text><text x=\"461.5\" y=\"259.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">d'adversaire</text></svg>",
+          "alt": "Un jet avec Peur ajoute un jeton à la réserve du MJ, qui le dépense de trois façons",
+          "description": "Un jet de joueur, 12 avec Peur, envoie un jeton violet dans la réserve du MJ, qui contient maintenant 5 Peur sur 12. En dessous, trois usages : prendre la main en interrompant, faire un acte de MJ en plus, utiliser une capacité d'adversaire.",
+          "legende": "La Peur passe des jets des joueurs à la réserve du MJ"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Les actes de MJ\n\nUn **acte de MJ** (*GM move*) est une action du MJ qui change l'histoire : un ennemi attaque, un pont s'effondre, un allié trahit, une vérité dérangeante éclate.\n\nLe MJ fait un acte quand les joueurs lui en donnent l'occasion :\n\n- un jet **raté** ;\n- un jet **avec Peur** ;\n- une action qui a forcément des conséquences ;\n- une ouverture évidente (« Je tourne le dos aux bandits pour fouiller le coffre ») ;\n- quand les joueurs se tournent vers lui pour savoir ce qui se passe.\n\nAprès son acte, le MJ rend la main aux joueurs."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Dépenser la Peur\n\nLe MJ dépense 1 Peur pour :\n\n- **interrompre** les joueurs et faire un acte, même sans jet raté ;\n- faire **un acte de plus**, par exemple faire agir un deuxième adversaire ;\n- activer une **capacité de Peur** d'un adversaire ou d'un lieu : une attaque spéciale, une invocation, un éboulement ;\n- ajouter l'**Expérience** d'un adversaire à son jet."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "La Peur n'est pas une arme contre les joueurs : c'est **le moteur de la tension**. Plus il y a de jets avec Peur, plus l'histoire devient dangereuse et spectaculaire. Le MJ et les joueurs restent dans la même équipe : celle de l'histoire."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "e1b60e87-5817-4645-a71d-768a524836f8",
+      "slug": "dh-mettre-en-avant",
+      "titre": "Qui agit ? Le jeu sans initiative",
+      "resume": "Comprendre comment la parole circule à Daggerheart : pas de tour de jeu fixe, mais une mise en avant qui suit l'histoire et les dés.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [
+        "dh-la-peur"
+      ],
+      "objectifs": [
+        "Expliquer pourquoi Daggerheart n'a pas d'initiative",
+        "Savoir quand la main passe au MJ",
+        "Utiliser les jetons d'action, une règle optionnelle"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Pas de tour de jeu\n\nBeaucoup de jeux de rôle fixent un ordre : chacun son tour, une action chacun. **Daggerheart n'en a pas.**\n\nLe personnage qui a l'attention de la table est **mis en avant** (en anglais, il a le *spotlight*, le projecteur). Il décrit ce qu'il fait, puis l'attention passe :\n\n- à la personne qu'une règle désigne (par exemple le MJ, après un jet avec Peur) ;\n- à celui vers qui l'histoire se tourne naturellement ;\n- ou à un personnage qu'on n'a pas vu depuis un moment."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 580 320\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><polygon points=\"140,20 160,20 225,210 75,210\" fill=\"illu-jaune\" stroke=\"none\" fill-opacity=\"0.35\" stroke-width=\"2\" stroke-linejoin=\"round\"/><ellipse cx=\"150\" cy=\"210\" rx=\"75\" ry=\"21.4\" fill=\"illu-jaune\" fill-opacity=\"0.5\" stroke=\"illu-orange\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"200\" r=\"30\" fill=\"ciel\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"150\" y=\"210.5\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Y</text><circle cx=\"280\" cy=\"210\" r=\"30\" fill=\"menthe\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"280\" y=\"220.5\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">P</text><circle cx=\"410\" cy=\"210\" r=\"30\" fill=\"peche\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"410\" y=\"220.5\" font-size=\"28\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">M</text><circle cx=\"520\" cy=\"120\" r=\"30\" fill=\"illu-rouge\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"520\" y=\"128.1\" font-size=\"22\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">MJ</text><path d=\"M 175 250 Q 215 290 255 250\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><path d=\"M 305 250 Q 345 290 385 250\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\"/><path d=\"M 430 180 Q 470 120 488 122\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\" stroke-dasharray=\"8 6\"/><text x=\"400\" y=\"40\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">Jet raté ou</text><text x=\"400\" y=\"64\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte\">avec Peur</text><path d=\"M 492 150 Q 330 120 182 178\" fill=\"none\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-end=\"url(#pointe)\" stroke-dasharray=\"8 6\"/><text x=\"330\" y=\"300\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\" font-style=\"italic\">La main passe selon l'histoire, sans ordre fixe</text></svg>",
+          "alt": "Un projecteur éclaire un joueur ; des flèches montrent la main qui passe entre joueurs puis au MJ",
+          "description": "Trois pions de joueurs, Y, P et M, et un pion de MJ. Un cône de lumière éclaire Y. Des flèches pleines vont de Y à P, puis de P à M. Une flèche en pointillés va de M au MJ, avec la mention : jet raté ou avec Peur. Une autre flèche en pointillés revient du MJ vers Y. En bas : la main passe selon l'histoire, sans ordre fixe.",
+          "legende": "La mise en avant circule entre les joueurs, et passe au MJ après un échec ou un jet avec Peur"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Quand le MJ prend la main\n\nLes joueurs gardent la main tant que leurs jets réussissent **avec Espoir**. Le MJ la prend quand un joueur :\n\n- **rate** un jet ;\n- fait un jet **avec Peur**, même réussi.\n\nC'est le **tour de MJ** : il fait un acte, par exemple mettre en avant un adversaire qui attaque. Il peut dépenser de la Peur pour faire d'autres actes. Puis il rend la main aux joueurs, qui décident ensemble qui agit.\n\nEn combat, cela donne un rythme très vivant : tant que les héros réussissent avec Espoir, ils enchaînent. Dès que la Peur sort, l'adversaire riposte."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Exemple\n\n> Ysolde frappe le troll : **succès avec Espoir**. Les joueurs gardent la main.\n>\n> **Léa** : Pell en profite pour se glisser derrière lui !\n>\n> Pell attaque : **échec avec Peur**. Le MJ gagne 1 Peur et prend la main.\n>\n> **MJ** : Le troll balaie l'air de son gourdin et vise Pell. *(Il attaque.)* Et je dépense 1 Peur : dans la forêt, deux loups répondent à son cri et surgissent.\n>\n> **MJ** : Que faites-vous ?"
+        },
+        {
+          "type": "texte",
+          "markdown": "## Règle optionnelle : les jetons d'action\n\nCertaines tables préfèrent un peu plus de structure. Au début d'une scène, chaque joueur pose **3 jetons** sur sa feuille et en retire un à chaque action. Quand un joueur n'a plus de jeton, la main passe à quelqu'un d'autre. Quand tout le monde a vidé ses jetons, chacun en reprend 3."
+        },
+        {
+          "type": "encadre",
+          "variante": "astuce",
+          "markdown": "Joueurs, **partagez la lumière**. Si un ami n'a pas parlé depuis un moment, tourne-toi vers lui : « Et toi, que fait ton personnage pendant ce temps ? »"
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "3e7f10c8-458e-4dd6-b3f2-7787fa9ac65f",
+      "slug": "dh-avantage-et-desavantage",
+      "titre": "Avantage et désavantage",
+      "resume": "Apprendre à jouer avec un dé d'avantage ou de désavantage, et savoir comment ils se combinent avec l'aide des alliés.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 8,
+      "prerequis": [
+        "dh-l-espoir"
+      ],
+      "objectifs": [
+        "Ajouter un dé d'avantage à un jet",
+        "Retirer un dé de désavantage",
+        "Combiner plusieurs sources d'avantage",
+        "Appliquer l'aide de plusieurs alliés"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Un d6 de plus\n\nQuand la situation t'aide, tu as l'**avantage** : lance un **d6** en plus et **ajoute-le** au total.\n\nQuand la situation te gêne, tu as un **désavantage** : lance un **d6** en plus et **retire-le** du total.\n\nLes dés de dualité ne changent pas : c'est toujours eux qui disent si le jet est avec Espoir ou avec Peur."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 580 250\"><text x=\"140\" y=\"30\" font-size=\"24\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Avantage</text><polygon points=\"60,54 81.2,60.9 94.2,78.9 94.2,101.1 81.2,119.1 60,126 38.8,119.1 25.8,101.1 25.8,78.9 38.8,60.9\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"60\" y1=\"67.7\" x2=\"60\" y2=\"54\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"81.2\" y1=\"83.1\" x2=\"94.2\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"73.1\" y1=\"108.1\" x2=\"81.2\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"46.9\" y1=\"108.1\" x2=\"38.8\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"38.8\" y1=\"83.1\" x2=\"25.8\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"60,67.7 81.2,83.1 73.1,108.1 46.9,108.1 38.8,83.1\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"60\" y=\"97.2\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">6</text><polygon points=\"140,54 161.2,60.9 174.2,78.9 174.2,101.1 161.2,119.1 140,126 118.8,119.1 105.8,101.1 105.8,78.9 118.8,60.9\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"140\" y1=\"67.7\" x2=\"140\" y2=\"54\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"161.2\" y1=\"83.1\" x2=\"174.2\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"153.1\" y1=\"108.1\" x2=\"161.2\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"126.9\" y1=\"108.1\" x2=\"118.8\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"118.8\" y1=\"83.1\" x2=\"105.8\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"140,67.7 161.2,83.1 153.1,108.1 126.9,108.1 118.8,83.1\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"140\" y=\"97.2\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">5</text><text x=\"196\" y=\"98\" font-size=\"30\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">+</text><rect x=\"210\" y=\"65\" width=\"50\" height=\"50\" rx=\"9\" fill=\"menthe\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"235\" y=\"99\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4</text><text x=\"140\" y=\"170\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\">6 + 5 + 4 = 15</text><text x=\"430\" y=\"30\" font-size=\"24\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Désavantage</text><polygon points=\"350,54 371.2,60.9 384.2,78.9 384.2,101.1 371.2,119.1 350,126 328.8,119.1 315.8,101.1 315.8,78.9 328.8,60.9\" fill=\"illu-jaune\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"350\" y1=\"67.7\" x2=\"350\" y2=\"54\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"371.2\" y1=\"83.1\" x2=\"384.2\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"363.1\" y1=\"108.1\" x2=\"371.2\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"336.9\" y1=\"108.1\" x2=\"328.8\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"328.8\" y1=\"83.1\" x2=\"315.8\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"350,67.7 371.2,83.1 363.1,108.1 336.9,108.1 328.8,83.1\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"350\" y=\"97.2\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">6</text><polygon points=\"430,54 451.2,60.9 464.2,78.9 464.2,101.1 451.2,119.1 430,126 408.8,119.1 395.8,101.1 395.8,78.9 408.8,60.9\" fill=\"illu-violet\" stroke=\"illu-noir\" stroke-width=\"3\" stroke-linejoin=\"round\"/><line x1=\"430\" y1=\"67.7\" x2=\"430\" y2=\"54\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"451.2\" y1=\"83.1\" x2=\"464.2\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"443.1\" y1=\"108.1\" x2=\"451.2\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"416.9\" y1=\"108.1\" x2=\"408.8\" y2=\"119.1\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"408.8\" y1=\"83.1\" x2=\"395.8\" y2=\"78.9\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linecap=\"round\"/><polygon points=\"430,67.7 451.2,83.1 443.1,108.1 416.9,108.1 408.8,83.1\" fill=\"none\" stroke=\"illu-noir\" stroke-width=\"2\" stroke-linejoin=\"round\"/><text x=\"430\" y=\"97.2\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">5</text><text x=\"486\" y=\"98\" font-size=\"30\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">−</text><rect x=\"500\" y=\"65\" width=\"50\" height=\"50\" rx=\"9\" fill=\"sakura\" stroke=\"illu-noir\" stroke-width=\"3\"/><text x=\"525\" y=\"99\" font-size=\"25\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">4</text><text x=\"430\" y=\"170\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\">6 + 5 − 4 = 7</text><text x=\"290\" y=\"230\" font-size=\"20\" text-anchor=\"middle\" fill=\"texte-doux\" font-style=\"italic\">Un avantage et un désavantage s'annulent</text></svg>",
+          "alt": "Le même jet avec un dé d'avantage, puis avec un dé de désavantage",
+          "description": "À gauche, avantage : dé d'Espoir 6, dé de Peur 5, plus un d6 d'avantage qui donne 4 : total 15. À droite, désavantage : les mêmes dés de dualité, moins un d6 qui donne 4 : total 7. En bas : un avantage et un désavantage s'annulent.",
+          "legende": "Le d6 s'ajoute avec l'avantage, et se retire avec le désavantage"
+        },
+        {
+          "type": "texte",
+          "markdown": "## D'où viennent-ils ?\n\nLe MJ les accorde selon la situation, et beaucoup de capacités en donnent :\n\n- attaquer un ennemi **Vulnérable** donne l'avantage ;\n- attaquer à distance une cible **à couvert** donne un désavantage ;\n- une ruse bien préparée, un terrain favorable : avantage.\n\nLe MJ préfère souvent donner un avantage ou un désavantage plutôt que changer la Difficulté : le joueur **sent** directement l'effet de la situation."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Ils ne s'additionnent pas\n\n- Un jet n'a **jamais plus d'un** dé d'avantage ou de désavantage. Trois raisons d'avoir l'avantage donnent un seul d6.\n- Avantage et désavantage **s'annulent un pour un**. Trois avantages et un désavantage : il reste un avantage, donc un seul d6."
+        },
+        {
+          "type": "texte",
+          "markdown": "## L'exception : Aider un allié\n\nQuand des alliés dépensent de l'Espoir pour **Aider un allié**, chacun lance **son propre d6**. Le joueur qui agit garde seulement **le plus haut** de tous ces d6, le sien compris.\n\nExemple : Maëlis grimpe une falaise avec l'avantage (elle a une corde). Ysolde et Pell l'aident tous les deux. Maëlis lance son d6 : 2. Ysolde : 3. Pell : 5. Maëlis ajoute **5** à son total."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "**Un seul d6 au maximum**, ajouté (avantage) ou retiré (désavantage). Quand plusieurs alliés aident, on garde le meilleur de leurs dés."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    },
+    {
+      "id": "2a1ebbc2-f631-436c-8460-a9bb6ebde6c7",
+      "slug": "dh-jets-de-reaction-groupe-et-equipe",
+      "titre": "Jets de réaction, de groupe et d'équipe",
+      "resume": "Connaître les jets spéciaux : le jet de réaction pour esquiver un danger, le jet de groupe pour agir ensemble, et le Jet d'équipe pour une action spectaculaire.",
+      "theme": "daggerheart",
+      "niveau": "debutant",
+      "duree_minutes": 10,
+      "prerequis": [
+        "dh-avantage-et-desavantage"
+      ],
+      "objectifs": [
+        "Faire un jet de réaction",
+        "Mener un jet de groupe",
+        "Lancer un Jet d'équipe"
+      ],
+      "blocs": [
+        {
+          "type": "texte",
+          "markdown": "## Le jet de réaction\n\nUn **jet de réaction** sert à **éviter ou encaisser** un effet qui arrive : une explosion, un piège, un sort. Il se fait comme un jet d'action, avec un trait et une Difficulté, mais :\n\n- il ne donne **ni Espoir ni Peur** ;\n- il ne donne pas la main au MJ ;\n- personne ne peut **Aider un allié** sur ce jet.\n\nSur un succès critique en réaction, tu ne gagnes rien, mais tu **ignores tout l'effet** : pas de dégâts, pas de Stress.\n\nExemple : un piège crache des fléchettes. Le MJ demande à Pell un **jet de réaction d'Agilité** (13). Réussi, il se jette au sol à temps."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le jet de groupe\n\nQuand plusieurs personnages font **la même chose ensemble** (escalader, fuir, monter la garde), le groupe choisit **un meneur**. Chaque autre joueur décrit comment il participe.\n\n- Le meneur fait un **jet d'action** normal.\n- Les autres font un **jet de réaction**, avec le trait qui convient à leur façon d'aider.\n- Le meneur gagne **+1** par réaction réussie, et **−1** par réaction ratée."
+        },
+        {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 580 300\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"texte\"/></marker><marker id=\"pointe-noire\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10Z\" fill=\"illu-noir\"/></marker></defs><rect x=\"200\" y=\"20\" width=\"180\" height=\"70\" rx=\"12\" fill=\"soleil\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"290\" y=\"49.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Meneuse</text><text x=\"290\" y=\"74.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">jet d'action</text><rect x=\"20\" y=\"170\" width=\"160\" height=\"70\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"100\" y=\"199.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Réaction</text><text x=\"100\" y=\"224.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">réussie : +1</text><rect x=\"210\" y=\"170\" width=\"160\" height=\"70\" rx=\"12\" fill=\"menthe\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"290\" y=\"199.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Réaction</text><text x=\"290\" y=\"224.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">réussie : +1</text><rect x=\"400\" y=\"170\" width=\"160\" height=\"70\" rx=\"12\" fill=\"sakura\" stroke=\"illu-gris\" stroke-width=\"2\"/><text x=\"480\" y=\"199.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\" font-weight=\"bold\">Réaction</text><text x=\"480\" y=\"224.5\" font-size=\"20\" text-anchor=\"middle\" fill=\"illu-noir\">ratée : −1</text><line x1=\"100\" y1=\"165\" x2=\"230\" y2=\"95\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><line x1=\"290\" y1=\"165\" x2=\"290\" y2=\"95\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><line x1=\"480\" y1=\"165\" x2=\"350\" y2=\"95\" stroke=\"texte\" stroke-width=\"3\" stroke-linecap=\"round\" marker-end=\"url(#pointe)\"/><text x=\"290\" y=\"280\" font-size=\"22\" text-anchor=\"middle\" fill=\"texte\" font-weight=\"bold\">Bonus total : +1 + 1 − 1 = +1</text></svg>",
+          "alt": "Un jet de groupe : trois réactions modifient le jet de la meneuse",
+          "description": "En haut, la meneuse fait un jet d'action. En dessous, trois jets de réaction pointent vers elle : deux réussis, qui donnent +1 chacun, et un raté, qui donne −1. Bonus total : +1.",
+          "legende": "Chaque réaction réussie ajoute 1, chaque réaction ratée retire 1"
+        },
+        {
+          "type": "texte",
+          "markdown": "Exemple : le groupe fuit à travers un marais. Maëlis mène, avec un jet d'Instinct pour trouver le chemin. Ysolde (Force, elle porte le blessé) et Pell (Agilité) réussissent leur réaction ; Tobiah rate la sienne. Maëlis gagne +1 + 1 − 1 = **+1** à son jet."
+        },
+        {
+          "type": "texte",
+          "markdown": "## Le Jet d'équipe\n\nLe **Jet d'équipe** (*Tag Team Roll*) combine deux héros dans une action spectaculaire : un sort lancé à travers la lame d'un allié, une acrobatie à deux.\n\n- Il coûte **3 Espoir** au joueur qui le lance. Chaque joueur peut en lancer **un par séance**.\n- Les deux joueurs décrivent leur action commune, puis **chacun fait son jet d'action**.\n- Ils **choisissent l'un des deux jets**, qui vaut pour les deux personnages.\n- Avec Espoir : **chaque** personnage gagne 1 Espoir. Avec Peur : le MJ gagne **1 Peur par personnage** impliqué.\n- Sur une attaque réussie, les deux joueurs lancent leurs dégâts et **les additionnent**, comme un seul coup."
+        },
+        {
+          "type": "encadre",
+          "variante": "a_retenir",
+          "markdown": "- **Réaction** : on évite un danger. Ni Espoir ni Peur, pas d'aide.\n- **Groupe** : un meneur, et +1 ou −1 par allié.\n- **Équipe** : 3 Espoir, deux jets, on garde le meilleur pour les deux."
+        }
+      ],
+      "sources": [
+        {
+          "titre": "Daggerheart SRD, Darrington Press",
+          "url": "https://www.daggerheart.com/srd/"
+        }
+      ]
+    }
+  ]
+}

@@ -49,7 +49,7 @@ async def charger(dossier: Path) -> Bilan:
         return await charger_parcours_valides(db, dossier)
 
 
-async def test_cree_les_themes_des_langages_s_ils_manquent(
+async def test_cree_les_themes_par_defaut_s_ils_manquent(
     client: AsyncClient, tmp_path: Path
 ) -> None:
     await charger(tmp_path)
@@ -58,6 +58,7 @@ async def test_cree_les_themes_des_langages_s_ils_manquent(
     async with SessionLocale() as db:
         themes = {theme.slug: theme.nom for theme in await db.scalars(select(Theme))}
     assert themes == {
+        "daggerheart": "JDR - DaggerHeart",
         "javascript": "JavaScript",
         "python-bases": "Python - Bases",
         "python-django": "Python - Django",
