@@ -30,6 +30,24 @@
   /* Mots trouvés par la recherche (texte en couleur `texte` dessus) */
   --surlignage: #ffe7a0;
 
+  /*
+   * Illustrations des leçons (ADR 0029). Elles ne changent pas avec le thème : elles ont un sens
+   * dans ce qui est dessiné (un pion blanc reste blanc). Les couleurs moyennes dépassent 3:1 sur
+   * la surface et le fond des deux thèmes. Le blanc, le noir, le jaune et le bois clair
+   * prennent un contour.
+   */
+  --illu-blanc: #ffffff;
+  --illu-noir: #1d1d24;
+  --illu-gris: #7a8294;
+  --illu-rouge: #de5161;
+  --illu-orange: #d16117;
+  --illu-jaune: #f2b81c;
+  --illu-vert: #319453;
+  --illu-bleu: #477fe4;
+  --illu-violet: #9c6ad7;
+  --illu-bois-clair: #f0d9b5;
+  --illu-bois-fonce: #ab764d;
+
   /* Coloration du code (contrastes vérifiés sur surface et ligne active) */
   --code-mot-cle: #7a3db8;
   --code-chaine: #1a7a43;

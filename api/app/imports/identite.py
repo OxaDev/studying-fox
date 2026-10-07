@@ -10,15 +10,28 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.imports.format import LeconImportee, Paquet, ParcoursImporte
+from app.imports.format import BlocIllustration, LeconImportee, Paquet, ParcoursImporte
 from app.imports.lecture import Erreur
 from app.lecons.modeles import Lecon
 from app.parcours.modeles import Parcours
 
 
 def erreurs_de_format(paquet: Paquet) -> list[Erreur]:
-    """Identifiants obligatoires en version 3, inconnus avant, et uniques dans le paquet."""
+    """Identifiants obligatoires en version 3, inconnus avant, et uniques dans le paquet.
+
+    Le bloc « illustration » demande la version 4 (ADR 0029).
+    """
     erreurs: list[Erreur] = []
+    if paquet.version < 4:
+        for lecon in paquet.lecons:
+            for index, bloc in enumerate(lecon.blocs, start=1):
+                if isinstance(bloc, BlocIllustration):
+                    erreurs.append(
+                        Erreur(
+                            f"Leçon « {lecon.slug} » › bloc {index}",
+                            "Le bloc « illustration » demande la version 4 du format.",
+                        )
+                    )
     vus: set[uuid.UUID] = set()
     elements: list[tuple[str, uuid.UUID | None]] = [
         (f"Leçon « {lecon.slug} »", lecon.id) for lecon in paquet.lecons

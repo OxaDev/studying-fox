@@ -52,7 +52,7 @@ L'affichage suit un **Excel réglé en français**, et `Debug.Print` a ses habit
 | `MsgBox "Bonjour"` | `Bonjour` |
 
 Pour une sortie simple à prévoir, concatène avec `&`.
-Pour connaître la sortie exacte, **exécute le code** avec l'outil de la plateforme (Node 22, dans `front/`) :
+Pour connaître la sortie exacte, **exécute le code** avec l'outil de la plateforme (Node 26, dans `front/`) :
 
 ```bash
 npm run vba -- mon-code.bas

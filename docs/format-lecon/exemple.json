@@ -1,6 +1,6 @@
 {
   "format": "renard-etudiant/lecons",
-  "version": 3,
+  "version": 4,
   "generation": {
     "assiste_par_ia": true,
     "outil": "Claude Opus 5.5",
@@ -60,6 +60,13 @@
           "markdown": "Une **variable** est une boîte qui porte un nom et contient une valeur.\n\nOn la crée avec le signe `=`."
         },
         {
+          "type": "illustration",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 240\"><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10z\" fill=\"primaire\"/></marker></defs><text x=\"24\" y=\"56\" font-size=\"26\" font-weight=\"bold\" fill=\"texte\">prenom = \"Aiko\"</text><path d=\"M110 72C130 150 200 175 262 165\" fill=\"none\" stroke=\"primaire\" stroke-width=\"3\" marker-end=\"url(#pointe)\"/><rect x=\"280\" y=\"96\" width=\"200\" height=\"120\" rx=\"14\" fill=\"ciel\" stroke=\"illu-bleu\" stroke-width=\"3\"/><rect x=\"310\" y=\"76\" width=\"140\" height=\"40\" rx=\"20\" fill=\"primaire\"/><text x=\"380\" y=\"103\" font-size=\"22\" font-weight=\"bold\" text-anchor=\"middle\" fill=\"surface\">prenom</text><text x=\"380\" y=\"176\" font-size=\"30\" text-anchor=\"middle\" fill=\"illu-noir\">\"Aiko\"</text></svg>",
+          "alt": "La variable prenom vue comme une boîte qui contient \"Aiko\"",
+          "description": "À gauche, la ligne de code prenom = \"Aiko\". Une flèche part de cette ligne vers une boîte bleu clair. La boîte porte une étiquette « prenom » et contient le texte \"Aiko\".",
+          "legende": "Une variable : une boîte avec un nom, qui contient une valeur"
+        },
+        {
           "type": "code",
           "langage": "python",
           "code": "prenom = \"Aiko\"\nprint(prenom)",
@@ -73,7 +80,10 @@
         }
       ],
       "sources": [
-        { "titre": "Documentation officielle de Python", "url": "https://docs.python.org/fr/3/tutorial/introduction.html" }
+        {
+          "titre": "Documentation officielle de Python",
+          "url": "https://docs.python.org/fr/3/tutorial/introduction.html"
+        }
       ]
     }
   ]

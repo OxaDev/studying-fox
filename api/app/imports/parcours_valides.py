@@ -1,8 +1,9 @@
 """Parcours validés, versionnés dans le dépôt et chargés au démarrage de l'API (ADR 0025).
 
-Chaque fichier .json du dossier api/validated_courses/ est un paquet en version 3 qui contient
-un parcours. Ce qui manque en base est créé et publié. Ce qui existe déjà (même identifiant)
-n'est pas modifié : une base vidée retrouve ses parcours, une base en service garde les siens.
+Chaque fichier .json du dossier api/validated_courses/ est un paquet en version 3 ou plus, qui
+contient un parcours. Ce qui manque en base est créé et publié. Ce qui existe déjà (même
+identifiant) n'est pas modifié : une base vidée retrouve ses parcours, une base en service garde
+les siens.
 
 À la main : uv run python -m app.imports.parcours_valides [dossier]
 """

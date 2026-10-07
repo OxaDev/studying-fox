@@ -18,6 +18,7 @@ TAILLE_MAX_FICHIER = 20 * 1024 * 1024
 TAILLE_MAX_DECOMPRESSEE = 50 * 1024 * 1024
 TAILLE_MAX_IMAGE = 2 * 1024 * 1024
 NOMBRE_MAX_FICHIERS = 200
+TYPES_DE_BLOCS = ("texte", "code", "exercice", "encadre", "image", "illustration")
 NOM_IMAGE = re.compile(r"^images/[a-z0-9-]+\.(png|jpg|webp|svg)$")
 
 
@@ -150,11 +151,7 @@ def _emplacement(chemin: tuple[int | str, ...], brut: object) -> str:
         elif cle == "blocs" and isinstance(suivant, int):
             morceaux.append(f"bloc {suivant + 1}")
             # Pydantic ajoute le type du bloc dans le chemin : on le saute.
-            i += (
-                3
-                if i + 2 < len(chemin) and chemin[i + 2] in ("texte", "code", "encadre", "image")
-                else 2
-            )
+            i += 3 if i + 2 < len(chemin) and chemin[i + 2] in TYPES_DE_BLOCS else 2
         elif isinstance(cle, int):
             morceaux.append(f"élément {cle + 1}")
             i += 1

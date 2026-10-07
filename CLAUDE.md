@@ -37,7 +37,7 @@ cd infra && docker compose up -d db
 cd api && uv sync && uv run alembic upgrade head && uv run uvicorn app.main:app --reload --port 8010
 uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest
 
-# Front (Node 22) — http://localhost:5173/app/ (la vitrine : http://localhost:5173/)
+# Front (Node 26) — http://localhost:5173/app/ (la vitrine : http://localhost:5173/)
 cd front && npm install && npm run dev
 npm run lint && npm run typecheck && npm test
 npm run test:e2e    # lance sa propre API sur une base renard_e2e : la base Docker doit tourner
@@ -51,6 +51,7 @@ cd api && uv run python -m app.openapi && cd ../front && npm run api:types
 
 Exécuter un code comme la plateforme, pour écrire la `sortie_attendue` d'une leçon : `cd front && npm run python -- mon-code.py` (Pyodide dans Node, ADR 0028) ou `npm run vba -- mon-code.bas` (ADR 0026).
 Vérifier un paquet de leçons comme l'import : `cd front && npm run verifier -- ../api/validated_courses/mon-parcours.json`.
+Regarder les illustrations d'un paquet (captures en thème clair, sombre et sur téléphone, ADR 0029) : `cd front && npm run illustration -- mon-paquet.json`. Il faut Chromium : `npx playwright install chromium`.
 
 Charger les leçons de `docs/format-lecon/exemple.json` en base de dev : `cd api && uv run python -m app.lecons.commandes charger-exemple`.
 

@@ -38,6 +38,17 @@ const BLOCS = [
     texte:
       '\n> [!exercice]\n> La consigne de l\'exercice.\n>\n> ```python run\n> # Code de départ\n> ```\n>\n> ```python solution\n> print("Solution")\n> ```\n',
   },
+  {
+    libelle: "Illustration",
+    texte:
+      "\n```illustration Légende de l'illustration\n" +
+      '<svg viewBox="0 0 400 200">\n' +
+      "  <title>Texte alternatif court</title>\n" +
+      "  <desc>Description détaillée de ce que montre l'illustration.</desc>\n" +
+      '  <rect x="20" y="20" width="360" height="160" rx="16" fill="ciel" stroke="illu-bleu" stroke-width="3"/>\n' +
+      '  <text x="200" y="108" font-size="28" text-anchor="middle" fill="illu-noir">Bonjour !</text>\n' +
+      "</svg>\n```\n",
+  },
   { libelle: "Astuce", texte: "\n> [!astuce]\n> Ton astuce ici.\n" },
   { libelle: "Attention", texte: "\n> [!attention]\n> Le piège à éviter.\n" },
   { libelle: "À retenir", texte: "\n> [!a_retenir]\n> L'idée clé de la leçon.\n" },

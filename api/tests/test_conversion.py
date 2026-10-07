@@ -116,7 +116,7 @@ def test_exercice() -> None:
 
 def test_une_version_inconnue_est_refusee() -> None:
     donnees = json.loads(EXEMPLE.read_text(encoding="utf-8"))
-    donnees["version"] = 4
+    donnees["version"] = 5
 
     with pytest.raises(ValidationError):
         Paquet.model_validate(donnees)

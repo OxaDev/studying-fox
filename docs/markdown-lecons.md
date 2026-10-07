@@ -64,3 +64,24 @@ Une citation sans marqueur reste une citation normale.
 - Une citation qui commence par `[!exercice]` crée un exercice. Son contenu : la consigne, puis le code de départ (`run`), puis la solution.
 - Le mot `solution` après le langage masque le bloc derrière un bouton « Afficher la solution ». Ce bloc n'est ni modifiable ni exécutable.
 - Toutes les lignes de l'exercice, code compris, commencent par `> `. Le bouton « Exercice Python » de l'éditeur insère ce modèle.
+
+## Illustrations
+
+Un schéma en SVG, redessiné dans le thème de l'apprenant ([ADR 0029](adr/0029-illustrations-vectorielles.md)) :
+
+````markdown
+```illustration Légende de l'illustration
+<svg viewBox="0 0 400 200">
+  <title>Texte alternatif court</title>
+  <desc>Description détaillée de ce que montre l'illustration.</desc>
+  <rect x="20" y="20" width="360" height="160" rx="16" fill="ciel" stroke="illu-bleu" stroke-width="3"/>
+  <text x="200" y="108" font-size="28" text-anchor="middle" fill="illu-noir">Bonjour !</text>
+</svg>
+```
+````
+
+- Ce qui suit `illustration` est la légende (facultative).
+- Le `<title>` (texte alternatif) et le `<desc>` (description détaillée) sont obligatoires, directement dans le `<svg>`.
+- Seuls les éléments et attributs de la liste blanche sont affichés, et les couleurs sont des noms de la palette : voir [les illustrations](format-lecon/README.md#les-illustrations-version-4) dans le guide du format.
+- Un SVG refusé n'est pas affiché : un message dit pourquoi, dans l'aperçu comme sur la leçon.
+- Le bouton « Illustration » de l'éditeur insère ce modèle.

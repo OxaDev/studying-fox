@@ -104,6 +104,21 @@ describe("Éditeur", () => {
     expect(screen.getByText(/Modifications non enregistrées/)).toBeInTheDocument();
   });
 
+  it("insère une illustration valide et l'affiche dans l'aperçu", async () => {
+    simulerApi(AVEC_CONTRIBUTION);
+    const utilisateur = userEvent.setup();
+    afficherA(adresse);
+
+    const outils = await screen.findByRole("toolbar", { name: "Insérer un bloc" });
+    await utilisateur.click(within(outils).getByRole("button", { name: "Illustration" }));
+
+    const apercu = await screen.findByRole("region", { name: "Aperçu" });
+    expect(
+      await within(apercu).findByRole("img", { name: "Texte alternatif court" }),
+    ).toBeInTheDocument();
+    expect(within(apercu).getByText("Légende de l'illustration")).toBeInTheDocument();
+  });
+
   it("enregistre le brouillon avec le jeton CSRF", async () => {
     const requetes = simulerApi({
       ...AVEC_CONTRIBUTION,

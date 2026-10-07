@@ -1,6 +1,6 @@
 # 0028 — Bibliothèques Python hébergées et chargées à la demande
 
-- **Statut** : Proposé
+- **Statut** : Accepté
 - **Date** : 2026-10-06
 - **Complète** : [0009](0009-execution-code-navigateur.md) et [0021](0021-isolation-du-code-des-lecons.md)
 

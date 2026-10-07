@@ -1,0 +1,69 @@
+.illustration {
+  margin-block: var(--esp-6);
+}
+
+.figure {
+  margin: 0;
+  padding: var(--esp-4);
+  border-radius: var(--rayon-carte);
+  background: var(--surface);
+  box-shadow: var(--ombre);
+}
+
+/* Couleur et police par défaut : celles du thème. Les couleurs nommées passent par les jetons. */
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 32rem;
+  fill: var(--texte);
+  font-family: var(--police-texte);
+}
+
+.legende {
+  margin-top: var(--esp-3);
+  color: var(--texte-doux);
+  font-size: 0.95em;
+  text-align: center;
+}
+
+.description {
+  margin-top: var(--esp-2);
+}
+
+.description p {
+  margin: var(--esp-2) 0 0;
+}
+
+.boutonDescription {
+  min-height: 44px;
+  padding: var(--esp-2) var(--esp-3);
+  border: none;
+  border-radius: var(--rayon-bouton);
+  background: none;
+  color: var(--primaire);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.boutonDescription[data-hovered] {
+  text-decoration: underline;
+}
+
+.boutonDescription[data-focus-visible] {
+  box-shadow: var(--focus);
+}
+
+.invalide {
+  margin-block: var(--esp-6);
+  padding: var(--esp-4) var(--esp-6);
+  border: 2px dashed var(--erreur);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.titreInvalide {
+  margin: 0;
+  font-weight: 800;
+}

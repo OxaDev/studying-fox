@@ -69,6 +69,24 @@ Contrastes mesurés sur `fond`. Ils sont tous un peu meilleurs sur `surface`.
 
 ⚠️ Le **turquoise vif** ne sert jamais pour du texte ni pour un contour utile. On l'utilise en décor, ou comme fond avec du texte `texte` dessus (7,8:1).
 
+**Illustrations des leçons** ([ADR 0029](adr/0029-illustrations-vectorielles.md)). Elles ne changent pas avec le thème : elles ont un sens dans ce qui est dessiné (un pion blanc reste blanc).
+
+| Nom | Couleur | Sur `surface` claire | Sur `surface` sombre |
+|---|---|---|---|
+| `illu-rouge` | `#DE5161` | 3,9:1 ✅ | 3,9:1 ✅ |
+| `illu-orange` | `#D16117` | 3,9:1 ✅ | 3,9:1 ✅ |
+| `illu-vert` | `#319453` | 3,8:1 ✅ | 3,9:1 ✅ |
+| `illu-bleu` | `#477FE4` | 3,9:1 ✅ | 3,9:1 ✅ |
+| `illu-violet` | `#9C6AD7` | 3,9:1 ✅ | 3,9:1 ✅ |
+| `illu-gris` | `#7A8294` | 3,9:1 ✅ | 3,9:1 ✅ |
+| `illu-bois-fonce` | `#AB764D` | 3,9:1 ✅ | 3,9:1 ✅ |
+| `illu-blanc` | `#FFFFFF` | contour ⚠️ | 14,9:1 ✅ |
+| `illu-noir` | `#1D1D24` | 16,8:1 ✅ | contour ⚠️ |
+| `illu-jaune` | `#F2B81C` | contour ⚠️ | 8,3:1 ✅ |
+| `illu-bois-clair` | `#F0D9B5` | contour ⚠️ | 10,9:1 ✅ |
+
+⚠️ Les quatre dernières se confondent avec la surface d'un des deux thèmes : on leur donne toujours un contour. Les illustrations peuvent aussi utiliser les couleurs du thème et les pastels.
+
 ### Thème sombre
 
 | Rôle | Couleur | Contraste |

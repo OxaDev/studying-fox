@@ -19,6 +19,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.imports.illustration import ELEMENTS
 from app.lecons.modeles import Lecon, Niveau, Revision, Theme
 from app.lecons.schemas import ThemeLecture
 from app.parcours.modeles import Parcours
@@ -41,6 +42,8 @@ OPTIONS_EXTRAIT = f'MaxFragments=2, MaxWords=20, MinWords=8, FragmentDelimiter="
 
 # Syntaxe Markdown retirée du contenu avant d'en tirer un extrait.
 NETTOYAGE_MARKDOWN = [
+    # Balises des illustrations (ADR 0029) : on garde leur texte (titre, description, libellés).
+    (rf"</?({'|'.join(sorted(ELEMENTS))})(\s[^>]*)?/?>", " "),
     (r"!?\[([^\]]*)\]\([^)]*\)", r"\1"),  # liens et images : on garde le texte
     (r"\[!\w+\]", " "),  # marqueurs d'encadré
     (r"```[^\n]*", " "),  # délimiteurs des blocs de code

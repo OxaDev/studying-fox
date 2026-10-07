@@ -10,10 +10,12 @@ from app.imports.format import (
     BlocCode,
     BlocEncadre,
     BlocExercice,
+    BlocIllustration,
     BlocImage,
     BlocTexte,
     LeconImportee,
 )
+from app.imports.illustration import svg_complet
 
 
 def _cloture(code: str) -> str:
@@ -56,6 +58,9 @@ def bloc_en_markdown(bloc: Bloc, medias: str = "/medias") -> str:
         case BlocImage():
             legende = f' "{bloc.legende}"' if bloc.legende else ""
             return f"![{bloc.alt}]({medias}/{bloc.fichier}{legende})"
+        case BlocIllustration():
+            info = f"illustration {bloc.legende}" if bloc.legende else "illustration"
+            return _bloc_de_code(svg_complet(bloc.svg, bloc.alt, bloc.description), info)
 
 
 def lecon_en_markdown(lecon: LeconImportee, medias: str = "/medias") -> str:

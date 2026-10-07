@@ -18,9 +18,10 @@
       "enum": [
         1,
         2,
-        3
+        3,
+        4
       ],
-      "description": "2 ajoute le bloc « exercice », 3 les identifiants (id). Les versions précédentes restent acceptées."
+      "description": "2 ajoute le bloc « exercice », 3 les identifiants (id), 4 le bloc « illustration ». Les versions précédentes restent acceptées."
     },
     "generation": {
       "$ref": "#/$defs/generation"
@@ -227,6 +228,9 @@
         },
         {
           "$ref": "#/$defs/bloc_image"
+        },
+        {
+          "$ref": "#/$defs/bloc_illustration"
         }
       ]
     },
@@ -404,6 +408,45 @@
         ]
       }
     },
+    "bloc_illustration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "svg",
+        "alt",
+        "description"
+      ],
+      "properties": {
+        "type": {
+          "const": "illustration"
+        },
+        "svg": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 100000,
+          "description": "Un SVG limité à la liste blanche (voir README) : formes, texte, groupes, marqueurs et dégradés. viewBox obligatoire. Couleurs : uniquement des noms de la palette (texte, texte-doux, primaire, turquoise, succes, erreur, bordure, surface, fond, peche, menthe, soleil, sakura, ciel, illu-blanc, illu-noir, illu-gris, illu-rouge, illu-orange, illu-jaune, illu-vert, illu-bleu, illu-violet, illu-bois-clair, illu-bois-fonce), none, ou url(#id). Ni <title> ni <desc> : ils viennent de alt et description."
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 250,
+          "description": "Texte alternatif court : ce que montre l'illustration."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 2000,
+          "description": "Description détaillée, pour qui ne voit pas l'illustration. Affichée sous l'illustration, à la demande."
+        },
+        "legende": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[^`\\n]*$",
+          "description": "Une ligne, sans accent grave."
+        }
+      }
+    },
     "identifiant": {
       "type": "string",
       "format": "uuid",
@@ -449,7 +492,10 @@
       "if": {
         "properties": {
           "version": {
-            "const": 3
+            "enum": [
+              3,
+              4
+            ]
           }
         }
       },
@@ -485,6 +531,43 @@
               "required": [
                 "id"
               ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "version": {
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "lecons": {
+            "items": {
+              "properties": {
+                "blocs": {
+                  "items": {
+                    "not": {
+                      "properties": {
+                        "type": {
+                          "const": "illustration"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ]
+                    }
+                  }
+                }
+              }
             }
           }
         }

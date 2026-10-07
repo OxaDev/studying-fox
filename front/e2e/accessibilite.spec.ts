@@ -125,6 +125,22 @@ for (const theme of ["light", "dark"] as const) {
 }
 
 for (const theme of ["light", "dark"] as const) {
+  test(`une illustration, description affichée, est accessible (thème ${theme})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: theme });
+    await simulerLecons(page);
+    await page.goto(`./lecons/${LECON.slug}`);
+    await expect(
+      page.getByRole("img", { name: "Une boîte prenom qui contient Aiko" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Description de l'illustration" }).click();
+    await expect(page.getByText("Une boîte bleu clair, avec l'étiquette prenom")).toBeVisible();
+    await verifierAccessibilite(page);
+  });
+}
+
+for (const theme of ["light", "dark"] as const) {
   test(`la feuille Excel d'un code VBA est accessible (thème ${theme})`, async ({ page }) => {
     await page.emulateMedia({ colorScheme: theme });
     await simulerLecons(page);

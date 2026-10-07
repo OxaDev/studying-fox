@@ -1,7 +1,9 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter } from "react-router";
+// La version DOM sait appliquer une navigation tout de suite (option `flushSync`).
+import { RouterProvider } from "react-router/dom";
 
 import { creerQueryClient } from "./api/queryClient";
 import { initialiserTheme } from "./composants/theme";

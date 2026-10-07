@@ -46,6 +46,16 @@ export const LECON = {
     "> [!astuce]",
     "> Modifie le code, puis relance-le.",
     "",
+    // Une illustration (ADR 0029), pour qu'axe vérifie ses couleurs dans les deux thèmes.
+    "```illustration Une variable et sa valeur",
+    '<svg viewBox="0 0 400 160"><title>Une boîte prenom qui contient Aiko</title>' +
+      "<desc>Une boîte bleu clair, avec l'étiquette prenom, contient le texte Aiko.</desc>" +
+      '<rect x="100" y="30" width="200" height="110" rx="14" fill="ciel" stroke="illu-bleu" stroke-width="3"/>' +
+      '<rect x="130" y="12" width="140" height="40" rx="20" fill="primaire"/>' +
+      '<text x="200" y="40" font-size="22" text-anchor="middle" fill="surface">prenom</text>' +
+      '<text x="200" y="110" font-size="28" text-anchor="middle" fill="illu-noir">Aiko</text></svg>',
+    "```",
+    "",
     "> [!exercice]",
     "> Affiche le **double** de `n`.",
     ">",

@@ -5,7 +5,7 @@ Des leçons courtes, du code à lancer directement dans le navigateur, et des pa
 
 ## Démarrer
 
-Prérequis : Docker, [uv](https://docs.astral.sh/uv/), Node 22.
+Prérequis : Docker, [uv](https://docs.astral.sh/uv/), Node 26.
 
 L'API et le front tournent en même temps : ouvre **un terminal pour chacun**.
 

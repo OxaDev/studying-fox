@@ -94,6 +94,8 @@ function pyodideEnDev(): Plugin {
   };
 }
 
+const REACT_ROUTER = resolve(import.meta.dirname, "node_modules/react-router/dist/development");
+
 // API cible du proxy : port 8010 en dev (8000 est souvent pris par d'autres projets).
 // Les tests de bout en bout lancent leur propre API (playwright.config.ts).
 const API = process.env.RENARD_API_URL ?? "http://localhost:8010";
@@ -115,8 +117,14 @@ export default defineConfig({
     rollupOptions: { output: { entryFileNames: "assets/worker-[name]-[hash].js" } },
   },
   test: {
-    environment: "jsdom",
+    environment: "./src/test/environnement.ts",
     setupFiles: ["./src/test/setup.ts"],
+    // Une seule copie de React Router, en module ES : sinon l'application et react-router/dom
+    // chargeraient chacun la leur (CommonJS et ES), avec deux contextes différents.
+    alias: [
+      { find: /^react-router$/, replacement: `${REACT_ROUTER}/index.mjs` },
+      { find: /^react-router\/dom$/, replacement: `${REACT_ROUTER}/dom-export.mjs` },
+    ],
     include: ["src/**/*.test.{ts,tsx}"],
   },
 });

@@ -7,8 +7,9 @@ l'exemple officiel passe ici aussi : si l'un change, l'autre doit suivre.
 import uuid
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from app.imports.illustration import erreurs_svg
 from app.lecons.modeles import Niveau
 
 Slug = Annotated[str, Field(pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$", max_length=80)]
@@ -72,8 +73,28 @@ class BlocImage(Strict):
         return self
 
 
+class BlocIllustration(Strict):
+    """Un SVG écrit dans la leçon, limité par une liste blanche (version 4, ADR 0029)."""
+
+    type: Literal["illustration"]
+    svg: str = Field(min_length=10)
+    alt: str = Field(min_length=5, max_length=250)
+    description: str = Field(min_length=20, max_length=2000)
+    # Sans accent grave ni retour à la ligne : elle suit « illustration » dans le Markdown.
+    legende: str | None = Field(default=None, max_length=200, pattern=r"^[^`\n]*$")
+
+    @field_validator("svg")
+    @classmethod
+    def svg_autorise(cls, svg: str) -> str:
+        erreurs = erreurs_svg(svg, complet=False)
+        if erreurs:
+            raise ValueError(" ".join(erreurs[:5]))
+        return svg
+
+
 Bloc = Annotated[
-    BlocTexte | BlocCode | BlocExercice | BlocEncadre | BlocImage, Field(discriminator="type")
+    BlocTexte | BlocCode | BlocExercice | BlocEncadre | BlocImage | BlocIllustration,
+    Field(discriminator="type"),
 ]
 
 
@@ -109,9 +130,10 @@ class ParcoursImporte(Strict):
 
 class Paquet(Strict):
     format: Literal["renard-etudiant/lecons"]
-    # La version 2 ajoute le bloc « exercice », la version 3 les identifiants (ADR 0025).
+    # La version 2 ajoute le bloc « exercice », la version 3 les identifiants (ADR 0025),
+    # la version 4 le bloc « illustration » (ADR 0029).
     # Les versions précédentes restent acceptées (ADR 0019).
-    version: Literal[1, 2, 3]
+    version: Literal[1, 2, 3, 4]
     generation: Generation | None = None
     parcours: ParcoursImporte | None = None
     lecons: list[LeconImportee] = Field(min_length=1, max_length=50)

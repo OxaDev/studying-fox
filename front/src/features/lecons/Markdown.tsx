@@ -5,6 +5,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import { BlocCode } from "../execution/BlocCode";
 import { remarqueEncadres, VARIANTES, type Variante } from "./encadres";
 import { ContexteExercice, Exercice, Solution } from "./Exercice";
+import { Illustration } from "./illustration/Illustration";
 import styles from "./Markdown.module.css";
 
 function texte(noeuds: ElementContent[]): string {
@@ -17,7 +18,10 @@ function texte(noeuds: ElementContent[]): string {
     .join("");
 }
 
-/** Lit le langage et les options « run » ou « solution » d'un bloc ```python run. */
+/**
+ * Lit le langage et les options « run » ou « solution » d'un bloc ```python run.
+ * `meta` est tout ce qui suit le langage : la légende, pour une illustration.
+ */
 function lireBlocCode(pre: Element | undefined) {
   const code = pre?.children[0];
   if (code?.type !== "element" || code.tagName !== "code") return null;
@@ -29,6 +33,7 @@ function lireBlocCode(pre: Element | undefined) {
     langage: classe.replace(/^language-/, ""),
     executable: /(^|\s)run(\s|$)/.test(meta),
     solution: /(^|\s)solution(\s|$)/.test(meta),
+    meta: meta.trim(),
     code: texte(code.children).replace(/\n$/, ""),
   };
 }
@@ -37,6 +42,10 @@ function Bloc({ node, children }: { node: Element | undefined; children: ReactNo
   const dansExercice = useContext(ContexteExercice);
   const bloc = lireBlocCode(node);
   if (!bloc) return <pre>{children}</pre>;
+  // ```illustration Légende : un SVG contrôlé par la liste blanche (ADR 0029).
+  if (bloc.langage === "illustration") {
+    return <Illustration source={bloc.code} legende={bloc.meta || undefined} />;
+  }
   if (bloc.solution) return <Solution langage={bloc.langage} code={bloc.code} />;
   // La clé recrée le bloc si son code change (aperçu de l'éditeur de contribution).
   return (

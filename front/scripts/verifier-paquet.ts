@@ -1,6 +1,7 @@
 /**
  * Vérifie un paquet de leçons comme le fait l'import (ADR 0019) : chaque exemple exécutable
  * et chaque solution d'exercice est lancé, et sa sortie comparée à `sortie_attendue`.
+ * Chaque illustration passe par la liste blanche (ADR 0029).
  *
  *   npm run verifier -- mon-paquet.json [autre-paquet.json…]
  *
@@ -9,8 +10,12 @@
  */
 import { readFileSync } from "node:fs";
 
+import { JSDOM } from "jsdom";
+
 import { executerJavascript } from "../src/features/execution/executerJavascript";
 import { executerVba } from "../src/features/execution/vba/interpreteur";
+import { analyserSvg } from "../src/features/lecons/illustration/analyse";
+import { illustrationsDuPaquet } from "../src/features/lecons/illustration/paquet";
 import { executerCodePython } from "./pyodide-node";
 
 interface Bloc {
@@ -20,6 +25,10 @@ interface Bloc {
   solution?: string;
   executable?: boolean;
   sortie_attendue?: string | null;
+  svg?: string;
+  alt?: string;
+  description?: string;
+  legende?: string | null;
 }
 
 interface Paquet {
@@ -42,10 +51,20 @@ async function executer(
   return { sortie, erreur };
 }
 
+const parseur = new new JSDOM().window.DOMParser();
 let ecarts = 0;
 let verifies = 0;
+let illustrations = 0;
 for (const fichier of process.argv.slice(2)) {
   const paquet = JSON.parse(readFileSync(fichier, "utf-8")) as Paquet;
+  for (const illustration of illustrationsDuPaquet(paquet)) {
+    illustrations++;
+    const analyse = analyserSvg(illustration.svg, parseur);
+    if (analyse.valide) continue;
+    ecarts++;
+    process.stdout.write(`✗ ${fichier} › ${illustration.emplacement} (illustration)\n`);
+    for (const erreur of analyse.erreurs) process.stdout.write(`  ${erreur}\n`);
+  }
   for (const lecon of paquet.lecons) {
     for (const [index, bloc] of lecon.blocs.entries()) {
       const code =
@@ -70,9 +89,10 @@ for (const fichier of process.argv.slice(2)) {
     }
   }
 }
+const bilan = `${String(verifies)} codes et ${String(illustrations)} illustration(s)`;
 process.stdout.write(
   ecarts === 0
-    ? `${String(verifies)} codes vérifiés, tous conformes.\n`
-    : `${String(ecarts)} écart(s) sur ${String(verifies)} codes.\n`,
+    ? `${bilan} vérifiés, tous conformes.\n`
+    : `${String(ecarts)} écart(s) sur ${bilan}.\n`,
 );
 process.exitCode = ecarts === 0 ? 0 : 1;

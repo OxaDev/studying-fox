@@ -1,5 +1,5 @@
 # 1. Construit le front React.
-FROM node:22-slim AS front
+FROM node:26-slim AS front
 WORKDIR /front
 COPY front/package.json front/package-lock.json ./
 # npm ci lance scripts/copier-pyodide.mjs (Pyodide hébergé chez nous).

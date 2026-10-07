@@ -1,0 +1,145 @@
+{
+  "$comment": "Joués par le front (illustration.test.tsx) et par l'API (tests/test_illustrations.py) : les deux contrôles doivent donner le même verdict (ADR 0029). « erreur » est un extrait du message attendu, ou null si le SVG est accepté.",
+  "cas": [
+    {
+      "nom": "illustration complète",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 100\"><title>Deux cases</title><desc>Une case rouge à gauche, une case bleue à droite.</desc><defs><marker id=\"pointe\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10z\" fill=\"texte\"/></marker><linearGradient id=\"degrade\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"ciel\"/><stop offset=\"100%\" stop-color=\"primaire\" stop-opacity=\"0.5\"/></linearGradient></defs><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"illu-rouge\" stroke=\"texte\" stroke-width=\"2\"/><rect x=\"110\" y=\"10\" width=\"80\" height=\"80\" fill=\"url(#degrade)\"/><line x1=\"90\" y1=\"50\" x2=\"110\" y2=\"50\" stroke=\"texte\" marker-end=\"url(#pointe)\"/><g transform=\"translate(10, 5) rotate(-10)\"><text x=\"50\" y=\"95\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">A <tspan dy=\"2\">1</tspan></text></g><use href=\"#pointe\"/></svg>",
+      "erreur": null
+    },
+    {
+      "nom": "sans espace de noms ni description de forme",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>Un point</title><desc>Un point noir au centre.</desc><!-- commentaire --><circle cx=\"5\" cy=\"5\" r=\"2\" fill=\"illu-noir\"/></svg>",
+      "erreur": null
+    },
+    {
+      "nom": "script",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><script>alert(1)</script></svg>",
+      "erreur": "Élément <script> non autorisé."
+    },
+    {
+      "nom": "foreignObject",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><foreignObject><p>x</p></foreignObject></svg>",
+      "erreur": "Élément <foreignObject> non autorisé."
+    },
+    {
+      "nom": "image externe",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><image href=\"https://exemple.fr/x.png\"/></svg>",
+      "erreur": "Élément <image> non autorisé."
+    },
+    {
+      "nom": "style",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><style>rect { fill: red }</style></svg>",
+      "erreur": "Élément <style> non autorisé."
+    },
+    {
+      "nom": "gestionnaire d'événement",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><rect width=\"1\" height=\"1\" onclick=\"alert(1)\"/></svg>",
+      "erreur": "Attribut « onclick » non autorisé sur <rect>."
+    },
+    {
+      "nom": "attribut style",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><rect width=\"1\" height=\"1\" style=\"fill: red\"/></svg>",
+      "erreur": "Attribut « style » non autorisé sur <rect>."
+    },
+    {
+      "nom": "class",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><rect width=\"1\" height=\"1\" class=\"rouge\"/></svg>",
+      "erreur": "Attribut « class » non autorisé sur <rect>."
+    },
+    {
+      "nom": "couleur en dur",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><rect width=\"1\" height=\"1\" fill=\"#ff0000\"/></svg>",
+      "erreur": "Couleur « #ff0000 » non autorisée dans « fill »."
+    },
+    {
+      "nom": "couleur nommée du web",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><circle r=\"1\" stroke=\"red\"/></svg>",
+      "erreur": "Couleur « red » non autorisée dans « stroke »."
+    },
+    {
+      "nom": "lien externe",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><use href=\"https://exemple.fr/a.svg#x\"/></svg>",
+      "erreur": "Valeur « https://exemple.fr/a.svg#x » non autorisée pour « href »."
+    },
+    {
+      "nom": "lien javascript",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><use href=\"javascript:alert(1)\"/></svg>",
+      "erreur": "non autorisée pour « href »."
+    },
+    {
+      "nom": "lien xlink",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><use xlink:href=\"#a\"/></svg>",
+      "erreur": "Attribut « href » avec un préfixe non autorisé sur <use>."
+    },
+    {
+      "nom": "url externe dans un marqueur",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><line x2=\"5\" marker-end=\"url(https://exemple.fr/m)\"/></svg>",
+      "erreur": "non autorisée pour « marker-end »."
+    },
+    {
+      "nom": "url externe dans une couleur",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><rect width=\"1\" height=\"1\" fill=\"url(https://exemple.fr/d)\"/></svg>",
+      "erreur": "non autorisée dans « fill »."
+    },
+    {
+      "nom": "transformation inconnue",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><g transform=\"expression(alert(1))\"/></svg>",
+      "erreur": "non autorisée pour « transform »."
+    },
+    {
+      "nom": "doctype et entités",
+      "svg": "<!DOCTYPE svg [<!ENTITY a \"aaaa\">]><svg viewBox=\"0 0 10 10\"><title>&a;</title><desc>D</desc></svg>",
+      "erreur": "Pas de DOCTYPE ni d'entité dans une illustration."
+    },
+    {
+      "nom": "XML mal formé",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><rect></svg>",
+      "erreur": "SVG illisible"
+    },
+    {
+      "nom": "racine qui n'est pas un svg",
+      "svg": "<g><title>T</title></g>",
+      "erreur": "L'illustration doit commencer par <svg>."
+    },
+    {
+      "nom": "sans viewBox",
+      "svg": "<svg width=\"10\" height=\"10\"><title>T</title><desc>D</desc></svg>",
+      "erreur": "<svg> doit avoir un attribut viewBox."
+    },
+    {
+      "nom": "svg imbriqué",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><svg viewBox=\"0 0 1 1\"/></svg>",
+      "erreur": "Un <svg> ne peut pas contenir un autre <svg>."
+    },
+    {
+      "nom": "autre espace de noms",
+      "svg": "<svg viewBox=\"0 0 10 10\" xmlns=\"http://www.w3.org/1999/xhtml\"><title>T</title><desc>D</desc></svg>",
+      "erreur": "d'un espace de noms non autorisé."
+    },
+    {
+      "nom": "texte hors d'un élément texte",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><g>Bonjour</g></svg>",
+      "erreur": "Texte hors d'un élément <text> : « Bonjour »."
+    },
+    {
+      "nom": "sans titre",
+      "svg": "<svg viewBox=\"0 0 10 10\"><desc>D</desc></svg>",
+      "erreur": "Il manque le <title> (texte alternatif)."
+    },
+    {
+      "nom": "sans description",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title></svg>",
+      "erreur": "Il manque le <desc> (description)."
+    },
+    {
+      "nom": "titre en double",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><title>U</title><desc>D</desc></svg>",
+      "erreur": "Un seul <title> et un seul <desc>."
+    },
+    {
+      "nom": "titre dans un groupe",
+      "svg": "<svg viewBox=\"0 0 10 10\"><title>T</title><desc>D</desc><g><title>U</title></g></svg>",
+      "erreur": "<title> et <desc> se placent directement dans <svg>."
+    }
+  ]
+}

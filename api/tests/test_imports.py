@@ -38,8 +38,15 @@ def parcours(paquet: Paquet) -> dict[str, object]:
 
 
 def en_version(paquet: Paquet, version: int) -> Paquet:
-    """Ramène l'exemple à une version antérieure : les identifiants n'existent qu'en version 3."""
+    """Ramène l'exemple à une version antérieure.
+
+    Les identifiants n'existent qu'à partir de la version 3, les illustrations de la version 4.
+    """
     paquet["version"] = version
+    if version < 4:
+        for element in cast(list[dict[str, object]], paquet["lecons"]):
+            blocs = cast(list[dict[str, object]], element["blocs"])
+            element["blocs"] = [bloc for bloc in blocs if bloc["type"] != "illustration"]
     if version < 3:
         for element in [*cast(list[dict[str, object]], paquet["lecons"]), parcours(paquet)]:
             element.pop("id")
@@ -329,7 +336,7 @@ async def test_l_identifiant_est_obligatoire_en_version_3(
 async def test_l_identifiant_demande_la_version_3(
     client: AsyncClient, csrf: dict[str, str]
 ) -> None:
-    paquet = exemple()
+    paquet = en_version(exemple(), 3)
     paquet["version"] = 2
 
     analyse = (await analyser(client, csrf, en_json(paquet))).json()

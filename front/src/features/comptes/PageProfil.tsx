@@ -221,8 +221,10 @@ function SectionSuppression() {
     mutationFn: comptesApi.supprimerCompte,
     onSuccess: async () => {
       // On quitte d'abord les pages connectées : sinon elles renverraient vers la connexion
-      // sans le message de confirmation.
-      await navigate("/connexion?compte=supprime", { replace: true });
+      // sans le message de confirmation. `flushSync` affiche la page de connexion tout de suite :
+      // sans lui, la navigation passe par une transition React, et la page du profil voit la
+      // session fermée avant d'avoir été quittée.
+      await navigate("/connexion?compte=supprime", { replace: true, flushSync: true });
       session.fermer();
     },
   });
