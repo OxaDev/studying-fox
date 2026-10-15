@@ -32,6 +32,24 @@ npm install && npm run dev
 
 La vitrine publique s'ouvre sur http://localhost:5173/, l'application sur http://localhost:5173/app/.
 
+## Déployer sur un serveur
+
+Prérequis : Docker et Docker Compose 2.24 ou plus, `make`, `git`. Rien d'autre : les images construisent l'API et le front.
+Par défaut, le site est servi sous `https://domain.com/studying-fox`, derrière le nginx de la machine ([ADR 0031](docs/adr/0031-site-sous-un-chemin.md)).
+
+```bash
+git clone <dépôt> && cd studying-fox
+make configurer      # crée infra/.env : y régler DOMAINE, CHEMIN_BASE et PORT_HTTP
+make deployer        # construit les images, démarre la base, l'API et Caddy
+make nginx           # affiche le bloc « location » à ajouter au nginx du domaine
+sudo nginx -t && sudo systemctl reload nginx
+make admin EMAIL=moi@exemple.fr   # après avoir créé son compte sur le site
+```
+
+Ensuite : `make mettre-a-jour` pour déployer la dernière version, `make sauvegarder` pour copier la base et les images dans `sauvegardes/`. `make` liste toutes les commandes.
+
+Sans nginx, Caddy peut gérer seul le HTTPS : dans `infra/.env`, garder seulement `COMPOSE_FILE=docker-compose.yml` et vider `CHEMIN_BASE`.
+
 ## Promouvoir un admin
 
 ```bash

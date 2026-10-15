@@ -9,6 +9,7 @@ from app.comptes.dependances import COOKIE_SESSION, Db, Ecriture, Lecture
 from app.comptes.modeles import Role, Utilisateur
 from app.comptes.routes import verifier_mot_de_passe_actuel
 from app.comptes.schemas import MotDePasseSaisi
+from app.config import get_config
 from app.rgpd.export import Export, exporter
 from app.rgpd.suppression import supprimer_compte
 from app.temps import maintenant
@@ -51,4 +52,4 @@ async def supprimer_mon_compte(
     journaliser(db, None, "suppression_compte", f"utilisateur:{utilisateur.id}")
     await supprimer_compte(db, utilisateur)
     await db.commit()
-    response.delete_cookie(COOKIE_SESSION, path="/")
+    response.delete_cookie(COOKIE_SESSION, path=get_config().chemin_cookie)

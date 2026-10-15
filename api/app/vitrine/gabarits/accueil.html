@@ -10,8 +10,8 @@
     directement dans ton navigateur. Pour Python, JavaScript et VBA, gratuitement.
   </p>
   <p class="actions">
-    <a href="/parcours" class="bouton primaire">Découvrir les parcours</a>
-    <a href="/app/inscription" class="bouton secondaire">Créer un compte gratuit</a>
+    <a href="{{ base }}/parcours" class="bouton primaire">Découvrir les parcours</a>
+    <a href="{{ base }}/app/inscription" class="bouton secondaire">Créer un compte gratuit</a>
   </p>
 </section>
 
@@ -45,7 +45,7 @@
     <li>{% with index = loop.index0, niveau_titre = 3 %}{% include "_carte.html" %}{% endwith %}</li>
     {% endfor %}
   </ul>
-  <p><a href="/parcours">Voir tous les parcours</a></p>
+  <p><a href="{{ base }}/parcours">Voir tous les parcours</a></p>
   {% else %}
   <p>Les premiers parcours arrivent bientôt. Reviens vite !</p>
   {% endif %}

@@ -2,6 +2,7 @@
  * Appels à l'API. Les types viennent de src/api/schema.d.ts, généré depuis le schéma OpenAPI :
  * `uv run python -m app.openapi` (dans api/) puis `npm run api:types`.
  */
+import { BASE_API } from "../adresses";
 import type { components } from "./schema";
 
 export type Schemas = components["schemas"];
@@ -76,7 +77,7 @@ async function lireErreur(reponse: Response): Promise<ErreurApi> {
 async function envoyer<T>(chemin: string, init: RequestInit): Promise<T> {
   let reponse: Response;
   try {
-    reponse = await fetch(`/api${chemin}`, { ...init, credentials: "same-origin" });
+    reponse = await fetch(`${BASE_API}${chemin}`, { ...init, credentials: "same-origin" });
   } catch {
     throw new ErreurApi(0, "Impossible de joindre le serveur. Vérifie ta connexion internet.");
   }

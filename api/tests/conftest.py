@@ -76,3 +76,13 @@ def sans_verification() -> Iterator[None]:
     config.verification_email = False
     yield
     config.verification_email = True
+
+
+@pytest.fixture
+def sous_un_chemin() -> Iterator[None]:
+    """Site servi sous https://exemple.fr/studying-fox, derrière un proxy (ADR 0031)."""
+    config = get_config()
+    avant = config.url_publique
+    config.url_publique = "https://exemple.fr/studying-fox"
+    yield
+    config.url_publique = avant

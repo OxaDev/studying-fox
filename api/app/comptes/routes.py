@@ -75,7 +75,7 @@ def _poser_cookie(response: Response, jeton: str) -> None:
         COOKIE_SESSION,
         jeton,
         max_age=config.duree_session_jours * 24 * 3600,
-        path="/",
+        path=config.chemin_cookie,
         secure=config.cookie_securise,
         httponly=True,
         samesite="lax",
@@ -204,7 +204,7 @@ async def deconnexion(connecte: Ecriture, response: Response, db: Db) -> None:
     await db.commit()
     response.delete_cookie(
         COOKIE_SESSION,
-        path="/",
+        path=get_config().chemin_cookie,
         secure=get_config().cookie_securise,
         httponly=True,
         samesite="lax",

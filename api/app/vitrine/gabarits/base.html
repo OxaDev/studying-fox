@@ -14,21 +14,21 @@
   <meta property="og:title" content="{{ titre_complet }}">
   <meta property="og:description" content="{{ self.description() }}">
   <meta property="og:url" content="{{ url_publique }}{{ chemin }}">
-  <link rel="stylesheet" href="/statique/vitrine.css">
+  <link rel="stylesheet" href="{{ base }}/statique/vitrine.css">
 </head>
 <body>
   <a href="#contenu" class="evitement">Aller au contenu</a>
   <header class="entete">
-    <a href="/" class="logo">Le Renard Étudiant</a>
+    <a href="{{ base }}/" class="logo">Le Renard Étudiant</a>
     <nav aria-label="Navigation principale">
       <ul class="menu">
-        <li><a href="/"{% if chemin == "/" %} aria-current="page"{% endif %}>Accueil</a></li>
-        <li><a href="/parcours"{% if chemin.startswith("/parcours") %} aria-current="page"{% endif %}>Parcours</a></li>
+        <li><a href="{{ base }}/"{% if chemin == "/" %} aria-current="page"{% endif %}>Accueil</a></li>
+        <li><a href="{{ base }}/parcours"{% if chemin.startswith("/parcours") %} aria-current="page"{% endif %}>Parcours</a></li>
       </ul>
     </nav>
     <div class="compte">
-      <a href="/app/connexion" class="bouton secondaire">Se connecter</a>
-      <a href="/app/inscription" class="bouton primaire">Créer un compte</a>
+      <a href="{{ base }}/app/connexion" class="bouton secondaire">Se connecter</a>
+      <a href="{{ base }}/app/inscription" class="bouton primaire">Créer un compte</a>
     </div>
   </header>
   <main id="contenu" tabindex="-1" class="contenu">

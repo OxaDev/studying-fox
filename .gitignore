@@ -22,3 +22,5 @@ front/public/pyodide/
 api/medias/
 local_ignore
 local_ignore/*
+# Sauvegardes du serveur (make sauvegarder)
+sauvegardes/

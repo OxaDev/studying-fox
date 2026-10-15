@@ -7,3 +7,5 @@
 **/test-results
 .git
 docs
+# Le build du front vérifie les types de tests qui lisent l'exemple de leçons.
+!docs/format-lecon/exemple.json

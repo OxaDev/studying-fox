@@ -1,0 +1,17 @@
+# Derrière un nginx déjà installé sur la machine (ADR 0031).
+# nginx garde le HTTPS et transmet https://DOMAINE/CHEMIN_BASE/… à Caddy, sans le préfixe.
+# S'ajoute à docker-compose.yml : voir COMPOSE_FILE dans .env.example.
+services:
+  db:
+    # La base n'est joignable que par l'API.
+    ports: !reset []
+
+  caddy:
+    environment:
+      # Simple HTTP : le certificat est celui de nginx.
+      DOMAINE: ":80"
+      # nginx joint Caddy depuis l'hôte, par le réseau Docker (adresses privées).
+      PROXIES_DE_CONFIANCE: private_ranges
+    ports: !override
+      # Seul nginx, sur la même machine, peut joindre Caddy.
+      - "127.0.0.1:${PORT_HTTP:-8080}:80"

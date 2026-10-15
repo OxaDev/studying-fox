@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { NavLink, Outlet, useNavigate } from "react-router";
 
+import { CHEMIN_SITE } from "../adresses";
 import { comptesApi } from "../features/comptes/api";
 import { aLeRole } from "../features/comptes/roles";
 import { useMoiConnecte, useSession } from "../features/comptes/session";
@@ -26,7 +27,7 @@ export function Gabarit() {
         Aller au contenu
       </a>
       <header className={styles.entete}>
-        <a href="/" className={styles.logo}>
+        <a href={`${CHEMIN_SITE}/`} className={styles.logo}>
           Le Renard Étudiant
         </a>
         <nav aria-label="Navigation principale">

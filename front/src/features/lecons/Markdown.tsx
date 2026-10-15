@@ -1,7 +1,8 @@
 import type { Element, ElementContent } from "hast";
 import { type ReactNode, useContext } from "react";
-import ReactMarkdown, { type Components } from "react-markdown";
+import ReactMarkdown, { type Components, defaultUrlTransform } from "react-markdown";
 
+import { adresseMedia } from "../../adresses";
 import { BlocCode } from "../execution/BlocCode";
 import { remarqueEncadres, VARIANTES, type Variante } from "./encadres";
 import { ContexteExercice, Exercice, Solution } from "./Exercice";
@@ -83,6 +84,11 @@ const composants: Components = {
   },
 };
 
+/** Neutralise les liens dangereux, et place les images importées sous le chemin du site. */
+function adresse(url: string): string {
+  return defaultUrlTransform(adresseMedia(url));
+}
+
 /**
  * Affiche le Markdown d'une leçon (ADR 0006). Le HTML brut n'est jamais interprété,
  * et les liens dangereux (javascript:…) sont neutralisés par react-markdown.
@@ -97,7 +103,12 @@ export function Markdown({ contenu, decalage = 0 }: { contenu: string; decalage?
   };
   return (
     <div className={styles.markdown}>
-      <ReactMarkdown remarkPlugins={[remarqueEncadres]} components={avecTitres} skipHtml>
+      <ReactMarkdown
+        remarkPlugins={[remarqueEncadres]}
+        components={avecTitres}
+        urlTransform={adresse}
+        skipHtml
+      >
         {contenu}
       </ReactMarkdown>
     </div>

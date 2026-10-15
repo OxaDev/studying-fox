@@ -6,7 +6,11 @@ COPY front/package.json front/package-lock.json ./
 COPY front/scripts ./scripts
 RUN npm ci
 COPY front ./
-RUN npm run build
+# Lu par des tests, dont `tsc -b` vérifie aussi les types.
+COPY docs/format-lecon/exemple.json /docs/format-lecon/exemple.json
+# Chemin du site sous son domaine, ex. « /studying-fox » (ADR 0031). Vide : à la racine.
+ARG CHEMIN_BASE=""
+RUN RENARD_CHEMIN_BASE="$CHEMIN_BASE" npm run build
 
 # 2. Caddy sert le front et redirige vers l'API.
 FROM caddy:2

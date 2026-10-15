@@ -1,3 +1,4 @@
+import { BASE_API } from "../../adresses";
 import { appelApi, type Schemas } from "../../api/client";
 
 export type Moi = Schemas["Moi"];
@@ -27,4 +28,4 @@ export const comptesApi = {
 };
 
 /** Téléchargement direct par le navigateur : le cookie de session suffit (lecture seule). */
-export const ADRESSE_EXPORT = "/api/comptes/moi/export";
+export const ADRESSE_EXPORT = `${BASE_API}/comptes/moi/export`;

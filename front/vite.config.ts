@@ -100,11 +100,23 @@ const REACT_ROUTER = resolve(import.meta.dirname, "node_modules/react-router/dis
 // Les tests de bout en bout lancent leur propre API (playwright.config.ts).
 const API = process.env.RENARD_API_URL ?? "http://localhost:8010";
 
+/**
+ * Chemin du site sous son domaine, pour le build de production : « /studying-fox » quand un
+ * proxy sert le site sous https://exemple.fr/studying-fox (ADR 0031). Vide par défaut.
+ * Le serveur de dev et `vite preview` restent à la racine.
+ */
+const CHEMIN_BASE = process.env.RENARD_CHEMIN_BASE ?? "";
+if (CHEMIN_BASE && !/^(\/[\w.-]+)+$/.test(CHEMIN_BASE)) {
+  throw new Error(
+    `RENARD_CHEMIN_BASE doit commencer par « / », sans barre finale : « ${CHEMIN_BASE} »`,
+  );
+}
+
 // L'application React est servie sous /app (ADR 0020). Comme Caddy, le proxy envoie tout le
 // reste à FastAPI : l'API, les images et la vitrine publique.
 // `vite preview` reprend ce proxy (preview.proxy vaut server.proxy par défaut).
 export default defineConfig({
-  base: "/app/",
+  base: `${CHEMIN_BASE}/app/`,
   plugins: [react(), barreFinaleApp(), cspEnPrevisualisation(), pyodideEnDev()],
   server: {
     proxy: {

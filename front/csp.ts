@@ -25,9 +25,12 @@ export const CSP_PAGE = [
 /** Worker JavaScript : il peut exécuter du code, mais n'a accès à rien, pas même au réseau. */
 export const CSP_WORKER_JAVASCRIPT = "default-src 'none'; script-src 'unsafe-eval'";
 
-/** Worker Python : il ne peut charger que les fichiers de Pyodide, hébergés sous /app/pyodide/. */
-export function cspWorkerPython(origine: string): string {
-  const pyodide = `${origine}/app/pyodide/`;
+/**
+ * Worker Python : il ne peut charger que les fichiers de Pyodide, hébergés sous /app/pyodide/.
+ * `site` est l'origine, suivie du chemin du site s'il n'est pas à la racine (ADR 0031).
+ */
+export function cspWorkerPython(site: string): string {
+  const pyodide = `${site}/app/pyodide/`;
   return `default-src 'none'; script-src ${pyodide} 'wasm-unsafe-eval'; connect-src ${pyodide}`;
 }
 

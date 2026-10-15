@@ -42,6 +42,15 @@ describe("Rendu Markdown", () => {
     expect(screen.getByText("clique").getAttribute("href") ?? "").not.toContain("javascript");
   });
 
+  it("affiche les images importées sous /medias/", () => {
+    afficherMarkdown("![Un renard](/medias/imports/1/renard.png)");
+
+    expect(screen.getByRole("img", { name: "Un renard" })).toHaveAttribute(
+      "src",
+      "/medias/imports/1/renard.png",
+    );
+  });
+
   it("transforme les titres de niveau 1 en niveau 2", () => {
     afficherMarkdown("# Titre");
 

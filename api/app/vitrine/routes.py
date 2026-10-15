@@ -45,10 +45,17 @@ gabarits.env.globals["PASTELS"] = PASTELS
 
 
 def _page(request: Request, gabarit: str, statut: int = 200, **contexte: object) -> HTMLResponse:
+    config = get_config()
     return gabarits.TemplateResponse(
         request,
         gabarit,
-        {"url_publique": get_config().url_publique, "chemin": request.url.path, **contexte},
+        {
+            "url_publique": config.url_publique,
+            # Préfixe des liens, vide à la racine du domaine (ADR 0031).
+            "base": config.chemin_base,
+            "chemin": request.url.path,
+            **contexte,
+        },
         status_code=statut,
         headers=CACHE if statut == 200 else None,
     )
@@ -128,10 +135,11 @@ async def sitemap(request: Request, db: Db) -> Response:
 @router.get("/robots.txt")
 async def robots() -> PlainTextResponse:
     # L'application et l'API ne sont pas référencées (ADR 0020).
+    config = get_config()
     return PlainTextResponse(
         "User-agent: *\n"
-        "Disallow: /app/\n"
-        "Disallow: /api/\n"
-        f"Sitemap: {get_config().url_publique}/sitemap.xml\n",
+        f"Disallow: {config.chemin_base}/app/\n"
+        f"Disallow: {config.chemin_base}/api/\n"
+        f"Sitemap: {config.url_publique}/sitemap.xml\n",
         headers=CACHE,
     )

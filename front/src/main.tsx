@@ -5,6 +5,7 @@ import { createBrowserRouter } from "react-router";
 // La version DOM sait appliquer une navigation tout de suite (option `flushSync`).
 import { RouterProvider } from "react-router/dom";
 
+import { BASE_APP } from "./adresses";
 import { creerQueryClient } from "./api/queryClient";
 import { initialiserTheme } from "./composants/theme";
 import { routes } from "./routes";
@@ -17,7 +18,7 @@ const racine = document.getElementById("racine");
 if (!racine) throw new Error("Élément #racine introuvable dans index.html");
 
 const queryClient = creerQueryClient();
-const router = createBrowserRouter(routes, { basename: "/app" });
+const router = createBrowserRouter(routes, { basename: BASE_APP });
 
 createRoot(racine).render(
   <StrictMode>

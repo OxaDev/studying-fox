@@ -8,9 +8,9 @@
 {% if themes|length > 1 %}
 <nav aria-label="Filtrer par thème">
   <ul class="filtres">
-    <li><a href="/parcours" class="filtre"{% if not theme_choisi %} aria-current="true"{% endif %}>Tous</a></li>
+    <li><a href="{{ base }}/parcours" class="filtre"{% if not theme_choisi %} aria-current="true"{% endif %}>Tous</a></li>
     {% for slug, nom in themes %}
-    <li><a href="/parcours?theme={{ slug|urlencode }}" class="filtre"{% if theme_choisi == slug %} aria-current="true"{% endif %}>{{ nom }}</a></li>
+    <li><a href="{{ base }}/parcours?theme={{ slug|urlencode }}" class="filtre"{% if theme_choisi == slug %} aria-current="true"{% endif %}>{{ nom }}</a></li>
     {% endfor %}
   </ul>
 </nav>

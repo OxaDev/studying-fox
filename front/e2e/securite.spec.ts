@@ -18,7 +18,7 @@ test("le Caddyfile applique les mêmes CSP que les tests", () => {
   expect(CADDYFILE).toContain(`Content-Security-Policy "${CSP_WORKER_JAVASCRIPT}"`);
   expect(CADDYFILE).toContain(`Content-Security-Policy "${CSP_WORKER_VBA}"`);
   expect(CADDYFILE).toContain(
-    `Content-Security-Policy "${cspWorkerPython("{scheme}://{hostport}")}"`,
+    `Content-Security-Policy "${cspWorkerPython("{scheme}://{hostport}{$CHEMIN_BASE}")}"`,
   );
 });
 

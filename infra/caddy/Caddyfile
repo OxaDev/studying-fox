@@ -1,5 +1,17 @@
 # Découpage des adresses : voir ADR 0020.
 # Les CSP doivent rester identiques à front/csp.ts (vérifié par front/e2e/securite.spec.ts).
+#
+# Derrière un nginx (ADR 0031), le site est servi sous un chemin du domaine (CHEMIN_BASE,
+# ex. « /studying-fox ») : nginx enlève ce préfixe, Caddy reçoit donc /api, /app, /medias…
+# Seules les adresses renvoyées au navigateur le remettent.
+{
+	servers {
+		# Proxys dont on garde l'en-tête X-Forwarded-For (l'adresse IP réelle du visiteur,
+		# pour la limitation des tentatives). Sans proxy devant Caddy : personne.
+		trusted_proxies static {$PROXIES_DE_CONFIANCE:127.0.0.1/32}
+	}
+}
+
 {$DOMAINE:localhost} {
 	encode zstd gzip
 
@@ -18,7 +30,7 @@
 	@medias path /medias/*
 	@page not path /app/assets/worker-javascript-* /app/assets/worker-python-* /app/assets/worker-vba-* /medias/*
 	header @worker_javascript Content-Security-Policy "default-src 'none'; script-src 'unsafe-eval'"
-	header @worker_python Content-Security-Policy "default-src 'none'; script-src {scheme}://{hostport}/app/pyodide/ 'wasm-unsafe-eval'; connect-src {scheme}://{hostport}/app/pyodide/"
+	header @worker_python Content-Security-Policy "default-src 'none'; script-src {scheme}://{hostport}{$CHEMIN_BASE}/app/pyodide/ 'wasm-unsafe-eval'; connect-src {scheme}://{hostport}{$CHEMIN_BASE}/app/pyodide/"
 	header @worker_vba Content-Security-Policy "default-src 'none'"
 	header @medias Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
 	header @page Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
@@ -35,7 +47,7 @@
 	}
 
 	# Application React (connexion requise). Le routeur mène à « /app » pour « Mon espace ».
-	redir /app /app/ 308
+	redir /app {$CHEMIN_BASE}/app/ 308
 	handle /app* {
 		root * /srv
 		try_files {path} /app/index.html

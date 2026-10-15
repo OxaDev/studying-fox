@@ -59,6 +59,9 @@ Les parcours validés de `api/validated_courses/` sont créés et publiés au d�
 
 Comptes de test des tests de bout en bout : `admin@exemple.fr`, `relectrice@exemple.fr`, `contributeur@exemple.fr`, `apprenant@exemple.fr` et `partant@exemple.fr` (qui supprime son compte), mot de passe dans `api/app/dev.py`.
 
+Déployer sur un serveur (ADR 0012 et 0031) : `make` liste les commandes (`make configurer`, `make deployer`, `make nginx`…). La config est dans `infra/.env`.
+Le site peut être servi sous un chemin (`CHEMIN_BASE`, ex. `/studying-fox`) : toute adresse absolue envoyée au navigateur passe par `front/src/adresses.ts` côté front, et par `base` (gabarits) ou `config.chemin_base` côté API.
+
 Nommer le premier admin (le compte doit exister) : `cd api && uv run python -m app.comptes.commandes promouvoir-admin <email>`.
 
 Les durées de conservation (ADR 0014) s'appliquent chaque jour, au démarrage de l'API puis toutes les 24 h. À la main : `cd api && uv run python -m app.rgpd.purge`.
